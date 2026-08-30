@@ -1,0 +1,261 @@
+/* ========================================
+   FONT IMPORTS
+   ======================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@200..1000&display=swap');
+
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/nunito-sans";
+
+@custom-variant dark (&:is(.dark *));
+
+
+/* ========================================
+   HUDYAT DESIGN TOKENS
+   ======================================== */
+
+:root {
+  /* ----------------------------------------
+     HUDYAT BRAND
+     ---------------------------------------- */
+
+  --hudyat-gold: #FFC145;
+  --hudyat-blue: #0077CE;
+
+
+  /* ----------------------------------------
+     HUDYAT ROLE PRIMARY COLORS
+     ---------------------------------------- */
+
+  --student-primary: var(--hudyat-gold);
+  --teacher-primary: var(--hudyat-blue);
+  --admin-primary: var(--hudyat-blue);
+
+
+  /* ----------------------------------------
+     HUDYAT CATEGORY COLORS
+     ---------------------------------------- */
+
+  --category-alphabet: #8B5CF6;
+  --category-numbers: #3B82F6;
+  --category-shapes: #06B6D4;
+  --category-colors: #EF4444;
+  --category-greetings: #22C55E;
+  --category-calendar: #F59E0B;
+  --category-wh-questions: #EC4899;
+  --category-word-concepts: #F97316;
+
+
+  /* ----------------------------------------
+     SHADCN SEMANTIC COLORS - LIGHT
+     ---------------------------------------- */
+
+  --background: #F8FAFC;
+  --foreground: #4B4B4B;
+
+  --card: #FFFFFF;
+  --card-foreground: #4B4B4B;
+
+  --popover: #FFFFFF;
+  --popover-foreground: #4B4B4B;
+
+  --primary: var(--hudyat-gold);
+  --primary-foreground: #FFFFFF;
+
+  --secondary: #F1F5F9;
+  --secondary-foreground: #404752;
+
+  --muted: #F1F5F9;
+  --muted-foreground: #777777;
+
+  --accent: #FFF4D6;
+  --accent-foreground: #4B4B4B;
+
+  --destructive: #EF4444;
+  --destructive-foreground: #FFFFFF;
+
+  --border: #E5E5E5;
+  --input: #E5E5E5;
+  --ring: var(--hudyat-gold);
+
+
+  /* ----------------------------------------
+     SHADCN SIDEBAR - LIGHT
+     ---------------------------------------- */
+
+  --sidebar: #FFFFFF;
+  --sidebar-foreground: #4B4B4B;
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: #FFF4D6;
+  --sidebar-accent-foreground: #4B4B4B;
+  --sidebar-border: #E5E5E5;
+  --sidebar-ring: var(--ring);
+
+
+  /* ----------------------------------------
+     SHADOWS
+     ---------------------------------------- */
+
+  --shadow-card: 0 2px 8px rgb(0 0 0 / 0.06);
+  --shadow-card-hover: 0 6px 16px rgb(0 0 0 / 0.10);
+  --shadow-button: 0 6px 0 #887041;
+
+
+  /* ----------------------------------------
+     APP-SPECIFIC LAYOUT
+     ---------------------------------------- */
+
+  --sidebar-width: 15rem;
+  --header-height: 4rem;
+   --radius: 0.75rem;
+}
+
+
+/* ========================================
+   DARK MODE
+   ======================================== */
+
+.dark {
+  --background: #18181B;
+  --foreground: #F4F4F5;
+
+  --card: #27272A;
+  --card-foreground: #F4F4F5;
+
+  --popover: #27272A;
+  --popover-foreground: #F4F4F5;
+
+  --primary: #FFC145;
+  --primary-foreground: #18181B;
+
+  --secondary: #3F3F46;
+  --secondary-foreground: #F4F4F5;
+
+  --muted: #3F3F46;
+  --muted-foreground: #A1A1AA;
+
+  --accent: #3F3F46;
+  --accent-foreground: #F4F4F5;
+
+  --destructive: #F87171;
+  --destructive-foreground: #18181B;
+
+  --border: rgb(255 255 255 / 10%);
+  --input: rgb(255 255 255 / 15%);
+  --ring: #FFC145;
+
+  --sidebar: #27272A;
+  --sidebar-foreground: #F4F4F5;
+  --sidebar-primary: #FFC145;
+  --sidebar-primary-foreground: #18181B;
+  --sidebar-accent: #3F3F46;
+  --sidebar-accent-foreground: #F4F4F5;
+  --sidebar-border: rgb(255 255 255 / 10%);
+  --sidebar-ring: #FFC145;
+}
+
+
+/* ========================================
+   TAILWIND V4 / SHADCN THEME MAPPING
+   ======================================== */
+
+@theme inline {
+  /* Fonts */
+  --font-sans: "Inter Variable", sans-serif;
+  --font-body: "Nunito";
+
+  /* Shadcn semantic colors */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Sidebar */
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* HUDYAT brand */
+  --color-hudyat-gold: var(--hudyat-gold);
+  --color-hudyat-blue: var(--hudyat-blue);
+
+  /* HUDYAT categories */
+  --color-category-alphabet: var(--category-alphabet);
+  --color-category-numbers: var(--category-numbers);
+  --color-category-shapes: var(--category-shapes);
+  --color-category-colors: var(--category-colors);
+  --color-category-greetings: var(--category-greetings);
+  --color-category-calendar: var(--category-calendar);
+  --color-category-wh-questions: var(--category-wh-questions);
+  --color-category-word-concepts: var(--category-word-concepts);
+
+  /* HUDYAT custom shadows */
+  --shadow-card: var(--shadow-card);
+  --shadow-card-hover: var(--shadow-card-hover);
+  --shadow-button: var(--shadow-button);
+
+  /* HUDYAT layout */
+  --spacing-sidebar: var(--sidebar-width);
+  --spacing-header: var(--header-height);
+
+  /* shadcn radius system */
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+
+/* ========================================
+   BASE
+   ======================================== */
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  html {
+    @apply font-sans;
+  }
+}
