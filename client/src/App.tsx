@@ -3,12 +3,7 @@ import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/auth/LoginPage";
 
 function App() {
-  return (
-    <Routes>
-        <Route index element={<HomePage/>} />
-        <Route path="/login" element={<LoginPage/>} />
-    </Routes>
-  )
+  return null
 }
 
 export default App
