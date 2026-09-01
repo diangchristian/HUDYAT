@@ -54,7 +54,7 @@
      SHADCN SEMANTIC COLORS - LIGHT
      ---------------------------------------- */
 
-  --background: #F8FAFC;
+  --background: #FFFFFF;
   --foreground: #4B4B4B;
 
   --card: #FFFFFF;
@@ -103,7 +103,8 @@
 
   --shadow-card: 0 2px 8px rgb(0 0 0 / 0.06);
   --shadow-card-hover: 0 6px 16px rgb(0 0 0 / 0.10);
-  --shadow-button: 0 6px 0 #887041;
+  --shadow-button: 0 4px 0 rgba(136, 112, 65, 0.80);
+  --shadow-button-secondary: 0 6px 0 #e7e2d9;
 
 
   /* ----------------------------------------
