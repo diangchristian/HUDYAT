@@ -51,7 +51,22 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
-  User: 'User'
+  User: 'User',
+  LearnerProfile: 'LearnerProfile',
+  TeacherProfile: 'TeacherProfile',
+  LearningArea: 'LearningArea',
+  Category: 'Category',
+  FslGesture: 'FslGesture',
+  CategoryGesture: 'CategoryGesture',
+  Assessment: 'Assessment',
+  AssessmentQuestion: 'AssessmentQuestion',
+  QuestionChoice: 'QuestionChoice',
+  AssessmentAttempt: 'AssessmentAttempt',
+  AssessmentAnswer: 'AssessmentAnswer',
+  PracticeSession: 'PracticeSession',
+  CategoryProgress: 'CategoryProgress',
+  SystemSetting: 'SystemSetting',
+  AuditLog: 'AuditLog'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -75,13 +90,218 @@ export const UserScalarFieldEnum = {
   username: 'username',
   email: 'email',
   password: 'password',
-  login_code: 'login_code',
+  loginCode: 'loginCode',
   role: 'role',
+  isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const LearnerProfileScalarFieldEnum = {
+  userId: 'userId',
+  fullName: 'fullName',
+  dateJoined: 'dateJoined',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type LearnerProfileScalarFieldEnum = (typeof LearnerProfileScalarFieldEnum)[keyof typeof LearnerProfileScalarFieldEnum]
+
+
+export const TeacherProfileScalarFieldEnum = {
+  userId: 'userId',
+  fullName: 'fullName',
+  email: 'email',
+  contactNumber: 'contactNumber',
+  dateJoined: 'dateJoined',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TeacherProfileScalarFieldEnum = (typeof TeacherProfileScalarFieldEnum)[keyof typeof TeacherProfileScalarFieldEnum]
+
+
+export const LearningAreaScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  displayOrder: 'displayOrder',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type LearningAreaScalarFieldEnum = (typeof LearningAreaScalarFieldEnum)[keyof typeof LearningAreaScalarFieldEnum]
+
+
+export const CategoryScalarFieldEnum = {
+  id: 'id',
+  learningAreaId: 'learningAreaId',
+  name: 'name',
+  description: 'description',
+  displayOrder: 'displayOrder',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CategoryScalarFieldEnum = (typeof CategoryScalarFieldEnum)[keyof typeof CategoryScalarFieldEnum]
+
+
+export const FslGestureScalarFieldEnum = {
+  id: 'id',
+  label: 'label',
+  meaning: 'meaning',
+  modelClass: 'modelClass',
+  referenceImageUrl: 'referenceImageUrl',
+  referenceVideoUrl: 'referenceVideoUrl',
+  isValidated: 'isValidated',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type FslGestureScalarFieldEnum = (typeof FslGestureScalarFieldEnum)[keyof typeof FslGestureScalarFieldEnum]
+
+
+export const CategoryGestureScalarFieldEnum = {
+  id: 'id',
+  categoryId: 'categoryId',
+  gestureId: 'gestureId',
+  exampleUsage: 'exampleUsage',
+  demonstrationVideoUrl: 'demonstrationVideoUrl',
+  displayOrder: 'displayOrder',
+  createdAt: 'createdAt'
+} as const
+
+export type CategoryGestureScalarFieldEnum = (typeof CategoryGestureScalarFieldEnum)[keyof typeof CategoryGestureScalarFieldEnum]
+
+
+export const AssessmentScalarFieldEnum = {
+  id: 'id',
+  categoryId: 'categoryId',
+  createdBy: 'createdBy',
+  title: 'title',
+  description: 'description',
+  passingScore: 'passingScore',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AssessmentScalarFieldEnum = (typeof AssessmentScalarFieldEnum)[keyof typeof AssessmentScalarFieldEnum]
+
+
+export const AssessmentQuestionScalarFieldEnum = {
+  id: 'id',
+  assessmentId: 'assessmentId',
+  gestureId: 'gestureId',
+  questionNumber: 'questionNumber',
+  questionText: 'questionText',
+  questionType: 'questionType',
+  referenceMediaUrl: 'referenceMediaUrl',
+  points: 'points',
+  createdAt: 'createdAt'
+} as const
+
+export type AssessmentQuestionScalarFieldEnum = (typeof AssessmentQuestionScalarFieldEnum)[keyof typeof AssessmentQuestionScalarFieldEnum]
+
+
+export const QuestionChoiceScalarFieldEnum = {
+  id: 'id',
+  questionId: 'questionId',
+  gestureId: 'gestureId',
+  choiceText: 'choiceText',
+  imageUrl: 'imageUrl',
+  displayOrder: 'displayOrder'
+} as const
+
+export type QuestionChoiceScalarFieldEnum = (typeof QuestionChoiceScalarFieldEnum)[keyof typeof QuestionChoiceScalarFieldEnum]
+
+
+export const AssessmentAttemptScalarFieldEnum = {
+  id: 'id',
+  assessmentId: 'assessmentId',
+  learnerId: 'learnerId',
+  score: 'score',
+  totalPoints: 'totalPoints',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt'
+} as const
+
+export type AssessmentAttemptScalarFieldEnum = (typeof AssessmentAttemptScalarFieldEnum)[keyof typeof AssessmentAttemptScalarFieldEnum]
+
+
+export const AssessmentAnswerScalarFieldEnum = {
+  id: 'id',
+  attemptId: 'attemptId',
+  questionId: 'questionId',
+  selectedChoiceId: 'selectedChoiceId',
+  isCorrect: 'isCorrect',
+  pointsEarned: 'pointsEarned',
+  answeredAt: 'answeredAt'
+} as const
+
+export type AssessmentAnswerScalarFieldEnum = (typeof AssessmentAnswerScalarFieldEnum)[keyof typeof AssessmentAnswerScalarFieldEnum]
+
+
+export const PracticeSessionScalarFieldEnum = {
+  id: 'id',
+  learnerId: 'learnerId',
+  gestureId: 'gestureId',
+  recognizedLabel: 'recognizedLabel',
+  confidence: 'confidence',
+  isCorrect: 'isCorrect',
+  attemptedAt: 'attemptedAt'
+} as const
+
+export type PracticeSessionScalarFieldEnum = (typeof PracticeSessionScalarFieldEnum)[keyof typeof PracticeSessionScalarFieldEnum]
+
+
+export const CategoryProgressScalarFieldEnum = {
+  id: 'id',
+  learnerId: 'learnerId',
+  categoryId: 'categoryId',
+  status: 'status',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CategoryProgressScalarFieldEnum = (typeof CategoryProgressScalarFieldEnum)[keyof typeof CategoryProgressScalarFieldEnum]
+
+
+export const SystemSettingScalarFieldEnum = {
+  id: 'id',
+  systemName: 'systemName',
+  systemVersion: 'systemVersion',
+  schoolName: 'schoolName',
+  unitName: 'unitName',
+  logoUrl: 'logoUrl',
+  defaultLanguage: 'defaultLanguage',
+  maintenanceMode: 'maintenanceMode',
+  updatedBy: 'updatedBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SystemSettingScalarFieldEnum = (typeof SystemSettingScalarFieldEnum)[keyof typeof SystemSettingScalarFieldEnum]
+
+
+export const AuditLogScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  action: 'action',
+  entityType: 'entityType',
+  entityId: 'entityId',
+  description: 'description',
+  createdAt: 'createdAt'
+} as const
+
+export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
 
 
 export const SortOrder = {
