@@ -10,9 +10,35 @@
 */
 
 export const UserRole = {
-  student: 'student',
-  teacher: 'teacher',
-  admin: 'admin'
+  ADMIN: 'ADMIN',
+  TEACHER: 'TEACHER',
+  LEARNER: 'LEARNER'
 } as const
 
 export type UserRole = (typeof UserRole)[keyof typeof UserRole]
+
+
+export const AssessmentStatus = {
+  DRAFT: 'DRAFT',
+  PUBLISHED: 'PUBLISHED',
+  ARCHIVED: 'ARCHIVED'
+} as const
+
+export type AssessmentStatus = (typeof AssessmentStatus)[keyof typeof AssessmentStatus]
+
+
+export const AssessmentQuestionType = {
+  IMAGE_GESTURE: 'IMAGE_GESTURE',
+  VIDEO_GESTURE: 'VIDEO_GESTURE'
+} as const
+
+export type AssessmentQuestionType = (typeof AssessmentQuestionType)[keyof typeof AssessmentQuestionType]
+
+
+export const CategoryProgressStatus = {
+  NOT_STARTED: 'NOT_STARTED',
+  IN_PROGRESS: 'IN_PROGRESS',
+  COMPLETED: 'COMPLETED'
+} as const
+
+export type CategoryProgressStatus = (typeof CategoryProgressStatus)[keyof typeof CategoryProgressStatus]

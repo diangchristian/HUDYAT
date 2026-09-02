@@ -1,8 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
@@ -12,21 +7,391 @@ datasource db {
   provider = "postgresql"
 }
 
+// ==========================================
+// AUTHENTICATION & USERS
+// ==========================================
 
 model User {
-  id          String   @id @default(uuid())
-  username    String   @unique
-  email       String   @unique
-  password    String
-  login_code  String?   
-  role        UserRole  @default(student)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id        String   @id @default(uuid())
+  username  String   @unique
+  email     String?  @unique
+  password  String?
+  loginCode String?
+  role      UserRole @default(LEARNER)
+  isActive  Boolean  @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  learnerProfile LearnerProfile?
+  teacherProfile TeacherProfile?
+
+  systemSettingsUpdated SystemSetting[]
+  auditLogs             AuditLog[]
+
+  @@map("users")
 }
 
-
 enum UserRole {
-  student
-  teacher
-  admin
+  ADMIN
+  TEACHER
+  LEARNER
+}
+
+// ==========================================
+// LEARNER PROFILE
+// ==========================================
+
+model LearnerProfile {
+  userId     String   @id
+  fullName   String
+  dateJoined DateTime @default(now())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  assessmentAttempts AssessmentAttempt[]
+  practiceSessions   PracticeSession[]
+  categoryProgress   CategoryProgress[]
+
+  @@map("learner_profiles")
+}
+
+// ==========================================
+// TEACHER PROFILE
+// ==========================================
+
+model TeacherProfile {
+  userId        String   @id
+  fullName      String
+  email         String   @unique
+  contactNumber String?
+  dateJoined    DateTime @default(now())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  assessments Assessment[]
+
+  @@map("teacher_profiles")
+}
+
+// ==========================================
+// LEARNING AREAS
+// ==========================================
+
+model LearningArea {
+  id           String  @id @default(uuid())
+  name         String
+  description  String?
+  displayOrder Int     @default(0)
+  isActive     Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  categories Category[]
+
+  @@index([name])
+  @@index([displayOrder])
+  @@map("learning_areas")
+}
+
+// ==========================================
+// CATEGORIES
+// ==========================================
+
+model Category {
+  id             String  @id @default(uuid())
+  learningAreaId String
+  name           String
+  description    String?
+  displayOrder   Int     @default(0)
+  isActive       Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  learningArea LearningArea @relation(fields: [learningAreaId], references: [id], onDelete: Cascade)
+
+  gestures   CategoryGesture[]
+  assessment Assessment?
+  progress   CategoryProgress[]
+
+  @@unique([learningAreaId, name])
+  @@unique([learningAreaId, displayOrder])
+  @@map("categories")
+}
+
+// ==========================================
+// FSL GESTURES
+// ==========================================
+
+model FslGesture {
+  id                String  @id @default(uuid())
+  label             String  @unique
+  meaning           String?
+  modelClass        String  @unique
+  referenceImageUrl String?
+  referenceVideoUrl String?
+  isValidated       Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  categoryGestures    CategoryGesture[]
+  assessmentQuestions AssessmentQuestion[]
+  questionChoices     QuestionChoice[]
+  practiceSessions    PracticeSession[]
+
+  @@map("fsl_gestures")
+}
+
+// ==========================================
+// CATEGORY GESTURES
+// ==========================================
+
+model CategoryGesture {
+  id                    String  @id @default(uuid())
+  categoryId            String
+  gestureId             String
+  exampleUsage          String?
+  demonstrationVideoUrl String?
+  displayOrder          Int     @default(0)
+
+  createdAt DateTime @default(now())
+
+  category Category   @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  gesture  FslGesture @relation(fields: [gestureId], references: [id], onDelete: Cascade)
+
+  @@unique([categoryId, gestureId])
+  @@unique([categoryId, displayOrder])
+  @@map("category_gestures")
+}
+
+// ==========================================
+// ASSESSMENTS
+// ==========================================
+
+model Assessment {
+  id           String           @id @default(uuid())
+  categoryId   String           @unique
+  createdBy    String
+  title        String
+  description  String?
+  passingScore Decimal
+  status       AssessmentStatus @default(DRAFT)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  category           Category             @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  teacher            TeacherProfile       @relation(fields: [createdBy], references: [userId])
+  questions          AssessmentQuestion[]
+  assessmentAttempts AssessmentAttempt[]
+
+  @@index([createdBy])
+  @@map("assessments")
+}
+
+enum AssessmentStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+// ==========================================
+// ASSESSMENT QUESTIONS
+// ==========================================
+
+model AssessmentQuestion {
+  id                String                 @id @default(uuid())
+  assessmentId      String
+  gestureId         String
+  questionNumber    Int
+  questionText      String
+  questionType      AssessmentQuestionType
+  referenceMediaUrl String?
+  points            Decimal                @default(1)
+
+  createdAt DateTime @default(now())
+
+  assessment Assessment         @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  gesture    FslGesture         @relation(fields: [gestureId], references: [id])
+  choices    QuestionChoice[]
+  answers    AssessmentAnswer[]
+
+  @@unique([assessmentId, questionNumber])
+  @@map("assessment_questions")
+}
+
+enum AssessmentQuestionType {
+  IMAGE_GESTURE
+  VIDEO_GESTURE
+}
+
+// ==========================================
+// QUESTION CHOICES
+// ==========================================
+
+model QuestionChoice {
+  id           String  @id @default(uuid())
+  questionId   String
+  gestureId    String
+  choiceText   String?
+  imageUrl     String?
+  displayOrder Int
+
+  question AssessmentQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  gesture  FslGesture         @relation(fields: [gestureId], references: [id])
+
+  answers AssessmentAnswer[]
+
+  @@unique([questionId, gestureId])
+  @@unique([questionId, displayOrder])
+  @@map("question_choices")
+}
+
+// ==========================================
+// ASSESSMENT ATTEMPTS
+// ==========================================
+
+model AssessmentAttempt {
+  id           String    @id @default(uuid())
+  assessmentId String
+  learnerId    String
+  score        Decimal   @default(0)
+  totalPoints  Decimal   @default(0)
+  startedAt    DateTime  @default(now())
+  completedAt  DateTime?
+
+  assessment Assessment         @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  learner    LearnerProfile     @relation(fields: [learnerId], references: [userId], onDelete: Cascade)
+  answers    AssessmentAnswer[]
+
+  @@index([assessmentId])
+  @@index([learnerId])
+  @@index([learnerId, assessmentId])
+  @@map("assessment_attempts")
+}
+
+// ==========================================
+// ASSESSMENT ANSWERS
+// ==========================================
+
+model AssessmentAnswer {
+  id               String   @id @default(uuid())
+  attemptId        String
+  questionId       String
+  selectedChoiceId String
+  isCorrect        Boolean
+  pointsEarned     Decimal  @default(0)
+  answeredAt       DateTime @default(now())
+
+  attempt        AssessmentAttempt  @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  question       AssessmentQuestion @relation(fields: [questionId], references: [id])
+  selectedChoice QuestionChoice     @relation(fields: [selectedChoiceId], references: [id])
+
+  @@unique([attemptId, questionId])
+  @@map("assessment_answers")
+}
+
+// ==========================================
+// PRACTICE SESSIONS
+// ==========================================
+
+model PracticeSession {
+  id              String   @id @default(uuid())
+  learnerId       String
+  gestureId       String
+  recognizedLabel String
+  confidence      Decimal?
+  isCorrect       Boolean
+  attemptedAt     DateTime @default(now())
+
+  learner LearnerProfile @relation(fields: [learnerId], references: [userId], onDelete: Cascade)
+  gesture FslGesture     @relation(fields: [gestureId], references: [id])
+
+  @@index([learnerId])
+  @@index([gestureId])
+  @@index([learnerId, attemptedAt])
+  @@map("practice_sessions")
+}
+
+// ==========================================
+// CATEGORY PROGRESS
+// ==========================================
+
+model CategoryProgress {
+  id         String                 @id @default(uuid())
+  learnerId  String
+  categoryId String
+  status     CategoryProgressStatus @default(NOT_STARTED)
+
+  startedAt   DateTime?
+  completedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  learner  LearnerProfile @relation(fields: [learnerId], references: [userId], onDelete: Cascade)
+  category Category       @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@unique([learnerId, categoryId])
+  @@map("category_progress")
+}
+
+enum CategoryProgressStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
+}
+
+// ==========================================
+// SYSTEM SETTINGS
+// ==========================================
+
+model SystemSetting {
+  id              String  @id @default(uuid())
+  systemName      String
+  systemVersion   String
+  schoolName      String?
+  unitName        String?
+  logoUrl         String?
+  defaultLanguage String
+
+  maintenanceMode Boolean @default(false)
+  updatedBy       String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  updater User @relation(fields: [updatedBy], references: [id])
+
+  @@map("system_settings")
+}
+
+// ==========================================
+// AUDIT LOGS
+// ==========================================
+
+model AuditLog {
+  id          String   @id @default(uuid())
+  userId      String
+  action      String
+  entityType  String
+  entityId    String?
+  description String?
+  createdAt   DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([entityType, entityId])
+  @@index([createdAt])
+  @@map("audit_logs")
 }
