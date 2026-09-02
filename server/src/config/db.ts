@@ -9,4 +9,21 @@ if (!connectionString) {
 }
 
 const adapter = new PrismaPg({ connectionString });
-export const prisma = new PrismaClient({ adapter });
+const prisma = new PrismaClient({ adapter });
+
+
+const connectDB = async () => {
+    try {
+        await prisma.$connect();
+        console.log("Database connected successfully via prisma");
+    } catch (error: any) {
+        console.error("Error connecting to the database:", error.message);
+        process.exit(1); // Exit the process with an error code
+    }
+}
+
+const disconnectDB = async () => {
+    await prisma.$disconnect();
+}
+
+export { prisma, connectDB, disconnectDB };
