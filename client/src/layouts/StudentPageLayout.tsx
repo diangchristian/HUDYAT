@@ -5,7 +5,7 @@ const navItems = [
   { name: "Home", path: "/student/home", image: "/icons/home.png" },
   { name: "Learn", path: "/student/learn", image: "/icons/learn.png" },
   { name: "Practice", path: "/student/practice", image: "/icons/practice.png" },
-  { name: "Quiz", path: "/student/quiz", image: "/icons/quiz.png" },
+  { name: "Assessment", path: "/student/assessment", image: "/icons/assessment.png" },
   { name: "My Progress", path: "/student/progress", image: "/icons/progress.png" },
 ];
 
@@ -68,7 +68,7 @@ const StudentPageLayout = () => {
                     className={({ isActive }) =>
                       `flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-bold transition-colors font-body uppercase ${
                         isActive
-                          ? "bg-amber-100 text-amber-700"
+                          ? "shadow-[var(--shadow-button)] active:shadow-[0_1px_0_#887041] bg-hudyat-gold text-white"
                           : "text-gray-600 hover:bg-foreground/5"
                       }`
                     }

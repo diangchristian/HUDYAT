@@ -16,16 +16,16 @@ const MODES = [
         path: "/student/practice",
     },
     {
-        title: "Quiz",
-        image: "/icons/quiz.png",
+        title: "Assessment",
+        image: "/icons/assessment.png",
         color: "#D8B4E2",
-        path: "/student/quiz",
+        path: "/student/assessment",
     },
 ]
 
 
 
-export const StudentHomePage = () => {
+const StudentHomePage = () => {
   const navigate = useNavigate();
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
@@ -76,3 +76,6 @@ export const StudentHomePage = () => {
     </div>
   )
 }
+
+
+export default StudentHomePage
