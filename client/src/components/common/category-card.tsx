@@ -10,6 +10,8 @@ export type CategoryColor =
   | "orange"
   | "red";
 
+export type CategoryStatus = "completed" | "current" | "locked";
+
 export type CategoryCardProps = {
   title: string;
   icon?: LucideIcon;
@@ -19,6 +21,9 @@ export type CategoryCardProps = {
   progress?: number;
   variant?: "default" | "progress";
   className?: string;
+  status?: CategoryStatus;
+  statusLabel?: string;
+  disabled?: boolean;
   onClick?: () => void;
 };
 
@@ -76,19 +81,27 @@ export default function CategoryCard({
   progress,
   variant = "default",
   className,
+  status,
+  statusLabel,
+  disabled = false,
   onClick,
 }: CategoryCardProps) {
   const style = CATEGORY_COLORS[color];
   const isProgressCard = variant === "progress";
   const safeProgress = Math.min(100, Math.max(0, progress ?? 0));
+  const resolvedStatusLabel = statusLabel ??
+    (status === "completed" ? "Completed" : status === "current" ? "Continue" : status === "locked" ? "Locked" : undefined);
 
   return (
     <button
       type="button"
-      onClick={onClick}
+      onClick={disabled ? undefined : onClick}
+      disabled={disabled}
+      aria-disabled={disabled}
       className={cn(
         "group flex w-full flex-col items-center border-2 bg-white transition-all duration-300",
         "hover:-translate-y-1 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
+        "disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0 disabled:hover:shadow-none",
         style.border,
         isProgressCard
           ? "min-h-40 rounded-3xl px-6 py-5"
@@ -101,13 +114,14 @@ export default function CategoryCard({
           "mb-3 flex items-center justify-center rounded-full transition-transform duration-300 group-hover:scale-110",
           isProgressCard ? "size-14" : "size-12",
           style.bg,
+          disabled && "opacity-60",
         )}
       >
         {iconContent ??
           (Icon && (
             <Icon
               aria-hidden="true"
-              className={cn(isProgressCard ? "size-7" : "size-6", style.icon)}
+              className={cn(isProgressCard ? "size-7" : "size-6", style.icon, disabled && "opacity-70")}
             />
           ))}
       </div>
@@ -116,13 +130,30 @@ export default function CategoryCard({
         className={cn(
           "text-center font-semibold text-gray-800",
           isProgressCard ? "text-sm" : "text-xs",
+          disabled && "text-gray-500",
         )}
       >
         {title}
       </h3>
 
+      {resolvedStatusLabel && (
+        <div
+          className={cn(
+            "mt-2 inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] font-bold",
+            status === "completed" && "border-emerald-200 bg-emerald-50 text-emerald-700",
+            status === "current" && "border-sky-200 bg-sky-50 text-sky-700",
+            status === "locked" && "border-slate-200 bg-slate-100 text-slate-600",
+          )}
+        >
+          <span aria-hidden="true">
+            {status === "completed" ? "✓" : status === "current" ? "▶" : "🔒"}
+          </span>
+          {resolvedStatusLabel}
+        </div>
+      )}
+
       {desc && (
-        <p className="mt-1 text-center text-[10px] leading-tight text-gray-500">
+        <p className={cn("mt-2 text-center text-[10px] leading-tight", disabled ? "text-slate-500" : "text-gray-500")}>
           {desc}
         </p>
       )}
@@ -130,14 +161,14 @@ export default function CategoryCard({
       {isProgressCard && progress !== undefined && (
         <div className="mt-auto w-full pt-4">
           <div className="mb-2 flex items-center justify-between text-xs">
-            <span className="text-gray-500">Progress</span>
-            <span className={cn("text-lg font-bold", style.progressText)}>
+            <span className={cn("text-gray-500", disabled && "text-slate-500")}>Progress</span>
+            <span className={cn("text-lg font-bold", disabled ? "text-slate-500" : style.progressText)}>
               {safeProgress}%
             </span>
           </div>
 
           <div
-            className="h-2 overflow-hidden rounded-full bg-gray-200"
+            className={cn("h-2 overflow-hidden rounded-full", disabled ? "bg-slate-200" : "bg-gray-200")}
             role="progressbar"
             aria-label={`${title} progress`}
             aria-valuemin={0}
@@ -145,7 +176,7 @@ export default function CategoryCard({
             aria-valuenow={safeProgress}
           >
             <div
-              className={cn("h-full rounded-full", style.progress)}
+              className={cn("h-full rounded-full", disabled ? "bg-slate-400" : style.progress)}
               style={{ width: `${safeProgress}%` }}
             />
           </div>
