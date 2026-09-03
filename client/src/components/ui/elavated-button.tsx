@@ -10,9 +10,11 @@ type ElevatedButtonProps = {
   disabled?: boolean;
   icon?: LucideIcon;
   iconPosition?: 'left' | 'right';
+  'aria-label'?: string;
+  title?: string;
 };
 
-const ElevatedButton = ({text, variant = 'primary', size = 'md', className = '', onClick, disabled = false, icon: Icon, iconPosition = 'left'}: ElevatedButtonProps) => {
+const ElevatedButton = ({text, variant = 'primary', size = 'md', className = '', onClick, disabled = false, icon: Icon, iconPosition = 'left', 'aria-label': ariaLabel, title}: ElevatedButtonProps) => {
 
     let defaulStyle = "rounded-lg font-extrabold tracking-wide transition-transform active:translate-y-1 cursor-pointer font-body disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none disabled:translate-y-0"
 
@@ -32,11 +34,11 @@ const ElevatedButton = ({text, variant = 'primary', size = 'md', className = '',
     }
 
   return (
-    <button type="button" className={`${defaulStyle} ${className}`} onClick={onClick} disabled={disabled}>
+    <button type="button" aria-label={ariaLabel} title={title} className={`${defaulStyle} ${className} focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring motion-reduce:transition-none`} onClick={onClick} disabled={disabled}>
       <span className="flex items-center justify-center gap-2">
-        {Icon && iconPosition === 'left' && <Icon className="h-4 w-4" />}
+        {Icon && iconPosition === 'left' && <Icon aria-hidden="true" className="h-4 w-4" />}
         {text}
-        {Icon && iconPosition === 'right' && <Icon className="h-4 w-4" />}
+        {Icon && iconPosition === 'right' && <Icon aria-hidden="true" className="h-4 w-4" />}
       </span>
     </button>
   )
