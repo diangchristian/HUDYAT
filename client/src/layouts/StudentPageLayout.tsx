@@ -14,7 +14,7 @@ const navItems = [
 const StudentPageLayout = () => {
   const navigate = useNavigate();
   const [showPopover, setShowPopover] = useState(false);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleLogout = () => {
     setShowPopover(false);
@@ -46,7 +46,6 @@ const StudentPageLayout = () => {
       <aside className="hidden lg:block lg:w-64 border-r-2 bg-white">
         <div className="flex items-center gap-3 border-b px-6 py-6">
           <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#F5C04A] text-2xl">
-            
           </div>
 
           <div>
