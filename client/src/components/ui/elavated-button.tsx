@@ -7,13 +7,14 @@ type ElevatedButtonProps = {
   size?: 'sm' | 'md' | 'lg';
   className?: string;
   onClick?: () => void;
+  disabled?: boolean;
   icon?: LucideIcon;
   iconPosition?: 'left' | 'right';
 };
 
-const ElevatedButton = ({text, variant = 'primary', size = 'md', className = '', onClick, icon: Icon, iconPosition = 'left'}: ElevatedButtonProps) => {
+const ElevatedButton = ({text, variant = 'primary', size = 'md', className = '', onClick, disabled = false, icon: Icon, iconPosition = 'left'}: ElevatedButtonProps) => {
 
-    let defaulStyle = "rounded-lg font-extrabold tracking-wide transition-transform active:translate-y-1 cursor-pointer font-body"
+    let defaulStyle = "rounded-lg font-extrabold tracking-wide transition-transform active:translate-y-1 cursor-pointer font-body disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none disabled:translate-y-0"
 
     // Size styles
     const sizeStyles = {
@@ -31,7 +32,7 @@ const ElevatedButton = ({text, variant = 'primary', size = 'md', className = '',
     }
 
   return (
-    <button className={`${defaulStyle} ${className}`} onClick={onClick}>
+    <button type="button" className={`${defaulStyle} ${className}`} onClick={onClick} disabled={disabled}>
       <span className="flex items-center justify-center gap-2">
         {Icon && iconPosition === 'left' && <Icon className="h-4 w-4" />}
         {text}
