@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router";
 
 import StudentPageLayout from "@/layouts/StudentPageLayout";
 import { StudentHomePage } from "@/pages/student/StudentHomePage";
+import MyProgressPage from "@/pages/student/MyProgressPage";
 
 import HomePage from "@/pages/HomePage";
 
@@ -14,7 +15,8 @@ export const router = createBrowserRouter([
   {
     element: <StudentPageLayout />,
     children: [
-      { path: "/student/home", element: <StudentHomePage /> }
+      { path: "/student/home", element: <StudentHomePage /> },
+      { path: "/student/progress", element: <MyProgressPage /> },
     ],
   },
   {
