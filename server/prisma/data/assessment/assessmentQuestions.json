@@ -1,0 +1,185 @@
+[
+  {
+    "category": "Alphabet",
+    "question_number": 1,
+    "question_text": "Which one is the correct sign for the letter A?",
+    "question_type": "IMAGE_GESTURE",
+    "gesture": "A",
+    "reference_media_url": null,
+    "points": 1
+  },
+  {
+    "category": "Alphabet",
+    "question_number": 2,
+    "question_text": "Which one is the correct sign for the letter B?",
+    "question_type": "IMAGE_GESTURE",
+    "gesture": "B",
+    "reference_media_url": null,
+    "points": 1
+  },
+  {
+    "category": "Alphabet",
+    "question_number": 3,
+    "question_text": "Which one is the correct sign for the letter M?",
+    "question_type": "IMAGE_GESTURE",
+    "gesture": "M",
+    "reference_media_url": null,
+    "points": 1
+  },
+  {
+    "category": "Alphabet",
+    "question_number": 4,
+    "question_text": "Which one is the correct sign for the letter S?",
+    "question_type": "IMAGE_GESTURE",
+    "gesture": "S",
+    "reference_media_url": null,
+    "points": 1
+  },
+  {
+    "category": "Alphabet",
+    "question_number": 5,
+    "question_text": "Which one is the correct sign for the letter Z?",
+    "question_type": "IMAGE_GESTURE",
+    "gesture": "Z",
+    "reference_media_url": null,
+    "points": 1
+  },
+
+  {
+    "category": "Numbers",
+    "question_number": 1,
+    "question_text": "Which one is the correct sign for One?",
+    "question_type": "VIDEO_GESTURE",
+    "gesture": "One",
+    "reference_media_url": "/videos/numbers/one.mp4",
+    "points": 1
+  },
+  {
+    "category": "Numbers",
+    "question_number": 2,
+    "question_text": "Which one is the correct sign for Four?",
+    "question_type": "VIDEO_GESTURE",
+    "gesture": "Four",
+    "reference_media_url": "/videos/numbers/four.mp4",
+    "points": 1
+  },
+  {
+    "category": "Numbers",
+    "question_number": 3,
+    "question_text": "Which one is the correct sign for Six?",
+    "question_type": "VIDEO_GESTURE",
+    "gesture": "Six",
+    "reference_media_url": "/videos/numbers/six.mp4",
+    "points": 1
+  },
+  {
+    "category": "Numbers",
+    "question_number": 4,
+    "question_text": "Which one is the correct sign for Eight?",
+    "question_type": "VIDEO_GESTURE",
+    "gesture": "Eight",
+    "reference_media_url": "/videos/numbers/eight.mp4",
+    "points": 1
+  },
+  {
+    "category": "Numbers",
+    "question_number": 5,
+    "question_text": "Which one is the correct sign for Ten?",
+    "question_type": "VIDEO_GESTURE",
+    "gesture": "Ten",
+    "reference_media_url": "/videos/numbers/ten.mp4",
+    "points": 1
+  },
+
+  {
+    "category": "Calendar",
+    "question_number": 1,
+    "question_text": "Which one is the correct sign for January?",
+    "question_type": "VIDEO_GESTURE",
+    "gesture": "January",
+    "reference_media_url": "/videos/calendar/january.mp4",
+    "points": 1
+  },
+  {
+    "category": "Calendar",
+    "question_number": 2,
+    "question_text": "Which one is the correct sign for March?",
+    "question_type": "VIDEO_GESTURE",
+    "gesture": "March",
+    "reference_media_url": "/videos/calendar/march.mp4",
+    "points": 1
+  },
+  {
+    "category": "Calendar",
+    "question_number": 3,
+    "question_text": "Which one is the correct sign for June?",
+    "question_type": "VIDEO_GESTURE",
+    "gesture": "June",
+    "reference_media_url": "/videos/calendar/june.mp4",
+    "points": 1
+  },
+  {
+    "category": "Calendar",
+    "question_number": 4,
+    "question_text": "Which one is the correct sign for September?",
+    "question_type": "VIDEO_GESTURE",
+    "gesture": "September",
+    "reference_media_url": "/videos/calendar/september.mp4",
+    "points": 1
+  },
+  {
+    "category": "Calendar",
+    "question_number": 5,
+    "question_text": "Which one is the correct sign for December?",
+    "question_type": "VIDEO_GESTURE",
+    "gesture": "December",
+    "reference_media_url": "/videos/calendar/december.mp4",
+    "points": 1
+  },
+
+  {
+    "category": "Greetings",
+    "question_number": 1,
+    "question_text": "Which one is the correct sign for Good Morning?",
+    "question_type": "VIDEO_GESTURE",
+    "gesture": "Good Morning",
+    "reference_media_url": "/videos/greetings/good-morning.mp4",
+    "points": 1
+  },
+  {
+    "category": "Greetings",
+    "question_number": 2,
+    "question_text": "Which one is the correct sign for Good Afternoon?",
+    "question_type": "VIDEO_GESTURE",
+    "gesture": "Good Afternoon",
+    "reference_media_url": "/videos/greetings/good-afternoon.mp4",
+    "points": 1
+  },
+  {
+    "category": "Greetings",
+    "question_number": 3,
+    "question_text": "Which one is the correct sign for Hello?",
+    "question_type": "VIDEO_GESTURE",
+    "gesture": "Hello",
+    "reference_media_url": "/videos/greetings/hello.mp4",
+    "points": 1
+  },
+  {
+    "category": "Greetings",
+    "question_number": 4,
+    "question_text": "Which one is the correct sign for Thank You?",
+    "question_type": "VIDEO_GESTURE",
+    "gesture": "Thank you",
+    "reference_media_url": "/videos/greetings/thank-you.mp4",
+    "points": 1
+  },
+  {
+    "category": "Greetings",
+    "question_number": 5,
+    "question_text": "Which one is the correct sign for Nice to Meet You?",
+    "question_type": "VIDEO_GESTURE",
+    "gesture": "Nice to meet you",
+    "reference_media_url": "/videos/greetings/nice-to-meet-you.mp4",
+    "points": 1
+  }
+]
