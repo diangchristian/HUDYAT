@@ -1757,6 +1757,7 @@ export const AssessmentScalarFieldEnum = {
   description: 'description',
   passingScore: 'passingScore',
   status: 'status',
+  isUnlocked: 'isUnlocked',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1785,7 +1786,8 @@ export const QuestionChoiceScalarFieldEnum = {
   gestureId: 'gestureId',
   choiceText: 'choiceText',
   imageUrl: 'imageUrl',
-  displayOrder: 'displayOrder'
+  displayOrder: 'displayOrder',
+  isCorrect: 'isCorrect'
 } as const
 
 export type QuestionChoiceScalarFieldEnum = (typeof QuestionChoiceScalarFieldEnum)[keyof typeof QuestionChoiceScalarFieldEnum]

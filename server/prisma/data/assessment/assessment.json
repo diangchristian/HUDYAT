@@ -1,0 +1,30 @@
+[
+  {
+    "category": "Alphabet",
+    "title": "Alphabet Assessment",
+    "description": "Assess the learner's knowledge of the Filipino Sign Language alphabet.",
+    "passing_score": 80,
+    "status": "PUBLISHED"
+  },
+  {
+    "category": "Numbers",
+    "title": "Numbers Assessment",
+    "description": "Assess the learner's knowledge of numbers one to ten in Filipino Sign Language.",
+    "passing_score": 80,
+    "status": "PUBLISHED"
+  },
+  {
+    "category": "Calendar",
+    "title": "Calendar Assessment",
+    "description": "Assess the learner's knowledge of the months of the year in Filipino Sign Language.",
+    "passing_score": 80,
+    "status": "PUBLISHED"
+  },
+  {
+    "category": "Greetings",
+    "title": "Greetings Assessment",
+    "description": "Assess the learner's knowledge of common Filipino Sign Language greetings.",
+    "passing_score": 80,
+    "status": "PUBLISHED"
+  }
+]
