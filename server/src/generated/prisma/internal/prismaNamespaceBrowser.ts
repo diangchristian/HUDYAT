@@ -268,7 +268,9 @@ export const CategoryProgressScalarFieldEnum = {
   startedAt: 'startedAt',
   completedAt: 'completedAt',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  lastGestureIndex: 'lastGestureIndex',
+  lastLessonStep: 'lastLessonStep'
 } as const
 
 export type CategoryProgressScalarFieldEnum = (typeof CategoryProgressScalarFieldEnum)[keyof typeof CategoryProgressScalarFieldEnum]

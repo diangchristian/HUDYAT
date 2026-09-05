@@ -236,9 +236,9 @@ export type AssessmentAttemptWhereInput = {
   totalPoints?: Prisma.DecimalFilter<"AssessmentAttempt"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   startedAt?: Prisma.DateTimeFilter<"AssessmentAttempt"> | Date | string
   completedAt?: Prisma.DateTimeNullableFilter<"AssessmentAttempt"> | Date | string | null
+  answers?: Prisma.AssessmentAnswerListRelationFilter
   assessment?: Prisma.XOR<Prisma.AssessmentScalarRelationFilter, Prisma.AssessmentWhereInput>
   learner?: Prisma.XOR<Prisma.LearnerProfileScalarRelationFilter, Prisma.LearnerProfileWhereInput>
-  answers?: Prisma.AssessmentAnswerListRelationFilter
 }
 
 export type AssessmentAttemptOrderByWithRelationInput = {
@@ -249,9 +249,9 @@ export type AssessmentAttemptOrderByWithRelationInput = {
   totalPoints?: Prisma.SortOrder
   startedAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  answers?: Prisma.AssessmentAnswerOrderByRelationAggregateInput
   assessment?: Prisma.AssessmentOrderByWithRelationInput
   learner?: Prisma.LearnerProfileOrderByWithRelationInput
-  answers?: Prisma.AssessmentAnswerOrderByRelationAggregateInput
 }
 
 export type AssessmentAttemptWhereUniqueInput = Prisma.AtLeast<{
@@ -265,9 +265,9 @@ export type AssessmentAttemptWhereUniqueInput = Prisma.AtLeast<{
   totalPoints?: Prisma.DecimalFilter<"AssessmentAttempt"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   startedAt?: Prisma.DateTimeFilter<"AssessmentAttempt"> | Date | string
   completedAt?: Prisma.DateTimeNullableFilter<"AssessmentAttempt"> | Date | string | null
+  answers?: Prisma.AssessmentAnswerListRelationFilter
   assessment?: Prisma.XOR<Prisma.AssessmentScalarRelationFilter, Prisma.AssessmentWhereInput>
   learner?: Prisma.XOR<Prisma.LearnerProfileScalarRelationFilter, Prisma.LearnerProfileWhereInput>
-  answers?: Prisma.AssessmentAnswerListRelationFilter
 }, "id">
 
 export type AssessmentAttemptOrderByWithAggregationInput = {
@@ -304,9 +304,9 @@ export type AssessmentAttemptCreateInput = {
   totalPoints?: runtime.Decimal | runtime.DecimalJsLike | number | string
   startedAt?: Date | string
   completedAt?: Date | string | null
+  answers?: Prisma.AssessmentAnswerCreateNestedManyWithoutAttemptInput
   assessment: Prisma.AssessmentCreateNestedOneWithoutAssessmentAttemptsInput
   learner: Prisma.LearnerProfileCreateNestedOneWithoutAssessmentAttemptsInput
-  answers?: Prisma.AssessmentAnswerCreateNestedManyWithoutAttemptInput
 }
 
 export type AssessmentAttemptUncheckedCreateInput = {
@@ -326,9 +326,9 @@ export type AssessmentAttemptUpdateInput = {
   totalPoints?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  answers?: Prisma.AssessmentAnswerUpdateManyWithoutAttemptNestedInput
   assessment?: Prisma.AssessmentUpdateOneRequiredWithoutAssessmentAttemptsNestedInput
   learner?: Prisma.LearnerProfileUpdateOneRequiredWithoutAssessmentAttemptsNestedInput
-  answers?: Prisma.AssessmentAnswerUpdateManyWithoutAttemptNestedInput
 }
 
 export type AssessmentAttemptUncheckedUpdateInput = {
@@ -533,8 +533,8 @@ export type AssessmentAttemptCreateWithoutLearnerInput = {
   totalPoints?: runtime.Decimal | runtime.DecimalJsLike | number | string
   startedAt?: Date | string
   completedAt?: Date | string | null
-  assessment: Prisma.AssessmentCreateNestedOneWithoutAssessmentAttemptsInput
   answers?: Prisma.AssessmentAnswerCreateNestedManyWithoutAttemptInput
+  assessment: Prisma.AssessmentCreateNestedOneWithoutAssessmentAttemptsInput
 }
 
 export type AssessmentAttemptUncheckedCreateWithoutLearnerInput = {
@@ -592,8 +592,8 @@ export type AssessmentAttemptCreateWithoutAssessmentInput = {
   totalPoints?: runtime.Decimal | runtime.DecimalJsLike | number | string
   startedAt?: Date | string
   completedAt?: Date | string | null
-  learner: Prisma.LearnerProfileCreateNestedOneWithoutAssessmentAttemptsInput
   answers?: Prisma.AssessmentAnswerCreateNestedManyWithoutAttemptInput
+  learner: Prisma.LearnerProfileCreateNestedOneWithoutAssessmentAttemptsInput
 }
 
 export type AssessmentAttemptUncheckedCreateWithoutAssessmentInput = {
@@ -703,8 +703,8 @@ export type AssessmentAttemptUpdateWithoutLearnerInput = {
   totalPoints?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  assessment?: Prisma.AssessmentUpdateOneRequiredWithoutAssessmentAttemptsNestedInput
   answers?: Prisma.AssessmentAnswerUpdateManyWithoutAttemptNestedInput
+  assessment?: Prisma.AssessmentUpdateOneRequiredWithoutAssessmentAttemptsNestedInput
 }
 
 export type AssessmentAttemptUncheckedUpdateWithoutLearnerInput = {
@@ -741,8 +741,8 @@ export type AssessmentAttemptUpdateWithoutAssessmentInput = {
   totalPoints?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  learner?: Prisma.LearnerProfileUpdateOneRequiredWithoutAssessmentAttemptsNestedInput
   answers?: Prisma.AssessmentAnswerUpdateManyWithoutAttemptNestedInput
+  learner?: Prisma.LearnerProfileUpdateOneRequiredWithoutAssessmentAttemptsNestedInput
 }
 
 export type AssessmentAttemptUncheckedUpdateWithoutAssessmentInput = {
@@ -803,9 +803,9 @@ export type AssessmentAttemptSelect<ExtArgs extends runtime.Types.Extensions.Int
   totalPoints?: boolean
   startedAt?: boolean
   completedAt?: boolean
+  answers?: boolean | Prisma.AssessmentAttempt$answersArgs<ExtArgs>
   assessment?: boolean | Prisma.AssessmentDefaultArgs<ExtArgs>
   learner?: boolean | Prisma.LearnerProfileDefaultArgs<ExtArgs>
-  answers?: boolean | Prisma.AssessmentAttempt$answersArgs<ExtArgs>
   _count?: boolean | Prisma.AssessmentAttemptCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["assessmentAttempt"]>
 
@@ -845,9 +845,9 @@ export type AssessmentAttemptSelectScalar = {
 
 export type AssessmentAttemptOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "assessmentId" | "learnerId" | "score" | "totalPoints" | "startedAt" | "completedAt", ExtArgs["result"]["assessmentAttempt"]>
 export type AssessmentAttemptInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  answers?: boolean | Prisma.AssessmentAttempt$answersArgs<ExtArgs>
   assessment?: boolean | Prisma.AssessmentDefaultArgs<ExtArgs>
   learner?: boolean | Prisma.LearnerProfileDefaultArgs<ExtArgs>
-  answers?: boolean | Prisma.AssessmentAttempt$answersArgs<ExtArgs>
   _count?: boolean | Prisma.AssessmentAttemptCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type AssessmentAttemptIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -862,9 +862,9 @@ export type AssessmentAttemptIncludeUpdateManyAndReturn<ExtArgs extends runtime.
 export type $AssessmentAttemptPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "AssessmentAttempt"
   objects: {
+    answers: Prisma.$AssessmentAnswerPayload<ExtArgs>[]
     assessment: Prisma.$AssessmentPayload<ExtArgs>
     learner: Prisma.$LearnerProfilePayload<ExtArgs>
-    answers: Prisma.$AssessmentAnswerPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1268,9 +1268,9 @@ readonly fields: AssessmentAttemptFieldRefs;
  */
 export interface Prisma__AssessmentAttemptClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  answers<T extends Prisma.AssessmentAttempt$answersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AssessmentAttempt$answersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AssessmentAnswerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   assessment<T extends Prisma.AssessmentDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AssessmentDefaultArgs<ExtArgs>>): Prisma.Prisma__AssessmentClient<runtime.Types.Result.GetResult<Prisma.$AssessmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   learner<T extends Prisma.LearnerProfileDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LearnerProfileDefaultArgs<ExtArgs>>): Prisma.Prisma__LearnerProfileClient<runtime.Types.Result.GetResult<Prisma.$LearnerProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  answers<T extends Prisma.AssessmentAttempt$answersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AssessmentAttempt$answersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AssessmentAnswerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.

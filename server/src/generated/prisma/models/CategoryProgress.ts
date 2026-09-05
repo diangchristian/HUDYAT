@@ -20,8 +20,18 @@ export type CategoryProgressModel = runtime.Types.Result.DefaultSelection<Prisma
 
 export type AggregateCategoryProgress = {
   _count: CategoryProgressCountAggregateOutputType | null
+  _avg: CategoryProgressAvgAggregateOutputType | null
+  _sum: CategoryProgressSumAggregateOutputType | null
   _min: CategoryProgressMinAggregateOutputType | null
   _max: CategoryProgressMaxAggregateOutputType | null
+}
+
+export type CategoryProgressAvgAggregateOutputType = {
+  lastGestureIndex: number | null
+}
+
+export type CategoryProgressSumAggregateOutputType = {
+  lastGestureIndex: number | null
 }
 
 export type CategoryProgressMinAggregateOutputType = {
@@ -33,6 +43,8 @@ export type CategoryProgressMinAggregateOutputType = {
   completedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
+  lastGestureIndex: number | null
+  lastLessonStep: string | null
 }
 
 export type CategoryProgressMaxAggregateOutputType = {
@@ -44,6 +56,8 @@ export type CategoryProgressMaxAggregateOutputType = {
   completedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
+  lastGestureIndex: number | null
+  lastLessonStep: string | null
 }
 
 export type CategoryProgressCountAggregateOutputType = {
@@ -55,9 +69,19 @@ export type CategoryProgressCountAggregateOutputType = {
   completedAt: number
   createdAt: number
   updatedAt: number
+  lastGestureIndex: number
+  lastLessonStep: number
   _all: number
 }
 
+
+export type CategoryProgressAvgAggregateInputType = {
+  lastGestureIndex?: true
+}
+
+export type CategoryProgressSumAggregateInputType = {
+  lastGestureIndex?: true
+}
 
 export type CategoryProgressMinAggregateInputType = {
   id?: true
@@ -68,6 +92,8 @@ export type CategoryProgressMinAggregateInputType = {
   completedAt?: true
   createdAt?: true
   updatedAt?: true
+  lastGestureIndex?: true
+  lastLessonStep?: true
 }
 
 export type CategoryProgressMaxAggregateInputType = {
@@ -79,6 +105,8 @@ export type CategoryProgressMaxAggregateInputType = {
   completedAt?: true
   createdAt?: true
   updatedAt?: true
+  lastGestureIndex?: true
+  lastLessonStep?: true
 }
 
 export type CategoryProgressCountAggregateInputType = {
@@ -90,6 +118,8 @@ export type CategoryProgressCountAggregateInputType = {
   completedAt?: true
   createdAt?: true
   updatedAt?: true
+  lastGestureIndex?: true
+  lastLessonStep?: true
   _all?: true
 }
 
@@ -131,6 +161,18 @@ export type CategoryProgressAggregateArgs<ExtArgs extends runtime.Types.Extensio
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: CategoryProgressAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: CategoryProgressSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: CategoryProgressMinAggregateInputType
@@ -161,6 +203,8 @@ export type CategoryProgressGroupByArgs<ExtArgs extends runtime.Types.Extensions
   take?: number
   skip?: number
   _count?: CategoryProgressCountAggregateInputType | true
+  _avg?: CategoryProgressAvgAggregateInputType
+  _sum?: CategoryProgressSumAggregateInputType
   _min?: CategoryProgressMinAggregateInputType
   _max?: CategoryProgressMaxAggregateInputType
 }
@@ -174,7 +218,11 @@ export type CategoryProgressGroupByOutputType = {
   completedAt: Date | null
   createdAt: Date
   updatedAt: Date
+  lastGestureIndex: number
+  lastLessonStep: string | null
   _count: CategoryProgressCountAggregateOutputType | null
+  _avg: CategoryProgressAvgAggregateOutputType | null
+  _sum: CategoryProgressSumAggregateOutputType | null
   _min: CategoryProgressMinAggregateOutputType | null
   _max: CategoryProgressMaxAggregateOutputType | null
 }
@@ -206,8 +254,10 @@ export type CategoryProgressWhereInput = {
   completedAt?: Prisma.DateTimeNullableFilter<"CategoryProgress"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"CategoryProgress"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CategoryProgress"> | Date | string
-  learner?: Prisma.XOR<Prisma.LearnerProfileScalarRelationFilter, Prisma.LearnerProfileWhereInput>
+  lastGestureIndex?: Prisma.IntFilter<"CategoryProgress"> | number
+  lastLessonStep?: Prisma.StringNullableFilter<"CategoryProgress"> | string | null
   category?: Prisma.XOR<Prisma.CategoryScalarRelationFilter, Prisma.CategoryWhereInput>
+  learner?: Prisma.XOR<Prisma.LearnerProfileScalarRelationFilter, Prisma.LearnerProfileWhereInput>
 }
 
 export type CategoryProgressOrderByWithRelationInput = {
@@ -219,8 +269,10 @@ export type CategoryProgressOrderByWithRelationInput = {
   completedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  learner?: Prisma.LearnerProfileOrderByWithRelationInput
+  lastGestureIndex?: Prisma.SortOrder
+  lastLessonStep?: Prisma.SortOrderInput | Prisma.SortOrder
   category?: Prisma.CategoryOrderByWithRelationInput
+  learner?: Prisma.LearnerProfileOrderByWithRelationInput
 }
 
 export type CategoryProgressWhereUniqueInput = Prisma.AtLeast<{
@@ -236,8 +288,10 @@ export type CategoryProgressWhereUniqueInput = Prisma.AtLeast<{
   completedAt?: Prisma.DateTimeNullableFilter<"CategoryProgress"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"CategoryProgress"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CategoryProgress"> | Date | string
-  learner?: Prisma.XOR<Prisma.LearnerProfileScalarRelationFilter, Prisma.LearnerProfileWhereInput>
+  lastGestureIndex?: Prisma.IntFilter<"CategoryProgress"> | number
+  lastLessonStep?: Prisma.StringNullableFilter<"CategoryProgress"> | string | null
   category?: Prisma.XOR<Prisma.CategoryScalarRelationFilter, Prisma.CategoryWhereInput>
+  learner?: Prisma.XOR<Prisma.LearnerProfileScalarRelationFilter, Prisma.LearnerProfileWhereInput>
 }, "id" | "learnerId_categoryId">
 
 export type CategoryProgressOrderByWithAggregationInput = {
@@ -249,9 +303,13 @@ export type CategoryProgressOrderByWithAggregationInput = {
   completedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  lastGestureIndex?: Prisma.SortOrder
+  lastLessonStep?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.CategoryProgressCountOrderByAggregateInput
+  _avg?: Prisma.CategoryProgressAvgOrderByAggregateInput
   _max?: Prisma.CategoryProgressMaxOrderByAggregateInput
   _min?: Prisma.CategoryProgressMinOrderByAggregateInput
+  _sum?: Prisma.CategoryProgressSumOrderByAggregateInput
 }
 
 export type CategoryProgressScalarWhereWithAggregatesInput = {
@@ -266,6 +324,8 @@ export type CategoryProgressScalarWhereWithAggregatesInput = {
   completedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"CategoryProgress"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"CategoryProgress"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"CategoryProgress"> | Date | string
+  lastGestureIndex?: Prisma.IntWithAggregatesFilter<"CategoryProgress"> | number
+  lastLessonStep?: Prisma.StringNullableWithAggregatesFilter<"CategoryProgress"> | string | null
 }
 
 export type CategoryProgressCreateInput = {
@@ -275,8 +335,10 @@ export type CategoryProgressCreateInput = {
   completedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  learner: Prisma.LearnerProfileCreateNestedOneWithoutCategoryProgressInput
+  lastGestureIndex?: number
+  lastLessonStep?: string | null
   category: Prisma.CategoryCreateNestedOneWithoutProgressInput
+  learner: Prisma.LearnerProfileCreateNestedOneWithoutCategoryProgressInput
 }
 
 export type CategoryProgressUncheckedCreateInput = {
@@ -288,6 +350,8 @@ export type CategoryProgressUncheckedCreateInput = {
   completedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  lastGestureIndex?: number
+  lastLessonStep?: string | null
 }
 
 export type CategoryProgressUpdateInput = {
@@ -297,8 +361,10 @@ export type CategoryProgressUpdateInput = {
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  learner?: Prisma.LearnerProfileUpdateOneRequiredWithoutCategoryProgressNestedInput
+  lastGestureIndex?: Prisma.IntFieldUpdateOperationsInput | number
+  lastLessonStep?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   category?: Prisma.CategoryUpdateOneRequiredWithoutProgressNestedInput
+  learner?: Prisma.LearnerProfileUpdateOneRequiredWithoutCategoryProgressNestedInput
 }
 
 export type CategoryProgressUncheckedUpdateInput = {
@@ -310,6 +376,8 @@ export type CategoryProgressUncheckedUpdateInput = {
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastGestureIndex?: Prisma.IntFieldUpdateOperationsInput | number
+  lastLessonStep?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type CategoryProgressCreateManyInput = {
@@ -321,6 +389,8 @@ export type CategoryProgressCreateManyInput = {
   completedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  lastGestureIndex?: number
+  lastLessonStep?: string | null
 }
 
 export type CategoryProgressUpdateManyMutationInput = {
@@ -330,6 +400,8 @@ export type CategoryProgressUpdateManyMutationInput = {
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastGestureIndex?: Prisma.IntFieldUpdateOperationsInput | number
+  lastLessonStep?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type CategoryProgressUncheckedUpdateManyInput = {
@@ -341,6 +413,8 @@ export type CategoryProgressUncheckedUpdateManyInput = {
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastGestureIndex?: Prisma.IntFieldUpdateOperationsInput | number
+  lastLessonStep?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type CategoryProgressListRelationFilter = {
@@ -367,6 +441,12 @@ export type CategoryProgressCountOrderByAggregateInput = {
   completedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  lastGestureIndex?: Prisma.SortOrder
+  lastLessonStep?: Prisma.SortOrder
+}
+
+export type CategoryProgressAvgOrderByAggregateInput = {
+  lastGestureIndex?: Prisma.SortOrder
 }
 
 export type CategoryProgressMaxOrderByAggregateInput = {
@@ -378,6 +458,8 @@ export type CategoryProgressMaxOrderByAggregateInput = {
   completedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  lastGestureIndex?: Prisma.SortOrder
+  lastLessonStep?: Prisma.SortOrder
 }
 
 export type CategoryProgressMinOrderByAggregateInput = {
@@ -389,6 +471,12 @@ export type CategoryProgressMinOrderByAggregateInput = {
   completedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  lastGestureIndex?: Prisma.SortOrder
+  lastLessonStep?: Prisma.SortOrder
+}
+
+export type CategoryProgressSumOrderByAggregateInput = {
+  lastGestureIndex?: Prisma.SortOrder
 }
 
 export type CategoryProgressCreateNestedManyWithoutLearnerInput = {
@@ -486,6 +574,8 @@ export type CategoryProgressCreateWithoutLearnerInput = {
   completedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  lastGestureIndex?: number
+  lastLessonStep?: string | null
   category: Prisma.CategoryCreateNestedOneWithoutProgressInput
 }
 
@@ -497,6 +587,8 @@ export type CategoryProgressUncheckedCreateWithoutLearnerInput = {
   completedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  lastGestureIndex?: number
+  lastLessonStep?: string | null
 }
 
 export type CategoryProgressCreateOrConnectWithoutLearnerInput = {
@@ -537,6 +629,8 @@ export type CategoryProgressScalarWhereInput = {
   completedAt?: Prisma.DateTimeNullableFilter<"CategoryProgress"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"CategoryProgress"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CategoryProgress"> | Date | string
+  lastGestureIndex?: Prisma.IntFilter<"CategoryProgress"> | number
+  lastLessonStep?: Prisma.StringNullableFilter<"CategoryProgress"> | string | null
 }
 
 export type CategoryProgressCreateWithoutCategoryInput = {
@@ -546,6 +640,8 @@ export type CategoryProgressCreateWithoutCategoryInput = {
   completedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  lastGestureIndex?: number
+  lastLessonStep?: string | null
   learner: Prisma.LearnerProfileCreateNestedOneWithoutCategoryProgressInput
 }
 
@@ -557,6 +653,8 @@ export type CategoryProgressUncheckedCreateWithoutCategoryInput = {
   completedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  lastGestureIndex?: number
+  lastLessonStep?: string | null
 }
 
 export type CategoryProgressCreateOrConnectWithoutCategoryInput = {
@@ -593,6 +691,8 @@ export type CategoryProgressCreateManyLearnerInput = {
   completedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  lastGestureIndex?: number
+  lastLessonStep?: string | null
 }
 
 export type CategoryProgressUpdateWithoutLearnerInput = {
@@ -602,6 +702,8 @@ export type CategoryProgressUpdateWithoutLearnerInput = {
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastGestureIndex?: Prisma.IntFieldUpdateOperationsInput | number
+  lastLessonStep?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   category?: Prisma.CategoryUpdateOneRequiredWithoutProgressNestedInput
 }
 
@@ -613,6 +715,8 @@ export type CategoryProgressUncheckedUpdateWithoutLearnerInput = {
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastGestureIndex?: Prisma.IntFieldUpdateOperationsInput | number
+  lastLessonStep?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type CategoryProgressUncheckedUpdateManyWithoutLearnerInput = {
@@ -623,6 +727,8 @@ export type CategoryProgressUncheckedUpdateManyWithoutLearnerInput = {
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastGestureIndex?: Prisma.IntFieldUpdateOperationsInput | number
+  lastLessonStep?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type CategoryProgressCreateManyCategoryInput = {
@@ -633,6 +739,8 @@ export type CategoryProgressCreateManyCategoryInput = {
   completedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  lastGestureIndex?: number
+  lastLessonStep?: string | null
 }
 
 export type CategoryProgressUpdateWithoutCategoryInput = {
@@ -642,6 +750,8 @@ export type CategoryProgressUpdateWithoutCategoryInput = {
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastGestureIndex?: Prisma.IntFieldUpdateOperationsInput | number
+  lastLessonStep?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   learner?: Prisma.LearnerProfileUpdateOneRequiredWithoutCategoryProgressNestedInput
 }
 
@@ -653,6 +763,8 @@ export type CategoryProgressUncheckedUpdateWithoutCategoryInput = {
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastGestureIndex?: Prisma.IntFieldUpdateOperationsInput | number
+  lastLessonStep?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type CategoryProgressUncheckedUpdateManyWithoutCategoryInput = {
@@ -663,6 +775,8 @@ export type CategoryProgressUncheckedUpdateManyWithoutCategoryInput = {
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastGestureIndex?: Prisma.IntFieldUpdateOperationsInput | number
+  lastLessonStep?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -676,8 +790,10 @@ export type CategoryProgressSelect<ExtArgs extends runtime.Types.Extensions.Inte
   completedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  learner?: boolean | Prisma.LearnerProfileDefaultArgs<ExtArgs>
+  lastGestureIndex?: boolean
+  lastLessonStep?: boolean
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
+  learner?: boolean | Prisma.LearnerProfileDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["categoryProgress"]>
 
 export type CategoryProgressSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -689,8 +805,10 @@ export type CategoryProgressSelectCreateManyAndReturn<ExtArgs extends runtime.Ty
   completedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  learner?: boolean | Prisma.LearnerProfileDefaultArgs<ExtArgs>
+  lastGestureIndex?: boolean
+  lastLessonStep?: boolean
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
+  learner?: boolean | Prisma.LearnerProfileDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["categoryProgress"]>
 
 export type CategoryProgressSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -702,8 +820,10 @@ export type CategoryProgressSelectUpdateManyAndReturn<ExtArgs extends runtime.Ty
   completedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  learner?: boolean | Prisma.LearnerProfileDefaultArgs<ExtArgs>
+  lastGestureIndex?: boolean
+  lastLessonStep?: boolean
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
+  learner?: boolean | Prisma.LearnerProfileDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["categoryProgress"]>
 
 export type CategoryProgressSelectScalar = {
@@ -715,27 +835,29 @@ export type CategoryProgressSelectScalar = {
   completedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  lastGestureIndex?: boolean
+  lastLessonStep?: boolean
 }
 
-export type CategoryProgressOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "learnerId" | "categoryId" | "status" | "startedAt" | "completedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["categoryProgress"]>
+export type CategoryProgressOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "learnerId" | "categoryId" | "status" | "startedAt" | "completedAt" | "createdAt" | "updatedAt" | "lastGestureIndex" | "lastLessonStep", ExtArgs["result"]["categoryProgress"]>
 export type CategoryProgressInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  learner?: boolean | Prisma.LearnerProfileDefaultArgs<ExtArgs>
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
+  learner?: boolean | Prisma.LearnerProfileDefaultArgs<ExtArgs>
 }
 export type CategoryProgressIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  learner?: boolean | Prisma.LearnerProfileDefaultArgs<ExtArgs>
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
+  learner?: boolean | Prisma.LearnerProfileDefaultArgs<ExtArgs>
 }
 export type CategoryProgressIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  learner?: boolean | Prisma.LearnerProfileDefaultArgs<ExtArgs>
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
+  learner?: boolean | Prisma.LearnerProfileDefaultArgs<ExtArgs>
 }
 
 export type $CategoryProgressPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "CategoryProgress"
   objects: {
-    learner: Prisma.$LearnerProfilePayload<ExtArgs>
     category: Prisma.$CategoryPayload<ExtArgs>
+    learner: Prisma.$LearnerProfilePayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -746,6 +868,8 @@ export type $CategoryProgressPayload<ExtArgs extends runtime.Types.Extensions.In
     completedAt: Date | null
     createdAt: Date
     updatedAt: Date
+    lastGestureIndex: number
+    lastLessonStep: string | null
   }, ExtArgs["result"]["categoryProgress"]>
   composites: {}
 }
@@ -1140,8 +1264,8 @@ readonly fields: CategoryProgressFieldRefs;
  */
 export interface Prisma__CategoryProgressClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  learner<T extends Prisma.LearnerProfileDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LearnerProfileDefaultArgs<ExtArgs>>): Prisma.Prisma__LearnerProfileClient<runtime.Types.Result.GetResult<Prisma.$LearnerProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   category<T extends Prisma.CategoryDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CategoryDefaultArgs<ExtArgs>>): Prisma.Prisma__CategoryClient<runtime.Types.Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  learner<T extends Prisma.LearnerProfileDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LearnerProfileDefaultArgs<ExtArgs>>): Prisma.Prisma__LearnerProfileClient<runtime.Types.Result.GetResult<Prisma.$LearnerProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1179,6 +1303,8 @@ export interface CategoryProgressFieldRefs {
   readonly completedAt: Prisma.FieldRef<"CategoryProgress", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"CategoryProgress", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"CategoryProgress", 'DateTime'>
+  readonly lastGestureIndex: Prisma.FieldRef<"CategoryProgress", 'Int'>
+  readonly lastLessonStep: Prisma.FieldRef<"CategoryProgress", 'String'>
 }
     
 

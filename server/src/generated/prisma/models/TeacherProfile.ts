@@ -198,8 +198,8 @@ export type TeacherProfileWhereInput = {
   dateJoined?: Prisma.DateTimeFilter<"TeacherProfile"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"TeacherProfile"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"TeacherProfile"> | Date | string
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   assessments?: Prisma.AssessmentListRelationFilter
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
 export type TeacherProfileOrderByWithRelationInput = {
@@ -210,8 +210,8 @@ export type TeacherProfileOrderByWithRelationInput = {
   dateJoined?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  user?: Prisma.UserOrderByWithRelationInput
   assessments?: Prisma.AssessmentOrderByRelationAggregateInput
+  user?: Prisma.UserOrderByWithRelationInput
 }
 
 export type TeacherProfileWhereUniqueInput = Prisma.AtLeast<{
@@ -225,8 +225,8 @@ export type TeacherProfileWhereUniqueInput = Prisma.AtLeast<{
   dateJoined?: Prisma.DateTimeFilter<"TeacherProfile"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"TeacherProfile"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"TeacherProfile"> | Date | string
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   assessments?: Prisma.AssessmentListRelationFilter
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "userId" | "email">
 
 export type TeacherProfileOrderByWithAggregationInput = {
@@ -262,8 +262,8 @@ export type TeacherProfileCreateInput = {
   dateJoined?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutTeacherProfileInput
   assessments?: Prisma.AssessmentCreateNestedManyWithoutTeacherInput
+  user: Prisma.UserCreateNestedOneWithoutTeacherProfileInput
 }
 
 export type TeacherProfileUncheckedCreateInput = {
@@ -284,8 +284,8 @@ export type TeacherProfileUpdateInput = {
   dateJoined?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutTeacherProfileNestedInput
   assessments?: Prisma.AssessmentUpdateManyWithoutTeacherNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutTeacherProfileNestedInput
 }
 
 export type TeacherProfileUncheckedUpdateInput = {
@@ -565,8 +565,8 @@ export type TeacherProfileSelect<ExtArgs extends runtime.Types.Extensions.Intern
   dateJoined?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   assessments?: boolean | Prisma.TeacherProfile$assessmentsArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.TeacherProfileCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["teacherProfile"]>
 
@@ -604,8 +604,8 @@ export type TeacherProfileSelectScalar = {
 
 export type TeacherProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"userId" | "fullName" | "email" | "contactNumber" | "dateJoined" | "createdAt" | "updatedAt", ExtArgs["result"]["teacherProfile"]>
 export type TeacherProfileInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   assessments?: boolean | Prisma.TeacherProfile$assessmentsArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.TeacherProfileCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type TeacherProfileIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -618,8 +618,8 @@ export type TeacherProfileIncludeUpdateManyAndReturn<ExtArgs extends runtime.Typ
 export type $TeacherProfilePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "TeacherProfile"
   objects: {
-    user: Prisma.$UserPayload<ExtArgs>
     assessments: Prisma.$AssessmentPayload<ExtArgs>[]
+    user: Prisma.$UserPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     userId: string
@@ -1023,8 +1023,8 @@ readonly fields: TeacherProfileFieldRefs;
  */
 export interface Prisma__TeacherProfileClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   assessments<T extends Prisma.TeacherProfile$assessmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TeacherProfile$assessmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AssessmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.

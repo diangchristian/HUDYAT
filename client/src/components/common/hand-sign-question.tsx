@@ -6,16 +6,18 @@ type HandSignAnswer = {
 };
 
 type HandSignQuestionProps = {
-  title: string;
-  answers: HandSignAnswer[];
-  correctAnswer: string;
-  selectedAnswer: string | null;
-  checked: boolean;
-  onSelect: (answer: string) => void;
+  title?: string;
+  imageUrl?: string;
+  answers?: HandSignAnswer[];
+  correctAnswer?: string;
+  selectedAnswer?: string | null;
+  checked?: boolean;
+  onSelect?: (answer: string) => void;
 };
 
 const HandSignQuestion = ({
   title,
+  imageUrl,
   answers,
   correctAnswer,
   selectedAnswer,
@@ -25,11 +27,19 @@ const HandSignQuestion = ({
   return (
     <>
       <h1 className="shrink-0 text-2xl font-extrabold leading-tight sm:text-3xl">
-        {title}
+        {title ?? "Reference sign"}
       </h1>
 
+      {imageUrl && (
+        <img
+          src={imageUrl}
+          alt="Reference sign"
+          className="mx-auto mt-6 max-h-64 rounded-lg object-contain"
+        />
+      )}
+
       <div className="mt-8 grid grid-cols-1 gap-3 sm:mt-10 sm:gap-4 lg:mt-12 lg:grid-cols-3 lg:gap-6">
-        {answers.map((answer) => {
+        {(answers ?? []).map((answer) => {
           const isSelected = selectedAnswer === answer.label;
           const isCorrect = answer.label === correctAnswer;
           const answerStyle = checked
@@ -48,7 +58,7 @@ const HandSignQuestion = ({
               type="button"
               aria-label={`Answer ${answer.label}`}
               aria-pressed={isSelected}
-              onClick={() => !checked && onSelect(answer.label)}
+              onClick={() => !checked && onSelect?.(answer.label)}
               disabled={checked}
               className={`relative flex h-24 w-full items-center justify-center rounded-xl border-2 p-4 transition-all sm:h-32 md:h-40 lg:h-60 ${checked && !isSelected && isCorrect ? "animate-bounce" : ""} ${answerStyle}`}
             >

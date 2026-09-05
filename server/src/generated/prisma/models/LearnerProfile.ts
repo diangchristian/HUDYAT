@@ -182,10 +182,10 @@ export type LearnerProfileWhereInput = {
   dateJoined?: Prisma.DateTimeFilter<"LearnerProfile"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"LearnerProfile"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"LearnerProfile"> | Date | string
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   assessmentAttempts?: Prisma.AssessmentAttemptListRelationFilter
-  practiceSessions?: Prisma.PracticeSessionListRelationFilter
   categoryProgress?: Prisma.CategoryProgressListRelationFilter
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  practiceSessions?: Prisma.PracticeSessionListRelationFilter
 }
 
 export type LearnerProfileOrderByWithRelationInput = {
@@ -194,10 +194,10 @@ export type LearnerProfileOrderByWithRelationInput = {
   dateJoined?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  user?: Prisma.UserOrderByWithRelationInput
   assessmentAttempts?: Prisma.AssessmentAttemptOrderByRelationAggregateInput
-  practiceSessions?: Prisma.PracticeSessionOrderByRelationAggregateInput
   categoryProgress?: Prisma.CategoryProgressOrderByRelationAggregateInput
+  user?: Prisma.UserOrderByWithRelationInput
+  practiceSessions?: Prisma.PracticeSessionOrderByRelationAggregateInput
 }
 
 export type LearnerProfileWhereUniqueInput = Prisma.AtLeast<{
@@ -209,10 +209,10 @@ export type LearnerProfileWhereUniqueInput = Prisma.AtLeast<{
   dateJoined?: Prisma.DateTimeFilter<"LearnerProfile"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"LearnerProfile"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"LearnerProfile"> | Date | string
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   assessmentAttempts?: Prisma.AssessmentAttemptListRelationFilter
-  practiceSessions?: Prisma.PracticeSessionListRelationFilter
   categoryProgress?: Prisma.CategoryProgressListRelationFilter
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  practiceSessions?: Prisma.PracticeSessionListRelationFilter
 }, "userId">
 
 export type LearnerProfileOrderByWithAggregationInput = {
@@ -242,10 +242,10 @@ export type LearnerProfileCreateInput = {
   dateJoined?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutLearnerProfileInput
   assessmentAttempts?: Prisma.AssessmentAttemptCreateNestedManyWithoutLearnerInput
-  practiceSessions?: Prisma.PracticeSessionCreateNestedManyWithoutLearnerInput
   categoryProgress?: Prisma.CategoryProgressCreateNestedManyWithoutLearnerInput
+  user: Prisma.UserCreateNestedOneWithoutLearnerProfileInput
+  practiceSessions?: Prisma.PracticeSessionCreateNestedManyWithoutLearnerInput
 }
 
 export type LearnerProfileUncheckedCreateInput = {
@@ -255,8 +255,8 @@ export type LearnerProfileUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   assessmentAttempts?: Prisma.AssessmentAttemptUncheckedCreateNestedManyWithoutLearnerInput
-  practiceSessions?: Prisma.PracticeSessionUncheckedCreateNestedManyWithoutLearnerInput
   categoryProgress?: Prisma.CategoryProgressUncheckedCreateNestedManyWithoutLearnerInput
+  practiceSessions?: Prisma.PracticeSessionUncheckedCreateNestedManyWithoutLearnerInput
 }
 
 export type LearnerProfileUpdateInput = {
@@ -264,10 +264,10 @@ export type LearnerProfileUpdateInput = {
   dateJoined?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutLearnerProfileNestedInput
   assessmentAttempts?: Prisma.AssessmentAttemptUpdateManyWithoutLearnerNestedInput
-  practiceSessions?: Prisma.PracticeSessionUpdateManyWithoutLearnerNestedInput
   categoryProgress?: Prisma.CategoryProgressUpdateManyWithoutLearnerNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutLearnerProfileNestedInput
+  practiceSessions?: Prisma.PracticeSessionUpdateManyWithoutLearnerNestedInput
 }
 
 export type LearnerProfileUncheckedUpdateInput = {
@@ -277,8 +277,8 @@ export type LearnerProfileUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assessmentAttempts?: Prisma.AssessmentAttemptUncheckedUpdateManyWithoutLearnerNestedInput
-  practiceSessions?: Prisma.PracticeSessionUncheckedUpdateManyWithoutLearnerNestedInput
   categoryProgress?: Prisma.CategoryProgressUncheckedUpdateManyWithoutLearnerNestedInput
+  practiceSessions?: Prisma.PracticeSessionUncheckedUpdateManyWithoutLearnerNestedInput
 }
 
 export type LearnerProfileCreateManyInput = {
@@ -418,8 +418,8 @@ export type LearnerProfileCreateWithoutUserInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   assessmentAttempts?: Prisma.AssessmentAttemptCreateNestedManyWithoutLearnerInput
-  practiceSessions?: Prisma.PracticeSessionCreateNestedManyWithoutLearnerInput
   categoryProgress?: Prisma.CategoryProgressCreateNestedManyWithoutLearnerInput
+  practiceSessions?: Prisma.PracticeSessionCreateNestedManyWithoutLearnerInput
 }
 
 export type LearnerProfileUncheckedCreateWithoutUserInput = {
@@ -428,8 +428,8 @@ export type LearnerProfileUncheckedCreateWithoutUserInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   assessmentAttempts?: Prisma.AssessmentAttemptUncheckedCreateNestedManyWithoutLearnerInput
-  practiceSessions?: Prisma.PracticeSessionUncheckedCreateNestedManyWithoutLearnerInput
   categoryProgress?: Prisma.CategoryProgressUncheckedCreateNestedManyWithoutLearnerInput
+  practiceSessions?: Prisma.PracticeSessionUncheckedCreateNestedManyWithoutLearnerInput
 }
 
 export type LearnerProfileCreateOrConnectWithoutUserInput = {
@@ -454,8 +454,8 @@ export type LearnerProfileUpdateWithoutUserInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assessmentAttempts?: Prisma.AssessmentAttemptUpdateManyWithoutLearnerNestedInput
-  practiceSessions?: Prisma.PracticeSessionUpdateManyWithoutLearnerNestedInput
   categoryProgress?: Prisma.CategoryProgressUpdateManyWithoutLearnerNestedInput
+  practiceSessions?: Prisma.PracticeSessionUpdateManyWithoutLearnerNestedInput
 }
 
 export type LearnerProfileUncheckedUpdateWithoutUserInput = {
@@ -464,8 +464,8 @@ export type LearnerProfileUncheckedUpdateWithoutUserInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assessmentAttempts?: Prisma.AssessmentAttemptUncheckedUpdateManyWithoutLearnerNestedInput
-  practiceSessions?: Prisma.PracticeSessionUncheckedUpdateManyWithoutLearnerNestedInput
   categoryProgress?: Prisma.CategoryProgressUncheckedUpdateManyWithoutLearnerNestedInput
+  practiceSessions?: Prisma.PracticeSessionUncheckedUpdateManyWithoutLearnerNestedInput
 }
 
 export type LearnerProfileCreateWithoutAssessmentAttemptsInput = {
@@ -473,9 +473,9 @@ export type LearnerProfileCreateWithoutAssessmentAttemptsInput = {
   dateJoined?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
+  categoryProgress?: Prisma.CategoryProgressCreateNestedManyWithoutLearnerInput
   user: Prisma.UserCreateNestedOneWithoutLearnerProfileInput
   practiceSessions?: Prisma.PracticeSessionCreateNestedManyWithoutLearnerInput
-  categoryProgress?: Prisma.CategoryProgressCreateNestedManyWithoutLearnerInput
 }
 
 export type LearnerProfileUncheckedCreateWithoutAssessmentAttemptsInput = {
@@ -484,8 +484,8 @@ export type LearnerProfileUncheckedCreateWithoutAssessmentAttemptsInput = {
   dateJoined?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
-  practiceSessions?: Prisma.PracticeSessionUncheckedCreateNestedManyWithoutLearnerInput
   categoryProgress?: Prisma.CategoryProgressUncheckedCreateNestedManyWithoutLearnerInput
+  practiceSessions?: Prisma.PracticeSessionUncheckedCreateNestedManyWithoutLearnerInput
 }
 
 export type LearnerProfileCreateOrConnectWithoutAssessmentAttemptsInput = {
@@ -509,9 +509,9 @@ export type LearnerProfileUpdateWithoutAssessmentAttemptsInput = {
   dateJoined?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  categoryProgress?: Prisma.CategoryProgressUpdateManyWithoutLearnerNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutLearnerProfileNestedInput
   practiceSessions?: Prisma.PracticeSessionUpdateManyWithoutLearnerNestedInput
-  categoryProgress?: Prisma.CategoryProgressUpdateManyWithoutLearnerNestedInput
 }
 
 export type LearnerProfileUncheckedUpdateWithoutAssessmentAttemptsInput = {
@@ -520,8 +520,8 @@ export type LearnerProfileUncheckedUpdateWithoutAssessmentAttemptsInput = {
   dateJoined?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  practiceSessions?: Prisma.PracticeSessionUncheckedUpdateManyWithoutLearnerNestedInput
   categoryProgress?: Prisma.CategoryProgressUncheckedUpdateManyWithoutLearnerNestedInput
+  practiceSessions?: Prisma.PracticeSessionUncheckedUpdateManyWithoutLearnerNestedInput
 }
 
 export type LearnerProfileCreateWithoutPracticeSessionsInput = {
@@ -529,9 +529,9 @@ export type LearnerProfileCreateWithoutPracticeSessionsInput = {
   dateJoined?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutLearnerProfileInput
   assessmentAttempts?: Prisma.AssessmentAttemptCreateNestedManyWithoutLearnerInput
   categoryProgress?: Prisma.CategoryProgressCreateNestedManyWithoutLearnerInput
+  user: Prisma.UserCreateNestedOneWithoutLearnerProfileInput
 }
 
 export type LearnerProfileUncheckedCreateWithoutPracticeSessionsInput = {
@@ -565,9 +565,9 @@ export type LearnerProfileUpdateWithoutPracticeSessionsInput = {
   dateJoined?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutLearnerProfileNestedInput
   assessmentAttempts?: Prisma.AssessmentAttemptUpdateManyWithoutLearnerNestedInput
   categoryProgress?: Prisma.CategoryProgressUpdateManyWithoutLearnerNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutLearnerProfileNestedInput
 }
 
 export type LearnerProfileUncheckedUpdateWithoutPracticeSessionsInput = {
@@ -585,8 +585,8 @@ export type LearnerProfileCreateWithoutCategoryProgressInput = {
   dateJoined?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutLearnerProfileInput
   assessmentAttempts?: Prisma.AssessmentAttemptCreateNestedManyWithoutLearnerInput
+  user: Prisma.UserCreateNestedOneWithoutLearnerProfileInput
   practiceSessions?: Prisma.PracticeSessionCreateNestedManyWithoutLearnerInput
 }
 
@@ -621,8 +621,8 @@ export type LearnerProfileUpdateWithoutCategoryProgressInput = {
   dateJoined?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutLearnerProfileNestedInput
   assessmentAttempts?: Prisma.AssessmentAttemptUpdateManyWithoutLearnerNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutLearnerProfileNestedInput
   practiceSessions?: Prisma.PracticeSessionUpdateManyWithoutLearnerNestedInput
 }
 
@@ -643,14 +643,14 @@ export type LearnerProfileUncheckedUpdateWithoutCategoryProgressInput = {
 
 export type LearnerProfileCountOutputType = {
   assessmentAttempts: number
-  practiceSessions: number
   categoryProgress: number
+  practiceSessions: number
 }
 
 export type LearnerProfileCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   assessmentAttempts?: boolean | LearnerProfileCountOutputTypeCountAssessmentAttemptsArgs
-  practiceSessions?: boolean | LearnerProfileCountOutputTypeCountPracticeSessionsArgs
   categoryProgress?: boolean | LearnerProfileCountOutputTypeCountCategoryProgressArgs
+  practiceSessions?: boolean | LearnerProfileCountOutputTypeCountPracticeSessionsArgs
 }
 
 /**
@@ -673,15 +673,15 @@ export type LearnerProfileCountOutputTypeCountAssessmentAttemptsArgs<ExtArgs ext
 /**
  * LearnerProfileCountOutputType without action
  */
-export type LearnerProfileCountOutputTypeCountPracticeSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.PracticeSessionWhereInput
+export type LearnerProfileCountOutputTypeCountCategoryProgressArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CategoryProgressWhereInput
 }
 
 /**
  * LearnerProfileCountOutputType without action
  */
-export type LearnerProfileCountOutputTypeCountCategoryProgressArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.CategoryProgressWhereInput
+export type LearnerProfileCountOutputTypeCountPracticeSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PracticeSessionWhereInput
 }
 
 
@@ -691,10 +691,10 @@ export type LearnerProfileSelect<ExtArgs extends runtime.Types.Extensions.Intern
   dateJoined?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   assessmentAttempts?: boolean | Prisma.LearnerProfile$assessmentAttemptsArgs<ExtArgs>
-  practiceSessions?: boolean | Prisma.LearnerProfile$practiceSessionsArgs<ExtArgs>
   categoryProgress?: boolean | Prisma.LearnerProfile$categoryProgressArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  practiceSessions?: boolean | Prisma.LearnerProfile$practiceSessionsArgs<ExtArgs>
   _count?: boolean | Prisma.LearnerProfileCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["learnerProfile"]>
 
@@ -726,10 +726,10 @@ export type LearnerProfileSelectScalar = {
 
 export type LearnerProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"userId" | "fullName" | "dateJoined" | "createdAt" | "updatedAt", ExtArgs["result"]["learnerProfile"]>
 export type LearnerProfileInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   assessmentAttempts?: boolean | Prisma.LearnerProfile$assessmentAttemptsArgs<ExtArgs>
-  practiceSessions?: boolean | Prisma.LearnerProfile$practiceSessionsArgs<ExtArgs>
   categoryProgress?: boolean | Prisma.LearnerProfile$categoryProgressArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  practiceSessions?: boolean | Prisma.LearnerProfile$practiceSessionsArgs<ExtArgs>
   _count?: boolean | Prisma.LearnerProfileCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type LearnerProfileIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -742,10 +742,10 @@ export type LearnerProfileIncludeUpdateManyAndReturn<ExtArgs extends runtime.Typ
 export type $LearnerProfilePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "LearnerProfile"
   objects: {
-    user: Prisma.$UserPayload<ExtArgs>
     assessmentAttempts: Prisma.$AssessmentAttemptPayload<ExtArgs>[]
-    practiceSessions: Prisma.$PracticeSessionPayload<ExtArgs>[]
     categoryProgress: Prisma.$CategoryProgressPayload<ExtArgs>[]
+    user: Prisma.$UserPayload<ExtArgs>
+    practiceSessions: Prisma.$PracticeSessionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     userId: string
@@ -1147,10 +1147,10 @@ readonly fields: LearnerProfileFieldRefs;
  */
 export interface Prisma__LearnerProfileClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   assessmentAttempts<T extends Prisma.LearnerProfile$assessmentAttemptsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LearnerProfile$assessmentAttemptsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AssessmentAttemptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  practiceSessions<T extends Prisma.LearnerProfile$practiceSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LearnerProfile$practiceSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PracticeSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   categoryProgress<T extends Prisma.LearnerProfile$categoryProgressArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LearnerProfile$categoryProgressArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CategoryProgressPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  practiceSessions<T extends Prisma.LearnerProfile$practiceSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LearnerProfile$practiceSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PracticeSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1610,30 +1610,6 @@ export type LearnerProfile$assessmentAttemptsArgs<ExtArgs extends runtime.Types.
 }
 
 /**
- * LearnerProfile.practiceSessions
- */
-export type LearnerProfile$practiceSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the PracticeSession
-   */
-  select?: Prisma.PracticeSessionSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the PracticeSession
-   */
-  omit?: Prisma.PracticeSessionOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.PracticeSessionInclude<ExtArgs> | null
-  where?: Prisma.PracticeSessionWhereInput
-  orderBy?: Prisma.PracticeSessionOrderByWithRelationInput | Prisma.PracticeSessionOrderByWithRelationInput[]
-  cursor?: Prisma.PracticeSessionWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.PracticeSessionScalarFieldEnum | Prisma.PracticeSessionScalarFieldEnum[]
-}
-
-/**
  * LearnerProfile.categoryProgress
  */
 export type LearnerProfile$categoryProgressArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1655,6 +1631,30 @@ export type LearnerProfile$categoryProgressArgs<ExtArgs extends runtime.Types.Ex
   take?: number
   skip?: number
   distinct?: Prisma.CategoryProgressScalarFieldEnum | Prisma.CategoryProgressScalarFieldEnum[]
+}
+
+/**
+ * LearnerProfile.practiceSessions
+ */
+export type LearnerProfile$practiceSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PracticeSession
+   */
+  select?: Prisma.PracticeSessionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PracticeSession
+   */
+  omit?: Prisma.PracticeSessionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PracticeSessionInclude<ExtArgs> | null
+  where?: Prisma.PracticeSessionWhereInput
+  orderBy?: Prisma.PracticeSessionOrderByWithRelationInput | Prisma.PracticeSessionOrderByWithRelationInput[]
+  cursor?: Prisma.PracticeSessionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PracticeSessionScalarFieldEnum | Prisma.PracticeSessionScalarFieldEnum[]
 }
 
 /**

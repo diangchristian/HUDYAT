@@ -252,10 +252,10 @@ export type AssessmentQuestionWhereInput = {
   referenceMediaUrl?: Prisma.StringNullableFilter<"AssessmentQuestion"> | string | null
   points?: Prisma.DecimalFilter<"AssessmentQuestion"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFilter<"AssessmentQuestion"> | Date | string
+  answers?: Prisma.AssessmentAnswerListRelationFilter
   assessment?: Prisma.XOR<Prisma.AssessmentScalarRelationFilter, Prisma.AssessmentWhereInput>
   gesture?: Prisma.XOR<Prisma.FslGestureScalarRelationFilter, Prisma.FslGestureWhereInput>
   choices?: Prisma.QuestionChoiceListRelationFilter
-  answers?: Prisma.AssessmentAnswerListRelationFilter
 }
 
 export type AssessmentQuestionOrderByWithRelationInput = {
@@ -268,10 +268,10 @@ export type AssessmentQuestionOrderByWithRelationInput = {
   referenceMediaUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   points?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  answers?: Prisma.AssessmentAnswerOrderByRelationAggregateInput
   assessment?: Prisma.AssessmentOrderByWithRelationInput
   gesture?: Prisma.FslGestureOrderByWithRelationInput
   choices?: Prisma.QuestionChoiceOrderByRelationAggregateInput
-  answers?: Prisma.AssessmentAnswerOrderByRelationAggregateInput
 }
 
 export type AssessmentQuestionWhereUniqueInput = Prisma.AtLeast<{
@@ -288,10 +288,10 @@ export type AssessmentQuestionWhereUniqueInput = Prisma.AtLeast<{
   referenceMediaUrl?: Prisma.StringNullableFilter<"AssessmentQuestion"> | string | null
   points?: Prisma.DecimalFilter<"AssessmentQuestion"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFilter<"AssessmentQuestion"> | Date | string
+  answers?: Prisma.AssessmentAnswerListRelationFilter
   assessment?: Prisma.XOR<Prisma.AssessmentScalarRelationFilter, Prisma.AssessmentWhereInput>
   gesture?: Prisma.XOR<Prisma.FslGestureScalarRelationFilter, Prisma.FslGestureWhereInput>
   choices?: Prisma.QuestionChoiceListRelationFilter
-  answers?: Prisma.AssessmentAnswerListRelationFilter
 }, "id" | "assessmentId_questionNumber">
 
 export type AssessmentQuestionOrderByWithAggregationInput = {
@@ -334,10 +334,10 @@ export type AssessmentQuestionCreateInput = {
   referenceMediaUrl?: string | null
   points?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
+  answers?: Prisma.AssessmentAnswerCreateNestedManyWithoutQuestionInput
   assessment: Prisma.AssessmentCreateNestedOneWithoutQuestionsInput
   gesture: Prisma.FslGestureCreateNestedOneWithoutAssessmentQuestionsInput
   choices?: Prisma.QuestionChoiceCreateNestedManyWithoutQuestionInput
-  answers?: Prisma.AssessmentAnswerCreateNestedManyWithoutQuestionInput
 }
 
 export type AssessmentQuestionUncheckedCreateInput = {
@@ -350,8 +350,8 @@ export type AssessmentQuestionUncheckedCreateInput = {
   referenceMediaUrl?: string | null
   points?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
-  choices?: Prisma.QuestionChoiceUncheckedCreateNestedManyWithoutQuestionInput
   answers?: Prisma.AssessmentAnswerUncheckedCreateNestedManyWithoutQuestionInput
+  choices?: Prisma.QuestionChoiceUncheckedCreateNestedManyWithoutQuestionInput
 }
 
 export type AssessmentQuestionUpdateInput = {
@@ -362,10 +362,10 @@ export type AssessmentQuestionUpdateInput = {
   referenceMediaUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   points?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  answers?: Prisma.AssessmentAnswerUpdateManyWithoutQuestionNestedInput
   assessment?: Prisma.AssessmentUpdateOneRequiredWithoutQuestionsNestedInput
   gesture?: Prisma.FslGestureUpdateOneRequiredWithoutAssessmentQuestionsNestedInput
   choices?: Prisma.QuestionChoiceUpdateManyWithoutQuestionNestedInput
-  answers?: Prisma.AssessmentAnswerUpdateManyWithoutQuestionNestedInput
 }
 
 export type AssessmentQuestionUncheckedUpdateInput = {
@@ -378,8 +378,8 @@ export type AssessmentQuestionUncheckedUpdateInput = {
   referenceMediaUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   points?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  choices?: Prisma.QuestionChoiceUncheckedUpdateManyWithoutQuestionNestedInput
   answers?: Prisma.AssessmentAnswerUncheckedUpdateManyWithoutQuestionNestedInput
+  choices?: Prisma.QuestionChoiceUncheckedUpdateManyWithoutQuestionNestedInput
 }
 
 export type AssessmentQuestionCreateManyInput = {
@@ -606,9 +606,9 @@ export type AssessmentQuestionCreateWithoutGestureInput = {
   referenceMediaUrl?: string | null
   points?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
+  answers?: Prisma.AssessmentAnswerCreateNestedManyWithoutQuestionInput
   assessment: Prisma.AssessmentCreateNestedOneWithoutQuestionsInput
   choices?: Prisma.QuestionChoiceCreateNestedManyWithoutQuestionInput
-  answers?: Prisma.AssessmentAnswerCreateNestedManyWithoutQuestionInput
 }
 
 export type AssessmentQuestionUncheckedCreateWithoutGestureInput = {
@@ -620,8 +620,8 @@ export type AssessmentQuestionUncheckedCreateWithoutGestureInput = {
   referenceMediaUrl?: string | null
   points?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
-  choices?: Prisma.QuestionChoiceUncheckedCreateNestedManyWithoutQuestionInput
   answers?: Prisma.AssessmentAnswerUncheckedCreateNestedManyWithoutQuestionInput
+  choices?: Prisma.QuestionChoiceUncheckedCreateNestedManyWithoutQuestionInput
 }
 
 export type AssessmentQuestionCreateOrConnectWithoutGestureInput = {
@@ -673,9 +673,9 @@ export type AssessmentQuestionCreateWithoutAssessmentInput = {
   referenceMediaUrl?: string | null
   points?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
+  answers?: Prisma.AssessmentAnswerCreateNestedManyWithoutQuestionInput
   gesture: Prisma.FslGestureCreateNestedOneWithoutAssessmentQuestionsInput
   choices?: Prisma.QuestionChoiceCreateNestedManyWithoutQuestionInput
-  answers?: Prisma.AssessmentAnswerCreateNestedManyWithoutQuestionInput
 }
 
 export type AssessmentQuestionUncheckedCreateWithoutAssessmentInput = {
@@ -687,8 +687,8 @@ export type AssessmentQuestionUncheckedCreateWithoutAssessmentInput = {
   referenceMediaUrl?: string | null
   points?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
-  choices?: Prisma.QuestionChoiceUncheckedCreateNestedManyWithoutQuestionInput
   answers?: Prisma.AssessmentAnswerUncheckedCreateNestedManyWithoutQuestionInput
+  choices?: Prisma.QuestionChoiceUncheckedCreateNestedManyWithoutQuestionInput
 }
 
 export type AssessmentQuestionCreateOrConnectWithoutAssessmentInput = {
@@ -725,9 +725,9 @@ export type AssessmentQuestionCreateWithoutChoicesInput = {
   referenceMediaUrl?: string | null
   points?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
+  answers?: Prisma.AssessmentAnswerCreateNestedManyWithoutQuestionInput
   assessment: Prisma.AssessmentCreateNestedOneWithoutQuestionsInput
   gesture: Prisma.FslGestureCreateNestedOneWithoutAssessmentQuestionsInput
-  answers?: Prisma.AssessmentAnswerCreateNestedManyWithoutQuestionInput
 }
 
 export type AssessmentQuestionUncheckedCreateWithoutChoicesInput = {
@@ -767,9 +767,9 @@ export type AssessmentQuestionUpdateWithoutChoicesInput = {
   referenceMediaUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   points?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  answers?: Prisma.AssessmentAnswerUpdateManyWithoutQuestionNestedInput
   assessment?: Prisma.AssessmentUpdateOneRequiredWithoutQuestionsNestedInput
   gesture?: Prisma.FslGestureUpdateOneRequiredWithoutAssessmentQuestionsNestedInput
-  answers?: Prisma.AssessmentAnswerUpdateManyWithoutQuestionNestedInput
 }
 
 export type AssessmentQuestionUncheckedUpdateWithoutChoicesInput = {
@@ -872,9 +872,9 @@ export type AssessmentQuestionUpdateWithoutGestureInput = {
   referenceMediaUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   points?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  answers?: Prisma.AssessmentAnswerUpdateManyWithoutQuestionNestedInput
   assessment?: Prisma.AssessmentUpdateOneRequiredWithoutQuestionsNestedInput
   choices?: Prisma.QuestionChoiceUpdateManyWithoutQuestionNestedInput
-  answers?: Prisma.AssessmentAnswerUpdateManyWithoutQuestionNestedInput
 }
 
 export type AssessmentQuestionUncheckedUpdateWithoutGestureInput = {
@@ -886,8 +886,8 @@ export type AssessmentQuestionUncheckedUpdateWithoutGestureInput = {
   referenceMediaUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   points?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  choices?: Prisma.QuestionChoiceUncheckedUpdateManyWithoutQuestionNestedInput
   answers?: Prisma.AssessmentAnswerUncheckedUpdateManyWithoutQuestionNestedInput
+  choices?: Prisma.QuestionChoiceUncheckedUpdateManyWithoutQuestionNestedInput
 }
 
 export type AssessmentQuestionUncheckedUpdateManyWithoutGestureInput = {
@@ -920,9 +920,9 @@ export type AssessmentQuestionUpdateWithoutAssessmentInput = {
   referenceMediaUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   points?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  answers?: Prisma.AssessmentAnswerUpdateManyWithoutQuestionNestedInput
   gesture?: Prisma.FslGestureUpdateOneRequiredWithoutAssessmentQuestionsNestedInput
   choices?: Prisma.QuestionChoiceUpdateManyWithoutQuestionNestedInput
-  answers?: Prisma.AssessmentAnswerUpdateManyWithoutQuestionNestedInput
 }
 
 export type AssessmentQuestionUncheckedUpdateWithoutAssessmentInput = {
@@ -934,8 +934,8 @@ export type AssessmentQuestionUncheckedUpdateWithoutAssessmentInput = {
   referenceMediaUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   points?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  choices?: Prisma.QuestionChoiceUncheckedUpdateManyWithoutQuestionNestedInput
   answers?: Prisma.AssessmentAnswerUncheckedUpdateManyWithoutQuestionNestedInput
+  choices?: Prisma.QuestionChoiceUncheckedUpdateManyWithoutQuestionNestedInput
 }
 
 export type AssessmentQuestionUncheckedUpdateManyWithoutAssessmentInput = {
@@ -955,13 +955,13 @@ export type AssessmentQuestionUncheckedUpdateManyWithoutAssessmentInput = {
  */
 
 export type AssessmentQuestionCountOutputType = {
-  choices: number
   answers: number
+  choices: number
 }
 
 export type AssessmentQuestionCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  choices?: boolean | AssessmentQuestionCountOutputTypeCountChoicesArgs
   answers?: boolean | AssessmentQuestionCountOutputTypeCountAnswersArgs
+  choices?: boolean | AssessmentQuestionCountOutputTypeCountChoicesArgs
 }
 
 /**
@@ -977,15 +977,15 @@ export type AssessmentQuestionCountOutputTypeDefaultArgs<ExtArgs extends runtime
 /**
  * AssessmentQuestionCountOutputType without action
  */
-export type AssessmentQuestionCountOutputTypeCountChoicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.QuestionChoiceWhereInput
+export type AssessmentQuestionCountOutputTypeCountAnswersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AssessmentAnswerWhereInput
 }
 
 /**
  * AssessmentQuestionCountOutputType without action
  */
-export type AssessmentQuestionCountOutputTypeCountAnswersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.AssessmentAnswerWhereInput
+export type AssessmentQuestionCountOutputTypeCountChoicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.QuestionChoiceWhereInput
 }
 
 
@@ -999,10 +999,10 @@ export type AssessmentQuestionSelect<ExtArgs extends runtime.Types.Extensions.In
   referenceMediaUrl?: boolean
   points?: boolean
   createdAt?: boolean
+  answers?: boolean | Prisma.AssessmentQuestion$answersArgs<ExtArgs>
   assessment?: boolean | Prisma.AssessmentDefaultArgs<ExtArgs>
   gesture?: boolean | Prisma.FslGestureDefaultArgs<ExtArgs>
   choices?: boolean | Prisma.AssessmentQuestion$choicesArgs<ExtArgs>
-  answers?: boolean | Prisma.AssessmentQuestion$answersArgs<ExtArgs>
   _count?: boolean | Prisma.AssessmentQuestionCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["assessmentQuestion"]>
 
@@ -1048,10 +1048,10 @@ export type AssessmentQuestionSelectScalar = {
 
 export type AssessmentQuestionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "assessmentId" | "gestureId" | "questionNumber" | "questionText" | "questionType" | "referenceMediaUrl" | "points" | "createdAt", ExtArgs["result"]["assessmentQuestion"]>
 export type AssessmentQuestionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  answers?: boolean | Prisma.AssessmentQuestion$answersArgs<ExtArgs>
   assessment?: boolean | Prisma.AssessmentDefaultArgs<ExtArgs>
   gesture?: boolean | Prisma.FslGestureDefaultArgs<ExtArgs>
   choices?: boolean | Prisma.AssessmentQuestion$choicesArgs<ExtArgs>
-  answers?: boolean | Prisma.AssessmentQuestion$answersArgs<ExtArgs>
   _count?: boolean | Prisma.AssessmentQuestionCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type AssessmentQuestionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1066,10 +1066,10 @@ export type AssessmentQuestionIncludeUpdateManyAndReturn<ExtArgs extends runtime
 export type $AssessmentQuestionPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "AssessmentQuestion"
   objects: {
+    answers: Prisma.$AssessmentAnswerPayload<ExtArgs>[]
     assessment: Prisma.$AssessmentPayload<ExtArgs>
     gesture: Prisma.$FslGesturePayload<ExtArgs>
     choices: Prisma.$QuestionChoicePayload<ExtArgs>[]
-    answers: Prisma.$AssessmentAnswerPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1475,10 +1475,10 @@ readonly fields: AssessmentQuestionFieldRefs;
  */
 export interface Prisma__AssessmentQuestionClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  answers<T extends Prisma.AssessmentQuestion$answersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AssessmentQuestion$answersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AssessmentAnswerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   assessment<T extends Prisma.AssessmentDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AssessmentDefaultArgs<ExtArgs>>): Prisma.Prisma__AssessmentClient<runtime.Types.Result.GetResult<Prisma.$AssessmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   gesture<T extends Prisma.FslGestureDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FslGestureDefaultArgs<ExtArgs>>): Prisma.Prisma__FslGestureClient<runtime.Types.Result.GetResult<Prisma.$FslGesturePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   choices<T extends Prisma.AssessmentQuestion$choicesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AssessmentQuestion$choicesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$QuestionChoicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  answers<T extends Prisma.AssessmentQuestion$answersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AssessmentQuestion$answersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AssessmentAnswerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1918,30 +1918,6 @@ export type AssessmentQuestionDeleteManyArgs<ExtArgs extends runtime.Types.Exten
 }
 
 /**
- * AssessmentQuestion.choices
- */
-export type AssessmentQuestion$choicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the QuestionChoice
-   */
-  select?: Prisma.QuestionChoiceSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the QuestionChoice
-   */
-  omit?: Prisma.QuestionChoiceOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.QuestionChoiceInclude<ExtArgs> | null
-  where?: Prisma.QuestionChoiceWhereInput
-  orderBy?: Prisma.QuestionChoiceOrderByWithRelationInput | Prisma.QuestionChoiceOrderByWithRelationInput[]
-  cursor?: Prisma.QuestionChoiceWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.QuestionChoiceScalarFieldEnum | Prisma.QuestionChoiceScalarFieldEnum[]
-}
-
-/**
  * AssessmentQuestion.answers
  */
 export type AssessmentQuestion$answersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1963,6 +1939,30 @@ export type AssessmentQuestion$answersArgs<ExtArgs extends runtime.Types.Extensi
   take?: number
   skip?: number
   distinct?: Prisma.AssessmentAnswerScalarFieldEnum | Prisma.AssessmentAnswerScalarFieldEnum[]
+}
+
+/**
+ * AssessmentQuestion.choices
+ */
+export type AssessmentQuestion$choicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the QuestionChoice
+   */
+  select?: Prisma.QuestionChoiceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the QuestionChoice
+   */
+  omit?: Prisma.QuestionChoiceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.QuestionChoiceInclude<ExtArgs> | null
+  where?: Prisma.QuestionChoiceWhereInput
+  orderBy?: Prisma.QuestionChoiceOrderByWithRelationInput | Prisma.QuestionChoiceOrderByWithRelationInput[]
+  cursor?: Prisma.QuestionChoiceWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.QuestionChoiceScalarFieldEnum | Prisma.QuestionChoiceScalarFieldEnum[]
 }
 
 /**
