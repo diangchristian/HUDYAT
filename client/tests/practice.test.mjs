@@ -85,6 +85,17 @@ test("every category has a working slug and unique starter prompts", () => {
   assert.equal(PRACTICE_PROMPTS["not-a-category"], undefined);
 });
 
+test("starter prompts no longer include the removed hand-position instruction", () => {
+  assert.equal(
+    PRACTICE_PROMPTS.alphabet.find((prompt) => prompt.label === "A")?.instruction,
+    undefined,
+  );
+  assert.ok(
+    !Object.values(PRACTICE_PROMPTS).flat().some((prompt) =>
+      prompt.instruction?.includes("Form a fist with your thumb resting against the side of your index finger.")),
+  );
+});
+
 test("progress reflects prompt position without overflowing", () => {
   assert.equal(practicePosition(0, 5), 20);
   assert.equal(practicePosition(4, 5), 100);
