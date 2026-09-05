@@ -1,0 +1,431 @@
+[
+  {
+    "category": "Alphabet",
+    "question_number": 1,
+    "choices": [
+      {
+        "gesture": "A",
+        "choice_text": "A",
+        "display_order": 1,
+        "isCorrect": true
+      },
+      {
+        "gesture": "B",
+        "choice_text": "B",
+        "display_order": 2
+      },
+      {
+        "gesture": "C",
+        "choice_text": "C",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "Alphabet",
+    "question_number": 2,
+    "choices": [
+      {
+        "gesture": "A",
+        "choice_text": "A",
+        "display_order": 1
+      },
+      {
+        "gesture": "B",
+        "choice_text": "B",
+        "display_order": 2,
+        "isCorrect": true
+        
+      },
+      {
+        "gesture": "D",
+        "choice_text": "D",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "Alphabet",
+    "question_number": 3,
+    "choices": [
+      {
+        "gesture": "M",
+        "choice_text": "M",
+        "display_order": 1,
+        "isCorrect": true
+      },
+      {
+        "gesture": "N",
+        "choice_text": "N",
+        "display_order": 2
+      },
+      {
+        "gesture": "W",
+        "choice_text": "W",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "Alphabet",
+    "question_number": 4,
+    "choices": [
+      {
+        "gesture": "S",
+        "choice_text": "S",
+        "display_order": 1,
+        "isCorrect": true
+      },
+      {
+        "gesture": "C",
+        "choice_text": "C",
+        "display_order": 2
+      },
+      {
+        "gesture": "O",
+        "choice_text": "O",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "Alphabet",
+    "question_number": 5,
+    "choices": [
+      {
+        "gesture": "Z",
+        "choice_text": "Z",
+        "display_order": 1,
+        "isCorrect": true
+      },
+      {
+        "gesture": "X",
+        "choice_text": "X",
+        "display_order": 2
+      },
+      {
+        "gesture": "Y",
+        "choice_text": "Y",
+        "display_order": 3
+      }
+    ]
+  },
+
+  {
+    "category": "Numbers",
+    "question_number": 1,
+    "choices": [
+      {
+        "gesture": "One",
+        "choice_text": "One",
+        "display_order": 1
+      },
+      {
+        "gesture": "Two",
+        "choice_text": "Two",
+        "display_order": 2
+      },
+      {
+        "gesture": "Three",
+        "choice_text": "Three",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "Numbers",
+    "question_number": 2,
+    "choices": [
+      {
+        "gesture": "Four",
+        "choice_text": "Four",
+        "display_order": 1
+      },
+      {
+        "gesture": "Five",
+        "choice_text": "Five",
+        "display_order": 2
+      },
+      {
+        "gesture": "Six",
+        "choice_text": "Six",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "Numbers",
+    "question_number": 3,
+    "choices": [
+      {
+        "gesture": "Five",
+        "choice_text": "Five",
+        "display_order": 1
+      },
+      {
+        "gesture": "Six",
+        "choice_text": "Six",
+        "display_order": 2
+      },
+      {
+        "gesture": "Seven",
+        "choice_text": "Seven",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "Numbers",
+    "question_number": 4,
+    "choices": [
+      {
+        "gesture": "Seven",
+        "choice_text": "Seven",
+        "display_order": 1
+      },
+      {
+        "gesture": "Eight",
+        "choice_text": "Eight",
+        "display_order": 2
+      },
+      {
+        "gesture": "Nine",
+        "choice_text": "Nine",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "Numbers",
+    "question_number": 5,
+    "choices": [
+      {
+        "gesture": "Eight",
+        "choice_text": "Eight",
+        "display_order": 1
+      },
+      {
+        "gesture": "Nine",
+        "choice_text": "Nine",
+        "display_order": 2
+      },
+      {
+        "gesture": "Ten",
+        "choice_text": "Ten",
+        "display_order": 3
+      }
+    ]
+  },
+
+  {
+    "category": "Calendar",
+    "question_number": 1,
+    "choices": [
+      {
+        "gesture": "January",
+        "choice_text": "January",
+        "display_order": 1
+      },
+      {
+        "gesture": "February",
+        "choice_text": "February",
+        "display_order": 2
+      },
+      {
+        "gesture": "March",
+        "choice_text": "March",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "Calendar",
+    "question_number": 2,
+    "choices": [
+      {
+        "gesture": "February",
+        "choice_text": "February",
+        "display_order": 1
+      },
+      {
+        "gesture": "March",
+        "choice_text": "March",
+        "display_order": 2
+      },
+      {
+        "gesture": "April",
+        "choice_text": "April",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "Calendar",
+    "question_number": 3,
+    "choices": [
+      {
+        "gesture": "May",
+        "choice_text": "May",
+        "display_order": 1
+      },
+      {
+        "gesture": "June",
+        "choice_text": "June",
+        "display_order": 2
+      },
+      {
+        "gesture": "July",
+        "choice_text": "July",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "Calendar",
+    "question_number": 4,
+    "choices": [
+      {
+        "gesture": "August",
+        "choice_text": "August",
+        "display_order": 1
+      },
+      {
+        "gesture": "September",
+        "choice_text": "September",
+        "display_order": 2
+      },
+      {
+        "gesture": "October",
+        "choice_text": "October",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "Calendar",
+    "question_number": 5,
+    "choices": [
+      {
+        "gesture": "November",
+        "choice_text": "November",
+        "display_order": 1
+      },
+      {
+        "gesture": "December",
+        "choice_text": "December",
+        "display_order": 2
+      },
+      {
+        "gesture": "January",
+        "choice_text": "January",
+        "display_order": 3
+      }
+    ]
+  },
+
+  {
+    "category": "Greetings",
+    "question_number": 1,
+    "choices": [
+      {
+        "gesture": "Good Morning",
+        "choice_text": "Good Morning",
+        "display_order": 1
+      },
+      {
+        "gesture": "Good Afternoon",
+        "choice_text": "Good Afternoon",
+        "display_order": 2
+      },
+      {
+        "gesture": "Good Evening",
+        "choice_text": "Good Evening",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "Greetings",
+    "question_number": 2,
+    "choices": [
+      {
+        "gesture": "Good Morning",
+        "choice_text": "Good Morning",
+        "display_order": 1
+      },
+      {
+        "gesture": "Good Afternoon",
+        "choice_text": "Good Afternoon",
+        "display_order": 2
+      },
+      {
+        "gesture": "Good Evening",
+        "choice_text": "Good Evening",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "Greetings",
+    "question_number": 3,
+    "choices": [
+      {
+        "gesture": "Hello",
+        "choice_text": "Hello",
+        "display_order": 1
+      },
+      {
+        "gesture": "Thank You",
+        "choice_text": "Thank You",
+        "display_order": 2
+      },
+      {
+        "gesture": "You're Welcome",
+        "choice_text": "You're Welcome",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "Greetings",
+    "question_number": 4,
+    "choices": [
+      {
+        "gesture": "Thank you",
+        "choice_text": "Thank you",
+        "display_order": 1
+      },
+      {
+        "gesture": "I'm Fine",
+        "choice_text": "I'm Fine",
+        "display_order": 2
+      },
+      {
+        "gesture": "Hello",
+        "choice_text": "Hello",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "Greetings",
+    "question_number": 5,
+    "choices": [
+      {
+        "gesture": "Nice to meet you",
+        "choice_text": "Nice to Meet You",
+        "display_order": 1
+      },
+      {
+        "gesture": "See You Tomorrow",
+        "choice_text": "See You Tomorrow",
+        "display_order": 2
+      },
+      {
+        "gesture": "You're Welcome",
+        "choice_text": "You're Welcome",
+        "display_order": 3
+      }
+    ]
+  }
+]
