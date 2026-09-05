@@ -1,9 +1,5 @@
-import { Routes, Route } from "react-router";
-import HomePage from "./pages/HomePage";
-import LoginPage from "./pages/auth/LoginPage";
-
 function App() {
-  return null
+  return null;
 }
 
-export default App
+export default App;

@@ -103,9 +103,6 @@ const TakeAssessmentPage = () => {
     }
   };
 
-  const isQuizComplete =
-    questionNumber === totalQuestions && checked && !isSubmitting;
-
   return (
     <div className="flex h-dvh flex-col overflow-hidden bg-white font-body text-[#111827]">
       {showSummary ? (

@@ -10,9 +10,6 @@ export type PracticePrompt = {
 export const PRACTICE_PROMPTS: Record<string, PracticePrompt[]> = {
   alphabet: Array.from("ABCDEFGHIJKLMNOPQRSTUVWXYZ", (label) => ({
     label,
-    ...(label === "A"
-      ? { instruction: "Form a fist with your thumb resting against the side of your index finger." }
-      : {}),
   })),
   numbers: Array.from({ length: 10 }, (_, index) => ({ label: String(index + 1) })),
   shapes: ["Circle", "Square", "Triangle", "Rectangle", "Star"].map((label) => ({ label })),

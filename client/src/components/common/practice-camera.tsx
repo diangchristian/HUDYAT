@@ -54,9 +54,6 @@ export default function PracticeCamera() {
           )}
         </div>
       </Card>
-      <p className="mt-2 text-center text-xs text-muted-foreground">
-        Video stays in this browser. Nothing is recorded or uploaded.
-      </p>
     </div>
   );
 }
