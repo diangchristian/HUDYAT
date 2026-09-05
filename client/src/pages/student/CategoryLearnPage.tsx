@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import {
   ArrowLeft,
@@ -7,93 +7,221 @@ import {
   Hand,
   Lightbulb,
   MessageCircle,
-  Sparkles,
 } from "lucide-react";
+
 import { useNavigate, useParams } from "react-router";
 
-import { CATEGORIES } from "@/components/common/categories.constants";
+import {
+  getCategoryLesson,
+  saveLessonCheckpoint,
+  type CategoryLesson,
+  type LessonStep,
+} from "@/lib/learning-api";
+
 import PracticeCamera from "@/components/common/practice-camera";
 import PracticeReference from "@/components/common/practice-reference";
 import SessionHeader from "@/components/common/session-header";
 import ElevatedButton from "@/components/ui/elavated-button";
 import { Card } from "@/components/ui/card";
+
 import {
-  categorySlug,
-  PRACTICE_PROMPTS,
   practicePosition,
   type PracticePrompt,
 } from "@/lib/practice";
 
-type LessonStep = "meaning" | "context" | "how" | "try";
-
-type ExtendedPracticePrompt = PracticePrompt & {
-  meaning?: string;
-  whenToUse?: string;
+type LessonPrompt = PracticePrompt & {
+  modelClass: string;
+  meaning?: string | null;
+  whenToUse?: string | null;
   contextImageUrl?: string;
-  howToUse?: string;
+  demonstrationVideoUrl?: string | null;
+};
+
+const STEP_ORDER: LessonStep[] = [
+  "meaning",
+  "context",
+  "how",
+  "try",
+];
+
+const STEP_LABELS: Record<LessonStep, string> = {
+  meaning: "Meaning",
+  context: "When to Use",
+  how: "How to Sign",
+  try: "Try",
 };
 
 function LearnSession({
+  categoryId,
   title,
   prompts,
+  initialGestureIndex,
+  initialStep,
 }: {
+  categoryId: string;
   title: string;
-  prompts: PracticePrompt[];
+  prompts: LessonPrompt[];
+  initialGestureIndex: number;
+  initialStep: LessonStep | null;
 }) {
   const navigate = useNavigate();
 
-  const [index, setIndex] = useState(0);
-  const [complete, setComplete] = useState(false);
-  const [step, setStep] = useState<LessonStep>("meaning");
+  const safeInitialIndex =
+    prompts.length > 0
+      ? Math.min(
+          Math.max(initialGestureIndex, 0),
+          prompts.length - 1,
+        )
+      : 0;
 
-  const prompt = prompts[index] as ExtendedPracticePrompt;
-  const isLast = index === prompts.length - 1;
+  const safeInitialStep: LessonStep =
+    initialStep &&
+    STEP_ORDER.includes(initialStep)
+      ? initialStep
+      : "meaning";
 
-  const continueLesson = () => {
-    if (step !== "try") {
-      if (step === "meaning") {
-        setStep("context");
-      } else if (step === "context") {
-        setStep("how");
-      } else if (step === "how") {
-        setStep("try");
-      }
+  const [index, setIndex] = useState(
+    safeInitialIndex,
+  );
 
-      return;
+  const [step, setStep] =
+    useState<LessonStep>(
+      safeInitialStep,
+    );
+
+  const prompt = prompts[index];
+
+  if (!prompt) {
+    return null;
+  }
+
+  const isLast =
+    index === prompts.length - 1;
+
+  const currentStepIndex =
+    STEP_ORDER.indexOf(step);
+
+  const saveCheckpoint = async (
+    gestureIndex: number,
+    lessonStep: LessonStep,
+  ) => {
+    try {
+      await saveLessonCheckpoint(
+        categoryId,
+        gestureIndex,
+        lessonStep,
+      );
+    } catch {
+      // The lesson can continue even if
+      // checkpoint saving fails.
     }
-
-    if (isLast) {
-      setComplete(true);
-      return;
-    }
-
-    setIndex((current) => current + 1);
-    setStep("meaning");
   };
 
-  const previousStep = () => {
-    if (step === "try") {
-      setStep("how");
+  const continueLesson = async () => {
+    const currentStepIndex =
+      STEP_ORDER.indexOf(step);
+
+    const nextStep =
+      STEP_ORDER[currentStepIndex + 1];
+
+    /*
+     * Continue is only shown on the TRY step,
+     * so normally nextStep will not exist here.
+     *
+     * This keeps the function safe if it is
+     * called from another place later.
+     */
+    if (nextStep) {
+      setStep(nextStep);
+
+      await saveCheckpoint(
+        index,
+        nextStep,
+      );
+
       return;
     }
 
-    if (step === "how") {
-      setStep("context");
+    /*
+     * Last sign:
+     * finish Learn and proceed to assessment.
+     */
+    if (isLast) {
+      navigate(
+        `/student/assessment/${categoryId}`,
+      );
+
       return;
     }
 
-    if (step === "context") {
-      setStep("meaning");
+    /*
+     * Move to the next sign.
+     */
+    const nextIndex = index + 1;
+
+    setIndex(nextIndex);
+    setStep("meaning");
+
+    await saveCheckpoint(
+      nextIndex,
+      "meaning",
+    );
+  };
+
+  const previousStep = async () => {
+    const previousStep =
+      STEP_ORDER[currentStepIndex - 1];
+
+    if (previousStep) {
+      setStep(previousStep);
+
+      await saveCheckpoint(
+        index,
+        previousStep,
+      );
+
       return;
     }
 
     if (index === 0) {
-      setComplete(false);
       return;
     }
 
-    setIndex((current) => current - 1);
-    setStep("meaning");
+    /*
+     * Going back from Meaning moves to
+     * the previous sign's Try step.
+     */
+    const previousIndex = index - 1;
+
+    setIndex(previousIndex);
+    setStep("try");
+
+    await saveCheckpoint(
+      previousIndex,
+      "try",
+    );
+  };
+
+  /*
+   * All four lesson sections are accessible.
+   *
+   * The learner can freely switch between:
+   * Meaning
+   * When to Use
+   * How to Sign
+   * Try
+   *
+   * Continue still only appears on Try.
+   */
+  const selectStep = async (
+    selectedStep: LessonStep,
+  ) => {
+    setStep(selectedStep);
+
+    await saveCheckpoint(
+      index,
+      selectedStep,
+    );
   };
 
   const meaningText =
@@ -102,59 +230,7 @@ function LearnSession({
 
   const whenToUseText =
     prompt.whenToUse ||
-    prompt.exampleUsage ||
     `Use "${prompt.label}" in a situation where this expression is appropriate.`;
-
-  const howToUseText =
-    prompt.howToUse ||
-    prompt.instruction ||
-    "Watch the reference and follow the hand position and movement.";
-
-  if (complete) {
-    return (
-      <Card
-        className="mx-auto mt-12 max-w-lg border-hudyat-gold/40 bg-accent/20 p-8 text-center"
-        role="status"
-      >
-        <div className="mx-auto mb-5 flex size-16 items-center justify-center rounded-full bg-hudyat-gold/20">
-          <Sparkles
-            aria-hidden="true"
-            className="size-9 text-hudyat-gold"
-          />
-        </div>
-
-        <p className="text-sm font-extrabold uppercase tracking-[0.16em] text-hudyat-gold">
-          Great job!
-        </p>
-
-        <h1 className="mt-2 text-2xl font-extrabold">
-          Lesson Complete!
-        </h1>
-
-        <p className="mt-3 text-muted-foreground">
-          You finished learning all the signs in{" "}
-          <strong>{title}</strong>.
-        </p>
-
-        <div className="mt-6 flex flex-wrap justify-center gap-4">
-          <ElevatedButton
-            text="PRACTICE NOW"
-            className="min-h-11"
-            onClick={() =>
-              navigate(`/student/practice/${categorySlug(title)}`)
-            }
-          />
-
-          <ElevatedButton
-            text="BACK TO LEARN"
-            variant="secondary"
-            className="min-h-11"
-            onClick={() => navigate("/student/learn")}
-          />
-        </div>
-      </Card>
-    );
-  }
 
   return (
     <>
@@ -166,7 +242,9 @@ function LearnSession({
           size="sm"
           className="min-h-11 sm:min-h-8"
           icon={ArrowLeft}
-          onClick={() => navigate("/student/learn")}
+          onClick={() =>
+            navigate("/student/learn")
+          }
         />
 
         <h1 className="inline-flex min-h-8 items-center rounded-full bg-hudyat-gold px-5 py-2 text-xs font-extrabold uppercase text-primary-foreground">
@@ -174,25 +252,27 @@ function LearnSession({
         </h1>
       </div>
 
+      {/* MAIN LESSON */}
       <div className="grid items-start gap-5 md:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
-
-        {/* ==========================================
-            LEFT: CONSISTENT SIGN INFORMATION
-        ========================================== */}
+        {/* LEFT SIDE */}
         <div className="space-y-4">
+          {/* TARGET SIGN */}
           <Card className="relative flex min-h-44 flex-col items-center justify-center border-hudyat-gold/30 bg-accent/10 px-5 py-6 text-center">
             <span className="absolute -top-4 left-4 rounded-full bg-hudyat-gold/75 px-6 py-1.5 text-xs font-extrabold text-primary-foreground">
               Target Sign
             </span>
 
             <div className="mb-2 flex size-10 items-center justify-center rounded-full bg-hudyat-gold/20 text-hudyat-gold">
-              <Hand aria-hidden="true" className="size-5" />
+              <Hand
+                aria-hidden="true"
+                className="size-5"
+              />
             </div>
 
             <h2
               aria-live="polite"
               aria-atomic="true"
-              className={`max-w-full break-words font-bold leading-tight ${
+              className={`max-w-full wrap-break-word font-bold leading-tight ${
                 prompt.label.length <= 2
                   ? "text-8xl"
                   : "text-3xl sm:text-4xl"
@@ -202,112 +282,108 @@ function LearnSession({
             </h2>
 
             <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
-              Learn this sign before you try making it.
+              Learn this sign before you
+              try making it.
             </p>
           </Card>
 
-          {/* LEARNING NAVIGATION */}
+          {/* LESSON STEPS */}
           <Card className="space-y-2 p-4 sm:p-5">
-            <button
-              type="button"
-              onClick={() => setStep("meaning")}
-              className={`flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left transition ${
-                step === "meaning"
-                  ? "bg-hudyat-gold/15 text-foreground"
-                  : "hover:bg-muted"
-              }`}
-            >
-              <Lightbulb className="size-5 shrink-0 text-hudyat-gold" />
+            {STEP_ORDER.map(
+              (stepItem) => {
+                const isCurrent =
+                  step === stepItem;
 
-              <div>
-                <p className="text-sm font-extrabold">
-                  Meaning
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  What does it mean?
-                </p>
-              </div>
-            </button>
+                const stepIndex =
+                  STEP_ORDER.indexOf(
+                    stepItem,
+                  );
 
-            <button
-              type="button"
-              onClick={() => setStep("context")}
-              className={`flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left transition ${
-                step === "context"
-                  ? "bg-hudyat-gold/15 text-foreground"
-                  : "hover:bg-muted"
-              }`}
-            >
-              <MessageCircle className="size-5 shrink-0 text-hudyat-gold" />
+                const isCompleted =
+                  stepIndex <
+                  currentStepIndex;
 
-              <div>
-                <p className="text-sm font-extrabold">
-                  When to Use
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  See it in context.
-                </p>
-              </div>
-            </button>
+                const StepIcon =
+                  stepItem === "meaning"
+                    ? Lightbulb
+                    : stepItem === "context"
+                      ? MessageCircle
+                      : stepItem === "how"
+                        ? Hand
+                        : Camera;
 
-            <button
-              type="button"
-              onClick={() => setStep("how")}
-              className={`flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left transition ${
-                step === "how"
-                  ? "bg-hudyat-gold/15 text-foreground"
-                  : "hover:bg-muted"
-              }`}
-            >
-              <Hand className="size-5 shrink-0 text-hudyat-gold" />
+                return (
+                  <button
+                    key={stepItem}
+                    type="button"
+                    onClick={() =>
+                      void selectStep(
+                        stepItem,
+                      )
+                    }
+                    className={`flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left transition ${
+                      isCurrent
+                        ? "bg-hudyat-gold/15 text-foreground"
+                        : "hover:bg-muted"
+                    }`}
+                  >
+                    <StepIcon
+                      aria-hidden="true"
+                      className="size-5 shrink-0 text-hudyat-gold"
+                    />
 
-              <div>
-                <p className="text-sm font-extrabold">
-                  How to Sign
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  Watch the FSL sign.
-                </p>
-              </div>
-            </button>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-extrabold">
+                        {
+                          STEP_LABELS[
+                            stepItem
+                          ]
+                        }
+                      </p>
 
-            <button
-              type="button"
-              onClick={() => setStep("try")}
-              className={`flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left transition ${
-                step === "try"
-                  ? "bg-hudyat-gold/15 text-foreground"
-                  : "hover:bg-muted"
-              }`}
-            >
-              <Camera className="size-5 shrink-0 text-hudyat-gold" />
+                      <p className="text-xs text-muted-foreground">
+                        {stepItem ===
+                        "meaning"
+                          ? "What does it mean?"
+                          : stepItem ===
+                              "context"
+                            ? "See it in context."
+                            : stepItem ===
+                                "how"
+                              ? "Watch the FSL sign."
+                              : "Make the sign."}
+                      </p>
+                    </div>
 
-              <div>
-                <p className="text-sm font-extrabold">
-                  Try
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  Make the sign.
-                </p>
-              </div>
-            </button>
+                    {isCompleted && (
+                      <Check
+                        aria-hidden="true"
+                        className="size-4 shrink-0 text-hudyat-gold"
+                      />
+                    )}
+                  </button>
+                );
+              },
+            )}
           </Card>
         </div>
 
-        {/* ==========================================
-            RIGHT: MULTIPURPOSE LEARNING BOX
-        ========================================== */}
+        {/* RIGHT SIDE */}
         <div className="min-w-0">
           <div className="space-y-4">
+            {/* CONTENT AREA */}
             <div className="rounded-2xl border-2 border-hudyat-gold/30 bg-accent/20 p-2 sm:p-3">
               <div className="relative aspect-video w-full overflow-hidden rounded-lg bg-muted sm:min-h-56">
-                {/* ------------------------------------------
+                {/* =========================
                     MEANING
-                ------------------------------------------ */}
+                   ========================= */}
                 {step === "meaning" && (
                   <div className="flex h-full w-full flex-col items-center justify-center p-6 text-center">
                     <div className="mb-4 flex size-12 items-center justify-center rounded-full bg-hudyat-gold/15">
-                      <Lightbulb className="size-6 text-hudyat-gold" />
+                      <Lightbulb
+                        aria-hidden="true"
+                        className="size-6 text-hudyat-gold"
+                      />
                     </div>
 
                     <p className="text-xs font-extrabold uppercase tracking-[0.15em] text-hudyat-gold">
@@ -324,9 +400,9 @@ function LearnSession({
                   </div>
                 )}
 
-                {/* ------------------------------------------
-                    CONTEXT / WHEN TO USE
-                ------------------------------------------ */}
+                {/* =========================
+                    WHEN TO USE
+                   ========================= */}
                 {step === "context" && (
                   <div className="h-full w-full p-3">
                     <div className="mb-4 text-center">
@@ -342,7 +418,9 @@ function LearnSession({
                     {prompt.contextImageUrl ? (
                       <div className="overflow-hidden rounded-2xl bg-muted">
                         <img
-                          src={prompt.contextImageUrl}
+                          src={
+                            prompt.contextImageUrl
+                          }
                           alt={`Context for the sign ${prompt.label}`}
                           className="mx-auto aspect-video w-full object-contain"
                         />
@@ -350,7 +428,10 @@ function LearnSession({
                     ) : (
                       <div className="flex aspect-video w-full items-center justify-center rounded-2xl bg-muted/60 px-8 text-center">
                         <div>
-                          <MessageCircle className="mx-auto mb-4 size-12 text-hudyat-gold" />
+                          <MessageCircle
+                            aria-hidden="true"
+                            className="mx-auto mb-4 size-12 text-hudyat-gold"
+                          />
 
                           <p className="text-lg font-bold">
                             {whenToUseText}
@@ -358,16 +439,12 @@ function LearnSession({
                         </div>
                       </div>
                     )}
-
-                    <p className="mt-4 text-center text-sm leading-relaxed text-muted-foreground">
-                      {whenToUseText}
-                    </p>
                   </div>
                 )}
 
-                {/* ------------------------------------------
+                {/* =========================
                     HOW TO SIGN
-                ------------------------------------------ */}
+                   ========================= */}
                 {step === "how" && (
                   <PracticeReference
                     key={`${title}-${prompt.label}`}
@@ -375,31 +452,37 @@ function LearnSession({
                   />
                 )}
 
-                {/* ------------------------------------------
-                    TRY / CAMERA
-                ------------------------------------------ */}
+                {/* =========================
+                    TRY
+                   ========================= */}
                 {step === "try" && (
                   <PracticeCamera />
                 )}
               </div>
             </div>
 
+            {/* NAVIGATION / CONTINUE */}
             <div className="relative mt-28">
+              {/* CONTINUE ONLY APPEARS ON TRY */}
               {step === "try" && (
                 <div className="absolute bottom-full left-0 mb-1 flex w-full justify-center translate-y-8">
                   <ElevatedButton
-                    text={isLast ? "FINISH LESSON" : "CONTINUE"}
+                    text={
+                      isLast
+                        ? "FINISH LESSON"
+                        : "CONTINUE"
+                    }
                     icon={Check}
                     iconPosition="right"
                     className="min-h-10 w-full max-w-sm"
-                    onClick={continueLesson}
+                    onClick={() =>
+                      void continueLesson()
+                    }
                   />
                 </div>
               )}
 
-              {/* ------------------------------------------
-                  PREVIOUS + PROGRESS
-              ------------------------------------------ */}
+              {/* PREVIOUS + PROGRESS */}
               <div className="relative top-10 flex items-center gap-3 sm:gap-5">
                 <ElevatedButton
                   text=""
@@ -409,7 +492,13 @@ function LearnSession({
                   icon={ArrowLeft}
                   size="sm"
                   className="h-11 w-12 shrink-0 px-0 sm:h-9"
-                  onClick={previousStep}
+                  disabled={
+                    index === 0 &&
+                    step === "meaning"
+                  }
+                  onClick={() =>
+                    void previousStep()
+                  }
                 />
 
                 <div className="min-w-0 flex-1">
@@ -417,21 +506,33 @@ function LearnSession({
                     role="progressbar"
                     aria-label="Learning progress"
                     aria-valuemin={0}
-                    aria-valuemax={prompts.length}
-                    aria-valuenow={index + 1}
-                    aria-valuetext={`Sign ${index + 1} of ${prompts.length}`}
+                    aria-valuemax={
+                      prompts.length
+                    }
+                    aria-valuenow={
+                      index + 1
+                    }
+                    aria-valuetext={`Sign ${
+                      index + 1
+                    } of ${
+                      prompts.length
+                    }`}
                     className="h-5 overflow-hidden rounded-full border border-hudyat-gold/20 bg-muted p-0.5"
                   >
                     <div
                       className="h-full rounded-full bg-hudyat-gold shadow-sm transition-[width] motion-reduce:transition-none"
                       style={{
-                        width: `${practicePosition(index, prompts.length)}%`,
+                        width: `${practicePosition(
+                          index,
+                          prompts.length,
+                        )}%`,
                       }}
                     />
                   </div>
 
                   <p className="mt-1 text-center text-xs text-muted-foreground">
-                    Sign {index + 1} of {prompts.length}
+                    Sign {index + 1} of{" "}
+                    {prompts.length}
                   </p>
                 </div>
               </div>
@@ -444,26 +545,126 @@ function LearnSession({
 }
 
 export default function CategoryLearnPage() {
-  const { category: slug } = useParams();
+  const { category: categoryId } =
+    useParams();
+
   const navigate = useNavigate();
 
-  const category = CATEGORIES.find(
-    (item) => categorySlug(item.title) === slug,
-  );
+  const [lesson, setLesson] =
+    useState<CategoryLesson | null>(
+      null,
+    );
 
-  const prompts =
-    category && slug ? PRACTICE_PROMPTS[slug] : undefined;
+  const [isLoading, setIsLoading] =
+    useState(Boolean(categoryId));
+
+  const [error, setError] =
+    useState<string | null>(null);
+
+  useEffect(() => {
+    if (!categoryId) {
+      return;
+    }
+
+    let isMounted = true;
+
+    void getCategoryLesson(categoryId)
+      .then((categoryLesson) => {
+        if (isMounted) {
+          setLesson(categoryLesson);
+        }
+      })
+      .catch(
+        (requestError: unknown) => {
+          if (isMounted) {
+            setError(
+              requestError instanceof
+                Error
+                ? requestError.message
+                : "We couldn't load this lesson right now.",
+            );
+          }
+        },
+      )
+      .finally(() => {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [categoryId]);
+
+  const prompts: LessonPrompt[] =
+    lesson?.categoryGestures.map(
+      (item) => ({
+        label: item.gesture.label,
+
+        modelClass:
+          item.gesture.modelClass,
+
+        meaning:
+          item.gesture.meaning ??
+          undefined,
+
+        whenToUse:
+          item.exampleUsage ??
+          undefined,
+
+        referenceImageUrl:
+          item.gesture
+            .referenceImageUrl ??
+          undefined,
+
+        referenceVideoUrl:
+          item.demonstrationVideoUrl ??
+          item.gesture
+            .referenceVideoUrl ??
+          undefined,
+      }),
+    ) ?? [];
 
   return (
     <div className="min-h-dvh bg-background font-body text-foreground">
       <SessionHeader />
 
       <main className="mx-auto w-full max-w-5xl px-5 py-10 sm:px-10 sm:py-12">
-        {category && prompts?.length ? (
+        {isLoading ? (
+          <p
+            className="py-12 text-center text-sm text-muted-foreground"
+            role="status"
+          >
+            Loading this lesson...
+          </p>
+        ) : error || !categoryId ? (
+          <p
+            className="py-12 text-center text-sm font-bold text-destructive"
+            role="alert"
+          >
+            {error ??
+              "Category not found."}
+          </p>
+        ) : lesson?.category &&
+          prompts.length ? (
           <LearnSession
-            key={slug}
-            title={category.title}
+            key={lesson.category.id}
+            categoryId={
+              lesson.category.id
+            }
+            title={
+              lesson.category.name
+            }
             prompts={prompts}
+            initialGestureIndex={
+              lesson.progress
+                .lastGestureIndex
+            }
+            initialStep={
+              lesson.progress
+                .lastLessonStep
+            }
           />
         ) : (
           <Card className="mx-auto max-w-md p-8 text-center">
@@ -472,14 +673,20 @@ export default function CategoryLearnPage() {
             </h1>
 
             <p className="my-4 text-muted-foreground">
-              Choose an available category to start learning.
+              Choose an available
+              category to start
+              learning.
             </p>
 
             <ElevatedButton
               text="BACK TO LEARN"
               variant="secondary"
               className="min-h-11"
-              onClick={() => navigate("/student/learn")}
+              onClick={() =>
+                navigate(
+                  "/student/learn",
+                )
+              }
             />
           </Card>
         )}

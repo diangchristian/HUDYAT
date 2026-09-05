@@ -4,7 +4,17 @@ import { Star } from "lucide-react";
 import ElevatedButton from "@/components/ui/elavated-button";
 import { useNavigate } from "react-router";
 
-const QuizSummary = () => {
+type QuizSummaryProps = {
+  score?: number;
+  totalItems?: number;
+  onContinue?: () => void;
+};
+
+const QuizSummary = ({
+  score = 9,
+  totalItems = 10,
+  onContinue,
+}: QuizSummaryProps) => {
     const navigate = useNavigate();
   const [windowSize, setWindowSize] = useState({
     width: window.innerWidth,
@@ -86,7 +96,7 @@ const QuizSummary = () => {
 
               <div className="flex h-16 items-center justify-center sm:h-18">
                 <span className="text-4xl font-extrabold text-[#4a4a4a]">
-                  10
+                  {totalItems}
                 </span>
               </div>
             </div>
@@ -99,7 +109,7 @@ const QuizSummary = () => {
 
               <div className="flex h-16 items-center justify-center sm:h-18">
                 <span className="text-4xl font-extrabold text-[#4a4a4a]">
-                  9
+                  {score}
                 </span>
               </div>
             </div>
@@ -120,7 +130,7 @@ const QuizSummary = () => {
             text="CONTINUE"
             variant="primary"
             size="lg"
-            onClick={() => navigate("/student/learn")}
+            onClick={onContinue ?? (() => navigate("/student/learn"))}
           />
         </div>
       </footer>

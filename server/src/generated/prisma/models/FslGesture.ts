@@ -214,10 +214,10 @@ export type FslGestureWhereInput = {
   isValidated?: Prisma.BoolFilter<"FslGesture"> | boolean
   createdAt?: Prisma.DateTimeFilter<"FslGesture"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"FslGesture"> | Date | string
-  categoryGestures?: Prisma.CategoryGestureListRelationFilter
   assessmentQuestions?: Prisma.AssessmentQuestionListRelationFilter
-  questionChoices?: Prisma.QuestionChoiceListRelationFilter
+  categoryGestures?: Prisma.CategoryGestureListRelationFilter
   practiceSessions?: Prisma.PracticeSessionListRelationFilter
+  questionChoices?: Prisma.QuestionChoiceListRelationFilter
 }
 
 export type FslGestureOrderByWithRelationInput = {
@@ -230,10 +230,10 @@ export type FslGestureOrderByWithRelationInput = {
   isValidated?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  categoryGestures?: Prisma.CategoryGestureOrderByRelationAggregateInput
   assessmentQuestions?: Prisma.AssessmentQuestionOrderByRelationAggregateInput
-  questionChoices?: Prisma.QuestionChoiceOrderByRelationAggregateInput
+  categoryGestures?: Prisma.CategoryGestureOrderByRelationAggregateInput
   practiceSessions?: Prisma.PracticeSessionOrderByRelationAggregateInput
+  questionChoices?: Prisma.QuestionChoiceOrderByRelationAggregateInput
 }
 
 export type FslGestureWhereUniqueInput = Prisma.AtLeast<{
@@ -249,10 +249,10 @@ export type FslGestureWhereUniqueInput = Prisma.AtLeast<{
   isValidated?: Prisma.BoolFilter<"FslGesture"> | boolean
   createdAt?: Prisma.DateTimeFilter<"FslGesture"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"FslGesture"> | Date | string
-  categoryGestures?: Prisma.CategoryGestureListRelationFilter
   assessmentQuestions?: Prisma.AssessmentQuestionListRelationFilter
-  questionChoices?: Prisma.QuestionChoiceListRelationFilter
+  categoryGestures?: Prisma.CategoryGestureListRelationFilter
   practiceSessions?: Prisma.PracticeSessionListRelationFilter
+  questionChoices?: Prisma.QuestionChoiceListRelationFilter
 }, "id" | "label" | "modelClass">
 
 export type FslGestureOrderByWithAggregationInput = {
@@ -295,10 +295,10 @@ export type FslGestureCreateInput = {
   isValidated?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  categoryGestures?: Prisma.CategoryGestureCreateNestedManyWithoutGestureInput
   assessmentQuestions?: Prisma.AssessmentQuestionCreateNestedManyWithoutGestureInput
-  questionChoices?: Prisma.QuestionChoiceCreateNestedManyWithoutGestureInput
+  categoryGestures?: Prisma.CategoryGestureCreateNestedManyWithoutGestureInput
   practiceSessions?: Prisma.PracticeSessionCreateNestedManyWithoutGestureInput
+  questionChoices?: Prisma.QuestionChoiceCreateNestedManyWithoutGestureInput
 }
 
 export type FslGestureUncheckedCreateInput = {
@@ -311,10 +311,10 @@ export type FslGestureUncheckedCreateInput = {
   isValidated?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  categoryGestures?: Prisma.CategoryGestureUncheckedCreateNestedManyWithoutGestureInput
   assessmentQuestions?: Prisma.AssessmentQuestionUncheckedCreateNestedManyWithoutGestureInput
-  questionChoices?: Prisma.QuestionChoiceUncheckedCreateNestedManyWithoutGestureInput
+  categoryGestures?: Prisma.CategoryGestureUncheckedCreateNestedManyWithoutGestureInput
   practiceSessions?: Prisma.PracticeSessionUncheckedCreateNestedManyWithoutGestureInput
+  questionChoices?: Prisma.QuestionChoiceUncheckedCreateNestedManyWithoutGestureInput
 }
 
 export type FslGestureUpdateInput = {
@@ -327,10 +327,10 @@ export type FslGestureUpdateInput = {
   isValidated?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  categoryGestures?: Prisma.CategoryGestureUpdateManyWithoutGestureNestedInput
   assessmentQuestions?: Prisma.AssessmentQuestionUpdateManyWithoutGestureNestedInput
-  questionChoices?: Prisma.QuestionChoiceUpdateManyWithoutGestureNestedInput
+  categoryGestures?: Prisma.CategoryGestureUpdateManyWithoutGestureNestedInput
   practiceSessions?: Prisma.PracticeSessionUpdateManyWithoutGestureNestedInput
+  questionChoices?: Prisma.QuestionChoiceUpdateManyWithoutGestureNestedInput
 }
 
 export type FslGestureUncheckedUpdateInput = {
@@ -343,10 +343,10 @@ export type FslGestureUncheckedUpdateInput = {
   isValidated?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  categoryGestures?: Prisma.CategoryGestureUncheckedUpdateManyWithoutGestureNestedInput
   assessmentQuestions?: Prisma.AssessmentQuestionUncheckedUpdateManyWithoutGestureNestedInput
-  questionChoices?: Prisma.QuestionChoiceUncheckedUpdateManyWithoutGestureNestedInput
+  categoryGestures?: Prisma.CategoryGestureUncheckedUpdateManyWithoutGestureNestedInput
   practiceSessions?: Prisma.PracticeSessionUncheckedUpdateManyWithoutGestureNestedInput
+  questionChoices?: Prisma.QuestionChoiceUncheckedUpdateManyWithoutGestureNestedInput
 }
 
 export type FslGestureCreateManyInput = {
@@ -500,8 +500,8 @@ export type FslGestureCreateWithoutCategoryGesturesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   assessmentQuestions?: Prisma.AssessmentQuestionCreateNestedManyWithoutGestureInput
-  questionChoices?: Prisma.QuestionChoiceCreateNestedManyWithoutGestureInput
   practiceSessions?: Prisma.PracticeSessionCreateNestedManyWithoutGestureInput
+  questionChoices?: Prisma.QuestionChoiceCreateNestedManyWithoutGestureInput
 }
 
 export type FslGestureUncheckedCreateWithoutCategoryGesturesInput = {
@@ -515,8 +515,8 @@ export type FslGestureUncheckedCreateWithoutCategoryGesturesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   assessmentQuestions?: Prisma.AssessmentQuestionUncheckedCreateNestedManyWithoutGestureInput
-  questionChoices?: Prisma.QuestionChoiceUncheckedCreateNestedManyWithoutGestureInput
   practiceSessions?: Prisma.PracticeSessionUncheckedCreateNestedManyWithoutGestureInput
+  questionChoices?: Prisma.QuestionChoiceUncheckedCreateNestedManyWithoutGestureInput
 }
 
 export type FslGestureCreateOrConnectWithoutCategoryGesturesInput = {
@@ -546,8 +546,8 @@ export type FslGestureUpdateWithoutCategoryGesturesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assessmentQuestions?: Prisma.AssessmentQuestionUpdateManyWithoutGestureNestedInput
-  questionChoices?: Prisma.QuestionChoiceUpdateManyWithoutGestureNestedInput
   practiceSessions?: Prisma.PracticeSessionUpdateManyWithoutGestureNestedInput
+  questionChoices?: Prisma.QuestionChoiceUpdateManyWithoutGestureNestedInput
 }
 
 export type FslGestureUncheckedUpdateWithoutCategoryGesturesInput = {
@@ -561,8 +561,8 @@ export type FslGestureUncheckedUpdateWithoutCategoryGesturesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assessmentQuestions?: Prisma.AssessmentQuestionUncheckedUpdateManyWithoutGestureNestedInput
-  questionChoices?: Prisma.QuestionChoiceUncheckedUpdateManyWithoutGestureNestedInput
   practiceSessions?: Prisma.PracticeSessionUncheckedUpdateManyWithoutGestureNestedInput
+  questionChoices?: Prisma.QuestionChoiceUncheckedUpdateManyWithoutGestureNestedInput
 }
 
 export type FslGestureCreateWithoutAssessmentQuestionsInput = {
@@ -576,8 +576,8 @@ export type FslGestureCreateWithoutAssessmentQuestionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   categoryGestures?: Prisma.CategoryGestureCreateNestedManyWithoutGestureInput
-  questionChoices?: Prisma.QuestionChoiceCreateNestedManyWithoutGestureInput
   practiceSessions?: Prisma.PracticeSessionCreateNestedManyWithoutGestureInput
+  questionChoices?: Prisma.QuestionChoiceCreateNestedManyWithoutGestureInput
 }
 
 export type FslGestureUncheckedCreateWithoutAssessmentQuestionsInput = {
@@ -591,8 +591,8 @@ export type FslGestureUncheckedCreateWithoutAssessmentQuestionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   categoryGestures?: Prisma.CategoryGestureUncheckedCreateNestedManyWithoutGestureInput
-  questionChoices?: Prisma.QuestionChoiceUncheckedCreateNestedManyWithoutGestureInput
   practiceSessions?: Prisma.PracticeSessionUncheckedCreateNestedManyWithoutGestureInput
+  questionChoices?: Prisma.QuestionChoiceUncheckedCreateNestedManyWithoutGestureInput
 }
 
 export type FslGestureCreateOrConnectWithoutAssessmentQuestionsInput = {
@@ -622,8 +622,8 @@ export type FslGestureUpdateWithoutAssessmentQuestionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   categoryGestures?: Prisma.CategoryGestureUpdateManyWithoutGestureNestedInput
-  questionChoices?: Prisma.QuestionChoiceUpdateManyWithoutGestureNestedInput
   practiceSessions?: Prisma.PracticeSessionUpdateManyWithoutGestureNestedInput
+  questionChoices?: Prisma.QuestionChoiceUpdateManyWithoutGestureNestedInput
 }
 
 export type FslGestureUncheckedUpdateWithoutAssessmentQuestionsInput = {
@@ -637,8 +637,8 @@ export type FslGestureUncheckedUpdateWithoutAssessmentQuestionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   categoryGestures?: Prisma.CategoryGestureUncheckedUpdateManyWithoutGestureNestedInput
-  questionChoices?: Prisma.QuestionChoiceUncheckedUpdateManyWithoutGestureNestedInput
   practiceSessions?: Prisma.PracticeSessionUncheckedUpdateManyWithoutGestureNestedInput
+  questionChoices?: Prisma.QuestionChoiceUncheckedUpdateManyWithoutGestureNestedInput
 }
 
 export type FslGestureCreateWithoutQuestionChoicesInput = {
@@ -651,8 +651,8 @@ export type FslGestureCreateWithoutQuestionChoicesInput = {
   isValidated?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  categoryGestures?: Prisma.CategoryGestureCreateNestedManyWithoutGestureInput
   assessmentQuestions?: Prisma.AssessmentQuestionCreateNestedManyWithoutGestureInput
+  categoryGestures?: Prisma.CategoryGestureCreateNestedManyWithoutGestureInput
   practiceSessions?: Prisma.PracticeSessionCreateNestedManyWithoutGestureInput
 }
 
@@ -666,8 +666,8 @@ export type FslGestureUncheckedCreateWithoutQuestionChoicesInput = {
   isValidated?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  categoryGestures?: Prisma.CategoryGestureUncheckedCreateNestedManyWithoutGestureInput
   assessmentQuestions?: Prisma.AssessmentQuestionUncheckedCreateNestedManyWithoutGestureInput
+  categoryGestures?: Prisma.CategoryGestureUncheckedCreateNestedManyWithoutGestureInput
   practiceSessions?: Prisma.PracticeSessionUncheckedCreateNestedManyWithoutGestureInput
 }
 
@@ -697,8 +697,8 @@ export type FslGestureUpdateWithoutQuestionChoicesInput = {
   isValidated?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  categoryGestures?: Prisma.CategoryGestureUpdateManyWithoutGestureNestedInput
   assessmentQuestions?: Prisma.AssessmentQuestionUpdateManyWithoutGestureNestedInput
+  categoryGestures?: Prisma.CategoryGestureUpdateManyWithoutGestureNestedInput
   practiceSessions?: Prisma.PracticeSessionUpdateManyWithoutGestureNestedInput
 }
 
@@ -712,8 +712,8 @@ export type FslGestureUncheckedUpdateWithoutQuestionChoicesInput = {
   isValidated?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  categoryGestures?: Prisma.CategoryGestureUncheckedUpdateManyWithoutGestureNestedInput
   assessmentQuestions?: Prisma.AssessmentQuestionUncheckedUpdateManyWithoutGestureNestedInput
+  categoryGestures?: Prisma.CategoryGestureUncheckedUpdateManyWithoutGestureNestedInput
   practiceSessions?: Prisma.PracticeSessionUncheckedUpdateManyWithoutGestureNestedInput
 }
 
@@ -727,8 +727,8 @@ export type FslGestureCreateWithoutPracticeSessionsInput = {
   isValidated?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  categoryGestures?: Prisma.CategoryGestureCreateNestedManyWithoutGestureInput
   assessmentQuestions?: Prisma.AssessmentQuestionCreateNestedManyWithoutGestureInput
+  categoryGestures?: Prisma.CategoryGestureCreateNestedManyWithoutGestureInput
   questionChoices?: Prisma.QuestionChoiceCreateNestedManyWithoutGestureInput
 }
 
@@ -742,8 +742,8 @@ export type FslGestureUncheckedCreateWithoutPracticeSessionsInput = {
   isValidated?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  categoryGestures?: Prisma.CategoryGestureUncheckedCreateNestedManyWithoutGestureInput
   assessmentQuestions?: Prisma.AssessmentQuestionUncheckedCreateNestedManyWithoutGestureInput
+  categoryGestures?: Prisma.CategoryGestureUncheckedCreateNestedManyWithoutGestureInput
   questionChoices?: Prisma.QuestionChoiceUncheckedCreateNestedManyWithoutGestureInput
 }
 
@@ -773,8 +773,8 @@ export type FslGestureUpdateWithoutPracticeSessionsInput = {
   isValidated?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  categoryGestures?: Prisma.CategoryGestureUpdateManyWithoutGestureNestedInput
   assessmentQuestions?: Prisma.AssessmentQuestionUpdateManyWithoutGestureNestedInput
+  categoryGestures?: Prisma.CategoryGestureUpdateManyWithoutGestureNestedInput
   questionChoices?: Prisma.QuestionChoiceUpdateManyWithoutGestureNestedInput
 }
 
@@ -788,8 +788,8 @@ export type FslGestureUncheckedUpdateWithoutPracticeSessionsInput = {
   isValidated?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  categoryGestures?: Prisma.CategoryGestureUncheckedUpdateManyWithoutGestureNestedInput
   assessmentQuestions?: Prisma.AssessmentQuestionUncheckedUpdateManyWithoutGestureNestedInput
+  categoryGestures?: Prisma.CategoryGestureUncheckedUpdateManyWithoutGestureNestedInput
   questionChoices?: Prisma.QuestionChoiceUncheckedUpdateManyWithoutGestureNestedInput
 }
 
@@ -799,17 +799,17 @@ export type FslGestureUncheckedUpdateWithoutPracticeSessionsInput = {
  */
 
 export type FslGestureCountOutputType = {
-  categoryGestures: number
   assessmentQuestions: number
-  questionChoices: number
+  categoryGestures: number
   practiceSessions: number
+  questionChoices: number
 }
 
 export type FslGestureCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  categoryGestures?: boolean | FslGestureCountOutputTypeCountCategoryGesturesArgs
   assessmentQuestions?: boolean | FslGestureCountOutputTypeCountAssessmentQuestionsArgs
-  questionChoices?: boolean | FslGestureCountOutputTypeCountQuestionChoicesArgs
+  categoryGestures?: boolean | FslGestureCountOutputTypeCountCategoryGesturesArgs
   practiceSessions?: boolean | FslGestureCountOutputTypeCountPracticeSessionsArgs
+  questionChoices?: boolean | FslGestureCountOutputTypeCountQuestionChoicesArgs
 }
 
 /**
@@ -825,13 +825,6 @@ export type FslGestureCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.E
 /**
  * FslGestureCountOutputType without action
  */
-export type FslGestureCountOutputTypeCountCategoryGesturesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.CategoryGestureWhereInput
-}
-
-/**
- * FslGestureCountOutputType without action
- */
 export type FslGestureCountOutputTypeCountAssessmentQuestionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.AssessmentQuestionWhereInput
 }
@@ -839,8 +832,8 @@ export type FslGestureCountOutputTypeCountAssessmentQuestionsArgs<ExtArgs extend
 /**
  * FslGestureCountOutputType without action
  */
-export type FslGestureCountOutputTypeCountQuestionChoicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.QuestionChoiceWhereInput
+export type FslGestureCountOutputTypeCountCategoryGesturesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CategoryGestureWhereInput
 }
 
 /**
@@ -848,6 +841,13 @@ export type FslGestureCountOutputTypeCountQuestionChoicesArgs<ExtArgs extends ru
  */
 export type FslGestureCountOutputTypeCountPracticeSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.PracticeSessionWhereInput
+}
+
+/**
+ * FslGestureCountOutputType without action
+ */
+export type FslGestureCountOutputTypeCountQuestionChoicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.QuestionChoiceWhereInput
 }
 
 
@@ -861,10 +861,10 @@ export type FslGestureSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   isValidated?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  categoryGestures?: boolean | Prisma.FslGesture$categoryGesturesArgs<ExtArgs>
   assessmentQuestions?: boolean | Prisma.FslGesture$assessmentQuestionsArgs<ExtArgs>
-  questionChoices?: boolean | Prisma.FslGesture$questionChoicesArgs<ExtArgs>
+  categoryGestures?: boolean | Prisma.FslGesture$categoryGesturesArgs<ExtArgs>
   practiceSessions?: boolean | Prisma.FslGesture$practiceSessionsArgs<ExtArgs>
+  questionChoices?: boolean | Prisma.FslGesture$questionChoicesArgs<ExtArgs>
   _count?: boolean | Prisma.FslGestureCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["fslGesture"]>
 
@@ -906,10 +906,10 @@ export type FslGestureSelectScalar = {
 
 export type FslGestureOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "label" | "meaning" | "modelClass" | "referenceImageUrl" | "referenceVideoUrl" | "isValidated" | "createdAt" | "updatedAt", ExtArgs["result"]["fslGesture"]>
 export type FslGestureInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  categoryGestures?: boolean | Prisma.FslGesture$categoryGesturesArgs<ExtArgs>
   assessmentQuestions?: boolean | Prisma.FslGesture$assessmentQuestionsArgs<ExtArgs>
-  questionChoices?: boolean | Prisma.FslGesture$questionChoicesArgs<ExtArgs>
+  categoryGestures?: boolean | Prisma.FslGesture$categoryGesturesArgs<ExtArgs>
   practiceSessions?: boolean | Prisma.FslGesture$practiceSessionsArgs<ExtArgs>
+  questionChoices?: boolean | Prisma.FslGesture$questionChoicesArgs<ExtArgs>
   _count?: boolean | Prisma.FslGestureCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type FslGestureIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -918,10 +918,10 @@ export type FslGestureIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.E
 export type $FslGesturePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "FslGesture"
   objects: {
-    categoryGestures: Prisma.$CategoryGesturePayload<ExtArgs>[]
     assessmentQuestions: Prisma.$AssessmentQuestionPayload<ExtArgs>[]
-    questionChoices: Prisma.$QuestionChoicePayload<ExtArgs>[]
+    categoryGestures: Prisma.$CategoryGesturePayload<ExtArgs>[]
     practiceSessions: Prisma.$PracticeSessionPayload<ExtArgs>[]
+    questionChoices: Prisma.$QuestionChoicePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1327,10 +1327,10 @@ readonly fields: FslGestureFieldRefs;
  */
 export interface Prisma__FslGestureClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  categoryGestures<T extends Prisma.FslGesture$categoryGesturesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FslGesture$categoryGesturesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CategoryGesturePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   assessmentQuestions<T extends Prisma.FslGesture$assessmentQuestionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FslGesture$assessmentQuestionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AssessmentQuestionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  questionChoices<T extends Prisma.FslGesture$questionChoicesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FslGesture$questionChoicesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$QuestionChoicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  categoryGestures<T extends Prisma.FslGesture$categoryGesturesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FslGesture$categoryGesturesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CategoryGesturePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   practiceSessions<T extends Prisma.FslGesture$practiceSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FslGesture$practiceSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PracticeSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  questionChoices<T extends Prisma.FslGesture$questionChoicesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FslGesture$questionChoicesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$QuestionChoicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1762,30 +1762,6 @@ export type FslGestureDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.In
 }
 
 /**
- * FslGesture.categoryGestures
- */
-export type FslGesture$categoryGesturesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the CategoryGesture
-   */
-  select?: Prisma.CategoryGestureSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the CategoryGesture
-   */
-  omit?: Prisma.CategoryGestureOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.CategoryGestureInclude<ExtArgs> | null
-  where?: Prisma.CategoryGestureWhereInput
-  orderBy?: Prisma.CategoryGestureOrderByWithRelationInput | Prisma.CategoryGestureOrderByWithRelationInput[]
-  cursor?: Prisma.CategoryGestureWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.CategoryGestureScalarFieldEnum | Prisma.CategoryGestureScalarFieldEnum[]
-}
-
-/**
  * FslGesture.assessmentQuestions
  */
 export type FslGesture$assessmentQuestionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1810,27 +1786,27 @@ export type FslGesture$assessmentQuestionsArgs<ExtArgs extends runtime.Types.Ext
 }
 
 /**
- * FslGesture.questionChoices
+ * FslGesture.categoryGestures
  */
-export type FslGesture$questionChoicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type FslGesture$categoryGesturesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the QuestionChoice
+   * Select specific fields to fetch from the CategoryGesture
    */
-  select?: Prisma.QuestionChoiceSelect<ExtArgs> | null
+  select?: Prisma.CategoryGestureSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the QuestionChoice
+   * Omit specific fields from the CategoryGesture
    */
-  omit?: Prisma.QuestionChoiceOmit<ExtArgs> | null
+  omit?: Prisma.CategoryGestureOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.QuestionChoiceInclude<ExtArgs> | null
-  where?: Prisma.QuestionChoiceWhereInput
-  orderBy?: Prisma.QuestionChoiceOrderByWithRelationInput | Prisma.QuestionChoiceOrderByWithRelationInput[]
-  cursor?: Prisma.QuestionChoiceWhereUniqueInput
+  include?: Prisma.CategoryGestureInclude<ExtArgs> | null
+  where?: Prisma.CategoryGestureWhereInput
+  orderBy?: Prisma.CategoryGestureOrderByWithRelationInput | Prisma.CategoryGestureOrderByWithRelationInput[]
+  cursor?: Prisma.CategoryGestureWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.QuestionChoiceScalarFieldEnum | Prisma.QuestionChoiceScalarFieldEnum[]
+  distinct?: Prisma.CategoryGestureScalarFieldEnum | Prisma.CategoryGestureScalarFieldEnum[]
 }
 
 /**
@@ -1855,6 +1831,30 @@ export type FslGesture$practiceSessionsArgs<ExtArgs extends runtime.Types.Extens
   take?: number
   skip?: number
   distinct?: Prisma.PracticeSessionScalarFieldEnum | Prisma.PracticeSessionScalarFieldEnum[]
+}
+
+/**
+ * FslGesture.questionChoices
+ */
+export type FslGesture$questionChoicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the QuestionChoice
+   */
+  select?: Prisma.QuestionChoiceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the QuestionChoice
+   */
+  omit?: Prisma.QuestionChoiceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.QuestionChoiceInclude<ExtArgs> | null
+  where?: Prisma.QuestionChoiceWhereInput
+  orderBy?: Prisma.QuestionChoiceOrderByWithRelationInput | Prisma.QuestionChoiceOrderByWithRelationInput[]
+  cursor?: Prisma.QuestionChoiceWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.QuestionChoiceScalarFieldEnum | Prisma.QuestionChoiceScalarFieldEnum[]
 }
 
 /**

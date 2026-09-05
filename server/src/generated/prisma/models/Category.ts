@@ -240,9 +240,9 @@ export type CategoryWhereInput = {
   isActive?: Prisma.BoolFilter<"Category"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Category"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Category"> | Date | string
+  assessment?: Prisma.XOR<Prisma.AssessmentNullableScalarRelationFilter, Prisma.AssessmentWhereInput> | null
   learningArea?: Prisma.XOR<Prisma.LearningAreaScalarRelationFilter, Prisma.LearningAreaWhereInput>
   gestures?: Prisma.CategoryGestureListRelationFilter
-  assessment?: Prisma.XOR<Prisma.AssessmentNullableScalarRelationFilter, Prisma.AssessmentWhereInput> | null
   progress?: Prisma.CategoryProgressListRelationFilter
 }
 
@@ -255,9 +255,9 @@ export type CategoryOrderByWithRelationInput = {
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  assessment?: Prisma.AssessmentOrderByWithRelationInput
   learningArea?: Prisma.LearningAreaOrderByWithRelationInput
   gestures?: Prisma.CategoryGestureOrderByRelationAggregateInput
-  assessment?: Prisma.AssessmentOrderByWithRelationInput
   progress?: Prisma.CategoryProgressOrderByRelationAggregateInput
 }
 
@@ -275,9 +275,9 @@ export type CategoryWhereUniqueInput = Prisma.AtLeast<{
   isActive?: Prisma.BoolFilter<"Category"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Category"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Category"> | Date | string
+  assessment?: Prisma.XOR<Prisma.AssessmentNullableScalarRelationFilter, Prisma.AssessmentWhereInput> | null
   learningArea?: Prisma.XOR<Prisma.LearningAreaScalarRelationFilter, Prisma.LearningAreaWhereInput>
   gestures?: Prisma.CategoryGestureListRelationFilter
-  assessment?: Prisma.XOR<Prisma.AssessmentNullableScalarRelationFilter, Prisma.AssessmentWhereInput> | null
   progress?: Prisma.CategoryProgressListRelationFilter
 }, "id" | "learningAreaId_name" | "learningAreaId_displayOrder">
 
@@ -319,9 +319,9 @@ export type CategoryCreateInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  assessment?: Prisma.AssessmentCreateNestedOneWithoutCategoryInput
   learningArea: Prisma.LearningAreaCreateNestedOneWithoutCategoriesInput
   gestures?: Prisma.CategoryGestureCreateNestedManyWithoutCategoryInput
-  assessment?: Prisma.AssessmentCreateNestedOneWithoutCategoryInput
   progress?: Prisma.CategoryProgressCreateNestedManyWithoutCategoryInput
 }
 
@@ -334,8 +334,8 @@ export type CategoryUncheckedCreateInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  gestures?: Prisma.CategoryGestureUncheckedCreateNestedManyWithoutCategoryInput
   assessment?: Prisma.AssessmentUncheckedCreateNestedOneWithoutCategoryInput
+  gestures?: Prisma.CategoryGestureUncheckedCreateNestedManyWithoutCategoryInput
   progress?: Prisma.CategoryProgressUncheckedCreateNestedManyWithoutCategoryInput
 }
 
@@ -347,9 +347,9 @@ export type CategoryUpdateInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  assessment?: Prisma.AssessmentUpdateOneWithoutCategoryNestedInput
   learningArea?: Prisma.LearningAreaUpdateOneRequiredWithoutCategoriesNestedInput
   gestures?: Prisma.CategoryGestureUpdateManyWithoutCategoryNestedInput
-  assessment?: Prisma.AssessmentUpdateOneWithoutCategoryNestedInput
   progress?: Prisma.CategoryProgressUpdateManyWithoutCategoryNestedInput
 }
 
@@ -362,8 +362,8 @@ export type CategoryUncheckedUpdateInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  gestures?: Prisma.CategoryGestureUncheckedUpdateManyWithoutCategoryNestedInput
   assessment?: Prisma.AssessmentUncheckedUpdateOneWithoutCategoryNestedInput
+  gestures?: Prisma.CategoryGestureUncheckedUpdateManyWithoutCategoryNestedInput
   progress?: Prisma.CategoryProgressUncheckedUpdateManyWithoutCategoryNestedInput
 }
 
@@ -557,8 +557,8 @@ export type CategoryCreateWithoutLearningAreaInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  gestures?: Prisma.CategoryGestureCreateNestedManyWithoutCategoryInput
   assessment?: Prisma.AssessmentCreateNestedOneWithoutCategoryInput
+  gestures?: Prisma.CategoryGestureCreateNestedManyWithoutCategoryInput
   progress?: Prisma.CategoryProgressCreateNestedManyWithoutCategoryInput
 }
 
@@ -570,8 +570,8 @@ export type CategoryUncheckedCreateWithoutLearningAreaInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  gestures?: Prisma.CategoryGestureUncheckedCreateNestedManyWithoutCategoryInput
   assessment?: Prisma.AssessmentUncheckedCreateNestedOneWithoutCategoryInput
+  gestures?: Prisma.CategoryGestureUncheckedCreateNestedManyWithoutCategoryInput
   progress?: Prisma.CategoryProgressUncheckedCreateNestedManyWithoutCategoryInput
 }
 
@@ -623,8 +623,8 @@ export type CategoryCreateWithoutGesturesInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  learningArea: Prisma.LearningAreaCreateNestedOneWithoutCategoriesInput
   assessment?: Prisma.AssessmentCreateNestedOneWithoutCategoryInput
+  learningArea: Prisma.LearningAreaCreateNestedOneWithoutCategoriesInput
   progress?: Prisma.CategoryProgressCreateNestedManyWithoutCategoryInput
 }
 
@@ -665,8 +665,8 @@ export type CategoryUpdateWithoutGesturesInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  learningArea?: Prisma.LearningAreaUpdateOneRequiredWithoutCategoriesNestedInput
   assessment?: Prisma.AssessmentUpdateOneWithoutCategoryNestedInput
+  learningArea?: Prisma.LearningAreaUpdateOneRequiredWithoutCategoriesNestedInput
   progress?: Prisma.CategoryProgressUpdateManyWithoutCategoryNestedInput
 }
 
@@ -759,9 +759,9 @@ export type CategoryCreateWithoutProgressInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  assessment?: Prisma.AssessmentCreateNestedOneWithoutCategoryInput
   learningArea: Prisma.LearningAreaCreateNestedOneWithoutCategoriesInput
   gestures?: Prisma.CategoryGestureCreateNestedManyWithoutCategoryInput
-  assessment?: Prisma.AssessmentCreateNestedOneWithoutCategoryInput
 }
 
 export type CategoryUncheckedCreateWithoutProgressInput = {
@@ -773,8 +773,8 @@ export type CategoryUncheckedCreateWithoutProgressInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  gestures?: Prisma.CategoryGestureUncheckedCreateNestedManyWithoutCategoryInput
   assessment?: Prisma.AssessmentUncheckedCreateNestedOneWithoutCategoryInput
+  gestures?: Prisma.CategoryGestureUncheckedCreateNestedManyWithoutCategoryInput
 }
 
 export type CategoryCreateOrConnectWithoutProgressInput = {
@@ -801,9 +801,9 @@ export type CategoryUpdateWithoutProgressInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  assessment?: Prisma.AssessmentUpdateOneWithoutCategoryNestedInput
   learningArea?: Prisma.LearningAreaUpdateOneRequiredWithoutCategoriesNestedInput
   gestures?: Prisma.CategoryGestureUpdateManyWithoutCategoryNestedInput
-  assessment?: Prisma.AssessmentUpdateOneWithoutCategoryNestedInput
 }
 
 export type CategoryUncheckedUpdateWithoutProgressInput = {
@@ -815,8 +815,8 @@ export type CategoryUncheckedUpdateWithoutProgressInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  gestures?: Prisma.CategoryGestureUncheckedUpdateManyWithoutCategoryNestedInput
   assessment?: Prisma.AssessmentUncheckedUpdateOneWithoutCategoryNestedInput
+  gestures?: Prisma.CategoryGestureUncheckedUpdateManyWithoutCategoryNestedInput
 }
 
 export type CategoryCreateManyLearningAreaInput = {
@@ -837,8 +837,8 @@ export type CategoryUpdateWithoutLearningAreaInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  gestures?: Prisma.CategoryGestureUpdateManyWithoutCategoryNestedInput
   assessment?: Prisma.AssessmentUpdateOneWithoutCategoryNestedInput
+  gestures?: Prisma.CategoryGestureUpdateManyWithoutCategoryNestedInput
   progress?: Prisma.CategoryProgressUpdateManyWithoutCategoryNestedInput
 }
 
@@ -850,8 +850,8 @@ export type CategoryUncheckedUpdateWithoutLearningAreaInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  gestures?: Prisma.CategoryGestureUncheckedUpdateManyWithoutCategoryNestedInput
   assessment?: Prisma.AssessmentUncheckedUpdateOneWithoutCategoryNestedInput
+  gestures?: Prisma.CategoryGestureUncheckedUpdateManyWithoutCategoryNestedInput
   progress?: Prisma.CategoryProgressUncheckedUpdateManyWithoutCategoryNestedInput
 }
 
@@ -914,9 +914,9 @@ export type CategorySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  assessment?: boolean | Prisma.Category$assessmentArgs<ExtArgs>
   learningArea?: boolean | Prisma.LearningAreaDefaultArgs<ExtArgs>
   gestures?: boolean | Prisma.Category$gesturesArgs<ExtArgs>
-  assessment?: boolean | Prisma.Category$assessmentArgs<ExtArgs>
   progress?: boolean | Prisma.Category$progressArgs<ExtArgs>
   _count?: boolean | Prisma.CategoryCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["category"]>
@@ -958,9 +958,9 @@ export type CategorySelectScalar = {
 
 export type CategoryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "learningAreaId" | "name" | "description" | "displayOrder" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["category"]>
 export type CategoryInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  assessment?: boolean | Prisma.Category$assessmentArgs<ExtArgs>
   learningArea?: boolean | Prisma.LearningAreaDefaultArgs<ExtArgs>
   gestures?: boolean | Prisma.Category$gesturesArgs<ExtArgs>
-  assessment?: boolean | Prisma.Category$assessmentArgs<ExtArgs>
   progress?: boolean | Prisma.Category$progressArgs<ExtArgs>
   _count?: boolean | Prisma.CategoryCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -974,9 +974,9 @@ export type CategoryIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
 export type $CategoryPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Category"
   objects: {
+    assessment: Prisma.$AssessmentPayload<ExtArgs> | null
     learningArea: Prisma.$LearningAreaPayload<ExtArgs>
     gestures: Prisma.$CategoryGesturePayload<ExtArgs>[]
-    assessment: Prisma.$AssessmentPayload<ExtArgs> | null
     progress: Prisma.$CategoryProgressPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1382,9 +1382,9 @@ readonly fields: CategoryFieldRefs;
  */
 export interface Prisma__CategoryClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  assessment<T extends Prisma.Category$assessmentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Category$assessmentArgs<ExtArgs>>): Prisma.Prisma__AssessmentClient<runtime.Types.Result.GetResult<Prisma.$AssessmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   learningArea<T extends Prisma.LearningAreaDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LearningAreaDefaultArgs<ExtArgs>>): Prisma.Prisma__LearningAreaClient<runtime.Types.Result.GetResult<Prisma.$LearningAreaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   gestures<T extends Prisma.Category$gesturesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Category$gesturesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CategoryGesturePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  assessment<T extends Prisma.Category$assessmentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Category$assessmentArgs<ExtArgs>>): Prisma.Prisma__AssessmentClient<runtime.Types.Result.GetResult<Prisma.$AssessmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   progress<T extends Prisma.Category$progressArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Category$progressArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CategoryProgressPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1824,6 +1824,25 @@ export type CategoryDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
 }
 
 /**
+ * Category.assessment
+ */
+export type Category$assessmentArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Assessment
+   */
+  select?: Prisma.AssessmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Assessment
+   */
+  omit?: Prisma.AssessmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AssessmentInclude<ExtArgs> | null
+  where?: Prisma.AssessmentWhereInput
+}
+
+/**
  * Category.gestures
  */
 export type Category$gesturesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1845,25 +1864,6 @@ export type Category$gesturesArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.CategoryGestureScalarFieldEnum | Prisma.CategoryGestureScalarFieldEnum[]
-}
-
-/**
- * Category.assessment
- */
-export type Category$assessmentArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Assessment
-   */
-  select?: Prisma.AssessmentSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Assessment
-   */
-  omit?: Prisma.AssessmentOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.AssessmentInclude<ExtArgs> | null
-  where?: Prisma.AssessmentWhereInput
 }
 
 /**

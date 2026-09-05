@@ -1,16 +1,24 @@
 import Router from "express";
-import { getAllAssessments, getAssessmentById } from "../controllers/assessment.controller.js";
+
+import {
+  getAssessment,
+  submitAssessment,
+} from "../controllers/assessment.controller.js";
 
 import { authMiddleware } from "../middleware/authMiddleware.js";
 
 const assessmentRouter = Router();
 
-assessmentRouter.use(authMiddleware)
+assessmentRouter.use(authMiddleware);
 
-assessmentRouter.get("/", getAllAssessments)
-assessmentRouter.get("/:assessmentId", getAssessmentById)
+assessmentRouter.get(
+  "/categories/:categoryId",
+  getAssessment,
+);
 
+assessmentRouter.post(
+  "/categories/:categoryId/submit",
+  submitAssessment,
+);
 
-
-
-export default assessmentRouter
+export default assessmentRouter;

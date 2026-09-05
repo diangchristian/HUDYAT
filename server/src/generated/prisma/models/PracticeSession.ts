@@ -232,8 +232,8 @@ export type PracticeSessionWhereInput = {
   confidence?: Prisma.DecimalNullableFilter<"PracticeSession"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   isCorrect?: Prisma.BoolFilter<"PracticeSession"> | boolean
   attemptedAt?: Prisma.DateTimeFilter<"PracticeSession"> | Date | string
-  learner?: Prisma.XOR<Prisma.LearnerProfileScalarRelationFilter, Prisma.LearnerProfileWhereInput>
   gesture?: Prisma.XOR<Prisma.FslGestureScalarRelationFilter, Prisma.FslGestureWhereInput>
+  learner?: Prisma.XOR<Prisma.LearnerProfileScalarRelationFilter, Prisma.LearnerProfileWhereInput>
 }
 
 export type PracticeSessionOrderByWithRelationInput = {
@@ -244,8 +244,8 @@ export type PracticeSessionOrderByWithRelationInput = {
   confidence?: Prisma.SortOrderInput | Prisma.SortOrder
   isCorrect?: Prisma.SortOrder
   attemptedAt?: Prisma.SortOrder
-  learner?: Prisma.LearnerProfileOrderByWithRelationInput
   gesture?: Prisma.FslGestureOrderByWithRelationInput
+  learner?: Prisma.LearnerProfileOrderByWithRelationInput
 }
 
 export type PracticeSessionWhereUniqueInput = Prisma.AtLeast<{
@@ -259,8 +259,8 @@ export type PracticeSessionWhereUniqueInput = Prisma.AtLeast<{
   confidence?: Prisma.DecimalNullableFilter<"PracticeSession"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   isCorrect?: Prisma.BoolFilter<"PracticeSession"> | boolean
   attemptedAt?: Prisma.DateTimeFilter<"PracticeSession"> | Date | string
-  learner?: Prisma.XOR<Prisma.LearnerProfileScalarRelationFilter, Prisma.LearnerProfileWhereInput>
   gesture?: Prisma.XOR<Prisma.FslGestureScalarRelationFilter, Prisma.FslGestureWhereInput>
+  learner?: Prisma.XOR<Prisma.LearnerProfileScalarRelationFilter, Prisma.LearnerProfileWhereInput>
 }, "id">
 
 export type PracticeSessionOrderByWithAggregationInput = {
@@ -297,8 +297,8 @@ export type PracticeSessionCreateInput = {
   confidence?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   isCorrect: boolean
   attemptedAt?: Date | string
-  learner: Prisma.LearnerProfileCreateNestedOneWithoutPracticeSessionsInput
   gesture: Prisma.FslGestureCreateNestedOneWithoutPracticeSessionsInput
+  learner: Prisma.LearnerProfileCreateNestedOneWithoutPracticeSessionsInput
 }
 
 export type PracticeSessionUncheckedCreateInput = {
@@ -317,8 +317,8 @@ export type PracticeSessionUpdateInput = {
   confidence?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   isCorrect?: Prisma.BoolFieldUpdateOperationsInput | boolean
   attemptedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  learner?: Prisma.LearnerProfileUpdateOneRequiredWithoutPracticeSessionsNestedInput
   gesture?: Prisma.FslGestureUpdateOneRequiredWithoutPracticeSessionsNestedInput
+  learner?: Prisma.LearnerProfileUpdateOneRequiredWithoutPracticeSessionsNestedInput
 }
 
 export type PracticeSessionUncheckedUpdateInput = {
@@ -682,8 +682,8 @@ export type PracticeSessionSelect<ExtArgs extends runtime.Types.Extensions.Inter
   confidence?: boolean
   isCorrect?: boolean
   attemptedAt?: boolean
-  learner?: boolean | Prisma.LearnerProfileDefaultArgs<ExtArgs>
   gesture?: boolean | Prisma.FslGestureDefaultArgs<ExtArgs>
+  learner?: boolean | Prisma.LearnerProfileDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["practiceSession"]>
 
 export type PracticeSessionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -694,8 +694,8 @@ export type PracticeSessionSelectCreateManyAndReturn<ExtArgs extends runtime.Typ
   confidence?: boolean
   isCorrect?: boolean
   attemptedAt?: boolean
-  learner?: boolean | Prisma.LearnerProfileDefaultArgs<ExtArgs>
   gesture?: boolean | Prisma.FslGestureDefaultArgs<ExtArgs>
+  learner?: boolean | Prisma.LearnerProfileDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["practiceSession"]>
 
 export type PracticeSessionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -706,8 +706,8 @@ export type PracticeSessionSelectUpdateManyAndReturn<ExtArgs extends runtime.Typ
   confidence?: boolean
   isCorrect?: boolean
   attemptedAt?: boolean
-  learner?: boolean | Prisma.LearnerProfileDefaultArgs<ExtArgs>
   gesture?: boolean | Prisma.FslGestureDefaultArgs<ExtArgs>
+  learner?: boolean | Prisma.LearnerProfileDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["practiceSession"]>
 
 export type PracticeSessionSelectScalar = {
@@ -722,23 +722,23 @@ export type PracticeSessionSelectScalar = {
 
 export type PracticeSessionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "learnerId" | "gestureId" | "recognizedLabel" | "confidence" | "isCorrect" | "attemptedAt", ExtArgs["result"]["practiceSession"]>
 export type PracticeSessionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  learner?: boolean | Prisma.LearnerProfileDefaultArgs<ExtArgs>
   gesture?: boolean | Prisma.FslGestureDefaultArgs<ExtArgs>
+  learner?: boolean | Prisma.LearnerProfileDefaultArgs<ExtArgs>
 }
 export type PracticeSessionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  learner?: boolean | Prisma.LearnerProfileDefaultArgs<ExtArgs>
   gesture?: boolean | Prisma.FslGestureDefaultArgs<ExtArgs>
+  learner?: boolean | Prisma.LearnerProfileDefaultArgs<ExtArgs>
 }
 export type PracticeSessionIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  learner?: boolean | Prisma.LearnerProfileDefaultArgs<ExtArgs>
   gesture?: boolean | Prisma.FslGestureDefaultArgs<ExtArgs>
+  learner?: boolean | Prisma.LearnerProfileDefaultArgs<ExtArgs>
 }
 
 export type $PracticeSessionPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "PracticeSession"
   objects: {
-    learner: Prisma.$LearnerProfilePayload<ExtArgs>
     gesture: Prisma.$FslGesturePayload<ExtArgs>
+    learner: Prisma.$LearnerProfilePayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1142,8 +1142,8 @@ readonly fields: PracticeSessionFieldRefs;
  */
 export interface Prisma__PracticeSessionClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  learner<T extends Prisma.LearnerProfileDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LearnerProfileDefaultArgs<ExtArgs>>): Prisma.Prisma__LearnerProfileClient<runtime.Types.Result.GetResult<Prisma.$LearnerProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   gesture<T extends Prisma.FslGestureDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FslGestureDefaultArgs<ExtArgs>>): Prisma.Prisma__FslGestureClient<runtime.Types.Result.GetResult<Prisma.$FslGesturePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  learner<T extends Prisma.LearnerProfileDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LearnerProfileDefaultArgs<ExtArgs>>): Prisma.Prisma__LearnerProfileClient<runtime.Types.Result.GetResult<Prisma.$LearnerProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.

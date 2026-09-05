@@ -6,28 +6,32 @@ type VideoAnswer = {
 };
 
 type VideoQuestionProps = {
-  title: string;
-  videoSrc: string;
-  answers: VideoAnswer[];
-  correctAnswer: string;
-  selectedAnswer: string | null;
-  checked: boolean;
-  onSelect: (answer: string) => void;
+  title?: string;
+  videoSrc?: string;
+  videoUrl?: string;
+  answers?: VideoAnswer[];
+  correctAnswer?: string;
+  selectedAnswer?: string | null;
+  checked?: boolean;
+  onSelect?: (answer: string) => void;
 };
 
 const VideoQuestion = ({
   title,
   videoSrc,
+  videoUrl,
   answers,
   correctAnswer,
   selectedAnswer,
   checked,
   onSelect,
 }: VideoQuestionProps) => {
+  const source = videoSrc ?? videoUrl;
+
   return (
     <>
       <h1 className="shrink-0 text-2xl font-extrabold leading-tight sm:text-3xl">
-        {title}
+        {title ?? "Reference video"}
       </h1>
 
       <div className="mt-3 flex w-full justify-center sm:mt-4">
@@ -36,13 +40,13 @@ const VideoQuestion = ({
           controls
           preload="metadata"
         >
-          <source src={videoSrc} type="video/mp4" />
+          <source src={source} type="video/mp4" />
           Your browser does not support the video tag.
         </video>
       </div>
 
       <div className="mt-6 grid w-full grid-cols-1 gap-3 sm:mt-8 sm:gap-4">
-        {answers.map((answer) => {
+        {(answers ?? []).map((answer) => {
           const isSelected = selectedAnswer === answer.label;
           const isCorrect = answer.label === correctAnswer;
           const showCorrectBounce = checked && !isSelected && isCorrect;
@@ -62,7 +66,7 @@ const VideoQuestion = ({
               type="button"
               aria-label={`Answer ${answer.label}: ${answer.text}`}
               aria-pressed={isSelected}
-              onClick={() => !checked && onSelect(answer.label)}
+              onClick={() => !checked && onSelect?.(answer.label)}
               disabled={checked}
               className={`relative flex h-12 w-full items-center rounded-xl border-2 px-3 transition-all sm:h-14 ${showCorrectBounce ? "animate-bounce" : ""} ${answerStyle}`}
             >

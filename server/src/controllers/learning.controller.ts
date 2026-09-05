@@ -1,30 +1,156 @@
-import {prisma} from "../config/db.js";
-import { type Request, type Response, type NextFunction } from "express";
+import {
+  type Request,
+  type Response,
+} from "express";
+
 import * as learningService from "../services/learning.service.js";
 
+export const getLearningAreas = async (
+  req: Request,
+  res: Response,
+) => {
+  if (!req.user) {
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized",
+    });
+  }
 
-export const getLearningAreas = async (req: Request, res: Response) => {
+  try {
+    const learningAreas =
+      await learningService.getLearningAreas(
+        req.user.id,
+      );
 
-    const learningAreas = await learningService.getLearningAreas()
+    return res.status(200).json({
+      success: true,
+      data: learningAreas,
+    });
+  } catch (error) {
+    const message =
+      error instanceof Error
+        ? error.message
+        : "Unable to load learning areas.";
 
-    res.status(200).json({
-        success: true,
-        data: learningAreas
+    return res.status(500).json({
+      success: false,
+      message,
+    });
+  }
+};
 
-    })
+export const getCategoryLesson = async (
+  req: Request,
+  res: Response,
+) => {
+  if (!req.user) {
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized",
+    });
+  }
 
+  const categoryId =
+    req.params.categoryId as string;
 
-}
+  try {
+    const categoryLesson =
+      await learningService.getCategoryLesson(
+        categoryId,
+        req.user.id,
+      );
 
+    return res.status(200).json({
+      success: true,
+      data: categoryLesson,
+    });
+  } catch (error) {
+    const message =
+      error instanceof Error
+        ? error.message
+        : "Unable to load category lesson.";
 
-export const getCategoryLesson = async (req: Request, res: Response) => {
-    const categoryId = req.params.categoryId
+    return res.status(500).json({
+      success: false,
+      message,
+    });
+  }
+};
 
-    const categoryLesson = await learningService.getCategoryLesson(categoryId as string)
+export const saveLessonCheckpoint = async (
+  req: Request,
+  res: Response,
+) => {
+  if (!req.user) {
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized",
+    });
+  }
 
-    res.status(200).json({
-        success: true,
-        data: categoryLesson
-    })
+  const categoryId =
+    req.params.categoryId as string;
 
-}
+  const { gestureIndex, lessonStep } =
+    req.body as {
+      gestureIndex?: number;
+      lessonStep?:
+        | "meaning"
+        | "context"
+        | "how"
+        | "try";
+    };
+
+  if (
+    typeof gestureIndex !== "number" ||
+    !Number.isInteger(gestureIndex) ||
+    gestureIndex < 0
+  ) {
+    return res.status(400).json({
+      success: false,
+      message: "Invalid lesson position.",
+    });
+  }
+
+  const validSteps = [
+    "meaning",
+    "context",
+    "how",
+    "try",
+  ] as const;
+
+  if (
+    !lessonStep ||
+    !validSteps.includes(lessonStep)
+  ) {
+    return res.status(400).json({
+      success: false,
+      message: "Invalid lesson step.",
+    });
+  }
+
+  try {
+    const progress =
+      await learningService.saveLessonCheckpoint(
+        categoryId,
+        req.user.id,
+        gestureIndex,
+        lessonStep,
+      );
+
+    return res.status(200).json({
+      success: true,
+      data: progress,
+    });
+  } catch (error) {
+    const message =
+      error instanceof Error
+        ? error.message
+        : "Unable to save lesson progress.";
+
+    return res.status(500).json({
+      success: false,
+      message,
+    });
+  }
+};

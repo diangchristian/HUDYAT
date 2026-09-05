@@ -231,10 +231,9 @@ export type QuestionChoiceWhereInput = {
   choiceText?: Prisma.StringNullableFilter<"QuestionChoice"> | string | null
   imageUrl?: Prisma.StringNullableFilter<"QuestionChoice"> | string | null
   displayOrder?: Prisma.IntFilter<"QuestionChoice"> | number
-  isCorrect?: Prisma.BoolFilter<"QuestionChoice"> | boolean
-  question?: Prisma.XOR<Prisma.AssessmentQuestionScalarRelationFilter, Prisma.AssessmentQuestionWhereInput>
-  gesture?: Prisma.XOR<Prisma.FslGestureNullableScalarRelationFilter, Prisma.FslGestureWhereInput> | null
   answers?: Prisma.AssessmentAnswerListRelationFilter
+  gesture?: Prisma.XOR<Prisma.FslGestureScalarRelationFilter, Prisma.FslGestureWhereInput>
+  question?: Prisma.XOR<Prisma.AssessmentQuestionScalarRelationFilter, Prisma.AssessmentQuestionWhereInput>
 }
 
 export type QuestionChoiceOrderByWithRelationInput = {
@@ -244,10 +243,9 @@ export type QuestionChoiceOrderByWithRelationInput = {
   choiceText?: Prisma.SortOrderInput | Prisma.SortOrder
   imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   displayOrder?: Prisma.SortOrder
-  isCorrect?: Prisma.SortOrder
-  question?: Prisma.AssessmentQuestionOrderByWithRelationInput
-  gesture?: Prisma.FslGestureOrderByWithRelationInput
   answers?: Prisma.AssessmentAnswerOrderByRelationAggregateInput
+  gesture?: Prisma.FslGestureOrderByWithRelationInput
+  question?: Prisma.AssessmentQuestionOrderByWithRelationInput
 }
 
 export type QuestionChoiceWhereUniqueInput = Prisma.AtLeast<{
@@ -262,10 +260,9 @@ export type QuestionChoiceWhereUniqueInput = Prisma.AtLeast<{
   choiceText?: Prisma.StringNullableFilter<"QuestionChoice"> | string | null
   imageUrl?: Prisma.StringNullableFilter<"QuestionChoice"> | string | null
   displayOrder?: Prisma.IntFilter<"QuestionChoice"> | number
-  isCorrect?: Prisma.BoolFilter<"QuestionChoice"> | boolean
-  question?: Prisma.XOR<Prisma.AssessmentQuestionScalarRelationFilter, Prisma.AssessmentQuestionWhereInput>
-  gesture?: Prisma.XOR<Prisma.FslGestureNullableScalarRelationFilter, Prisma.FslGestureWhereInput> | null
   answers?: Prisma.AssessmentAnswerListRelationFilter
+  gesture?: Prisma.XOR<Prisma.FslGestureScalarRelationFilter, Prisma.FslGestureWhereInput>
+  question?: Prisma.XOR<Prisma.AssessmentQuestionScalarRelationFilter, Prisma.AssessmentQuestionWhereInput>
 }, "id" | "questionId_gestureId" | "questionId_displayOrder">
 
 export type QuestionChoiceOrderByWithAggregationInput = {
@@ -301,10 +298,9 @@ export type QuestionChoiceCreateInput = {
   choiceText?: string | null
   imageUrl?: string | null
   displayOrder: number
-  isCorrect?: boolean
-  question: Prisma.AssessmentQuestionCreateNestedOneWithoutChoicesInput
-  gesture?: Prisma.FslGestureCreateNestedOneWithoutQuestionChoicesInput
   answers?: Prisma.AssessmentAnswerCreateNestedManyWithoutSelectedChoiceInput
+  gesture: Prisma.FslGestureCreateNestedOneWithoutQuestionChoicesInput
+  question: Prisma.AssessmentQuestionCreateNestedOneWithoutChoicesInput
 }
 
 export type QuestionChoiceUncheckedCreateInput = {
@@ -323,10 +319,9 @@ export type QuestionChoiceUpdateInput = {
   choiceText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   displayOrder?: Prisma.IntFieldUpdateOperationsInput | number
-  isCorrect?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  question?: Prisma.AssessmentQuestionUpdateOneRequiredWithoutChoicesNestedInput
-  gesture?: Prisma.FslGestureUpdateOneWithoutQuestionChoicesNestedInput
   answers?: Prisma.AssessmentAnswerUpdateManyWithoutSelectedChoiceNestedInput
+  gesture?: Prisma.FslGestureUpdateOneRequiredWithoutQuestionChoicesNestedInput
+  question?: Prisma.AssessmentQuestionUpdateOneRequiredWithoutChoicesNestedInput
 }
 
 export type QuestionChoiceUncheckedUpdateInput = {
@@ -534,9 +529,8 @@ export type QuestionChoiceCreateWithoutGestureInput = {
   choiceText?: string | null
   imageUrl?: string | null
   displayOrder: number
-  isCorrect?: boolean
-  question: Prisma.AssessmentQuestionCreateNestedOneWithoutChoicesInput
   answers?: Prisma.AssessmentAnswerCreateNestedManyWithoutSelectedChoiceInput
+  question: Prisma.AssessmentQuestionCreateNestedOneWithoutChoicesInput
 }
 
 export type QuestionChoiceUncheckedCreateWithoutGestureInput = {
@@ -593,9 +587,8 @@ export type QuestionChoiceCreateWithoutQuestionInput = {
   choiceText?: string | null
   imageUrl?: string | null
   displayOrder: number
-  isCorrect?: boolean
-  gesture?: Prisma.FslGestureCreateNestedOneWithoutQuestionChoicesInput
   answers?: Prisma.AssessmentAnswerCreateNestedManyWithoutSelectedChoiceInput
+  gesture: Prisma.FslGestureCreateNestedOneWithoutQuestionChoicesInput
 }
 
 export type QuestionChoiceUncheckedCreateWithoutQuestionInput = {
@@ -639,9 +632,8 @@ export type QuestionChoiceCreateWithoutAnswersInput = {
   choiceText?: string | null
   imageUrl?: string | null
   displayOrder: number
-  isCorrect?: boolean
+  gesture: Prisma.FslGestureCreateNestedOneWithoutQuestionChoicesInput
   question: Prisma.AssessmentQuestionCreateNestedOneWithoutChoicesInput
-  gesture?: Prisma.FslGestureCreateNestedOneWithoutQuestionChoicesInput
 }
 
 export type QuestionChoiceUncheckedCreateWithoutAnswersInput = {
@@ -675,9 +667,8 @@ export type QuestionChoiceUpdateWithoutAnswersInput = {
   choiceText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   displayOrder?: Prisma.IntFieldUpdateOperationsInput | number
-  isCorrect?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  gesture?: Prisma.FslGestureUpdateOneRequiredWithoutQuestionChoicesNestedInput
   question?: Prisma.AssessmentQuestionUpdateOneRequiredWithoutChoicesNestedInput
-  gesture?: Prisma.FslGestureUpdateOneWithoutQuestionChoicesNestedInput
 }
 
 export type QuestionChoiceUncheckedUpdateWithoutAnswersInput = {
@@ -704,9 +695,8 @@ export type QuestionChoiceUpdateWithoutGestureInput = {
   choiceText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   displayOrder?: Prisma.IntFieldUpdateOperationsInput | number
-  isCorrect?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  question?: Prisma.AssessmentQuestionUpdateOneRequiredWithoutChoicesNestedInput
   answers?: Prisma.AssessmentAnswerUpdateManyWithoutSelectedChoiceNestedInput
+  question?: Prisma.AssessmentQuestionUpdateOneRequiredWithoutChoicesNestedInput
 }
 
 export type QuestionChoiceUncheckedUpdateWithoutGestureInput = {
@@ -742,9 +732,8 @@ export type QuestionChoiceUpdateWithoutQuestionInput = {
   choiceText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   displayOrder?: Prisma.IntFieldUpdateOperationsInput | number
-  isCorrect?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  gesture?: Prisma.FslGestureUpdateOneWithoutQuestionChoicesNestedInput
   answers?: Prisma.AssessmentAnswerUpdateManyWithoutSelectedChoiceNestedInput
+  gesture?: Prisma.FslGestureUpdateOneRequiredWithoutQuestionChoicesNestedInput
 }
 
 export type QuestionChoiceUncheckedUpdateWithoutQuestionInput = {
@@ -804,10 +793,9 @@ export type QuestionChoiceSelect<ExtArgs extends runtime.Types.Extensions.Intern
   choiceText?: boolean
   imageUrl?: boolean
   displayOrder?: boolean
-  isCorrect?: boolean
-  question?: boolean | Prisma.AssessmentQuestionDefaultArgs<ExtArgs>
-  gesture?: boolean | Prisma.QuestionChoice$gestureArgs<ExtArgs>
   answers?: boolean | Prisma.QuestionChoice$answersArgs<ExtArgs>
+  gesture?: boolean | Prisma.FslGestureDefaultArgs<ExtArgs>
+  question?: boolean | Prisma.AssessmentQuestionDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.QuestionChoiceCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["questionChoice"]>
 
@@ -818,9 +806,8 @@ export type QuestionChoiceSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   choiceText?: boolean
   imageUrl?: boolean
   displayOrder?: boolean
-  isCorrect?: boolean
+  gesture?: boolean | Prisma.FslGestureDefaultArgs<ExtArgs>
   question?: boolean | Prisma.AssessmentQuestionDefaultArgs<ExtArgs>
-  gesture?: boolean | Prisma.QuestionChoice$gestureArgs<ExtArgs>
 }, ExtArgs["result"]["questionChoice"]>
 
 export type QuestionChoiceSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -830,9 +817,8 @@ export type QuestionChoiceSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   choiceText?: boolean
   imageUrl?: boolean
   displayOrder?: boolean
-  isCorrect?: boolean
+  gesture?: boolean | Prisma.FslGestureDefaultArgs<ExtArgs>
   question?: boolean | Prisma.AssessmentQuestionDefaultArgs<ExtArgs>
-  gesture?: boolean | Prisma.QuestionChoice$gestureArgs<ExtArgs>
 }, ExtArgs["result"]["questionChoice"]>
 
 export type QuestionChoiceSelectScalar = {
@@ -847,26 +833,26 @@ export type QuestionChoiceSelectScalar = {
 
 export type QuestionChoiceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "questionId" | "gestureId" | "choiceText" | "imageUrl" | "displayOrder" | "isCorrect", ExtArgs["result"]["questionChoice"]>
 export type QuestionChoiceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  question?: boolean | Prisma.AssessmentQuestionDefaultArgs<ExtArgs>
-  gesture?: boolean | Prisma.QuestionChoice$gestureArgs<ExtArgs>
   answers?: boolean | Prisma.QuestionChoice$answersArgs<ExtArgs>
+  gesture?: boolean | Prisma.FslGestureDefaultArgs<ExtArgs>
+  question?: boolean | Prisma.AssessmentQuestionDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.QuestionChoiceCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type QuestionChoiceIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  gesture?: boolean | Prisma.FslGestureDefaultArgs<ExtArgs>
   question?: boolean | Prisma.AssessmentQuestionDefaultArgs<ExtArgs>
-  gesture?: boolean | Prisma.QuestionChoice$gestureArgs<ExtArgs>
 }
 export type QuestionChoiceIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  gesture?: boolean | Prisma.FslGestureDefaultArgs<ExtArgs>
   question?: boolean | Prisma.AssessmentQuestionDefaultArgs<ExtArgs>
-  gesture?: boolean | Prisma.QuestionChoice$gestureArgs<ExtArgs>
 }
 
 export type $QuestionChoicePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "QuestionChoice"
   objects: {
-    question: Prisma.$AssessmentQuestionPayload<ExtArgs>
-    gesture: Prisma.$FslGesturePayload<ExtArgs> | null
     answers: Prisma.$AssessmentAnswerPayload<ExtArgs>[]
+    gesture: Prisma.$FslGesturePayload<ExtArgs>
+    question: Prisma.$AssessmentQuestionPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1270,9 +1256,9 @@ readonly fields: QuestionChoiceFieldRefs;
  */
 export interface Prisma__QuestionChoiceClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  question<T extends Prisma.AssessmentQuestionDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AssessmentQuestionDefaultArgs<ExtArgs>>): Prisma.Prisma__AssessmentQuestionClient<runtime.Types.Result.GetResult<Prisma.$AssessmentQuestionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  gesture<T extends Prisma.QuestionChoice$gestureArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.QuestionChoice$gestureArgs<ExtArgs>>): Prisma.Prisma__FslGestureClient<runtime.Types.Result.GetResult<Prisma.$FslGesturePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   answers<T extends Prisma.QuestionChoice$answersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.QuestionChoice$answersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AssessmentAnswerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  gesture<T extends Prisma.FslGestureDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FslGestureDefaultArgs<ExtArgs>>): Prisma.Prisma__FslGestureClient<runtime.Types.Result.GetResult<Prisma.$FslGesturePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  question<T extends Prisma.AssessmentQuestionDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AssessmentQuestionDefaultArgs<ExtArgs>>): Prisma.Prisma__AssessmentQuestionClient<runtime.Types.Result.GetResult<Prisma.$AssessmentQuestionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.

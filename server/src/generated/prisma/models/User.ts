@@ -214,10 +214,10 @@ export type UserWhereInput = {
   isActive?: Prisma.BoolFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
-  learnerProfile?: Prisma.XOR<Prisma.LearnerProfileNullableScalarRelationFilter, Prisma.LearnerProfileWhereInput> | null
-  teacherProfile?: Prisma.XOR<Prisma.TeacherProfileNullableScalarRelationFilter, Prisma.TeacherProfileWhereInput> | null
-  systemSettingsUpdated?: Prisma.SystemSettingListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
+  learnerProfile?: Prisma.XOR<Prisma.LearnerProfileNullableScalarRelationFilter, Prisma.LearnerProfileWhereInput> | null
+  systemSettingsUpdated?: Prisma.SystemSettingListRelationFilter
+  teacherProfile?: Prisma.XOR<Prisma.TeacherProfileNullableScalarRelationFilter, Prisma.TeacherProfileWhereInput> | null
 }
 
 export type UserOrderByWithRelationInput = {
@@ -230,10 +230,10 @@ export type UserOrderByWithRelationInput = {
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  learnerProfile?: Prisma.LearnerProfileOrderByWithRelationInput
-  teacherProfile?: Prisma.TeacherProfileOrderByWithRelationInput
-  systemSettingsUpdated?: Prisma.SystemSettingOrderByRelationAggregateInput
   auditLogs?: Prisma.AuditLogOrderByRelationAggregateInput
+  learnerProfile?: Prisma.LearnerProfileOrderByWithRelationInput
+  systemSettingsUpdated?: Prisma.SystemSettingOrderByRelationAggregateInput
+  teacherProfile?: Prisma.TeacherProfileOrderByWithRelationInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -249,10 +249,10 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   isActive?: Prisma.BoolFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
-  learnerProfile?: Prisma.XOR<Prisma.LearnerProfileNullableScalarRelationFilter, Prisma.LearnerProfileWhereInput> | null
-  teacherProfile?: Prisma.XOR<Prisma.TeacherProfileNullableScalarRelationFilter, Prisma.TeacherProfileWhereInput> | null
-  systemSettingsUpdated?: Prisma.SystemSettingListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
+  learnerProfile?: Prisma.XOR<Prisma.LearnerProfileNullableScalarRelationFilter, Prisma.LearnerProfileWhereInput> | null
+  systemSettingsUpdated?: Prisma.SystemSettingListRelationFilter
+  teacherProfile?: Prisma.XOR<Prisma.TeacherProfileNullableScalarRelationFilter, Prisma.TeacherProfileWhereInput> | null
 }, "id" | "username" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -295,10 +295,10 @@ export type UserCreateInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  learnerProfile?: Prisma.LearnerProfileCreateNestedOneWithoutUserInput
-  teacherProfile?: Prisma.TeacherProfileCreateNestedOneWithoutUserInput
-  systemSettingsUpdated?: Prisma.SystemSettingCreateNestedManyWithoutUpdaterInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  learnerProfile?: Prisma.LearnerProfileCreateNestedOneWithoutUserInput
+  systemSettingsUpdated?: Prisma.SystemSettingCreateNestedManyWithoutUpdaterInput
+  teacherProfile?: Prisma.TeacherProfileCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -311,10 +311,10 @@ export type UserUncheckedCreateInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  learnerProfile?: Prisma.LearnerProfileUncheckedCreateNestedOneWithoutUserInput
-  teacherProfile?: Prisma.TeacherProfileUncheckedCreateNestedOneWithoutUserInput
-  systemSettingsUpdated?: Prisma.SystemSettingUncheckedCreateNestedManyWithoutUpdaterInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  learnerProfile?: Prisma.LearnerProfileUncheckedCreateNestedOneWithoutUserInput
+  systemSettingsUpdated?: Prisma.SystemSettingUncheckedCreateNestedManyWithoutUpdaterInput
+  teacherProfile?: Prisma.TeacherProfileUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -327,10 +327,10 @@ export type UserUpdateInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  learnerProfile?: Prisma.LearnerProfileUpdateOneWithoutUserNestedInput
-  teacherProfile?: Prisma.TeacherProfileUpdateOneWithoutUserNestedInput
-  systemSettingsUpdated?: Prisma.SystemSettingUpdateManyWithoutUpdaterNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  learnerProfile?: Prisma.LearnerProfileUpdateOneWithoutUserNestedInput
+  systemSettingsUpdated?: Prisma.SystemSettingUpdateManyWithoutUpdaterNestedInput
+  teacherProfile?: Prisma.TeacherProfileUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -343,10 +343,10 @@ export type UserUncheckedUpdateInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  learnerProfile?: Prisma.LearnerProfileUncheckedUpdateOneWithoutUserNestedInput
-  teacherProfile?: Prisma.TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
-  systemSettingsUpdated?: Prisma.SystemSettingUncheckedUpdateManyWithoutUpdaterNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  learnerProfile?: Prisma.LearnerProfileUncheckedUpdateOneWithoutUserNestedInput
+  systemSettingsUpdated?: Prisma.SystemSettingUncheckedUpdateManyWithoutUpdaterNestedInput
+  teacherProfile?: Prisma.TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -512,9 +512,9 @@ export type UserCreateWithoutLearnerProfileInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  teacherProfile?: Prisma.TeacherProfileCreateNestedOneWithoutUserInput
-  systemSettingsUpdated?: Prisma.SystemSettingCreateNestedManyWithoutUpdaterInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  systemSettingsUpdated?: Prisma.SystemSettingCreateNestedManyWithoutUpdaterInput
+  teacherProfile?: Prisma.TeacherProfileCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutLearnerProfileInput = {
@@ -527,9 +527,9 @@ export type UserUncheckedCreateWithoutLearnerProfileInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  teacherProfile?: Prisma.TeacherProfileUncheckedCreateNestedOneWithoutUserInput
-  systemSettingsUpdated?: Prisma.SystemSettingUncheckedCreateNestedManyWithoutUpdaterInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  systemSettingsUpdated?: Prisma.SystemSettingUncheckedCreateNestedManyWithoutUpdaterInput
+  teacherProfile?: Prisma.TeacherProfileUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutLearnerProfileInput = {
@@ -558,9 +558,9 @@ export type UserUpdateWithoutLearnerProfileInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  teacherProfile?: Prisma.TeacherProfileUpdateOneWithoutUserNestedInput
-  systemSettingsUpdated?: Prisma.SystemSettingUpdateManyWithoutUpdaterNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  systemSettingsUpdated?: Prisma.SystemSettingUpdateManyWithoutUpdaterNestedInput
+  teacherProfile?: Prisma.TeacherProfileUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutLearnerProfileInput = {
@@ -573,9 +573,9 @@ export type UserUncheckedUpdateWithoutLearnerProfileInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  teacherProfile?: Prisma.TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
-  systemSettingsUpdated?: Prisma.SystemSettingUncheckedUpdateManyWithoutUpdaterNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  systemSettingsUpdated?: Prisma.SystemSettingUncheckedUpdateManyWithoutUpdaterNestedInput
+  teacherProfile?: Prisma.TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutTeacherProfileInput = {
@@ -588,9 +588,9 @@ export type UserCreateWithoutTeacherProfileInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
   learnerProfile?: Prisma.LearnerProfileCreateNestedOneWithoutUserInput
   systemSettingsUpdated?: Prisma.SystemSettingCreateNestedManyWithoutUpdaterInput
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTeacherProfileInput = {
@@ -603,9 +603,9 @@ export type UserUncheckedCreateWithoutTeacherProfileInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
   learnerProfile?: Prisma.LearnerProfileUncheckedCreateNestedOneWithoutUserInput
   systemSettingsUpdated?: Prisma.SystemSettingUncheckedCreateNestedManyWithoutUpdaterInput
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTeacherProfileInput = {
@@ -634,9 +634,9 @@ export type UserUpdateWithoutTeacherProfileInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
   learnerProfile?: Prisma.LearnerProfileUpdateOneWithoutUserNestedInput
   systemSettingsUpdated?: Prisma.SystemSettingUpdateManyWithoutUpdaterNestedInput
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTeacherProfileInput = {
@@ -649,9 +649,9 @@ export type UserUncheckedUpdateWithoutTeacherProfileInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
   learnerProfile?: Prisma.LearnerProfileUncheckedUpdateOneWithoutUserNestedInput
   systemSettingsUpdated?: Prisma.SystemSettingUncheckedUpdateManyWithoutUpdaterNestedInput
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSystemSettingsUpdatedInput = {
@@ -664,9 +664,9 @@ export type UserCreateWithoutSystemSettingsUpdatedInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
   learnerProfile?: Prisma.LearnerProfileCreateNestedOneWithoutUserInput
   teacherProfile?: Prisma.TeacherProfileCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSystemSettingsUpdatedInput = {
@@ -679,9 +679,9 @@ export type UserUncheckedCreateWithoutSystemSettingsUpdatedInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
   learnerProfile?: Prisma.LearnerProfileUncheckedCreateNestedOneWithoutUserInput
   teacherProfile?: Prisma.TeacherProfileUncheckedCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSystemSettingsUpdatedInput = {
@@ -710,9 +710,9 @@ export type UserUpdateWithoutSystemSettingsUpdatedInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
   learnerProfile?: Prisma.LearnerProfileUpdateOneWithoutUserNestedInput
   teacherProfile?: Prisma.TeacherProfileUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSystemSettingsUpdatedInput = {
@@ -725,9 +725,9 @@ export type UserUncheckedUpdateWithoutSystemSettingsUpdatedInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
   learnerProfile?: Prisma.LearnerProfileUncheckedUpdateOneWithoutUserNestedInput
   teacherProfile?: Prisma.TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAuditLogsInput = {
@@ -741,8 +741,8 @@ export type UserCreateWithoutAuditLogsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   learnerProfile?: Prisma.LearnerProfileCreateNestedOneWithoutUserInput
-  teacherProfile?: Prisma.TeacherProfileCreateNestedOneWithoutUserInput
   systemSettingsUpdated?: Prisma.SystemSettingCreateNestedManyWithoutUpdaterInput
+  teacherProfile?: Prisma.TeacherProfileCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAuditLogsInput = {
@@ -756,8 +756,8 @@ export type UserUncheckedCreateWithoutAuditLogsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   learnerProfile?: Prisma.LearnerProfileUncheckedCreateNestedOneWithoutUserInput
-  teacherProfile?: Prisma.TeacherProfileUncheckedCreateNestedOneWithoutUserInput
   systemSettingsUpdated?: Prisma.SystemSettingUncheckedCreateNestedManyWithoutUpdaterInput
+  teacherProfile?: Prisma.TeacherProfileUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAuditLogsInput = {
@@ -787,8 +787,8 @@ export type UserUpdateWithoutAuditLogsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   learnerProfile?: Prisma.LearnerProfileUpdateOneWithoutUserNestedInput
-  teacherProfile?: Prisma.TeacherProfileUpdateOneWithoutUserNestedInput
   systemSettingsUpdated?: Prisma.SystemSettingUpdateManyWithoutUpdaterNestedInput
+  teacherProfile?: Prisma.TeacherProfileUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAuditLogsInput = {
@@ -802,8 +802,8 @@ export type UserUncheckedUpdateWithoutAuditLogsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   learnerProfile?: Prisma.LearnerProfileUncheckedUpdateOneWithoutUserNestedInput
-  teacherProfile?: Prisma.TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
   systemSettingsUpdated?: Prisma.SystemSettingUncheckedUpdateManyWithoutUpdaterNestedInput
+  teacherProfile?: Prisma.TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
 }
 
 
@@ -812,13 +812,13 @@ export type UserUncheckedUpdateWithoutAuditLogsInput = {
  */
 
 export type UserCountOutputType = {
-  systemSettingsUpdated: number
   auditLogs: number
+  systemSettingsUpdated: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  systemSettingsUpdated?: boolean | UserCountOutputTypeCountSystemSettingsUpdatedArgs
   auditLogs?: boolean | UserCountOutputTypeCountAuditLogsArgs
+  systemSettingsUpdated?: boolean | UserCountOutputTypeCountSystemSettingsUpdatedArgs
 }
 
 /**
@@ -834,15 +834,15 @@ export type UserCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensi
 /**
  * UserCountOutputType without action
  */
-export type UserCountOutputTypeCountSystemSettingsUpdatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.SystemSettingWhereInput
+export type UserCountOutputTypeCountAuditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AuditLogWhereInput
 }
 
 /**
  * UserCountOutputType without action
  */
-export type UserCountOutputTypeCountAuditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.AuditLogWhereInput
+export type UserCountOutputTypeCountSystemSettingsUpdatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SystemSettingWhereInput
 }
 
 
@@ -856,10 +856,10 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  learnerProfile?: boolean | Prisma.User$learnerProfileArgs<ExtArgs>
-  teacherProfile?: boolean | Prisma.User$teacherProfileArgs<ExtArgs>
-  systemSettingsUpdated?: boolean | Prisma.User$systemSettingsUpdatedArgs<ExtArgs>
   auditLogs?: boolean | Prisma.User$auditLogsArgs<ExtArgs>
+  learnerProfile?: boolean | Prisma.User$learnerProfileArgs<ExtArgs>
+  systemSettingsUpdated?: boolean | Prisma.User$systemSettingsUpdatedArgs<ExtArgs>
+  teacherProfile?: boolean | Prisma.User$teacherProfileArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -901,10 +901,10 @@ export type UserSelectScalar = {
 
 export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "username" | "email" | "password" | "loginCode" | "role" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  learnerProfile?: boolean | Prisma.User$learnerProfileArgs<ExtArgs>
-  teacherProfile?: boolean | Prisma.User$teacherProfileArgs<ExtArgs>
-  systemSettingsUpdated?: boolean | Prisma.User$systemSettingsUpdatedArgs<ExtArgs>
   auditLogs?: boolean | Prisma.User$auditLogsArgs<ExtArgs>
+  learnerProfile?: boolean | Prisma.User$learnerProfileArgs<ExtArgs>
+  systemSettingsUpdated?: boolean | Prisma.User$systemSettingsUpdatedArgs<ExtArgs>
+  teacherProfile?: boolean | Prisma.User$teacherProfileArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -913,10 +913,10 @@ export type UserIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "User"
   objects: {
-    learnerProfile: Prisma.$LearnerProfilePayload<ExtArgs> | null
-    teacherProfile: Prisma.$TeacherProfilePayload<ExtArgs> | null
-    systemSettingsUpdated: Prisma.$SystemSettingPayload<ExtArgs>[]
     auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
+    learnerProfile: Prisma.$LearnerProfilePayload<ExtArgs> | null
+    systemSettingsUpdated: Prisma.$SystemSettingPayload<ExtArgs>[]
+    teacherProfile: Prisma.$TeacherProfilePayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1322,10 +1322,10 @@ readonly fields: UserFieldRefs;
  */
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  learnerProfile<T extends Prisma.User$learnerProfileArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$learnerProfileArgs<ExtArgs>>): Prisma.Prisma__LearnerProfileClient<runtime.Types.Result.GetResult<Prisma.$LearnerProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  teacherProfile<T extends Prisma.User$teacherProfileArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$teacherProfileArgs<ExtArgs>>): Prisma.Prisma__TeacherProfileClient<runtime.Types.Result.GetResult<Prisma.$TeacherProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  systemSettingsUpdated<T extends Prisma.User$systemSettingsUpdatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$systemSettingsUpdatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SystemSettingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   auditLogs<T extends Prisma.User$auditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  learnerProfile<T extends Prisma.User$learnerProfileArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$learnerProfileArgs<ExtArgs>>): Prisma.Prisma__LearnerProfileClient<runtime.Types.Result.GetResult<Prisma.$LearnerProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  systemSettingsUpdated<T extends Prisma.User$systemSettingsUpdatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$systemSettingsUpdatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SystemSettingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  teacherProfile<T extends Prisma.User$teacherProfileArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$teacherProfileArgs<ExtArgs>>): Prisma.Prisma__TeacherProfileClient<runtime.Types.Result.GetResult<Prisma.$TeacherProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1757,6 +1757,30 @@ export type UserDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
 }
 
 /**
+ * User.auditLogs
+ */
+export type User$auditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AuditLog
+   */
+  select?: Prisma.AuditLogSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AuditLog
+   */
+  omit?: Prisma.AuditLogOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AuditLogInclude<ExtArgs> | null
+  where?: Prisma.AuditLogWhereInput
+  orderBy?: Prisma.AuditLogOrderByWithRelationInput | Prisma.AuditLogOrderByWithRelationInput[]
+  cursor?: Prisma.AuditLogWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AuditLogScalarFieldEnum | Prisma.AuditLogScalarFieldEnum[]
+}
+
+/**
  * User.learnerProfile
  */
 export type User$learnerProfileArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1773,25 +1797,6 @@ export type User$learnerProfileArgs<ExtArgs extends runtime.Types.Extensions.Int
    */
   include?: Prisma.LearnerProfileInclude<ExtArgs> | null
   where?: Prisma.LearnerProfileWhereInput
-}
-
-/**
- * User.teacherProfile
- */
-export type User$teacherProfileArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the TeacherProfile
-   */
-  select?: Prisma.TeacherProfileSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the TeacherProfile
-   */
-  omit?: Prisma.TeacherProfileOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.TeacherProfileInclude<ExtArgs> | null
-  where?: Prisma.TeacherProfileWhereInput
 }
 
 /**
@@ -1819,27 +1824,22 @@ export type User$systemSettingsUpdatedArgs<ExtArgs extends runtime.Types.Extensi
 }
 
 /**
- * User.auditLogs
+ * User.teacherProfile
  */
-export type User$auditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type User$teacherProfileArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the AuditLog
+   * Select specific fields to fetch from the TeacherProfile
    */
-  select?: Prisma.AuditLogSelect<ExtArgs> | null
+  select?: Prisma.TeacherProfileSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the AuditLog
+   * Omit specific fields from the TeacherProfile
    */
-  omit?: Prisma.AuditLogOmit<ExtArgs> | null
+  omit?: Prisma.TeacherProfileOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.AuditLogInclude<ExtArgs> | null
-  where?: Prisma.AuditLogWhereInput
-  orderBy?: Prisma.AuditLogOrderByWithRelationInput | Prisma.AuditLogOrderByWithRelationInput[]
-  cursor?: Prisma.AuditLogWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.AuditLogScalarFieldEnum | Prisma.AuditLogScalarFieldEnum[]
+  include?: Prisma.TeacherProfileInclude<ExtArgs> | null
+  where?: Prisma.TeacherProfileWhereInput
 }
 
 /**
