@@ -187,6 +187,16 @@ export const submitAssessment = async (
         );
       }
 
+      const uniqueQuestionIds = new Set(
+        answers.map((answer) => answer.questionId),
+      );
+
+      if (uniqueQuestionIds.size !== answers.length) {
+        throw new Error(
+          "Duplicate answers were submitted.",
+        );
+      }
+
       const questionMap = new Map(
         assessment.questions.map(
           (question) => [
