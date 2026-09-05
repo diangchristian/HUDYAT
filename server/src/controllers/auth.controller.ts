@@ -7,6 +7,8 @@ import { type Request, type Response, type NextFunction } from "express";
 export const register = async (req: Request, res: Response) => {
     const {username, email, password} = req.body;
 
+    console.log(username)
+
     const userExist = await prisma.user.findUnique({ where: { email } });
 
     if(userExist){
@@ -51,7 +53,7 @@ export const login = async (req: Request, res: Response) => {
         return res.status(400).json({ message: "User not found" });
     } 
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    const isPasswordValid = await bcrypt.compare(password, user.password as string);
 
     if(!isPasswordValid){
         return res.status(400).json({ message: "Invalid password" });

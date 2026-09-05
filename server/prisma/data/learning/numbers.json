@@ -1,0 +1,63 @@
+
+[
+  {
+    "label": "One",
+    "meaning": "The number one.",
+    "exampleUsage": "I have one book.",
+    "displayOrder": 1
+  },
+  {
+    "label": "Two",
+    "meaning": "The number two.",
+    "exampleUsage": "I have two pencils.",
+    "displayOrder": 2
+  },
+  {
+    "label": "Three",
+    "meaning": "The number three.",
+    "exampleUsage": "I have three apples.",
+    "displayOrder": 3
+  },
+  {
+    "label": "Four",
+    "meaning": "The number four.",
+    "exampleUsage": "There are four chairs.",
+    "displayOrder": 4
+  },
+  {
+    "label": "Five",
+    "meaning": "The number five.",
+    "exampleUsage": "I have five fingers on one hand.",
+    "displayOrder": 5
+  },
+  {
+    "label": "Six",
+    "meaning": "The number six.",
+    "exampleUsage": "There are six students in the group.",
+    "displayOrder": 6
+  },
+  {
+    "label": "Seven",
+    "meaning": "The number seven.",
+    "exampleUsage": "There are seven days in a week.",
+    "displayOrder": 7
+  },
+  {
+    "label": "Eight",
+    "meaning": "The number eight.",
+    "exampleUsage": "I have eight crayons.",
+    "displayOrder": 8
+  },
+  {
+    "label": "Nine",
+    "meaning": "The number nine.",
+    "exampleUsage": "There are nine books on the shelf.",
+    "displayOrder": 9
+  },
+  {
+    "label": "Ten",
+    "meaning": "The number ten.",
+    "exampleUsage": "I can count to ten.",
+    "displayOrder": 10
+  }
+]

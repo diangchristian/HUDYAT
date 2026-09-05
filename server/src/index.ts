@@ -1,7 +1,11 @@
 import express from "express";
 import dotenv from "dotenv";
 import { connectDB, disconnectDB } from "./config/db.js";
+
+// Routes
 import authRouter from "./routes/auth.routes.js";
+import categoriesRouter from "./routes/categories.routes.js";
+import learningRouter from "./routes/learning.routes.js";
 
 dotenv.config();
 connectDB()
@@ -13,6 +17,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/auth", authRouter);
+app.use("/api/learning", learningRouter);
+app.use("/api/categories", categoriesRouter);
 
 
 
