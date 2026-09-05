@@ -1,0 +1,74 @@
+[
+  {
+    "label": "January",
+    "meaning": "The first month of the year.",
+    "exampleUsage": "January is the first month of the year.",
+    "displayOrder": 1
+  },
+  {
+    "label": "February",
+    "meaning": "The second month of the year.",
+    "exampleUsage": "February is the second month of the year.",
+    "displayOrder": 2
+  },
+  {
+    "label": "March",
+    "meaning": "The third month of the year.",
+    "exampleUsage": "March is the third month of the year.",
+    "displayOrder": 3
+  },
+  {
+    "label": "April",
+    "meaning": "The fourth month of the year.",
+    "exampleUsage": "April is the fourth month of the year.",
+    "displayOrder": 4
+  },
+  {
+    "label": "May",
+    "meaning": "The fifth month of the year.",
+    "exampleUsage": "May is the fifth month of the year.",
+    "displayOrder": 5
+  },
+  {
+    "label": "June",
+    "meaning": "The sixth month of the year.",
+    "exampleUsage": "June is the sixth month of the year.",
+    "displayOrder": 6
+  },
+  {
+    "label": "July",
+    "meaning": "The seventh month of the year.",
+    "exampleUsage": "July is the seventh month of the year.",
+    "displayOrder": 7
+  },
+  {
+    "label": "August",
+    "meaning": "The eighth month of the year.",
+    "exampleUsage": "August is the eighth month of the year.",
+    "displayOrder": 8
+  },
+  {
+    "label": "September",
+    "meaning": "The ninth month of the year.",
+    "exampleUsage": "September is the ninth month of the year.",
+    "displayOrder": 9
+  },
+  {
+    "label": "October",
+    "meaning": "The tenth month of the year.",
+    "exampleUsage": "October is the tenth month of the year.",
+    "displayOrder": 10
+  },
+  {
+    "label": "November",
+    "meaning": "The eleventh month of the year.",
+    "exampleUsage": "November is the eleventh month of the year.",
+    "displayOrder": 11
+  },
+  {
+    "label": "December",
+    "meaning": "The twelfth and final month of the year.",
+    "exampleUsage": "December is the last month of the year.",
+    "displayOrder": 12
+  }
+]

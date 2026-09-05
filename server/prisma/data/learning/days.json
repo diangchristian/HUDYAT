@@ -1,0 +1,62 @@
+[
+  {
+    "label": "Monday",
+    "meaning": "The day of the week that comes after Sunday.",
+    "exampleUsage": "Today is Monday.",
+    "displayOrder": 1
+  },
+  {
+    "label": "Tuesday",
+    "meaning": "The day of the week that comes after Monday.",
+    "exampleUsage": "We have class on Tuesday.",
+    "displayOrder": 2
+  },
+  {
+    "label": "Wednesday",
+    "meaning": "The day of the week that comes after Tuesday.",
+    "exampleUsage": "Today is Wednesday.",
+    "displayOrder": 3
+  },
+  {
+    "label": "Thursday",
+    "meaning": "The day of the week that comes after Wednesday.",
+    "exampleUsage": "We have an activity on Thursday.",
+    "displayOrder": 4
+  },
+  {
+    "label": "Friday",
+    "meaning": "The day of the week that comes after Thursday.",
+    "exampleUsage": "Friday is the last school day of the week.",
+    "displayOrder": 5
+  },
+  {
+    "label": "Saturday",
+    "meaning": "The day of the week that comes after Friday.",
+    "exampleUsage": "We stay at home on Saturday.",
+    "displayOrder": 6
+  },
+  {
+    "label": "Sunday",
+    "meaning": "The day of the week that comes after Saturday.",
+    "exampleUsage": "Sunday is the last day of the week.",
+    "displayOrder": 7
+  },
+  {
+    "label": "Today",
+    "meaning": "The current day.",
+    "exampleUsage": "Today is a good day to learn.",
+    "displayOrder": 8
+  },
+  {
+    "label": "Yesterday",
+    "meaning": "The day immediately before today.",
+    "exampleUsage": "Yesterday was a busy day.",
+    "displayOrder": 9
+  },
+  {
+    "label": "Tomorrow",
+    "meaning": "The day immediately after today.",
+    "exampleUsage": "We will study again tomorrow.",
+    "displayOrder": 10
+  }
+]

@@ -1,0 +1,158 @@
+[
+  {
+    "label": "A",
+    "meaning": "The letter A in the Filipino Sign Language alphabet.",
+    "exampleUsage": "A is the first letter of the alphabet.",
+    "displayOrder": 1
+  },
+  {
+    "label": "B",
+    "meaning": "The letter B in the Filipino Sign Language alphabet.",
+    "exampleUsage": "B is the first letter in the word 'book'.",
+    "displayOrder": 2
+  },
+  {
+    "label": "C",
+    "meaning": "The letter C in the Filipino Sign Language alphabet.",
+    "exampleUsage": "C is the first letter in the word 'cat'.",
+    "displayOrder": 3
+  },
+  {
+    "label": "D",
+    "meaning": "The letter D in the Filipino Sign Language alphabet.",
+    "exampleUsage": "D is the first letter in the word 'dog'.",
+    "displayOrder": 4
+  },
+  {
+    "label": "E",
+    "meaning": "The letter E in the Filipino Sign Language alphabet.",
+    "exampleUsage": "E is the first letter in the word 'egg'.",
+    "displayOrder": 5
+  },
+  {
+    "label": "F",
+    "meaning": "The letter F in the Filipino Sign Language alphabet.",
+    "exampleUsage": "F is the first letter in the word 'fish'.",
+    "displayOrder": 6
+  },
+  {
+    "label": "G",
+    "meaning": "The letter G in the Filipino Sign Language alphabet.",
+    "exampleUsage": "G is the first letter in the word 'game'.",
+    "displayOrder": 7
+  },
+  {
+    "label": "H",
+    "meaning": "The letter H in the Filipino Sign Language alphabet.",
+    "exampleUsage": "H is the first letter in the word 'house'.",
+    "displayOrder": 8
+  },
+  {
+    "label": "I",
+    "meaning": "The letter I in the Filipino Sign Language alphabet.",
+    "exampleUsage": "I is the first letter in the word 'ice'.",
+    "displayOrder": 9
+  },
+  {
+    "label": "J",
+    "meaning": "The letter J in the Filipino Sign Language alphabet.",
+    "exampleUsage": "J is the first letter in the word 'juice'.",
+    "displayOrder": 10
+  },
+  {
+    "label": "K",
+    "meaning": "The letter K in the Filipino Sign Language alphabet.",
+    "exampleUsage": "K is the first letter in the word 'kite'.",
+    "displayOrder": 11
+  },
+  {
+    "label": "L",
+    "meaning": "The letter L in the Filipino Sign Language alphabet.",
+    "exampleUsage": "L is the first letter in the word 'love'.",
+    "displayOrder": 12
+  },
+  {
+    "label": "M",
+    "meaning": "The letter M in the Filipino Sign Language alphabet.",
+    "exampleUsage": "M is the first letter in the word 'mother'.",
+    "displayOrder": 13
+  },
+  {
+    "label": "N",
+    "meaning": "The letter N in the Filipino Sign Language alphabet.",
+    "exampleUsage": "N is the first letter in the word 'name'.",
+    "displayOrder": 14
+  },
+  {
+    "label": "O",
+    "meaning": "The letter O in the Filipino Sign Language alphabet.",
+    "exampleUsage": "O is the first letter in the word 'orange'.",
+    "displayOrder": 15
+  },
+  {
+    "label": "P",
+    "meaning": "The letter P in the Filipino Sign Language alphabet.",
+    "exampleUsage": "P is the first letter in the word 'pencil'.",
+    "displayOrder": 16
+  },
+  {
+    "label": "Q",
+    "meaning": "The letter Q in the Filipino Sign Language alphabet.",
+    "exampleUsage": "Q is the first letter in the word 'queen'.",
+    "displayOrder": 17
+  },
+  {
+    "label": "R",
+    "meaning": "The letter R in the Filipino Sign Language alphabet.",
+    "exampleUsage": "R is the first letter in the word 'rabbit'.",
+    "displayOrder": 18
+  },
+  {
+    "label": "S",
+    "meaning": "The letter S in the Filipino Sign Language alphabet.",
+    "exampleUsage": "S is the first letter in the word 'school'.",
+    "displayOrder": 19
+  },
+  {
+    "label": "T",
+    "meaning": "The letter T in the Filipino Sign Language alphabet.",
+    "exampleUsage": "T is the first letter in the word 'teacher'.",
+    "displayOrder": 20
+  },
+  {
+    "label": "U",
+    "meaning": "The letter U in the Filipino Sign Language alphabet.",
+    "exampleUsage": "U is the first letter in the word 'umbrella'.",
+    "displayOrder": 21
+  },
+  {
+    "label": "V",
+    "meaning": "The letter V in the Filipino Sign Language alphabet.",
+    "exampleUsage": "V is the first letter in the word 'van'.",
+    "displayOrder": 22
+  },
+  {
+    "label": "W",
+    "meaning": "The letter W in the Filipino Sign Language alphabet.",
+    "exampleUsage": "W is the first letter in the word 'water'.",
+    "displayOrder": 23
+  },
+  {
+    "label": "X",
+    "meaning": "The letter X in the Filipino Sign Language alphabet.",
+    "exampleUsage": "X is the first letter in the word 'xylophone'.",
+    "displayOrder": 24
+  },
+  {
+    "label": "Y",
+    "meaning": "The letter Y in the Filipino Sign Language alphabet.",
+    "exampleUsage": "Y is the first letter in the word 'yellow'.",
+    "displayOrder": 25
+  },
+  {
+    "label": "Z",
+    "meaning": "The letter Z in the Filipino Sign Language alphabet.",
+    "exampleUsage": "Z is the last letter of the alphabet.",
+    "displayOrder": 26
+  }
+]

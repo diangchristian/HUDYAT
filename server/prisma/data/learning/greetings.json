@@ -1,0 +1,62 @@
+[
+  {
+    "label": "Good Morning",
+    "meaning": "A greeting used when meeting someone in the morning.",
+    "exampleUsage": "Good morning! How are you?",
+    "displayOrder": 1
+  },
+  {
+    "label": "Good Afternoon",
+    "meaning": "A greeting used when meeting someone in the afternoon.",
+    "exampleUsage": "Good afternoon! How was your day?",
+    "displayOrder": 2
+  },
+  {
+    "label": "Good Evening",
+    "meaning": "A greeting used when meeting someone in the evening.",
+    "exampleUsage": "Good evening! Welcome.",
+    "displayOrder": 3
+  },
+  {
+    "label": "Hello",
+    "meaning": "A common greeting used when meeting or addressing someone.",
+    "exampleUsage": "Hello! Nice to meet you.",
+    "displayOrder": 4
+  },
+  {
+    "label": "How are you",
+    "meaning": "An expression used to ask about someone's condition or well-being.",
+    "exampleUsage": "Hello! How are you?",
+    "displayOrder": 5
+  },
+  {
+    "label": "I'm fine",
+    "meaning": "An expression used to say that you are doing well.",
+    "exampleUsage": "I'm fine, thank you.",
+    "displayOrder": 6
+  },
+  {
+    "label": "Nice to meet you",
+    "meaning": "An expression used when meeting someone for the first time.",
+    "exampleUsage": "Nice to meet you. I am happy to meet you.",
+    "displayOrder": 7
+  },
+  {
+    "label": "Thank you",
+    "meaning": "An expression used to show appreciation or gratitude.",
+    "exampleUsage": "Thank you for helping me.",
+    "displayOrder": 8
+  },
+  {
+    "label": "You're welcome",
+    "meaning": "An expression used in response to someone who has thanked you.",
+    "exampleUsage": "Thank you! You're welcome.",
+    "displayOrder": 9
+  },
+  {
+    "label": "See you tomorrow",
+    "meaning": "An expression used when saying goodbye to someone you expect to see the next day.",
+    "exampleUsage": "Goodbye! See you tomorrow.",
+    "displayOrder": 10
+  }
+]
