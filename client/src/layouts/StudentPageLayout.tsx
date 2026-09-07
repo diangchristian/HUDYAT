@@ -1,5 +1,9 @@
 import { useState, useRef } from "react";
 import { Outlet, NavLink, useNavigate } from "react-router";
+import { useQueryClient } from "@tanstack/react-query";
+
+import { logout } from "@/api/auth-api";
+import { currentUserKey } from "@/hooks/use-current-user";
 
 const navItems = [
   { name: "Home", path: "/student/home", image: "/icons/home.png" },
@@ -13,13 +17,21 @@ const navItems = [
 
 const StudentPageLayout = () => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [showPopover, setShowPopover] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleLogout = () => {
     setShowPopover(false);
-    // TODO: Add logout logic
-    console.log("Logout clicked");
+
+    localStorage.removeItem("token");
+    queryClient.removeQueries({ queryKey: currentUserKey });
+    navigate("/login");
+
+    logout().catch(() => {
+      // The local session is already cleared; the server-side
+      // cookie clear is best-effort.
+    });
   };
 
   const handleSettings = () => {

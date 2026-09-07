@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
 import { Link } from "react-router";
-import { getMyProgress, type MyProgress } from "@/lib/progress-api";
+import { useMyProgress } from "@/hooks/use-my-progress";
 
 const STATUS_LABELS = {
   NOT_STARTED: "Not started",
@@ -9,27 +8,7 @@ const STATUS_LABELS = {
 } as const;
 
 export default function MyProgressPage() {
-  const [progress, setProgress] = useState<MyProgress | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [reload, setReload] = useState(0);
-
-  useEffect(() => {
-    const controller = new AbortController();
-    void getMyProgress(controller.signal)
-      .then((data) => {
-        if (!controller.signal.aborted) setProgress(data);
-      })
-      .catch((reason: unknown) => {
-        if (!controller.signal.aborted) {
-          setError(reason instanceof Error ? reason.message : "Unable to load your progress.");
-        }
-      })
-      .finally(() => {
-        if (!controller.signal.aborted) setIsLoading(false);
-      });
-    return () => controller.abort();
-  }, [reload]);
+  const { data: progress, isLoading, error, refetch } = useMyProgress();
 
   return (
     <div className="space-y-8 font-body">
@@ -43,12 +22,8 @@ export default function MyProgressPage() {
       {isLoading && <p role="status">Loading your progress...</p>}
       {!isLoading && error && (
         <div role="alert" className="rounded-xl border p-6">
-          <p>{error}</p>
-          <button type="button" className="mt-3 font-bold underline" onClick={() => {
-            setError(null);
-            setIsLoading(true);
-            setReload((value) => value + 1);
-          }}>Try again</button>
+          <p>{error instanceof Error ? error.message : "Unable to load your progress."}</p>
+          <button type="button" className="mt-3 font-bold underline" onClick={() => void refetch()}>Try again</button>
         </div>
       )}
       {!isLoading && !error && progress && (

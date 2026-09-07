@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import {
   ArrowLeft,
@@ -11,12 +11,9 @@ import {
 
 import { useNavigate, useParams } from "react-router";
 
-import {
-  getCategoryLesson,
-  saveLessonCheckpoint,
-  type CategoryLesson,
-  type LessonStep,
-} from "@/lib/learning-api";
+import type { LessonStep } from "@/api/learning-api";
+import { useCategoryLesson } from "@/hooks/use-category-lesson";
+import { useSaveLessonCheckpoint } from "@/hooks/use-save-lesson-checkpoint";
 
 import PracticeCamera from "@/components/common/practice-camera";
 import PracticeReference from "@/components/common/practice-reference";
@@ -89,6 +86,9 @@ function LearnSession({
       safeInitialStep,
     );
 
+  const checkpointMutation =
+    useSaveLessonCheckpoint(categoryId);
+
   const prompt = prompts[index];
 
   if (!prompt) {
@@ -106,11 +106,10 @@ function LearnSession({
     lessonStep: LessonStep,
   ) => {
     try {
-      await saveLessonCheckpoint(
-        categoryId,
+      await checkpointMutation.mutateAsync({
         gestureIndex,
         lessonStep,
-      );
+      });
     } catch {
       // The lesson can continue even if
       // checkpoint saving fails.
@@ -550,52 +549,11 @@ export default function CategoryLearnPage() {
 
   const navigate = useNavigate();
 
-  const [lesson, setLesson] =
-    useState<CategoryLesson | null>(
-      null,
-    );
-
-  const [isLoading, setIsLoading] =
-    useState(Boolean(categoryId));
-
-  const [error, setError] =
-    useState<string | null>(null);
-
-  useEffect(() => {
-    if (!categoryId) {
-      return;
-    }
-
-    let isMounted = true;
-
-    void getCategoryLesson(categoryId)
-      .then((categoryLesson) => {
-        if (isMounted) {
-          setLesson(categoryLesson);
-        }
-      })
-      .catch(
-        (requestError: unknown) => {
-          if (isMounted) {
-            setError(
-              requestError instanceof
-                Error
-                ? requestError.message
-                : "We couldn't load this lesson right now.",
-            );
-          }
-        },
-      )
-      .finally(() => {
-        if (isMounted) {
-          setIsLoading(false);
-        }
-      });
-
-    return () => {
-      isMounted = false;
-    };
-  }, [categoryId]);
+  const {
+    data: lesson,
+    isLoading,
+    error,
+  } = useCategoryLesson(categoryId);
 
   const prompts: LessonPrompt[] =
     lesson?.categoryGestures.map(
@@ -643,8 +601,11 @@ export default function CategoryLearnPage() {
             className="py-12 text-center text-sm font-bold text-destructive"
             role="alert"
           >
-            {error ??
-              "Category not found."}
+            {error instanceof Error
+              ? error.message
+              : !categoryId
+                ? "Category not found."
+                : "We couldn't load this lesson right now."}
           </p>
         ) : lesson?.category &&
           prompts.length ? (

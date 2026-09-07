@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router";
 
 import StudentPageLayout from "@/layouts/StudentPageLayout";
 import NoSidebarLayout from "@/layouts/NoSidebarLayout";
+import { RequireGuest, RequireRole } from "./route-guards";
 
 import HomePage from "@/pages/HomePage";
 import LoginPage from "@/pages/auth/LoginPage";
@@ -18,67 +19,77 @@ import TakeAssessmentPage from "@/pages/student/TakeAssessmentPage";
 
 export const router = createBrowserRouter([
   // =========================
-  // PUBLIC ROUTES
+  // PUBLIC ROUTES (guests only — a logged-in user is redirected away)
   // =========================
   {
-    path: "/",
-    element: <HomePage />,
-  },
-  {
-    path: "/login",
-    element: <LoginPage />,
-  },
-
-  // =========================
-  // STUDENT ROUTES
-  // =========================
-  {
-    element: <StudentPageLayout />,
+    element: <RequireGuest />,
     children: [
       {
-        path: "/student/home",
-        element: <StudentHomePage />,
+        path: "/",
+        element: <HomePage />,
       },
       {
-        path: "/student/learn",
-        element: <LearnPage />,
-      },
-      {
-        path: "/student/progress",
-        element: <MyProgressPage />,
-      },
-      {
-        path: "/student/practice",
-        element: <PracticePage />,
-      },
-      {
-        path: "/student/assessment",
-        element: <AssessmentPage />,
-      },
-      {
-        path: "/student/assessment/result",
-        element: <AssessmentResultPage />,
+        path: "/login",
+        element: <LoginPage />,
       },
     ],
   },
 
   // =========================
-  // STUDENT FULL-SCREEN ROUTES
+  // STUDENT ROUTES (LEARNER role only)
   // =========================
   {
-    element: <NoSidebarLayout />,
+    element: <RequireRole allowedRoles={["LEARNER"]} />,
     children: [
       {
-        path: "/student/assessment/:categoryId",
-        element: <TakeAssessmentPage />,
+        element: <StudentPageLayout />,
+        children: [
+          {
+            path: "/student/home",
+            element: <StudentHomePage />,
+          },
+          {
+            path: "/student/learn",
+            element: <LearnPage />,
+          },
+          {
+            path: "/student/progress",
+            element: <MyProgressPage />,
+          },
+          {
+            path: "/student/practice",
+            element: <PracticePage />,
+          },
+          {
+            path: "/student/assessment",
+            element: <AssessmentPage />,
+          },
+          {
+            path: "/student/assessment/result",
+            element: <AssessmentResultPage />,
+          },
+        ],
       },
+
+      // =========================
+      // STUDENT FULL-SCREEN ROUTES
+      // =========================
       {
-        path: "/student/learn/:category",
-        element: <CategoryLearnPage />,
-      },
-      {
-        path: "/student/practice/:category",
-        element: <CategoryPracticePage />,
+        element: <NoSidebarLayout />,
+        children: [
+          {
+            path: "/student/assessment/:categoryId",
+            element: <TakeAssessmentPage />,
+          },
+          {
+            path: "/student/learn/:category",
+            element: <CategoryLearnPage />,
+          },
+          {
+            path: "/student/practice/:category",
+            element: <CategoryPracticePage />,
+          },
+        ],
       },
     ],
   },
