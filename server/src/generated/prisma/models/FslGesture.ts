@@ -426,11 +426,6 @@ export type FslGestureScalarRelationFilter = {
   isNot?: Prisma.FslGestureWhereInput
 }
 
-export type FslGestureNullableScalarRelationFilter = {
-  is?: Prisma.FslGestureWhereInput | null
-  isNot?: Prisma.FslGestureWhereInput | null
-}
-
 export type FslGestureCreateNestedOneWithoutCategoryGesturesInput = {
   create?: Prisma.XOR<Prisma.FslGestureCreateWithoutCategoryGesturesInput, Prisma.FslGestureUncheckedCreateWithoutCategoryGesturesInput>
   connectOrCreate?: Prisma.FslGestureCreateOrConnectWithoutCategoryGesturesInput
@@ -465,12 +460,10 @@ export type FslGestureCreateNestedOneWithoutQuestionChoicesInput = {
   connect?: Prisma.FslGestureWhereUniqueInput
 }
 
-export type FslGestureUpdateOneWithoutQuestionChoicesNestedInput = {
+export type FslGestureUpdateOneRequiredWithoutQuestionChoicesNestedInput = {
   create?: Prisma.XOR<Prisma.FslGestureCreateWithoutQuestionChoicesInput, Prisma.FslGestureUncheckedCreateWithoutQuestionChoicesInput>
   connectOrCreate?: Prisma.FslGestureCreateOrConnectWithoutQuestionChoicesInput
   upsert?: Prisma.FslGestureUpsertWithoutQuestionChoicesInput
-  disconnect?: Prisma.FslGestureWhereInput | boolean
-  delete?: Prisma.FslGestureWhereInput | boolean
   connect?: Prisma.FslGestureWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.FslGestureUpdateToOneWithWhereWithoutQuestionChoicesInput, Prisma.FslGestureUpdateWithoutQuestionChoicesInput>, Prisma.FslGestureUncheckedUpdateWithoutQuestionChoicesInput>
 }

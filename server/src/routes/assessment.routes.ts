@@ -1,7 +1,9 @@
 import Router from "express";
 
 import {
+  checkAnswer,
   getAssessment,
+  listAssessments,
   submitAssessment,
 } from "../controllers/assessment.controller.js";
 
@@ -12,8 +14,18 @@ const assessmentRouter = Router();
 assessmentRouter.use(authMiddleware);
 
 assessmentRouter.get(
+  "/",
+  listAssessments,
+);
+
+assessmentRouter.get(
   "/categories/:categoryId",
   getAssessment,
+);
+
+assessmentRouter.post(
+  "/categories/:categoryId/questions/:questionId/check",
+  checkAnswer,
 );
 
 assessmentRouter.post(

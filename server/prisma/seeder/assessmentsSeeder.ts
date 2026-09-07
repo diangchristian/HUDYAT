@@ -168,15 +168,21 @@ async function seedAssessments() {
         );
       }
 
+      await prisma.questionChoice.deleteMany({
+        where: {
+          questionId: questionId,
+        },
+      });
+
       for (const choice of questionData.choices) {
         // Find the existing gesture
         const gesture = await prisma.fslGesture.findFirst({
-        where: {
+          where: {
             label: {
-            equals: choice.gesture,
-            mode: "insensitive",
+              equals: choice.gesture,
+              mode: "insensitive",
             },
-        },
+          },
         });
 
         if (!gesture) {
@@ -185,39 +191,18 @@ async function seedAssessments() {
           );
         }
 
-        await prisma.questionChoice.deleteMany({
-            where: {
-              questionId: questionId,
-            },
+        await prisma.questionChoice.create({
+          data: {
+            questionId: questionId,
+            gestureId: gesture.id,
+            choiceText: choice.choice_text,
+            displayOrder: choice.display_order,
+            // isCorrect no longer exists on QuestionChoice —
+            // correctness is derived at submit time by comparing
+            // choice.gestureId to the question's target gestureId.
+          },
         });
-
-            for (const choice of questionData.choices) {
-            const gesture = await prisma.fslGesture.findFirst({
-                where: {
-                    label: {
-                    equals: choice.gesture,
-                    mode: "insensitive",
-                    },
-                },
-                });
-
-            if (!gesture) {
-                throw new Error(
-                `Gesture "${choice.gesture}" was not found.`
-                );
-            }
-
-            await prisma.questionChoice.create({
-                data: {
-                questionId: questionId,
-                gestureId: gesture.id,
-                choiceText: choice.choice_text,
-                displayOrder: choice.display_order,
-                isCorrect: choice.isCorrect ?? false,
-                },
-            });
-            }
-                }
+      }
 
       console.log(
         `  ✓ Choices: ${questionData.category} #${questionData.question_number}`

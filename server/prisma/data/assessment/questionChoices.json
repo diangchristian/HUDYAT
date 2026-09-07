@@ -6,8 +6,7 @@
       {
         "gesture": "A",
         "choice_text": "A",
-        "display_order": 1,
-        "isCorrect": true
+        "display_order": 1
       },
       {
         "gesture": "B",
@@ -33,9 +32,7 @@
       {
         "gesture": "B",
         "choice_text": "B",
-        "display_order": 2,
-        "isCorrect": true
-        
+        "display_order": 2
       },
       {
         "gesture": "D",
@@ -51,8 +48,7 @@
       {
         "gesture": "M",
         "choice_text": "M",
-        "display_order": 1,
-        "isCorrect": true
+        "display_order": 1
       },
       {
         "gesture": "N",
@@ -73,8 +69,7 @@
       {
         "gesture": "S",
         "choice_text": "S",
-        "display_order": 1,
-        "isCorrect": true
+        "display_order": 1
       },
       {
         "gesture": "C",
@@ -95,8 +90,7 @@
       {
         "gesture": "Z",
         "choice_text": "Z",
-        "display_order": 1,
-        "isCorrect": true
+        "display_order": 1
       },
       {
         "gesture": "X",

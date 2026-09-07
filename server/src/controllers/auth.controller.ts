@@ -6,6 +6,18 @@ import {
   type Response,
 } from "express";
 
+const toAuthUser = (user: {
+  id: string;
+  username: string;
+  email: string | null;
+  role: string;
+}) => ({
+  id: user.id,
+  username: user.username,
+  email: user.email,
+  role: user.role,
+});
+
 export const register = async (req: Request, res: Response) => {
   const { username, email, password } = req.body;
 
@@ -44,11 +56,7 @@ export const register = async (req: Request, res: Response) => {
   res.status(201).json({
     status: "success",
     data: {
-      user: {
-        id: user.id,
-        username: user.username,
-        email: user.email,
-      },
+      user: toAuthUser(user),
       token,
     },
   });
@@ -78,18 +86,34 @@ export const login = async (req: Request, res: Response) => {
     });
   }
 
+  if (user.role !== "LEARNER") {
+    return res.status(403).json({
+      message:
+        "This login is for students. Please use the teacher or admin login.",
+    });
+  }
+
   const token = generateToken(user.id, res);
 
   res.status(201).json({
     status: "success",
     data: {
-      user: {
-        id: user.id,
-        username: user.username,
-        email: user.email,
-      },
+      user: toAuthUser(user),
       token,
     },
+  });
+};
+
+export const me = async (req: Request, res: Response) => {
+  if (!req.user) {
+    return res.status(401).json({
+      message: "Unauthorized",
+    });
+  }
+
+  res.status(200).json({
+    success: true,
+    data: toAuthUser(req.user),
   });
 };
 
