@@ -276,6 +276,19 @@ export const saveLessonCheckpoint = async (
     );
   }
 
+  /*
+   * The learner has finished this category's lesson
+   * once they reach the final gesture's final step.
+   *
+   * This unlocks the category's assessment. Once set,
+   * lessonCompletedAt is never cleared back to null on
+   * later checkpoint saves (e.g. navigating backward
+   * to review earlier steps).
+   */
+  const isFinalStep =
+    gestureIndex === category.gestures.length - 1 &&
+    lessonStep === "try";
+
   const progress =
     await prisma.categoryProgress.upsert({
       where: {
@@ -293,6 +306,10 @@ export const saveLessonCheckpoint = async (
 
         lastLessonStep:
           lessonStep,
+
+        ...(isFinalStep
+          ? { lessonCompletedAt: new Date() }
+          : {}),
       },
 
       create: {
@@ -308,6 +325,10 @@ export const saveLessonCheckpoint = async (
           lessonStep,
 
         startedAt: new Date(),
+
+        ...(isFinalStep
+          ? { lessonCompletedAt: new Date() }
+          : {}),
       },
     });
 

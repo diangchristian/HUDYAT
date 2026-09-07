@@ -42,7 +42,6 @@ export type AssessmentMinAggregateOutputType = {
   description: string | null
   passingScore: runtime.Decimal | null
   status: $Enums.AssessmentStatus | null
-  isUnlocked: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -55,7 +54,6 @@ export type AssessmentMaxAggregateOutputType = {
   description: string | null
   passingScore: runtime.Decimal | null
   status: $Enums.AssessmentStatus | null
-  isUnlocked: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -68,7 +66,6 @@ export type AssessmentCountAggregateOutputType = {
   description: number
   passingScore: number
   status: number
-  isUnlocked: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -91,7 +88,6 @@ export type AssessmentMinAggregateInputType = {
   description?: true
   passingScore?: true
   status?: true
-  isUnlocked?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -104,7 +100,6 @@ export type AssessmentMaxAggregateInputType = {
   description?: true
   passingScore?: true
   status?: true
-  isUnlocked?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -117,7 +112,6 @@ export type AssessmentCountAggregateInputType = {
   description?: true
   passingScore?: true
   status?: true
-  isUnlocked?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -217,7 +211,6 @@ export type AssessmentGroupByOutputType = {
   description: string | null
   passingScore: runtime.Decimal
   status: $Enums.AssessmentStatus
-  isUnlocked: boolean
   createdAt: Date
   updatedAt: Date
   _count: AssessmentCountAggregateOutputType | null
@@ -253,7 +246,6 @@ export type AssessmentWhereInput = {
   description?: Prisma.StringNullableFilter<"Assessment"> | string | null
   passingScore?: Prisma.DecimalFilter<"Assessment"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumAssessmentStatusFilter<"Assessment"> | $Enums.AssessmentStatus
-  isUnlocked?: Prisma.BoolFilter<"Assessment"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Assessment"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Assessment"> | Date | string
   assessmentAttempts?: Prisma.AssessmentAttemptListRelationFilter
@@ -270,7 +262,6 @@ export type AssessmentOrderByWithRelationInput = {
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   passingScore?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  isUnlocked?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   assessmentAttempts?: Prisma.AssessmentAttemptOrderByRelationAggregateInput
@@ -290,7 +281,6 @@ export type AssessmentWhereUniqueInput = Prisma.AtLeast<{
   description?: Prisma.StringNullableFilter<"Assessment"> | string | null
   passingScore?: Prisma.DecimalFilter<"Assessment"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumAssessmentStatusFilter<"Assessment"> | $Enums.AssessmentStatus
-  isUnlocked?: Prisma.BoolFilter<"Assessment"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Assessment"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Assessment"> | Date | string
   assessmentAttempts?: Prisma.AssessmentAttemptListRelationFilter
@@ -307,7 +297,6 @@ export type AssessmentOrderByWithAggregationInput = {
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   passingScore?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  isUnlocked?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.AssessmentCountOrderByAggregateInput
@@ -328,7 +317,6 @@ export type AssessmentScalarWhereWithAggregatesInput = {
   description?: Prisma.StringNullableWithAggregatesFilter<"Assessment"> | string | null
   passingScore?: Prisma.DecimalWithAggregatesFilter<"Assessment"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumAssessmentStatusWithAggregatesFilter<"Assessment"> | $Enums.AssessmentStatus
-  isUnlocked?: Prisma.BoolWithAggregatesFilter<"Assessment"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Assessment"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Assessment"> | Date | string
 }
@@ -339,7 +327,6 @@ export type AssessmentCreateInput = {
   description?: string | null
   passingScore: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.AssessmentStatus
-  isUnlocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   assessmentAttempts?: Prisma.AssessmentAttemptCreateNestedManyWithoutAssessmentInput
@@ -356,7 +343,6 @@ export type AssessmentUncheckedCreateInput = {
   description?: string | null
   passingScore: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.AssessmentStatus
-  isUnlocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   assessmentAttempts?: Prisma.AssessmentAttemptUncheckedCreateNestedManyWithoutAssessmentInput
@@ -369,7 +355,6 @@ export type AssessmentUpdateInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passingScore?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumAssessmentStatusFieldUpdateOperationsInput | $Enums.AssessmentStatus
-  isUnlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assessmentAttempts?: Prisma.AssessmentAttemptUpdateManyWithoutAssessmentNestedInput
@@ -386,7 +371,6 @@ export type AssessmentUncheckedUpdateInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passingScore?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumAssessmentStatusFieldUpdateOperationsInput | $Enums.AssessmentStatus
-  isUnlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assessmentAttempts?: Prisma.AssessmentAttemptUncheckedUpdateManyWithoutAssessmentNestedInput
@@ -401,7 +385,6 @@ export type AssessmentCreateManyInput = {
   description?: string | null
   passingScore: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.AssessmentStatus
-  isUnlocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -412,7 +395,6 @@ export type AssessmentUpdateManyMutationInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passingScore?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumAssessmentStatusFieldUpdateOperationsInput | $Enums.AssessmentStatus
-  isUnlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -425,7 +407,6 @@ export type AssessmentUncheckedUpdateManyInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passingScore?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumAssessmentStatusFieldUpdateOperationsInput | $Enums.AssessmentStatus
-  isUnlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -453,7 +434,6 @@ export type AssessmentCountOrderByAggregateInput = {
   description?: Prisma.SortOrder
   passingScore?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  isUnlocked?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -470,7 +450,6 @@ export type AssessmentMaxOrderByAggregateInput = {
   description?: Prisma.SortOrder
   passingScore?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  isUnlocked?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -483,7 +462,6 @@ export type AssessmentMinOrderByAggregateInput = {
   description?: Prisma.SortOrder
   passingScore?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  isUnlocked?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -617,7 +595,6 @@ export type AssessmentCreateWithoutTeacherInput = {
   description?: string | null
   passingScore: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.AssessmentStatus
-  isUnlocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   assessmentAttempts?: Prisma.AssessmentAttemptCreateNestedManyWithoutAssessmentInput
@@ -632,7 +609,6 @@ export type AssessmentUncheckedCreateWithoutTeacherInput = {
   description?: string | null
   passingScore: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.AssessmentStatus
-  isUnlocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   assessmentAttempts?: Prisma.AssessmentAttemptUncheckedCreateNestedManyWithoutAssessmentInput
@@ -676,7 +652,6 @@ export type AssessmentScalarWhereInput = {
   description?: Prisma.StringNullableFilter<"Assessment"> | string | null
   passingScore?: Prisma.DecimalFilter<"Assessment"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumAssessmentStatusFilter<"Assessment"> | $Enums.AssessmentStatus
-  isUnlocked?: Prisma.BoolFilter<"Assessment"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Assessment"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Assessment"> | Date | string
 }
@@ -687,7 +662,6 @@ export type AssessmentCreateWithoutCategoryInput = {
   description?: string | null
   passingScore: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.AssessmentStatus
-  isUnlocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   assessmentAttempts?: Prisma.AssessmentAttemptCreateNestedManyWithoutAssessmentInput
@@ -702,7 +676,6 @@ export type AssessmentUncheckedCreateWithoutCategoryInput = {
   description?: string | null
   passingScore: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.AssessmentStatus
-  isUnlocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   assessmentAttempts?: Prisma.AssessmentAttemptUncheckedCreateNestedManyWithoutAssessmentInput
@@ -731,7 +704,6 @@ export type AssessmentUpdateWithoutCategoryInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passingScore?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumAssessmentStatusFieldUpdateOperationsInput | $Enums.AssessmentStatus
-  isUnlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assessmentAttempts?: Prisma.AssessmentAttemptUpdateManyWithoutAssessmentNestedInput
@@ -746,7 +718,6 @@ export type AssessmentUncheckedUpdateWithoutCategoryInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passingScore?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumAssessmentStatusFieldUpdateOperationsInput | $Enums.AssessmentStatus
-  isUnlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assessmentAttempts?: Prisma.AssessmentAttemptUncheckedUpdateManyWithoutAssessmentNestedInput
@@ -759,7 +730,6 @@ export type AssessmentCreateWithoutQuestionsInput = {
   description?: string | null
   passingScore: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.AssessmentStatus
-  isUnlocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   assessmentAttempts?: Prisma.AssessmentAttemptCreateNestedManyWithoutAssessmentInput
@@ -775,7 +745,6 @@ export type AssessmentUncheckedCreateWithoutQuestionsInput = {
   description?: string | null
   passingScore: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.AssessmentStatus
-  isUnlocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   assessmentAttempts?: Prisma.AssessmentAttemptUncheckedCreateNestedManyWithoutAssessmentInput
@@ -803,7 +772,6 @@ export type AssessmentUpdateWithoutQuestionsInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passingScore?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumAssessmentStatusFieldUpdateOperationsInput | $Enums.AssessmentStatus
-  isUnlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assessmentAttempts?: Prisma.AssessmentAttemptUpdateManyWithoutAssessmentNestedInput
@@ -819,7 +787,6 @@ export type AssessmentUncheckedUpdateWithoutQuestionsInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passingScore?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumAssessmentStatusFieldUpdateOperationsInput | $Enums.AssessmentStatus
-  isUnlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assessmentAttempts?: Prisma.AssessmentAttemptUncheckedUpdateManyWithoutAssessmentNestedInput
@@ -831,7 +798,6 @@ export type AssessmentCreateWithoutAssessmentAttemptsInput = {
   description?: string | null
   passingScore: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.AssessmentStatus
-  isUnlocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   questions?: Prisma.AssessmentQuestionCreateNestedManyWithoutAssessmentInput
@@ -847,7 +813,6 @@ export type AssessmentUncheckedCreateWithoutAssessmentAttemptsInput = {
   description?: string | null
   passingScore: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.AssessmentStatus
-  isUnlocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   questions?: Prisma.AssessmentQuestionUncheckedCreateNestedManyWithoutAssessmentInput
@@ -875,7 +840,6 @@ export type AssessmentUpdateWithoutAssessmentAttemptsInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passingScore?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumAssessmentStatusFieldUpdateOperationsInput | $Enums.AssessmentStatus
-  isUnlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   questions?: Prisma.AssessmentQuestionUpdateManyWithoutAssessmentNestedInput
@@ -891,7 +855,6 @@ export type AssessmentUncheckedUpdateWithoutAssessmentAttemptsInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passingScore?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumAssessmentStatusFieldUpdateOperationsInput | $Enums.AssessmentStatus
-  isUnlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   questions?: Prisma.AssessmentQuestionUncheckedUpdateManyWithoutAssessmentNestedInput
@@ -904,7 +867,6 @@ export type AssessmentCreateManyTeacherInput = {
   description?: string | null
   passingScore: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.AssessmentStatus
-  isUnlocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -915,7 +877,6 @@ export type AssessmentUpdateWithoutTeacherInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passingScore?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumAssessmentStatusFieldUpdateOperationsInput | $Enums.AssessmentStatus
-  isUnlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assessmentAttempts?: Prisma.AssessmentAttemptUpdateManyWithoutAssessmentNestedInput
@@ -930,7 +891,6 @@ export type AssessmentUncheckedUpdateWithoutTeacherInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passingScore?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumAssessmentStatusFieldUpdateOperationsInput | $Enums.AssessmentStatus
-  isUnlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assessmentAttempts?: Prisma.AssessmentAttemptUncheckedUpdateManyWithoutAssessmentNestedInput
@@ -944,7 +904,6 @@ export type AssessmentUncheckedUpdateManyWithoutTeacherInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passingScore?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumAssessmentStatusFieldUpdateOperationsInput | $Enums.AssessmentStatus
-  isUnlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -997,7 +956,6 @@ export type AssessmentSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   description?: boolean
   passingScore?: boolean
   status?: boolean
-  isUnlocked?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   assessmentAttempts?: boolean | Prisma.Assessment$assessmentAttemptsArgs<ExtArgs>
@@ -1015,7 +973,6 @@ export type AssessmentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   description?: boolean
   passingScore?: boolean
   status?: boolean
-  isUnlocked?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
@@ -1030,7 +987,6 @@ export type AssessmentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   description?: boolean
   passingScore?: boolean
   status?: boolean
-  isUnlocked?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
@@ -1045,12 +1001,11 @@ export type AssessmentSelectScalar = {
   description?: boolean
   passingScore?: boolean
   status?: boolean
-  isUnlocked?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type AssessmentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "categoryId" | "createdBy" | "title" | "description" | "passingScore" | "status" | "isUnlocked" | "createdAt" | "updatedAt", ExtArgs["result"]["assessment"]>
+export type AssessmentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "categoryId" | "createdBy" | "title" | "description" | "passingScore" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["assessment"]>
 export type AssessmentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   assessmentAttempts?: boolean | Prisma.Assessment$assessmentAttemptsArgs<ExtArgs>
   questions?: boolean | Prisma.Assessment$questionsArgs<ExtArgs>
@@ -1083,7 +1038,6 @@ export type $AssessmentPayload<ExtArgs extends runtime.Types.Extensions.Internal
     description: string | null
     passingScore: runtime.Decimal
     status: $Enums.AssessmentStatus
-    isUnlocked: boolean
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["assessment"]>
@@ -1520,7 +1474,6 @@ export interface AssessmentFieldRefs {
   readonly description: Prisma.FieldRef<"Assessment", 'String'>
   readonly passingScore: Prisma.FieldRef<"Assessment", 'Decimal'>
   readonly status: Prisma.FieldRef<"Assessment", 'AssessmentStatus'>
-  readonly isUnlocked: Prisma.FieldRef<"Assessment", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Assessment", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Assessment", 'DateTime'>
 }

@@ -237,6 +237,7 @@ model CategoryProgress {
   updatedAt        DateTime               @updatedAt
   lastGestureIndex Int                    @default(0)
   lastLessonStep   String?
+  lessonCompletedAt DateTime?
   category         Category               @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   learner          LearnerProfile         @relation(fields: [learnerId], references: [userId], onDelete: Cascade)
 

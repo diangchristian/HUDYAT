@@ -187,7 +187,6 @@ export const AssessmentScalarFieldEnum = {
   description: 'description',
   passingScore: 'passingScore',
   status: 'status',
-  isUnlocked: 'isUnlocked',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -216,8 +215,7 @@ export const QuestionChoiceScalarFieldEnum = {
   gestureId: 'gestureId',
   choiceText: 'choiceText',
   imageUrl: 'imageUrl',
-  displayOrder: 'displayOrder',
-  isCorrect: 'isCorrect'
+  displayOrder: 'displayOrder'
 } as const
 
 export type QuestionChoiceScalarFieldEnum = (typeof QuestionChoiceScalarFieldEnum)[keyof typeof QuestionChoiceScalarFieldEnum]
@@ -272,7 +270,8 @@ export const CategoryProgressScalarFieldEnum = {
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   lastGestureIndex: 'lastGestureIndex',
-  lastLessonStep: 'lastLessonStep'
+  lastLessonStep: 'lastLessonStep',
+  lessonCompletedAt: 'lessonCompletedAt'
 } as const
 
 export type CategoryProgressScalarFieldEnum = (typeof CategoryProgressScalarFieldEnum)[keyof typeof CategoryProgressScalarFieldEnum]
