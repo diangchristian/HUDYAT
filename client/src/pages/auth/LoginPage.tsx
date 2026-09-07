@@ -5,6 +5,8 @@ import ElevatedButton from "@/components/ui/elavated-button";
 import { Input } from "@/components/ui/input";
 import { MoveLeft } from "lucide-react";
 
+import { login } from "@/api/auth-api";
+
 const LoginPage = () => {
   const navigate = useNavigate();
 
@@ -19,26 +21,9 @@ const LoginPage = () => {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL ?? "http://localhost:5001"}/api/auth/login`,
-        {
-          method: "POST",
-          credentials: "include",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email: username, password }),
-        },
-      );
+      const { token } = await login(username, password);
 
-      const body = (await response.json()) as {
-        message?: string;
-        data?: { token?: string };
-      };
-
-      if (!response.ok || !body.data?.token) {
-        throw new Error(body.message ?? "Unable to log in.");
-      }
-
-      localStorage.setItem("token", body.data.token);
+      localStorage.setItem("token", token);
 
       // Redirect to Student Home after successful login
       navigate("/student/home");

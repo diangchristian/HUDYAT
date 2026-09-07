@@ -1,14 +1,11 @@
-import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 
 import CategoryCard from "@/components/common/category-card";
 import { CATEGORIES } from "@/components/common/categories.constants";
 
-import {
-  getLearningAreas,
-  type LearningArea,
-} from "@/lib/learning-api";
+import type { LearningArea } from "@/api/learning-api";
+import { useLearningAreas } from "@/hooks/use-learning-areas";
 
-import { useNavigate } from "react-router";
 
 const STATUS_LABELS = {
   completed: "Completed",
@@ -19,43 +16,11 @@ const STATUS_LABELS = {
 export default function LearnPage() {
   const navigate = useNavigate();
 
-  const [learningAreas, setLearningAreas] =
-    useState<LearningArea[]>([]);
-
-  const [isLoading, setIsLoading] =
-    useState(true);
-
-  const [error, setError] =
-    useState<string | null>(null);
-
-  useEffect(() => {
-    let isMounted = true;
-
-    void getLearningAreas()
-      .then((areas) => {
-        if (isMounted) {
-          setLearningAreas(areas);
-        }
-      })
-      .catch((requestError: unknown) => {
-        if (isMounted) {
-          setError(
-            requestError instanceof Error
-              ? requestError.message
-              : "We couldn't load your lessons right now.",
-          );
-        }
-      })
-      .finally(() => {
-        if (isMounted) {
-          setIsLoading(false);
-        }
-      });
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
+  const {
+    data: learningAreas = [],
+    isLoading,
+    error,
+  } = useLearningAreas();
 
   /*
    * Find the learner's current category.
@@ -230,7 +195,9 @@ export default function LearnPage() {
           className="mt-12 text-center text-sm font-bold text-destructive"
           role="alert"
         >
-          {error}
+          {error instanceof Error
+            ? error.message
+            : "We couldn't load your lessons right now."}
         </p>
       )}
 

@@ -7,7 +7,7 @@ const MODES = [
         title: "Learn FSL",
         image: "/icons/learn.png",
         color: "#6EC5FF",
-        path: "#",
+        path: "/student/learn",
     },
     {
         title: "Practice",
