@@ -81,7 +81,7 @@ const TakeAssessmentPage = () => {
 
   if (isLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
+      <div className="flex h-dvh items-center justify-center">
         <p className="text-sm text-muted-foreground">
           Loading assessment...
         </p>
@@ -91,7 +91,7 @@ const TakeAssessmentPage = () => {
 
   if (error || !assessment) {
     return (
-      <div className="flex min-h-screen items-center justify-center px-6">
+      <div className="flex h-dvh items-center justify-center px-6">
         <div className="text-center">
           <h1 className="text-xl font-bold text-foreground">
             Assessment unavailable
@@ -128,7 +128,7 @@ const TakeAssessmentPage = () => {
 
   if (!currentQuestion) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
+      <div className="flex h-dvh items-center justify-center">
         <p className="text-sm text-muted-foreground">
           No questions are available.
         </p>
@@ -242,9 +242,9 @@ const TakeAssessmentPage = () => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-background px-4 py-6 sm:px-6">
+    <div className="flex h-dvh max-h-dvh w-full flex-col overflow-hidden bg-background px-4 py-6 sm:px-6">
       {/* HEADER */}
-      <div className="mx-auto flex w-full max-w-5xl items-center justify-between">
+      <div className="mx-auto flex w-full max-w-5xl shrink-0 items-center justify-between">
         <div>
           <p className="text-sm font-semibold text-muted-foreground">
             Assessment
@@ -266,7 +266,7 @@ const TakeAssessmentPage = () => {
       </div>
 
       {/* PROGRESS */}
-      <div className="mx-auto mt-6 w-full max-w-5xl">
+      <div className="mx-auto mt-6 w-full max-w-5xl shrink-0">
         <div className="flex items-center justify-between text-sm">
           <span className="font-semibold text-foreground">
             Question {questionNumber}
@@ -296,21 +296,21 @@ const TakeAssessmentPage = () => {
       </div>
 
       {/* QUESTION */}
-      <main className="mx-auto mt-8 w-full max-w-5xl">
-        <div className="rounded-3xl border bg-card p-5 shadow-sm sm:p-8">
-          <div className="mb-6 flex items-center gap-2 text-sm font-bold text-hudyat-gold">
+      <main className="mx-auto mt-[clamp(1rem,4vh,2rem)] flex w-full min-h-0 max-w-5xl flex-1 flex-col">
+        <div className="flex h-full min-h-0 w-full flex-col overflow-y-auto rounded-3xl border bg-card p-[clamp(0.875rem,3vh,2rem)] shadow-sm">
+          <div className="flex shrink-0 items-center gap-2 text-sm font-bold text-hudyat-gold">
             <Sparkles className="h-4 w-4" />
             <span>
               Question {currentQuestion.questionNumber}
             </span>
           </div>
 
-          <h2 className="text-center text-xl font-bold text-foreground sm:text-2xl">
+          <h2 className="mt-[clamp(0.5rem,1.5vh,1.5rem)] shrink-0 text-center text-xl font-bold text-foreground sm:text-2xl">
             {currentQuestion.questionText}
           </h2>
 
           {/* HINT */}
-          <div className="mx-auto mt-6 flex max-w-2xl items-start gap-3 rounded-2xl bg-muted p-4">
+          <div className="mx-auto mt-[clamp(0.5rem,1.5vh,1.5rem)] flex w-full max-w-2xl shrink-0 items-start gap-3 rounded-2xl bg-muted p-[clamp(0.5rem,1.5vh,1rem)]">
             <Lightbulb className="mt-0.5 h-5 w-5 shrink-0 text-hudyat-gold" />
 
             <p className="text-sm text-muted-foreground">
@@ -319,7 +319,7 @@ const TakeAssessmentPage = () => {
           </div>
 
           {/* QUESTION MEDIA + ANSWERS */}
-          <div className="mx-auto mt-8 max-w-2xl">
+          <div className="mx-auto mt-[clamp(0.75rem,2vh,2rem)] flex w-full min-h-0 max-w-2xl flex-1 flex-col">
             {isVideoQuestion ? (
               <VideoQuestion
                 videoUrl={
@@ -358,7 +358,7 @@ const TakeAssessmentPage = () => {
           </div>
 
           {/* ACTION */}
-          <div className="mt-8 flex justify-center">
+          <div className="mt-[clamp(0.75rem,2vh,2rem)] flex shrink-0 justify-center">
             <ElevatedButton
               text={
                 isChecking
