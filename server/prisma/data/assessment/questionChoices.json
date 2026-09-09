@@ -104,7 +104,6 @@
       }
     ]
   },
-
   {
     "category": "Numbers",
     "question_number": 1,
@@ -210,7 +209,6 @@
       }
     ]
   },
-
   {
     "category": "Calendar",
     "question_number": 1,
@@ -316,7 +314,6 @@
       }
     ]
   },
-
   {
     "category": "Greetings",
     "question_number": 1,
@@ -418,6 +415,846 @@
       {
         "gesture": "You're Welcome",
         "choice_text": "You're Welcome",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "Shapes",
+    "question_number": 1,
+    "choices": [
+      {
+        "gesture": "Circle",
+        "choice_text": "Circle",
+        "display_order": 1
+      },
+      {
+        "gesture": "Square",
+        "choice_text": "Square",
+        "display_order": 2
+      },
+      {
+        "gesture": "Triangle",
+        "choice_text": "Triangle",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "Shapes",
+    "question_number": 2,
+    "choices": [
+      {
+        "gesture": "Triangle",
+        "choice_text": "Triangle",
+        "display_order": 1
+      },
+      {
+        "gesture": "Rectangle",
+        "choice_text": "Rectangle",
+        "display_order": 2
+      },
+      {
+        "gesture": "Square",
+        "choice_text": "Square",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "Shapes",
+    "question_number": 3,
+    "choices": [
+      {
+        "gesture": "Star",
+        "choice_text": "Star",
+        "display_order": 1
+      },
+      {
+        "gesture": "Triangle",
+        "choice_text": "Triangle",
+        "display_order": 2
+      },
+      {
+        "gesture": "Rectangle",
+        "choice_text": "Rectangle",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "Shapes",
+    "question_number": 4,
+    "choices": [
+      {
+        "gesture": "Rectangle",
+        "choice_text": "Rectangle",
+        "display_order": 1
+      },
+      {
+        "gesture": "Star",
+        "choice_text": "Star",
+        "display_order": 2
+      },
+      {
+        "gesture": "Heart",
+        "choice_text": "Heart",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "Shapes",
+    "question_number": 5,
+    "choices": [
+      {
+        "gesture": "Heart",
+        "choice_text": "Heart",
+        "display_order": 1
+      },
+      {
+        "gesture": "Diamond",
+        "choice_text": "Diamond",
+        "display_order": 2
+      },
+      {
+        "gesture": "Star",
+        "choice_text": "Star",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "Shapes",
+    "question_number": 6,
+    "choices": [
+      {
+        "gesture": "Oval",
+        "choice_text": "Oval",
+        "display_order": 1
+      },
+      {
+        "gesture": "Heart",
+        "choice_text": "Heart",
+        "display_order": 2
+      },
+      {
+        "gesture": "Diamond",
+        "choice_text": "Diamond",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "Shapes",
+    "question_number": 7,
+    "choices": [
+      {
+        "gesture": "Diamond",
+        "choice_text": "Diamond",
+        "display_order": 1
+      },
+      {
+        "gesture": "Oval",
+        "choice_text": "Oval",
+        "display_order": 2
+      },
+      {
+        "gesture": "Pentagon",
+        "choice_text": "Pentagon",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "Shapes",
+    "question_number": 8,
+    "choices": [
+      {
+        "gesture": "Pentagon",
+        "choice_text": "Pentagon",
+        "display_order": 1
+      },
+      {
+        "gesture": "Hexagon",
+        "choice_text": "Hexagon",
+        "display_order": 2
+      },
+      {
+        "gesture": "Oval",
+        "choice_text": "Oval",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "Shapes",
+    "question_number": 9,
+    "choices": [
+      {
+        "gesture": "Circle",
+        "choice_text": "Circle",
+        "display_order": 1
+      },
+      {
+        "gesture": "Pentagon",
+        "choice_text": "Pentagon",
+        "display_order": 2
+      },
+      {
+        "gesture": "Hexagon",
+        "choice_text": "Hexagon",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "Shapes",
+    "question_number": 10,
+    "choices": [
+      {
+        "gesture": "Hexagon",
+        "choice_text": "Hexagon",
+        "display_order": 1
+      },
+      {
+        "gesture": "Circle",
+        "choice_text": "Circle",
+        "display_order": 2
+      },
+      {
+        "gesture": "Square",
+        "choice_text": "Square",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "Colors",
+    "question_number": 1,
+    "choices": [
+      {
+        "gesture": "Red",
+        "choice_text": "Red",
+        "display_order": 1
+      },
+      {
+        "gesture": "Blue",
+        "choice_text": "Blue",
+        "display_order": 2
+      },
+      {
+        "gesture": "Yellow",
+        "choice_text": "Yellow",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "Colors",
+    "question_number": 2,
+    "choices": [
+      {
+        "gesture": "Yellow",
+        "choice_text": "Yellow",
+        "display_order": 1
+      },
+      {
+        "gesture": "Green",
+        "choice_text": "Green",
+        "display_order": 2
+      },
+      {
+        "gesture": "Blue",
+        "choice_text": "Blue",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "Colors",
+    "question_number": 3,
+    "choices": [
+      {
+        "gesture": "Black",
+        "choice_text": "Black",
+        "display_order": 1
+      },
+      {
+        "gesture": "Yellow",
+        "choice_text": "Yellow",
+        "display_order": 2
+      },
+      {
+        "gesture": "Green",
+        "choice_text": "Green",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "Colors",
+    "question_number": 4,
+    "choices": [
+      {
+        "gesture": "Green",
+        "choice_text": "Green",
+        "display_order": 1
+      },
+      {
+        "gesture": "Black",
+        "choice_text": "Black",
+        "display_order": 2
+      },
+      {
+        "gesture": "White",
+        "choice_text": "White",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "Colors",
+    "question_number": 5,
+    "choices": [
+      {
+        "gesture": "White",
+        "choice_text": "White",
+        "display_order": 1
+      },
+      {
+        "gesture": "Orange",
+        "choice_text": "Orange",
+        "display_order": 2
+      },
+      {
+        "gesture": "Black",
+        "choice_text": "Black",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "Colors",
+    "question_number": 6,
+    "choices": [
+      {
+        "gesture": "Purple",
+        "choice_text": "Purple",
+        "display_order": 1
+      },
+      {
+        "gesture": "White",
+        "choice_text": "White",
+        "display_order": 2
+      },
+      {
+        "gesture": "Orange",
+        "choice_text": "Orange",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "Colors",
+    "question_number": 7,
+    "choices": [
+      {
+        "gesture": "Orange",
+        "choice_text": "Orange",
+        "display_order": 1
+      },
+      {
+        "gesture": "Purple",
+        "choice_text": "Purple",
+        "display_order": 2
+      },
+      {
+        "gesture": "Pink",
+        "choice_text": "Pink",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "Colors",
+    "question_number": 8,
+    "choices": [
+      {
+        "gesture": "Pink",
+        "choice_text": "Pink",
+        "display_order": 1
+      },
+      {
+        "gesture": "Brown",
+        "choice_text": "Brown",
+        "display_order": 2
+      },
+      {
+        "gesture": "Purple",
+        "choice_text": "Purple",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "Colors",
+    "question_number": 9,
+    "choices": [
+      {
+        "gesture": "Red",
+        "choice_text": "Red",
+        "display_order": 1
+      },
+      {
+        "gesture": "Pink",
+        "choice_text": "Pink",
+        "display_order": 2
+      },
+      {
+        "gesture": "Brown",
+        "choice_text": "Brown",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "Colors",
+    "question_number": 10,
+    "choices": [
+      {
+        "gesture": "Brown",
+        "choice_text": "Brown",
+        "display_order": 1
+      },
+      {
+        "gesture": "Red",
+        "choice_text": "Red",
+        "display_order": 2
+      },
+      {
+        "gesture": "Blue",
+        "choice_text": "Blue",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "WH Questions",
+    "question_number": 1,
+    "choices": [
+      {
+        "gesture": "What",
+        "choice_text": "What",
+        "display_order": 1
+      },
+      {
+        "gesture": "Who",
+        "choice_text": "Who",
+        "display_order": 2
+      },
+      {
+        "gesture": "Where",
+        "choice_text": "Where",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "WH Questions",
+    "question_number": 2,
+    "choices": [
+      {
+        "gesture": "Where",
+        "choice_text": "Where",
+        "display_order": 1
+      },
+      {
+        "gesture": "When",
+        "choice_text": "When",
+        "display_order": 2
+      },
+      {
+        "gesture": "Who",
+        "choice_text": "Who",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "WH Questions",
+    "question_number": 3,
+    "choices": [
+      {
+        "gesture": "Why",
+        "choice_text": "Why",
+        "display_order": 1
+      },
+      {
+        "gesture": "Where",
+        "choice_text": "Where",
+        "display_order": 2
+      },
+      {
+        "gesture": "When",
+        "choice_text": "When",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "WH Questions",
+    "question_number": 4,
+    "choices": [
+      {
+        "gesture": "When",
+        "choice_text": "When",
+        "display_order": 1
+      },
+      {
+        "gesture": "Why",
+        "choice_text": "Why",
+        "display_order": 2
+      },
+      {
+        "gesture": "How",
+        "choice_text": "How",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "WH Questions",
+    "question_number": 5,
+    "choices": [
+      {
+        "gesture": "How",
+        "choice_text": "How",
+        "display_order": 1
+      },
+      {
+        "gesture": "Which",
+        "choice_text": "Which",
+        "display_order": 2
+      },
+      {
+        "gesture": "Why",
+        "choice_text": "Why",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "WH Questions",
+    "question_number": 6,
+    "choices": [
+      {
+        "gesture": "How Many",
+        "choice_text": "How Many",
+        "display_order": 1
+      },
+      {
+        "gesture": "How",
+        "choice_text": "How",
+        "display_order": 2
+      },
+      {
+        "gesture": "Which",
+        "choice_text": "Which",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "WH Questions",
+    "question_number": 7,
+    "choices": [
+      {
+        "gesture": "Which",
+        "choice_text": "Which",
+        "display_order": 1
+      },
+      {
+        "gesture": "How Many",
+        "choice_text": "How Many",
+        "display_order": 2
+      },
+      {
+        "gesture": "How Much",
+        "choice_text": "How Much",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "WH Questions",
+    "question_number": 8,
+    "choices": [
+      {
+        "gesture": "How Much",
+        "choice_text": "How Much",
+        "display_order": 1
+      },
+      {
+        "gesture": "Whose",
+        "choice_text": "Whose",
+        "display_order": 2
+      },
+      {
+        "gesture": "How Many",
+        "choice_text": "How Many",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "WH Questions",
+    "question_number": 9,
+    "choices": [
+      {
+        "gesture": "What",
+        "choice_text": "What",
+        "display_order": 1
+      },
+      {
+        "gesture": "How Much",
+        "choice_text": "How Much",
+        "display_order": 2
+      },
+      {
+        "gesture": "Whose",
+        "choice_text": "Whose",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "WH Questions",
+    "question_number": 10,
+    "choices": [
+      {
+        "gesture": "Whose",
+        "choice_text": "Whose",
+        "display_order": 1
+      },
+      {
+        "gesture": "What",
+        "choice_text": "What",
+        "display_order": 2
+      },
+      {
+        "gesture": "Who",
+        "choice_text": "Who",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "Word Concepts",
+    "question_number": 1,
+    "choices": [
+      {
+        "gesture": "Yes",
+        "choice_text": "Yes",
+        "display_order": 1
+      },
+      {
+        "gesture": "No",
+        "choice_text": "No",
+        "display_order": 2
+      },
+      {
+        "gesture": "Please",
+        "choice_text": "Please",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "Word Concepts",
+    "question_number": 2,
+    "choices": [
+      {
+        "gesture": "Please",
+        "choice_text": "Please",
+        "display_order": 1
+      },
+      {
+        "gesture": "Sorry",
+        "choice_text": "Sorry",
+        "display_order": 2
+      },
+      {
+        "gesture": "No",
+        "choice_text": "No",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "Word Concepts",
+    "question_number": 3,
+    "choices": [
+      {
+        "gesture": "Love",
+        "choice_text": "Love",
+        "display_order": 1
+      },
+      {
+        "gesture": "Please",
+        "choice_text": "Please",
+        "display_order": 2
+      },
+      {
+        "gesture": "Sorry",
+        "choice_text": "Sorry",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "Word Concepts",
+    "question_number": 4,
+    "choices": [
+      {
+        "gesture": "Sorry",
+        "choice_text": "Sorry",
+        "display_order": 1
+      },
+      {
+        "gesture": "Love",
+        "choice_text": "Love",
+        "display_order": 2
+      },
+      {
+        "gesture": "Friend",
+        "choice_text": "Friend",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "Word Concepts",
+    "question_number": 5,
+    "choices": [
+      {
+        "gesture": "Friend",
+        "choice_text": "Friend",
+        "display_order": 1
+      },
+      {
+        "gesture": "Family",
+        "choice_text": "Family",
+        "display_order": 2
+      },
+      {
+        "gesture": "Love",
+        "choice_text": "Love",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "Word Concepts",
+    "question_number": 6,
+    "choices": [
+      {
+        "gesture": "Eat",
+        "choice_text": "Eat",
+        "display_order": 1
+      },
+      {
+        "gesture": "Friend",
+        "choice_text": "Friend",
+        "display_order": 2
+      },
+      {
+        "gesture": "Family",
+        "choice_text": "Family",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "Word Concepts",
+    "question_number": 7,
+    "choices": [
+      {
+        "gesture": "Family",
+        "choice_text": "Family",
+        "display_order": 1
+      },
+      {
+        "gesture": "Eat",
+        "choice_text": "Eat",
+        "display_order": 2
+      },
+      {
+        "gesture": "Drink",
+        "choice_text": "Drink",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "Word Concepts",
+    "question_number": 8,
+    "choices": [
+      {
+        "gesture": "Drink",
+        "choice_text": "Drink",
+        "display_order": 1
+      },
+      {
+        "gesture": "Help",
+        "choice_text": "Help",
+        "display_order": 2
+      },
+      {
+        "gesture": "Eat",
+        "choice_text": "Eat",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "Word Concepts",
+    "question_number": 9,
+    "choices": [
+      {
+        "gesture": "Yes",
+        "choice_text": "Yes",
+        "display_order": 1
+      },
+      {
+        "gesture": "Drink",
+        "choice_text": "Drink",
+        "display_order": 2
+      },
+      {
+        "gesture": "Help",
+        "choice_text": "Help",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "Word Concepts",
+    "question_number": 10,
+    "choices": [
+      {
+        "gesture": "Help",
+        "choice_text": "Help",
+        "display_order": 1
+      },
+      {
+        "gesture": "Yes",
+        "choice_text": "Yes",
+        "display_order": 2
+      },
+      {
+        "gesture": "No",
+        "choice_text": "No",
         "display_order": 3
       }
     ]

@@ -1,0 +1,62 @@
+[
+  {
+    "label": "Red",
+    "meaning": "The color red.",
+    "exampleUsage": "The apple is red.",
+    "displayOrder": 1
+  },
+  {
+    "label": "Blue",
+    "meaning": "The color blue.",
+    "exampleUsage": "The sky is blue.",
+    "displayOrder": 2
+  },
+  {
+    "label": "Yellow",
+    "meaning": "The color yellow.",
+    "exampleUsage": "The sun looks yellow.",
+    "displayOrder": 3
+  },
+  {
+    "label": "Green",
+    "meaning": "The color green.",
+    "exampleUsage": "The grass is green.",
+    "displayOrder": 4
+  },
+  {
+    "label": "Black",
+    "meaning": "The color black.",
+    "exampleUsage": "Her shoes are black.",
+    "displayOrder": 5
+  },
+  {
+    "label": "White",
+    "meaning": "The color white.",
+    "exampleUsage": "The paper is white.",
+    "displayOrder": 6
+  },
+  {
+    "label": "Orange",
+    "meaning": "The color orange.",
+    "exampleUsage": "The fruit and the color share the name orange.",
+    "displayOrder": 7
+  },
+  {
+    "label": "Purple",
+    "meaning": "The color purple.",
+    "exampleUsage": "The flower is purple.",
+    "displayOrder": 8
+  },
+  {
+    "label": "Pink",
+    "meaning": "The color pink.",
+    "exampleUsage": "Her dress is pink.",
+    "displayOrder": 9
+  },
+  {
+    "label": "Brown",
+    "meaning": "The color brown.",
+    "exampleUsage": "The table is brown.",
+    "displayOrder": 10
+  }
+]

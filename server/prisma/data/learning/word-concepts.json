@@ -1,0 +1,62 @@
+[
+  {
+    "label": "Yes",
+    "meaning": "An affirmative response.",
+    "exampleUsage": "Yes, I understand the lesson.",
+    "displayOrder": 1
+  },
+  {
+    "label": "No",
+    "meaning": "A negative response.",
+    "exampleUsage": "No, I don't have a pen.",
+    "displayOrder": 2
+  },
+  {
+    "label": "Please",
+    "meaning": "Used to make a polite request.",
+    "exampleUsage": "Please help me with this.",
+    "displayOrder": 3
+  },
+  {
+    "label": "Sorry",
+    "meaning": "Used to express apology.",
+    "exampleUsage": "Sorry, I was late.",
+    "displayOrder": 4
+  },
+  {
+    "label": "Love",
+    "meaning": "A strong feeling of affection.",
+    "exampleUsage": "I love my family.",
+    "displayOrder": 5
+  },
+  {
+    "label": "Friend",
+    "meaning": "A person you know and like.",
+    "exampleUsage": "She is my best friend.",
+    "displayOrder": 6
+  },
+  {
+    "label": "Family",
+    "meaning": "A group of related people.",
+    "exampleUsage": "My family is very supportive.",
+    "displayOrder": 7
+  },
+  {
+    "label": "Eat",
+    "meaning": "To consume food.",
+    "exampleUsage": "Let's eat lunch together.",
+    "displayOrder": 8
+  },
+  {
+    "label": "Drink",
+    "meaning": "To consume liquid.",
+    "exampleUsage": "I drink water every day.",
+    "displayOrder": 9
+  },
+  {
+    "label": "Help",
+    "meaning": "To assist someone.",
+    "exampleUsage": "Can you help me carry this?",
+    "displayOrder": 10
+  }
+]

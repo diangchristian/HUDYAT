@@ -8,6 +8,10 @@ import numbers from "../data/learning/numbers.json";
 import days from "../data/learning/days.json";
 import calendar from "../data/learning/calendar.json";
 import greetings from "../data/learning/greetings.json";
+import shapes from "../data/learning/shapes.json";
+import colors from "../data/learning/colors.json";
+import whQuestions from "../data/learning/wh-questions.json";
+import wordConcepts from "../data/learning/word-concepts.json";
 
 const connectionString = process.env.DATABASE_URL;
 
@@ -129,6 +133,26 @@ async function main() {
 
   console.log(
     "✓ Calendar: Days and months merged successfully",
+  );
+
+  await seedCategoryGestures(
+    "Shapes",
+    shapes,
+  );
+
+  await seedCategoryGestures(
+    "Colors",
+    colors,
+  );
+
+  await seedCategoryGestures(
+    "WH Questions",
+    whQuestions,
+  );
+
+  await seedCategoryGestures(
+    "Word Concepts",
+    wordConcepts,
   );
 
   console.log(

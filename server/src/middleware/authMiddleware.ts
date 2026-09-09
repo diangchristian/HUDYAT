@@ -36,7 +36,10 @@ export const authMiddleware = async (
       return res.status(401).json({ message: "Invalid token payload" });
     }
 
-    const user = await prisma.user.findUnique({ where: { id: decoded.id } });
+    const user = await prisma.user.findUnique({
+      where: { id: decoded.id },
+      include: { learnerProfile: true },
+    });
 
     if (!user) {
       return res.status(401).json({ message: "User not found" });

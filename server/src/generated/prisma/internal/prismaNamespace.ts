@@ -1673,6 +1673,7 @@ export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof User
 export const LearnerProfileScalarFieldEnum = {
   userId: 'userId',
   fullName: 'fullName',
+  avatarKey: 'avatarKey',
   dateJoined: 'dateJoined',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
