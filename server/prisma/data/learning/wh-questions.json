@@ -1,0 +1,62 @@
+[
+  {
+    "label": "What",
+    "meaning": "Used to ask for information about something.",
+    "exampleUsage": "What is your name?",
+    "displayOrder": 1
+  },
+  {
+    "label": "Who",
+    "meaning": "Used to ask about a person.",
+    "exampleUsage": "Who is your teacher?",
+    "displayOrder": 2
+  },
+  {
+    "label": "Where",
+    "meaning": "Used to ask about a place.",
+    "exampleUsage": "Where do you live?",
+    "displayOrder": 3
+  },
+  {
+    "label": "When",
+    "meaning": "Used to ask about time.",
+    "exampleUsage": "When is the assessment?",
+    "displayOrder": 4
+  },
+  {
+    "label": "Why",
+    "meaning": "Used to ask for a reason.",
+    "exampleUsage": "Why are you late?",
+    "displayOrder": 5
+  },
+  {
+    "label": "How",
+    "meaning": "Used to ask about a method or condition.",
+    "exampleUsage": "How are you feeling today?",
+    "displayOrder": 6
+  },
+  {
+    "label": "Which",
+    "meaning": "Used to ask someone to choose between options.",
+    "exampleUsage": "Which color do you like?",
+    "displayOrder": 7
+  },
+  {
+    "label": "How Many",
+    "meaning": "Used to ask about a countable quantity.",
+    "exampleUsage": "How many students are here?",
+    "displayOrder": 8
+  },
+  {
+    "label": "How Much",
+    "meaning": "Used to ask about an amount.",
+    "exampleUsage": "How much does it cost?",
+    "displayOrder": 9
+  },
+  {
+    "label": "Whose",
+    "meaning": "Used to ask about ownership.",
+    "exampleUsage": "Whose bag is this?",
+    "displayOrder": 10
+  }
+]

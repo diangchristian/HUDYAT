@@ -1,0 +1,62 @@
+[
+  {
+    "label": "Circle",
+    "meaning": "A round shape with no corners.",
+    "exampleUsage": "Draw a circle on the paper.",
+    "displayOrder": 1
+  },
+  {
+    "label": "Square",
+    "meaning": "A shape with four equal sides.",
+    "exampleUsage": "The gift box is a square.",
+    "displayOrder": 2
+  },
+  {
+    "label": "Triangle",
+    "meaning": "A shape with three sides.",
+    "exampleUsage": "The rooftop looks like a triangle.",
+    "displayOrder": 3
+  },
+  {
+    "label": "Rectangle",
+    "meaning": "A shape with four sides, two long and two short.",
+    "exampleUsage": "The door is shaped like a rectangle.",
+    "displayOrder": 4
+  },
+  {
+    "label": "Star",
+    "meaning": "A shape with five or more points.",
+    "exampleUsage": "I drew a star in my notebook.",
+    "displayOrder": 5
+  },
+  {
+    "label": "Heart",
+    "meaning": "A shape symbolizing love.",
+    "exampleUsage": "She drew a heart on the card.",
+    "displayOrder": 6
+  },
+  {
+    "label": "Diamond",
+    "meaning": "A shape with four sides like a rhombus.",
+    "exampleUsage": "The kite is shaped like a diamond.",
+    "displayOrder": 7
+  },
+  {
+    "label": "Oval",
+    "meaning": "A rounded shape like a stretched circle.",
+    "exampleUsage": "The mirror is oval-shaped.",
+    "displayOrder": 8
+  },
+  {
+    "label": "Pentagon",
+    "meaning": "A shape with five sides.",
+    "exampleUsage": "The building looks like a pentagon.",
+    "displayOrder": 9
+  },
+  {
+    "label": "Hexagon",
+    "meaning": "A shape with six sides.",
+    "exampleUsage": "A honeycomb cell is a hexagon.",
+    "displayOrder": 10
+  }
+]

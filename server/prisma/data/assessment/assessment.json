@@ -26,5 +26,33 @@
     "description": "Assess the learner's knowledge of common Filipino Sign Language greetings.",
     "passing_score": 80,
     "status": "PUBLISHED"
+  },
+  {
+    "category": "Shapes",
+    "title": "Shapes Assessment",
+    "description": "Assess the learner's knowledge of basic shapes in Filipino Sign Language.",
+    "passing_score": 80,
+    "status": "PUBLISHED"
+  },
+  {
+    "category": "Colors",
+    "title": "Colors Assessment",
+    "description": "Assess the learner's knowledge of common colors in Filipino Sign Language.",
+    "passing_score": 80,
+    "status": "PUBLISHED"
+  },
+  {
+    "category": "WH Questions",
+    "title": "WH Questions Assessment",
+    "description": "Assess the learner's knowledge of WH question signs in Filipino Sign Language.",
+    "passing_score": 80,
+    "status": "PUBLISHED"
+  },
+  {
+    "category": "Word Concepts",
+    "title": "Word Concepts Assessment",
+    "description": "Assess the learner's knowledge of common word concepts in Filipino Sign Language.",
+    "passing_score": 80,
+    "status": "PUBLISHED"
   }
 ]

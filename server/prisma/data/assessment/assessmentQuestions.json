@@ -44,7 +44,6 @@
     "reference_media_url": null,
     "points": 1
   },
-
   {
     "category": "Numbers",
     "question_number": 1,
@@ -90,7 +89,6 @@
     "reference_media_url": "/videos/numbers/ten.mp4",
     "points": 1
   },
-
   {
     "category": "Calendar",
     "question_number": 1,
@@ -136,7 +134,6 @@
     "reference_media_url": "/videos/calendar/december.mp4",
     "points": 1
   },
-
   {
     "category": "Greetings",
     "question_number": 1,
@@ -180,6 +177,366 @@
     "question_type": "VIDEO_GESTURE",
     "gesture": "Nice to meet you",
     "reference_media_url": "/videos/greetings/nice-to-meet-you.mp4",
+    "points": 1
+  },
+  {
+    "category": "Shapes",
+    "question_number": 1,
+    "question_text": "Which one is the correct sign for Circle?",
+    "question_type": "IMAGE_GESTURE",
+    "gesture": "Circle",
+    "reference_media_url": "/images/shapes/circle.png",
+    "points": 1
+  },
+  {
+    "category": "Shapes",
+    "question_number": 2,
+    "question_text": "Which one is the correct sign for Square?",
+    "question_type": "IMAGE_GESTURE",
+    "gesture": "Square",
+    "reference_media_url": "/images/shapes/square.png",
+    "points": 1
+  },
+  {
+    "category": "Shapes",
+    "question_number": 3,
+    "question_text": "Which one is the correct sign for Triangle?",
+    "question_type": "IMAGE_GESTURE",
+    "gesture": "Triangle",
+    "reference_media_url": "/images/shapes/triangle.png",
+    "points": 1
+  },
+  {
+    "category": "Shapes",
+    "question_number": 4,
+    "question_text": "Which one is the correct sign for Rectangle?",
+    "question_type": "IMAGE_GESTURE",
+    "gesture": "Rectangle",
+    "reference_media_url": "/images/shapes/rectangle.png",
+    "points": 1
+  },
+  {
+    "category": "Shapes",
+    "question_number": 5,
+    "question_text": "Which one is the correct sign for Star?",
+    "question_type": "IMAGE_GESTURE",
+    "gesture": "Star",
+    "reference_media_url": "/images/shapes/star.png",
+    "points": 1
+  },
+  {
+    "category": "Shapes",
+    "question_number": 6,
+    "question_text": "Which one is the correct sign for Heart?",
+    "question_type": "IMAGE_GESTURE",
+    "gesture": "Heart",
+    "reference_media_url": "/images/shapes/heart.png",
+    "points": 1
+  },
+  {
+    "category": "Shapes",
+    "question_number": 7,
+    "question_text": "Which one is the correct sign for Diamond?",
+    "question_type": "IMAGE_GESTURE",
+    "gesture": "Diamond",
+    "reference_media_url": "/images/shapes/diamond.png",
+    "points": 1
+  },
+  {
+    "category": "Shapes",
+    "question_number": 8,
+    "question_text": "Which one is the correct sign for Oval?",
+    "question_type": "IMAGE_GESTURE",
+    "gesture": "Oval",
+    "reference_media_url": "/images/shapes/oval.png",
+    "points": 1
+  },
+  {
+    "category": "Shapes",
+    "question_number": 9,
+    "question_text": "Which one is the correct sign for Pentagon?",
+    "question_type": "IMAGE_GESTURE",
+    "gesture": "Pentagon",
+    "reference_media_url": "/images/shapes/pentagon.png",
+    "points": 1
+  },
+  {
+    "category": "Shapes",
+    "question_number": 10,
+    "question_text": "Which one is the correct sign for Hexagon?",
+    "question_type": "IMAGE_GESTURE",
+    "gesture": "Hexagon",
+    "reference_media_url": "/images/shapes/hexagon.png",
+    "points": 1
+  },
+  {
+    "category": "Colors",
+    "question_number": 1,
+    "question_text": "Which one is the correct sign for Red?",
+    "question_type": "VIDEO_GESTURE",
+    "gesture": "Red",
+    "reference_media_url": "/videos/colors/red.mp4",
+    "points": 1
+  },
+  {
+    "category": "Colors",
+    "question_number": 2,
+    "question_text": "Which one is the correct sign for Blue?",
+    "question_type": "VIDEO_GESTURE",
+    "gesture": "Blue",
+    "reference_media_url": "/videos/colors/blue.mp4",
+    "points": 1
+  },
+  {
+    "category": "Colors",
+    "question_number": 3,
+    "question_text": "Which one is the correct sign for Yellow?",
+    "question_type": "VIDEO_GESTURE",
+    "gesture": "Yellow",
+    "reference_media_url": "/videos/colors/yellow.mp4",
+    "points": 1
+  },
+  {
+    "category": "Colors",
+    "question_number": 4,
+    "question_text": "Which one is the correct sign for Green?",
+    "question_type": "VIDEO_GESTURE",
+    "gesture": "Green",
+    "reference_media_url": "/videos/colors/green.mp4",
+    "points": 1
+  },
+  {
+    "category": "Colors",
+    "question_number": 5,
+    "question_text": "Which one is the correct sign for Black?",
+    "question_type": "VIDEO_GESTURE",
+    "gesture": "Black",
+    "reference_media_url": "/videos/colors/black.mp4",
+    "points": 1
+  },
+  {
+    "category": "Colors",
+    "question_number": 6,
+    "question_text": "Which one is the correct sign for White?",
+    "question_type": "VIDEO_GESTURE",
+    "gesture": "White",
+    "reference_media_url": "/videos/colors/white.mp4",
+    "points": 1
+  },
+  {
+    "category": "Colors",
+    "question_number": 7,
+    "question_text": "Which one is the correct sign for Orange?",
+    "question_type": "VIDEO_GESTURE",
+    "gesture": "Orange",
+    "reference_media_url": "/videos/colors/orange.mp4",
+    "points": 1
+  },
+  {
+    "category": "Colors",
+    "question_number": 8,
+    "question_text": "Which one is the correct sign for Purple?",
+    "question_type": "VIDEO_GESTURE",
+    "gesture": "Purple",
+    "reference_media_url": "/videos/colors/purple.mp4",
+    "points": 1
+  },
+  {
+    "category": "Colors",
+    "question_number": 9,
+    "question_text": "Which one is the correct sign for Pink?",
+    "question_type": "VIDEO_GESTURE",
+    "gesture": "Pink",
+    "reference_media_url": "/videos/colors/pink.mp4",
+    "points": 1
+  },
+  {
+    "category": "Colors",
+    "question_number": 10,
+    "question_text": "Which one is the correct sign for Brown?",
+    "question_type": "VIDEO_GESTURE",
+    "gesture": "Brown",
+    "reference_media_url": "/videos/colors/brown.mp4",
+    "points": 1
+  },
+  {
+    "category": "WH Questions",
+    "question_number": 1,
+    "question_text": "Which one is the correct sign for What?",
+    "question_type": "VIDEO_GESTURE",
+    "gesture": "What",
+    "reference_media_url": "/videos/wh-questions/what.mp4",
+    "points": 1
+  },
+  {
+    "category": "WH Questions",
+    "question_number": 2,
+    "question_text": "Which one is the correct sign for Who?",
+    "question_type": "VIDEO_GESTURE",
+    "gesture": "Who",
+    "reference_media_url": "/videos/wh-questions/who.mp4",
+    "points": 1
+  },
+  {
+    "category": "WH Questions",
+    "question_number": 3,
+    "question_text": "Which one is the correct sign for Where?",
+    "question_type": "VIDEO_GESTURE",
+    "gesture": "Where",
+    "reference_media_url": "/videos/wh-questions/where.mp4",
+    "points": 1
+  },
+  {
+    "category": "WH Questions",
+    "question_number": 4,
+    "question_text": "Which one is the correct sign for When?",
+    "question_type": "VIDEO_GESTURE",
+    "gesture": "When",
+    "reference_media_url": "/videos/wh-questions/when.mp4",
+    "points": 1
+  },
+  {
+    "category": "WH Questions",
+    "question_number": 5,
+    "question_text": "Which one is the correct sign for Why?",
+    "question_type": "VIDEO_GESTURE",
+    "gesture": "Why",
+    "reference_media_url": "/videos/wh-questions/why.mp4",
+    "points": 1
+  },
+  {
+    "category": "WH Questions",
+    "question_number": 6,
+    "question_text": "Which one is the correct sign for How?",
+    "question_type": "VIDEO_GESTURE",
+    "gesture": "How",
+    "reference_media_url": "/videos/wh-questions/how.mp4",
+    "points": 1
+  },
+  {
+    "category": "WH Questions",
+    "question_number": 7,
+    "question_text": "Which one is the correct sign for Which?",
+    "question_type": "VIDEO_GESTURE",
+    "gesture": "Which",
+    "reference_media_url": "/videos/wh-questions/which.mp4",
+    "points": 1
+  },
+  {
+    "category": "WH Questions",
+    "question_number": 8,
+    "question_text": "Which one is the correct sign for How Many?",
+    "question_type": "VIDEO_GESTURE",
+    "gesture": "How Many",
+    "reference_media_url": "/videos/wh-questions/how-many.mp4",
+    "points": 1
+  },
+  {
+    "category": "WH Questions",
+    "question_number": 9,
+    "question_text": "Which one is the correct sign for How Much?",
+    "question_type": "VIDEO_GESTURE",
+    "gesture": "How Much",
+    "reference_media_url": "/videos/wh-questions/how-much.mp4",
+    "points": 1
+  },
+  {
+    "category": "WH Questions",
+    "question_number": 10,
+    "question_text": "Which one is the correct sign for Whose?",
+    "question_type": "VIDEO_GESTURE",
+    "gesture": "Whose",
+    "reference_media_url": "/videos/wh-questions/whose.mp4",
+    "points": 1
+  },
+  {
+    "category": "Word Concepts",
+    "question_number": 1,
+    "question_text": "Which one is the correct sign for Yes?",
+    "question_type": "VIDEO_GESTURE",
+    "gesture": "Yes",
+    "reference_media_url": "/videos/word-concepts/yes.mp4",
+    "points": 1
+  },
+  {
+    "category": "Word Concepts",
+    "question_number": 2,
+    "question_text": "Which one is the correct sign for No?",
+    "question_type": "VIDEO_GESTURE",
+    "gesture": "No",
+    "reference_media_url": "/videos/word-concepts/no.mp4",
+    "points": 1
+  },
+  {
+    "category": "Word Concepts",
+    "question_number": 3,
+    "question_text": "Which one is the correct sign for Please?",
+    "question_type": "VIDEO_GESTURE",
+    "gesture": "Please",
+    "reference_media_url": "/videos/word-concepts/please.mp4",
+    "points": 1
+  },
+  {
+    "category": "Word Concepts",
+    "question_number": 4,
+    "question_text": "Which one is the correct sign for Sorry?",
+    "question_type": "VIDEO_GESTURE",
+    "gesture": "Sorry",
+    "reference_media_url": "/videos/word-concepts/sorry.mp4",
+    "points": 1
+  },
+  {
+    "category": "Word Concepts",
+    "question_number": 5,
+    "question_text": "Which one is the correct sign for Love?",
+    "question_type": "VIDEO_GESTURE",
+    "gesture": "Love",
+    "reference_media_url": "/videos/word-concepts/love.mp4",
+    "points": 1
+  },
+  {
+    "category": "Word Concepts",
+    "question_number": 6,
+    "question_text": "Which one is the correct sign for Friend?",
+    "question_type": "VIDEO_GESTURE",
+    "gesture": "Friend",
+    "reference_media_url": "/videos/word-concepts/friend.mp4",
+    "points": 1
+  },
+  {
+    "category": "Word Concepts",
+    "question_number": 7,
+    "question_text": "Which one is the correct sign for Family?",
+    "question_type": "VIDEO_GESTURE",
+    "gesture": "Family",
+    "reference_media_url": "/videos/word-concepts/family.mp4",
+    "points": 1
+  },
+  {
+    "category": "Word Concepts",
+    "question_number": 8,
+    "question_text": "Which one is the correct sign for Eat?",
+    "question_type": "VIDEO_GESTURE",
+    "gesture": "Eat",
+    "reference_media_url": "/videos/word-concepts/eat.mp4",
+    "points": 1
+  },
+  {
+    "category": "Word Concepts",
+    "question_number": 9,
+    "question_text": "Which one is the correct sign for Drink?",
+    "question_type": "VIDEO_GESTURE",
+    "gesture": "Drink",
+    "reference_media_url": "/videos/word-concepts/drink.mp4",
+    "points": 1
+  },
+  {
+    "category": "Word Concepts",
+    "question_number": 10,
+    "question_text": "Which one is the correct sign for Help?",
+    "question_type": "VIDEO_GESTURE",
+    "gesture": "Help",
+    "reference_media_url": "/videos/word-concepts/help.mp4",
     "points": 1
   }
 ]

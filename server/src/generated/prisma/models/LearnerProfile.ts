@@ -27,6 +27,7 @@ export type AggregateLearnerProfile = {
 export type LearnerProfileMinAggregateOutputType = {
   userId: string | null
   fullName: string | null
+  avatarKey: string | null
   dateJoined: Date | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -35,6 +36,7 @@ export type LearnerProfileMinAggregateOutputType = {
 export type LearnerProfileMaxAggregateOutputType = {
   userId: string | null
   fullName: string | null
+  avatarKey: string | null
   dateJoined: Date | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -43,6 +45,7 @@ export type LearnerProfileMaxAggregateOutputType = {
 export type LearnerProfileCountAggregateOutputType = {
   userId: number
   fullName: number
+  avatarKey: number
   dateJoined: number
   createdAt: number
   updatedAt: number
@@ -53,6 +56,7 @@ export type LearnerProfileCountAggregateOutputType = {
 export type LearnerProfileMinAggregateInputType = {
   userId?: true
   fullName?: true
+  avatarKey?: true
   dateJoined?: true
   createdAt?: true
   updatedAt?: true
@@ -61,6 +65,7 @@ export type LearnerProfileMinAggregateInputType = {
 export type LearnerProfileMaxAggregateInputType = {
   userId?: true
   fullName?: true
+  avatarKey?: true
   dateJoined?: true
   createdAt?: true
   updatedAt?: true
@@ -69,6 +74,7 @@ export type LearnerProfileMaxAggregateInputType = {
 export type LearnerProfileCountAggregateInputType = {
   userId?: true
   fullName?: true
+  avatarKey?: true
   dateJoined?: true
   createdAt?: true
   updatedAt?: true
@@ -150,6 +156,7 @@ export type LearnerProfileGroupByArgs<ExtArgs extends runtime.Types.Extensions.I
 export type LearnerProfileGroupByOutputType = {
   userId: string
   fullName: string
+  avatarKey: string | null
   dateJoined: Date
   createdAt: Date
   updatedAt: Date
@@ -179,6 +186,7 @@ export type LearnerProfileWhereInput = {
   NOT?: Prisma.LearnerProfileWhereInput | Prisma.LearnerProfileWhereInput[]
   userId?: Prisma.StringFilter<"LearnerProfile"> | string
   fullName?: Prisma.StringFilter<"LearnerProfile"> | string
+  avatarKey?: Prisma.StringNullableFilter<"LearnerProfile"> | string | null
   dateJoined?: Prisma.DateTimeFilter<"LearnerProfile"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"LearnerProfile"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"LearnerProfile"> | Date | string
@@ -191,6 +199,7 @@ export type LearnerProfileWhereInput = {
 export type LearnerProfileOrderByWithRelationInput = {
   userId?: Prisma.SortOrder
   fullName?: Prisma.SortOrder
+  avatarKey?: Prisma.SortOrderInput | Prisma.SortOrder
   dateJoined?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -206,6 +215,7 @@ export type LearnerProfileWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.LearnerProfileWhereInput[]
   NOT?: Prisma.LearnerProfileWhereInput | Prisma.LearnerProfileWhereInput[]
   fullName?: Prisma.StringFilter<"LearnerProfile"> | string
+  avatarKey?: Prisma.StringNullableFilter<"LearnerProfile"> | string | null
   dateJoined?: Prisma.DateTimeFilter<"LearnerProfile"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"LearnerProfile"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"LearnerProfile"> | Date | string
@@ -218,6 +228,7 @@ export type LearnerProfileWhereUniqueInput = Prisma.AtLeast<{
 export type LearnerProfileOrderByWithAggregationInput = {
   userId?: Prisma.SortOrder
   fullName?: Prisma.SortOrder
+  avatarKey?: Prisma.SortOrderInput | Prisma.SortOrder
   dateJoined?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -232,6 +243,7 @@ export type LearnerProfileScalarWhereWithAggregatesInput = {
   NOT?: Prisma.LearnerProfileScalarWhereWithAggregatesInput | Prisma.LearnerProfileScalarWhereWithAggregatesInput[]
   userId?: Prisma.StringWithAggregatesFilter<"LearnerProfile"> | string
   fullName?: Prisma.StringWithAggregatesFilter<"LearnerProfile"> | string
+  avatarKey?: Prisma.StringNullableWithAggregatesFilter<"LearnerProfile"> | string | null
   dateJoined?: Prisma.DateTimeWithAggregatesFilter<"LearnerProfile"> | Date | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"LearnerProfile"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"LearnerProfile"> | Date | string
@@ -239,6 +251,7 @@ export type LearnerProfileScalarWhereWithAggregatesInput = {
 
 export type LearnerProfileCreateInput = {
   fullName: string
+  avatarKey?: string | null
   dateJoined?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -251,6 +264,7 @@ export type LearnerProfileCreateInput = {
 export type LearnerProfileUncheckedCreateInput = {
   userId: string
   fullName: string
+  avatarKey?: string | null
   dateJoined?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -261,6 +275,7 @@ export type LearnerProfileUncheckedCreateInput = {
 
 export type LearnerProfileUpdateInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  avatarKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateJoined?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -273,6 +288,7 @@ export type LearnerProfileUpdateInput = {
 export type LearnerProfileUncheckedUpdateInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  avatarKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateJoined?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -284,6 +300,7 @@ export type LearnerProfileUncheckedUpdateInput = {
 export type LearnerProfileCreateManyInput = {
   userId: string
   fullName: string
+  avatarKey?: string | null
   dateJoined?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -291,6 +308,7 @@ export type LearnerProfileCreateManyInput = {
 
 export type LearnerProfileUpdateManyMutationInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  avatarKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateJoined?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -299,6 +317,7 @@ export type LearnerProfileUpdateManyMutationInput = {
 export type LearnerProfileUncheckedUpdateManyInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  avatarKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateJoined?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -312,6 +331,7 @@ export type LearnerProfileNullableScalarRelationFilter = {
 export type LearnerProfileCountOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   fullName?: Prisma.SortOrder
+  avatarKey?: Prisma.SortOrder
   dateJoined?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -320,6 +340,7 @@ export type LearnerProfileCountOrderByAggregateInput = {
 export type LearnerProfileMaxOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   fullName?: Prisma.SortOrder
+  avatarKey?: Prisma.SortOrder
   dateJoined?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -328,6 +349,7 @@ export type LearnerProfileMaxOrderByAggregateInput = {
 export type LearnerProfileMinOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   fullName?: Prisma.SortOrder
+  avatarKey?: Prisma.SortOrder
   dateJoined?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -414,6 +436,7 @@ export type LearnerProfileUpdateOneRequiredWithoutCategoryProgressNestedInput = 
 
 export type LearnerProfileCreateWithoutUserInput = {
   fullName: string
+  avatarKey?: string | null
   dateJoined?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -424,6 +447,7 @@ export type LearnerProfileCreateWithoutUserInput = {
 
 export type LearnerProfileUncheckedCreateWithoutUserInput = {
   fullName: string
+  avatarKey?: string | null
   dateJoined?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -450,6 +474,7 @@ export type LearnerProfileUpdateToOneWithWhereWithoutUserInput = {
 
 export type LearnerProfileUpdateWithoutUserInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  avatarKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateJoined?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -460,6 +485,7 @@ export type LearnerProfileUpdateWithoutUserInput = {
 
 export type LearnerProfileUncheckedUpdateWithoutUserInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  avatarKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateJoined?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -470,6 +496,7 @@ export type LearnerProfileUncheckedUpdateWithoutUserInput = {
 
 export type LearnerProfileCreateWithoutAssessmentAttemptsInput = {
   fullName: string
+  avatarKey?: string | null
   dateJoined?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -481,6 +508,7 @@ export type LearnerProfileCreateWithoutAssessmentAttemptsInput = {
 export type LearnerProfileUncheckedCreateWithoutAssessmentAttemptsInput = {
   userId: string
   fullName: string
+  avatarKey?: string | null
   dateJoined?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -506,6 +534,7 @@ export type LearnerProfileUpdateToOneWithWhereWithoutAssessmentAttemptsInput = {
 
 export type LearnerProfileUpdateWithoutAssessmentAttemptsInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  avatarKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateJoined?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -517,6 +546,7 @@ export type LearnerProfileUpdateWithoutAssessmentAttemptsInput = {
 export type LearnerProfileUncheckedUpdateWithoutAssessmentAttemptsInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  avatarKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateJoined?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -526,6 +556,7 @@ export type LearnerProfileUncheckedUpdateWithoutAssessmentAttemptsInput = {
 
 export type LearnerProfileCreateWithoutPracticeSessionsInput = {
   fullName: string
+  avatarKey?: string | null
   dateJoined?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -537,6 +568,7 @@ export type LearnerProfileCreateWithoutPracticeSessionsInput = {
 export type LearnerProfileUncheckedCreateWithoutPracticeSessionsInput = {
   userId: string
   fullName: string
+  avatarKey?: string | null
   dateJoined?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -562,6 +594,7 @@ export type LearnerProfileUpdateToOneWithWhereWithoutPracticeSessionsInput = {
 
 export type LearnerProfileUpdateWithoutPracticeSessionsInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  avatarKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateJoined?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -573,6 +606,7 @@ export type LearnerProfileUpdateWithoutPracticeSessionsInput = {
 export type LearnerProfileUncheckedUpdateWithoutPracticeSessionsInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  avatarKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateJoined?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -582,6 +616,7 @@ export type LearnerProfileUncheckedUpdateWithoutPracticeSessionsInput = {
 
 export type LearnerProfileCreateWithoutCategoryProgressInput = {
   fullName: string
+  avatarKey?: string | null
   dateJoined?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -593,6 +628,7 @@ export type LearnerProfileCreateWithoutCategoryProgressInput = {
 export type LearnerProfileUncheckedCreateWithoutCategoryProgressInput = {
   userId: string
   fullName: string
+  avatarKey?: string | null
   dateJoined?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -618,6 +654,7 @@ export type LearnerProfileUpdateToOneWithWhereWithoutCategoryProgressInput = {
 
 export type LearnerProfileUpdateWithoutCategoryProgressInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  avatarKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateJoined?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -629,6 +666,7 @@ export type LearnerProfileUpdateWithoutCategoryProgressInput = {
 export type LearnerProfileUncheckedUpdateWithoutCategoryProgressInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  avatarKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateJoined?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -688,6 +726,7 @@ export type LearnerProfileCountOutputTypeCountPracticeSessionsArgs<ExtArgs exten
 export type LearnerProfileSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   userId?: boolean
   fullName?: boolean
+  avatarKey?: boolean
   dateJoined?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -701,6 +740,7 @@ export type LearnerProfileSelect<ExtArgs extends runtime.Types.Extensions.Intern
 export type LearnerProfileSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   userId?: boolean
   fullName?: boolean
+  avatarKey?: boolean
   dateJoined?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -710,6 +750,7 @@ export type LearnerProfileSelectCreateManyAndReturn<ExtArgs extends runtime.Type
 export type LearnerProfileSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   userId?: boolean
   fullName?: boolean
+  avatarKey?: boolean
   dateJoined?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -719,12 +760,13 @@ export type LearnerProfileSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
 export type LearnerProfileSelectScalar = {
   userId?: boolean
   fullName?: boolean
+  avatarKey?: boolean
   dateJoined?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type LearnerProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"userId" | "fullName" | "dateJoined" | "createdAt" | "updatedAt", ExtArgs["result"]["learnerProfile"]>
+export type LearnerProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"userId" | "fullName" | "avatarKey" | "dateJoined" | "createdAt" | "updatedAt", ExtArgs["result"]["learnerProfile"]>
 export type LearnerProfileInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   assessmentAttempts?: boolean | Prisma.LearnerProfile$assessmentAttemptsArgs<ExtArgs>
   categoryProgress?: boolean | Prisma.LearnerProfile$categoryProgressArgs<ExtArgs>
@@ -750,6 +792,7 @@ export type $LearnerProfilePayload<ExtArgs extends runtime.Types.Extensions.Inte
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     userId: string
     fullName: string
+    avatarKey: string | null
     dateJoined: Date
     createdAt: Date
     updatedAt: Date
@@ -1182,6 +1225,7 @@ export interface Prisma__LearnerProfileClient<T, Null = never, ExtArgs extends r
 export interface LearnerProfileFieldRefs {
   readonly userId: Prisma.FieldRef<"LearnerProfile", 'String'>
   readonly fullName: Prisma.FieldRef<"LearnerProfile", 'String'>
+  readonly avatarKey: Prisma.FieldRef<"LearnerProfile", 'String'>
   readonly dateJoined: Prisma.FieldRef<"LearnerProfile", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"LearnerProfile", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"LearnerProfile", 'DateTime'>

@@ -168,11 +168,23 @@ async function seedAssessments() {
         );
       }
 
-      await prisma.questionChoice.deleteMany({
-        where: {
-          questionId: questionId,
-        },
-      });
+      try {
+        await prisma.questionChoice.deleteMany({
+          where: {
+            questionId: questionId,
+          },
+        });
+      } catch {
+        /*
+         * Some existing choices are protected by a RESTRICT foreign key
+         * from AssessmentAnswer (a learner already answered using them).
+         * Leave those rows in place — the upserts below still bring
+         * matching choices up to date — instead of failing the whole run.
+         */
+        console.log(
+          `  ⚠ Skipped clearing old choices for ${questionKey} (in use by existing attempts)`
+        );
+      }
 
       for (const choice of questionData.choices) {
         // Find the existing gesture
@@ -191,8 +203,18 @@ async function seedAssessments() {
           );
         }
 
-        await prisma.questionChoice.create({
-          data: {
+        await prisma.questionChoice.upsert({
+          where: {
+            questionId_gestureId: {
+              questionId: questionId,
+              gestureId: gesture.id,
+            },
+          },
+          update: {
+            choiceText: choice.choice_text,
+            displayOrder: choice.display_order,
+          },
+          create: {
             questionId: questionId,
             gestureId: gesture.id,
             choiceText: choice.choice_text,
