@@ -7,6 +7,8 @@ export type AuthUser = {
   username: string;
   email: string | null;
   role: UserRole;
+  fullName: string;
+  avatarKey: string | null;
 };
 
 export function login(email: string, password: string) {
@@ -21,4 +23,20 @@ export function getCurrentUser() {
 
 export async function logout() {
   await api.post("/api/auth/logout");
+}
+
+export function updateProfile(data: {
+  fullName?: string;
+  avatarKey?: string | null;
+}) {
+  return unwrap<AuthUser>(api.patch("/api/auth/me", data));
+}
+
+export function changePassword(data: {
+  currentPassword: string;
+  newPassword: string;
+}) {
+  return unwrap<{ message: string }>(
+    api.post("/api/auth/change-password", data),
+  );
 }

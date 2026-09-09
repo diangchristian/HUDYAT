@@ -3,7 +3,8 @@ import { Outlet, NavLink, useNavigate } from "react-router";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { logout } from "@/api/auth-api";
-import { currentUserKey } from "@/hooks/use-current-user";
+import { currentUserKey, useCurrentUser } from "@/hooks/use-current-user";
+import { getAvatarEmoji } from "@/components/common/avatars.constants";
 
 const navItems = [
   { name: "Home", path: "/student/home", image: "/icons/home.png" },
@@ -18,8 +19,10 @@ const navItems = [
 const StudentPageLayout = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { data: user } = useCurrentUser();
   const [showPopover, setShowPopover] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const avatarEmoji = getAvatarEmoji(user?.avatarKey);
 
   const handleLogout = () => {
     setShowPopover(false);
@@ -54,10 +57,14 @@ const StudentPageLayout = () => {
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen">
+      {/* Spacer to preserve main content's layout while the sidebar is fixed */}
+      <div className="hidden lg:block lg:w-64 shrink-0" aria-hidden="true" />
+
       {/* Sidebar - Hidden on mobile */}
-      <aside className="hidden lg:block lg:w-64 border-r-2 bg-white">
+      <aside className="hidden lg:flex lg:flex-col lg:fixed lg:inset-y-0 lg:left-0 lg:w-64 border-r-2 bg-white overflow-y-auto">
         <div className="flex items-center gap-3 border-b px-6 py-6">
           <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#F5C04A] text-2xl">
+            {avatarEmoji}
           </div>
 
           <div>

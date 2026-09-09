@@ -260,3 +260,26 @@
     @apply font-sans;
   }
 }
+
+
+/* ========================================
+   ANIMATIONS
+   ======================================== */
+
+@keyframes hudyat-wave {
+  0%, 60%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  30% {
+    transform: translateY(-10px) rotate(-8deg);
+  }
+}
+
+@keyframes hudyat-loading-fill {
+  0% {
+    width: 8%;
+  }
+  100% {
+    width: 100%;
+  }
+}

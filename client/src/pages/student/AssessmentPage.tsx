@@ -1,5 +1,12 @@
 import { useState } from "react";
-import { ArrowRight, Check, Lock, RotateCcw, Sparkles } from "lucide-react";
+import {
+  ArrowRight,
+  Check,
+  Lock,
+  type LucideIcon,
+  RotateCcw,
+  Sparkles,
+} from "lucide-react";
 import { useNavigate } from "react-router";
 
 import { useAssessmentList } from "@/hooks/use-assessment-list";
@@ -7,27 +14,34 @@ import type {
   AssessmentListCategory,
   AssessmentListStatus,
 } from "@/api/assessment-api";
-import type { CategoryColor } from "@/components/common/category-card";
-import { CATEGORIES } from "@/components/common/categories.constants";
+import {
+  CATEGORIES,
+  CATEGORY_THEME,
+} from "@/components/common/categories.constants";
+import StatusBadge, {
+  type StatusBadgeTone,
+} from "@/components/common/status-badge";
+import { cn } from "@/lib/utils";
 
 const filters = ["All", "Available", "Completed"] as const;
 
 const statusDetails: Record<
   AssessmentListStatus,
-  { label: string; color: string; icon: typeof Check }
+  { label: string; color: string; icon: LucideIcon; tone: StatusBadgeTone }
 > = {
-  locked: { label: "Locked", color: "#94a3b8", icon: Lock },
-  "not-started": { label: "Not Started", color: "#eef1f3", icon: Sparkles },
-  completed: { label: "Completed", color: "#3da44b", icon: Check },
-};
-
-const themeStyles: Record<CategoryColor, string> = {
-  green: "bg-[#eaf7e1] text-[#5c9a3a]",
-  yellow: "bg-[#fdf3d9] text-[#c9971f]",
-  blue: "bg-[#e3f2fa] text-[#2385c3]",
-  purple: "bg-[#f0eaf8] text-[#8b5fc9]",
-  orange: "bg-[#fbe9e0] text-[#d97a3f]",
-  red: "bg-[#fbe3e2] text-[#d95849]",
+  locked: { label: "Locked", color: "#94a3b8", icon: Lock, tone: "locked" },
+  "not-started": {
+    label: "Not Started",
+    color: "#eef1f3",
+    icon: Sparkles,
+    tone: "neutral",
+  },
+  completed: {
+    label: "Completed",
+    color: "#3da44b",
+    icon: Check,
+    tone: "success",
+  },
 };
 
 const AssessmentPage = () => {
@@ -55,7 +69,7 @@ const AssessmentPage = () => {
       (item) => item.title === category.categoryName,
     );
 
-    const theme = themeStyles[presentation?.color ?? "blue"];
+    const theme = CATEGORY_THEME[presentation?.color ?? "blue"];
     const ThumbnailIcon = presentation?.icon ?? Sparkles;
 
     const isLocked = category.status === "locked";
@@ -89,15 +103,12 @@ const AssessmentPage = () => {
         />
 
         <div className="mb-4 flex items-center justify-between gap-2 text-xs font-extrabold">
-          <span
-            className="inline-flex items-center gap-1 rounded-full border border-[#b8bfc5] px-2.5 py-1"
-            style={{
-              backgroundColor: isCompleted ? details.color : "#eef1f3",
-              color: isCompleted ? "white" : "#334155",
-            }}
-          >
-            <StatusIcon className="size-3.5" /> {details.label}
-          </span>
+          <StatusBadge
+            icon={StatusIcon}
+            label={details.label}
+            tone={details.tone}
+            className="gap-1 text-xs font-extrabold"
+          />
 
           <span className="rounded-full bg-[#edf0f2] px-2.5 py-1">
             {score ? `Score: ${score}` : `${category.totalQuestions} Items`}
@@ -105,7 +116,11 @@ const AssessmentPage = () => {
         </div>
 
         <div
-          className={`relative flex h-31.5 items-center justify-center overflow-hidden rounded-xl border border-[#dbe1e4] ${theme}`}
+          className={cn(
+            "relative flex h-31.5 items-center justify-center overflow-hidden rounded-xl border border-[#dbe1e4]",
+            theme.bg,
+            theme.icon,
+          )}
         >
           <div className="absolute inset-3 rounded-lg border-2 border-white/70 bg-white/35" />
           <ThumbnailIcon className="relative size-14 drop-shadow-sm" />

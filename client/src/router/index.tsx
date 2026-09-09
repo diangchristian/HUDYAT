@@ -16,6 +16,7 @@ import MyProgressPage from "@/pages/student/MyProgressPage";
 import AssessmentPage from "@/pages/student/AssessmentPage";
 import AssessmentResultPage from "@/pages/student/AssessmentResultPage";
 import TakeAssessmentPage from "@/pages/student/TakeAssessmentPage";
+import SettingsPage from "@/pages/student/SettingsPage";
 
 export const router = createBrowserRouter([
   // =========================
@@ -67,6 +68,10 @@ export const router = createBrowserRouter([
           {
             path: "/student/assessment/result",
             element: <AssessmentResultPage />,
+          },
+          {
+            path: "/student/settings",
+            element: <SettingsPage />,
           },
         ],
       },

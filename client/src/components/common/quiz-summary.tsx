@@ -62,7 +62,7 @@ const QuizSummary = ({
       />
 
       {/* Main content */}
-      <main className="relative z-10 flex min-h-0 flex-1 items-center justify-center px-4 py-6">
+      <main className="relative z-10 flex min-h-0 flex-1 items-center justify-center overflow-y-auto px-4 py-6">
         <section className="flex w-full max-w-xl flex-col items-center text-center">
           {/* Stars */}
           <div className="mb-3 flex items-end justify-center gap-3">

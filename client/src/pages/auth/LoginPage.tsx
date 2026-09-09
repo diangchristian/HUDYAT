@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 
 import ElevatedButton from "@/components/ui/elavated-button";
 import { Input } from "@/components/ui/input";
-import { MoveLeft } from "lucide-react";
+import { Eye, EyeOff, Lock, MoveLeft, User } from "lucide-react";
 
 import { login } from "@/api/auth-api";
 
@@ -12,6 +12,7 @@ const LoginPage = () => {
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -56,8 +57,6 @@ const LoginPage = () => {
         <div className="w-full max-w-md flex flex-col items-center gap-8">
           {/* Welcome Section */}
           <div className="flex flex-col items-center gap-4">
-            {/* <span className="text-6xl">👋</span> */}
-
             <h1 className="text-4xl md:text-5xl font-bold font-body text-foreground text-center">
               Welcome to Hudyat
             </h1>
@@ -76,14 +75,22 @@ const LoginPage = () => {
 
             {/* Username Input */}
             <div className="space-y-2">
-              <Input
-                placeholder="Username"
-                id="username"
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                className="py-6 px-4 border-3 font-body font-bold text-base"
-              />
+              <div className="relative">
+                <User
+                  aria-hidden="true"
+                  className="pointer-events-none absolute left-4 top-1/2 size-5 -translate-y-1/2 text-muted-foreground"
+                />
+
+                <Input
+                  placeholder="Username"
+                  id="username"
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  disabled={isSubmitting}
+                  className="py-6 pl-12 pr-4 border-3 font-body font-bold text-base"
+                />
+              </div>
             </div>
 
             {error && (
@@ -97,19 +104,40 @@ const LoginPage = () => {
 
             {/* Password Input */}
             <div className="space-y-2">
-              <Input
-                id="password"
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="py-6 px-4 border-3 font-body font-bold text-lg"
-              />
+              <div className="relative">
+                <Lock
+                  aria-hidden="true"
+                  className="pointer-events-none absolute left-4 top-1/2 size-5 -translate-y-1/2 text-muted-foreground"
+                />
+
+                <Input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  disabled={isSubmitting}
+                  className="py-6 pl-12 pr-12 border-3 font-body font-bold text-lg"
+                />
+
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((current) => !current)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  {showPassword ? (
+                    <EyeOff aria-hidden="true" className="size-5" />
+                  ) : (
+                    <Eye aria-hidden="true" className="size-5" />
+                  )}
+                </button>
+              </div>
             </div>
 
             {/* Login Button */}
             <ElevatedButton
-              text="LOG IN"
+              text={isSubmitting ? "LOGGING IN..." : "LOG IN"}
               variant="primary"
               size="lg"
               className="w-full"

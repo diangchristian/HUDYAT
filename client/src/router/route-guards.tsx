@@ -2,6 +2,7 @@ import { Navigate, Outlet, useLocation } from "react-router";
 
 import type { UserRole } from "@/api/auth-api";
 import { useCurrentUser } from "@/hooks/use-current-user";
+import LoadingScreen from "@/components/common/loading-screen";
 
 /*
  * Where a logged-in user of each role belongs. Roles without an
@@ -24,13 +25,7 @@ function useAuthState() {
 }
 
 function AuthLoading() {
-  return (
-    <div className="flex min-h-screen items-center justify-center">
-      <p className="text-sm text-muted-foreground" role="status">
-        Loading...
-      </p>
-    </div>
-  );
+  return <LoadingScreen />;
 }
 
 /*

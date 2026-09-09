@@ -29,14 +29,14 @@ const VideoQuestion = ({
   const source = videoSrc ?? videoUrl;
 
   return (
-    <>
-      <h1 className="shrink-0 text-2xl font-extrabold leading-tight sm:text-3xl">
+    <div className="flex h-full min-h-0 w-full flex-col">
+      <h1 className="shrink-0 text-[clamp(1.25rem,3vh,1.875rem)] font-extrabold leading-tight">
         {title ?? "Reference video"}
       </h1>
 
-      <div className="mt-3 flex w-full justify-center sm:mt-4">
+      <div className="mt-[clamp(0.5rem,1.5vh,1rem)] flex w-full min-h-0 flex-1 justify-center">
         <video
-          className="aspect-video w-full max-w-md rounded-sm object-cover"
+          className="aspect-video max-h-full w-full max-w-md rounded-sm object-contain"
           controls
           preload="metadata"
         >
@@ -45,7 +45,7 @@ const VideoQuestion = ({
         </video>
       </div>
 
-      <div className="mt-6 grid w-full grid-cols-1 gap-3 sm:mt-8 sm:gap-4">
+      <div className="mt-[clamp(0.75rem,2vh,2rem)] grid w-full shrink-0 grid-cols-1 gap-[clamp(0.375rem,1vh,1rem)]">
         {(answers ?? []).map((answer) => {
           const isSelected = selectedAnswer === answer.label;
           const isCorrect = answer.label === correctAnswer;
@@ -68,7 +68,7 @@ const VideoQuestion = ({
               aria-pressed={isSelected}
               onClick={() => !checked && onSelect?.(answer.label)}
               disabled={checked}
-              className={`relative flex h-12 w-full items-center rounded-xl border-2 px-3 transition-all sm:h-14 ${showCorrectBounce ? "animate-bounce" : ""} ${answerStyle}`}
+              className={`relative flex h-[clamp(2.5rem,6vh,3.5rem)] w-full items-center rounded-xl border-2 px-3 transition-all ${showCorrectBounce ? "animate-bounce" : ""} ${answerStyle}`}
             >
               <span className="absolute left-2 flex size-6 items-center justify-center rounded-md border border-[#e0e0e0] text-[10px] text-[#999]">
                 {answer.label}
@@ -86,7 +86,7 @@ const VideoQuestion = ({
           );
         })}
       </div>
-    </>
+    </div>
   );
 };
 

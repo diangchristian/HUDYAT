@@ -18,6 +18,7 @@ import { useSaveLessonCheckpoint } from "@/hooks/use-save-lesson-checkpoint";
 import PracticeCamera from "@/components/common/practice-camera";
 import PracticeReference from "@/components/common/practice-reference";
 import SessionHeader from "@/components/common/session-header";
+import LoadingScreen from "@/components/common/loading-screen";
 import ElevatedButton from "@/components/ui/elavated-button";
 import { Card } from "@/components/ui/card";
 
@@ -48,18 +49,22 @@ const STEP_LABELS: Record<LessonStep, string> = {
   try: "Try",
 };
 
+const LESSON_TO_ASSESSMENT_TRANSITION_MS = 1400;
+
 function LearnSession({
   categoryId,
   title,
   prompts,
   initialGestureIndex,
   initialStep,
+  onFinishLesson,
 }: {
   categoryId: string;
   title: string;
   prompts: LessonPrompt[];
   initialGestureIndex: number;
   initialStep: LessonStep | null;
+  onFinishLesson: () => void;
 }) {
   const navigate = useNavigate();
 
@@ -142,13 +147,10 @@ function LearnSession({
     }
 
     /*
-     * Last sign:
-     * finish Learn and proceed to assessment.
+     * Last sign: finish Learn and proceed to assessment.
      */
     if (isLast) {
-      navigate(
-        `/student/assessment/${categoryId}`,
-      );
+      onFinishLesson();
 
       return;
     }
@@ -549,11 +551,28 @@ export default function CategoryLearnPage() {
 
   const navigate = useNavigate();
 
+  const [isFinishingLesson, setIsFinishingLesson] =
+    useState(false);
+
   const {
     data: lesson,
     isLoading,
     error,
   } = useCategoryLesson(categoryId);
+
+  const handleFinishLesson = () => {
+    setIsFinishingLesson(true);
+
+    setTimeout(() => {
+      navigate(
+        `/student/assessment/${categoryId}`,
+      );
+    }, LESSON_TO_ASSESSMENT_TRANSITION_MS);
+  };
+
+  if (isFinishingLesson) {
+    return <LoadingScreen />;
+  }
 
   const prompts: LessonPrompt[] =
     lesson?.categoryGestures.map(
@@ -625,6 +644,9 @@ export default function CategoryLearnPage() {
             initialStep={
               lesson.progress
                 .lastLessonStep
+            }
+            onFinishLesson={
+              handleFinishLesson
             }
           />
         ) : (
