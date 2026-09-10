@@ -170,6 +170,31 @@ const TakeAssessmentPage = () => {
     if (!selectedChoiceId) return;
     if (!categoryId) return;
 
+    /*
+     * Browsers only allow HTMLAudioElement.play() when it happens inside a
+     * user gesture. This handler awaits an API call before it knows which
+     * sound to play, and by then the gesture has expired, so the play()
+     * calls below were silently rejected. Playing (muted) and immediately
+     * pausing here, synchronously within the click, "unlocks" each element
+     * so it can be played later once the API response comes back.
+     */
+    for (const sound of [correctSound, wrongSound, assessmentEndSound]) {
+      const audio = sound.current;
+      if (!audio) continue;
+
+      audio.muted = true;
+      audio
+        .play()
+        .then(() => {
+          audio.pause();
+          audio.currentTime = 0;
+          audio.muted = false;
+        })
+        .catch(() => {
+          audio.muted = false;
+        });
+    }
+
     if (!checked) {
       try {
         const checkResult = await checkAnswerMutation.mutateAsync({
@@ -184,6 +209,9 @@ const TakeAssessmentPage = () => {
           ? correctSound
           : wrongSound;
 
+        if (sound.current) {
+          sound.current.currentTime = 0;
+        }
         sound.current?.play().catch(() => {});
       } catch (checkError: unknown) {
         setSubmitError(
@@ -220,6 +248,9 @@ const TakeAssessmentPage = () => {
 
         setResult(submissionResult);
 
+        if (assessmentEndSound.current) {
+          assessmentEndSound.current.currentTime = 0;
+        }
         assessmentEndSound.current?.play().catch(() => {});
       } catch (error: unknown) {
         setSubmitError(
