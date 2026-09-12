@@ -30,6 +30,8 @@ type GestureData = {
   meaning: string;
   exampleUsage: string;
   displayOrder: number;
+  referenceImageUrl?: string;
+  referenceVideoUrl?: string;
 };
 
 async function seedCategoryGestures(
@@ -57,6 +59,8 @@ async function seedCategoryGestures(
 
       update: {
         meaning: gesture.meaning,
+        referenceImageUrl: gesture.referenceImageUrl,
+        referenceVideoUrl: gesture.referenceVideoUrl,
       },
 
       create: {
@@ -64,6 +68,8 @@ async function seedCategoryGestures(
         meaning: gesture.meaning,
         modelClass: gesture.label,
         isValidated: false,
+        referenceImageUrl: gesture.referenceImageUrl,
+        referenceVideoUrl: gesture.referenceVideoUrl,
       },
     });
 

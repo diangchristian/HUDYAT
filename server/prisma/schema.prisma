@@ -107,15 +107,14 @@ model FslGesture {
 }
 
 model CategoryGesture {
-  id                    String     @id @default(uuid())
-  categoryId            String
-  gestureId             String
-  exampleUsage          String?
-  demonstrationVideoUrl String?
-  displayOrder          Int        @default(0)
-  createdAt             DateTime   @default(now())
-  category              Category   @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  gesture               FslGesture @relation(fields: [gestureId], references: [id], onDelete: Cascade)
+  id           String     @id @default(uuid())
+  categoryId   String
+  gestureId    String
+  exampleUsage String?
+  displayOrder Int        @default(0)
+  createdAt    DateTime   @default(now())
+  category     Category   @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  gesture      FslGesture @relation(fields: [gestureId], references: [id], onDelete: Cascade)
 
   @@unique([categoryId, gestureId])
   @@unique([categoryId, displayOrder])

@@ -11,7 +11,8 @@
     "seed:learning-areas": "tsx prisma/seeder/learningAreasSeeder.ts",
     "seed:categories": "tsx prisma/seeder/categoriesSeeder.ts",
     "seed:fsl-gestures": "tsx prisma/seeder/fslGesturesSeeder.ts",
-    "seed:assessments": "tsx prisma/seeder/assessmentsSeeder.ts"
+    "seed:assessments": "tsx prisma/seeder/assessmentsSeeder.ts",
+    "upload:media": "tsx prisma/scripts/uploadGestureMedia.ts"
   },
   "keywords": [],
   "author": "",
@@ -23,6 +24,7 @@
     "@types/cors": "^2.8.19",
     "bcrypt": "^6.0.0",
     "bcryptjs": "^3.0.3",
+    "cloudinary": "^2.11.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",

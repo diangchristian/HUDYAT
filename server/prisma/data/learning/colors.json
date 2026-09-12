@@ -3,43 +3,50 @@
     "label": "Red",
     "meaning": "The color red.",
     "exampleUsage": "The apple is red.",
-    "displayOrder": 1
+    "displayOrder": 1,
+    "referenceVideoUrl": "https://res.cloudinary.com/ducnmdeii/video/upload/v1789148112/fsl-pwa/colors/red.mov"
   },
   {
     "label": "Blue",
     "meaning": "The color blue.",
     "exampleUsage": "The sky is blue.",
-    "displayOrder": 2
+    "displayOrder": 2,
+    "referenceVideoUrl": "https://res.cloudinary.com/ducnmdeii/video/upload/v1789148105/fsl-pwa/colors/blue.mov"
   },
   {
     "label": "Yellow",
     "meaning": "The color yellow.",
     "exampleUsage": "The sun looks yellow.",
-    "displayOrder": 3
+    "displayOrder": 3,
+    "referenceVideoUrl": "https://res.cloudinary.com/ducnmdeii/video/upload/v1789148116/fsl-pwa/colors/yellow.mov"
   },
   {
     "label": "Green",
     "meaning": "The color green.",
     "exampleUsage": "The grass is green.",
-    "displayOrder": 4
+    "displayOrder": 4,
+    "referenceVideoUrl": "https://res.cloudinary.com/ducnmdeii/video/upload/v1789148107/fsl-pwa/colors/green.mov"
   },
   {
     "label": "Black",
     "meaning": "The color black.",
     "exampleUsage": "Her shoes are black.",
-    "displayOrder": 5
+    "displayOrder": 5,
+    "referenceVideoUrl": "https://res.cloudinary.com/ducnmdeii/video/upload/v1789148103/fsl-pwa/colors/black.mov"
   },
   {
     "label": "White",
     "meaning": "The color white.",
     "exampleUsage": "The paper is white.",
-    "displayOrder": 6
+    "displayOrder": 6,
+    "referenceVideoUrl": "https://res.cloudinary.com/ducnmdeii/video/upload/v1789148113/fsl-pwa/colors/white.mov"
   },
   {
     "label": "Orange",
     "meaning": "The color orange.",
     "exampleUsage": "The fruit and the color share the name orange.",
-    "displayOrder": 7
+    "displayOrder": 7,
+    "referenceVideoUrl": "https://res.cloudinary.com/ducnmdeii/video/upload/v1789148108/fsl-pwa/colors/orange.mov"
   },
   {
     "label": "Purple",
@@ -51,12 +58,14 @@
     "label": "Pink",
     "meaning": "The color pink.",
     "exampleUsage": "Her dress is pink.",
-    "displayOrder": 9
+    "displayOrder": 9,
+    "referenceVideoUrl": "https://res.cloudinary.com/ducnmdeii/video/upload/v1789148110/fsl-pwa/colors/pink.mov"
   },
   {
     "label": "Brown",
     "meaning": "The color brown.",
     "exampleUsage": "The table is brown.",
-    "displayOrder": 10
+    "displayOrder": 10,
+    "referenceVideoUrl": "https://res.cloudinary.com/ducnmdeii/video/upload/v1789148106/fsl-pwa/colors/brown.mov"
   }
 ]

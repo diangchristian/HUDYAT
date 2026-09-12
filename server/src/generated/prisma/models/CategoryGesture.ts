@@ -39,7 +39,6 @@ export type CategoryGestureMinAggregateOutputType = {
   categoryId: string | null
   gestureId: string | null
   exampleUsage: string | null
-  demonstrationVideoUrl: string | null
   displayOrder: number | null
   createdAt: Date | null
 }
@@ -49,7 +48,6 @@ export type CategoryGestureMaxAggregateOutputType = {
   categoryId: string | null
   gestureId: string | null
   exampleUsage: string | null
-  demonstrationVideoUrl: string | null
   displayOrder: number | null
   createdAt: Date | null
 }
@@ -59,7 +57,6 @@ export type CategoryGestureCountAggregateOutputType = {
   categoryId: number
   gestureId: number
   exampleUsage: number
-  demonstrationVideoUrl: number
   displayOrder: number
   createdAt: number
   _all: number
@@ -79,7 +76,6 @@ export type CategoryGestureMinAggregateInputType = {
   categoryId?: true
   gestureId?: true
   exampleUsage?: true
-  demonstrationVideoUrl?: true
   displayOrder?: true
   createdAt?: true
 }
@@ -89,7 +85,6 @@ export type CategoryGestureMaxAggregateInputType = {
   categoryId?: true
   gestureId?: true
   exampleUsage?: true
-  demonstrationVideoUrl?: true
   displayOrder?: true
   createdAt?: true
 }
@@ -99,7 +94,6 @@ export type CategoryGestureCountAggregateInputType = {
   categoryId?: true
   gestureId?: true
   exampleUsage?: true
-  demonstrationVideoUrl?: true
   displayOrder?: true
   createdAt?: true
   _all?: true
@@ -196,7 +190,6 @@ export type CategoryGestureGroupByOutputType = {
   categoryId: string
   gestureId: string
   exampleUsage: string | null
-  demonstrationVideoUrl: string | null
   displayOrder: number
   createdAt: Date
   _count: CategoryGestureCountAggregateOutputType | null
@@ -229,7 +222,6 @@ export type CategoryGestureWhereInput = {
   categoryId?: Prisma.StringFilter<"CategoryGesture"> | string
   gestureId?: Prisma.StringFilter<"CategoryGesture"> | string
   exampleUsage?: Prisma.StringNullableFilter<"CategoryGesture"> | string | null
-  demonstrationVideoUrl?: Prisma.StringNullableFilter<"CategoryGesture"> | string | null
   displayOrder?: Prisma.IntFilter<"CategoryGesture"> | number
   createdAt?: Prisma.DateTimeFilter<"CategoryGesture"> | Date | string
   category?: Prisma.XOR<Prisma.CategoryScalarRelationFilter, Prisma.CategoryWhereInput>
@@ -241,7 +233,6 @@ export type CategoryGestureOrderByWithRelationInput = {
   categoryId?: Prisma.SortOrder
   gestureId?: Prisma.SortOrder
   exampleUsage?: Prisma.SortOrderInput | Prisma.SortOrder
-  demonstrationVideoUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   displayOrder?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   category?: Prisma.CategoryOrderByWithRelationInput
@@ -258,7 +249,6 @@ export type CategoryGestureWhereUniqueInput = Prisma.AtLeast<{
   categoryId?: Prisma.StringFilter<"CategoryGesture"> | string
   gestureId?: Prisma.StringFilter<"CategoryGesture"> | string
   exampleUsage?: Prisma.StringNullableFilter<"CategoryGesture"> | string | null
-  demonstrationVideoUrl?: Prisma.StringNullableFilter<"CategoryGesture"> | string | null
   displayOrder?: Prisma.IntFilter<"CategoryGesture"> | number
   createdAt?: Prisma.DateTimeFilter<"CategoryGesture"> | Date | string
   category?: Prisma.XOR<Prisma.CategoryScalarRelationFilter, Prisma.CategoryWhereInput>
@@ -270,7 +260,6 @@ export type CategoryGestureOrderByWithAggregationInput = {
   categoryId?: Prisma.SortOrder
   gestureId?: Prisma.SortOrder
   exampleUsage?: Prisma.SortOrderInput | Prisma.SortOrder
-  demonstrationVideoUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   displayOrder?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.CategoryGestureCountOrderByAggregateInput
@@ -288,7 +277,6 @@ export type CategoryGestureScalarWhereWithAggregatesInput = {
   categoryId?: Prisma.StringWithAggregatesFilter<"CategoryGesture"> | string
   gestureId?: Prisma.StringWithAggregatesFilter<"CategoryGesture"> | string
   exampleUsage?: Prisma.StringNullableWithAggregatesFilter<"CategoryGesture"> | string | null
-  demonstrationVideoUrl?: Prisma.StringNullableWithAggregatesFilter<"CategoryGesture"> | string | null
   displayOrder?: Prisma.IntWithAggregatesFilter<"CategoryGesture"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"CategoryGesture"> | Date | string
 }
@@ -296,7 +284,6 @@ export type CategoryGestureScalarWhereWithAggregatesInput = {
 export type CategoryGestureCreateInput = {
   id?: string
   exampleUsage?: string | null
-  demonstrationVideoUrl?: string | null
   displayOrder?: number
   createdAt?: Date | string
   category: Prisma.CategoryCreateNestedOneWithoutGesturesInput
@@ -308,7 +295,6 @@ export type CategoryGestureUncheckedCreateInput = {
   categoryId: string
   gestureId: string
   exampleUsage?: string | null
-  demonstrationVideoUrl?: string | null
   displayOrder?: number
   createdAt?: Date | string
 }
@@ -316,7 +302,6 @@ export type CategoryGestureUncheckedCreateInput = {
 export type CategoryGestureUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   exampleUsage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  demonstrationVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   displayOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   category?: Prisma.CategoryUpdateOneRequiredWithoutGesturesNestedInput
@@ -328,7 +313,6 @@ export type CategoryGestureUncheckedUpdateInput = {
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   gestureId?: Prisma.StringFieldUpdateOperationsInput | string
   exampleUsage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  demonstrationVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   displayOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -338,7 +322,6 @@ export type CategoryGestureCreateManyInput = {
   categoryId: string
   gestureId: string
   exampleUsage?: string | null
-  demonstrationVideoUrl?: string | null
   displayOrder?: number
   createdAt?: Date | string
 }
@@ -346,7 +329,6 @@ export type CategoryGestureCreateManyInput = {
 export type CategoryGestureUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   exampleUsage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  demonstrationVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   displayOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -356,7 +338,6 @@ export type CategoryGestureUncheckedUpdateManyInput = {
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   gestureId?: Prisma.StringFieldUpdateOperationsInput | string
   exampleUsage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  demonstrationVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   displayOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -386,7 +367,6 @@ export type CategoryGestureCountOrderByAggregateInput = {
   categoryId?: Prisma.SortOrder
   gestureId?: Prisma.SortOrder
   exampleUsage?: Prisma.SortOrder
-  demonstrationVideoUrl?: Prisma.SortOrder
   displayOrder?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -400,7 +380,6 @@ export type CategoryGestureMaxOrderByAggregateInput = {
   categoryId?: Prisma.SortOrder
   gestureId?: Prisma.SortOrder
   exampleUsage?: Prisma.SortOrder
-  demonstrationVideoUrl?: Prisma.SortOrder
   displayOrder?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -410,7 +389,6 @@ export type CategoryGestureMinOrderByAggregateInput = {
   categoryId?: Prisma.SortOrder
   gestureId?: Prisma.SortOrder
   exampleUsage?: Prisma.SortOrder
-  demonstrationVideoUrl?: Prisma.SortOrder
   displayOrder?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -506,7 +484,6 @@ export type CategoryGestureUncheckedUpdateManyWithoutGestureNestedInput = {
 export type CategoryGestureCreateWithoutCategoryInput = {
   id?: string
   exampleUsage?: string | null
-  demonstrationVideoUrl?: string | null
   displayOrder?: number
   createdAt?: Date | string
   gesture: Prisma.FslGestureCreateNestedOneWithoutCategoryGesturesInput
@@ -516,7 +493,6 @@ export type CategoryGestureUncheckedCreateWithoutCategoryInput = {
   id?: string
   gestureId: string
   exampleUsage?: string | null
-  demonstrationVideoUrl?: string | null
   displayOrder?: number
   createdAt?: Date | string
 }
@@ -555,7 +531,6 @@ export type CategoryGestureScalarWhereInput = {
   categoryId?: Prisma.StringFilter<"CategoryGesture"> | string
   gestureId?: Prisma.StringFilter<"CategoryGesture"> | string
   exampleUsage?: Prisma.StringNullableFilter<"CategoryGesture"> | string | null
-  demonstrationVideoUrl?: Prisma.StringNullableFilter<"CategoryGesture"> | string | null
   displayOrder?: Prisma.IntFilter<"CategoryGesture"> | number
   createdAt?: Prisma.DateTimeFilter<"CategoryGesture"> | Date | string
 }
@@ -563,7 +538,6 @@ export type CategoryGestureScalarWhereInput = {
 export type CategoryGestureCreateWithoutGestureInput = {
   id?: string
   exampleUsage?: string | null
-  demonstrationVideoUrl?: string | null
   displayOrder?: number
   createdAt?: Date | string
   category: Prisma.CategoryCreateNestedOneWithoutGesturesInput
@@ -573,7 +547,6 @@ export type CategoryGestureUncheckedCreateWithoutGestureInput = {
   id?: string
   categoryId: string
   exampleUsage?: string | null
-  demonstrationVideoUrl?: string | null
   displayOrder?: number
   createdAt?: Date | string
 }
@@ -608,7 +581,6 @@ export type CategoryGestureCreateManyCategoryInput = {
   id?: string
   gestureId: string
   exampleUsage?: string | null
-  demonstrationVideoUrl?: string | null
   displayOrder?: number
   createdAt?: Date | string
 }
@@ -616,7 +588,6 @@ export type CategoryGestureCreateManyCategoryInput = {
 export type CategoryGestureUpdateWithoutCategoryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   exampleUsage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  demonstrationVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   displayOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   gesture?: Prisma.FslGestureUpdateOneRequiredWithoutCategoryGesturesNestedInput
@@ -626,7 +597,6 @@ export type CategoryGestureUncheckedUpdateWithoutCategoryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   gestureId?: Prisma.StringFieldUpdateOperationsInput | string
   exampleUsage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  demonstrationVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   displayOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -635,7 +605,6 @@ export type CategoryGestureUncheckedUpdateManyWithoutCategoryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   gestureId?: Prisma.StringFieldUpdateOperationsInput | string
   exampleUsage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  demonstrationVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   displayOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -644,7 +613,6 @@ export type CategoryGestureCreateManyGestureInput = {
   id?: string
   categoryId: string
   exampleUsage?: string | null
-  demonstrationVideoUrl?: string | null
   displayOrder?: number
   createdAt?: Date | string
 }
@@ -652,7 +620,6 @@ export type CategoryGestureCreateManyGestureInput = {
 export type CategoryGestureUpdateWithoutGestureInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   exampleUsage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  demonstrationVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   displayOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   category?: Prisma.CategoryUpdateOneRequiredWithoutGesturesNestedInput
@@ -662,7 +629,6 @@ export type CategoryGestureUncheckedUpdateWithoutGestureInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   exampleUsage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  demonstrationVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   displayOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -671,7 +637,6 @@ export type CategoryGestureUncheckedUpdateManyWithoutGestureInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   exampleUsage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  demonstrationVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   displayOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -683,7 +648,6 @@ export type CategoryGestureSelect<ExtArgs extends runtime.Types.Extensions.Inter
   categoryId?: boolean
   gestureId?: boolean
   exampleUsage?: boolean
-  demonstrationVideoUrl?: boolean
   displayOrder?: boolean
   createdAt?: boolean
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
@@ -695,7 +659,6 @@ export type CategoryGestureSelectCreateManyAndReturn<ExtArgs extends runtime.Typ
   categoryId?: boolean
   gestureId?: boolean
   exampleUsage?: boolean
-  demonstrationVideoUrl?: boolean
   displayOrder?: boolean
   createdAt?: boolean
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
@@ -707,7 +670,6 @@ export type CategoryGestureSelectUpdateManyAndReturn<ExtArgs extends runtime.Typ
   categoryId?: boolean
   gestureId?: boolean
   exampleUsage?: boolean
-  demonstrationVideoUrl?: boolean
   displayOrder?: boolean
   createdAt?: boolean
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
@@ -719,12 +681,11 @@ export type CategoryGestureSelectScalar = {
   categoryId?: boolean
   gestureId?: boolean
   exampleUsage?: boolean
-  demonstrationVideoUrl?: boolean
   displayOrder?: boolean
   createdAt?: boolean
 }
 
-export type CategoryGestureOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "categoryId" | "gestureId" | "exampleUsage" | "demonstrationVideoUrl" | "displayOrder" | "createdAt", ExtArgs["result"]["categoryGesture"]>
+export type CategoryGestureOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "categoryId" | "gestureId" | "exampleUsage" | "displayOrder" | "createdAt", ExtArgs["result"]["categoryGesture"]>
 export type CategoryGestureInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
   gesture?: boolean | Prisma.FslGestureDefaultArgs<ExtArgs>
@@ -749,7 +710,6 @@ export type $CategoryGesturePayload<ExtArgs extends runtime.Types.Extensions.Int
     categoryId: string
     gestureId: string
     exampleUsage: string | null
-    demonstrationVideoUrl: string | null
     displayOrder: number
     createdAt: Date
   }, ExtArgs["result"]["categoryGesture"]>
@@ -1181,7 +1141,6 @@ export interface CategoryGestureFieldRefs {
   readonly categoryId: Prisma.FieldRef<"CategoryGesture", 'String'>
   readonly gestureId: Prisma.FieldRef<"CategoryGesture", 'String'>
   readonly exampleUsage: Prisma.FieldRef<"CategoryGesture", 'String'>
-  readonly demonstrationVideoUrl: Prisma.FieldRef<"CategoryGesture", 'String'>
   readonly displayOrder: Prisma.FieldRef<"CategoryGesture", 'Int'>
   readonly createdAt: Prisma.FieldRef<"CategoryGesture", 'DateTime'>
 }

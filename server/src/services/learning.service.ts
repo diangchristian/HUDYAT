@@ -289,6 +289,30 @@ export const saveLessonCheckpoint = async (
     gestureIndex === category.gestures.length - 1 &&
     lessonStep === "try";
 
+  const existingProgress =
+    await prisma.categoryProgress.findUnique({
+      where: {
+        learnerId_categoryId: {
+          learnerId,
+          categoryId,
+        },
+      },
+
+      select: {
+        status: true,
+      },
+    });
+
+  /*
+   * Reviewing a category that's already COMPLETED (e.g. the
+   * learner revisits it after passing the assessment) must not
+   * regress its status back to IN_PROGRESS — doing so would make
+   * the learn page treat it as the active category again and
+   * re-lock everything that comes after it.
+   */
+  const isAlreadyCompleted =
+    existingProgress?.status === "COMPLETED";
+
   const progress =
     await prisma.categoryProgress.upsert({
       where: {
@@ -299,7 +323,9 @@ export const saveLessonCheckpoint = async (
       },
 
       update: {
-        status: "IN_PROGRESS",
+        ...(isAlreadyCompleted
+          ? {}
+          : { status: "IN_PROGRESS" }),
 
         lastGestureIndex:
           gestureIndex,
