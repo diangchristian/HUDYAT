@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Eye, EyeOff, Lock, MoveLeft, User } from "lucide-react";
 
 import { login } from "@/api/auth-api";
+import { isStandalonePwa } from "@/lib/pwa";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -42,16 +43,18 @@ const LoginPage = () => {
   return (
     <div className="min-h-screen flex flex-col bg-white px-4">
       {/* Back Button */}
-      <div className="pt-4">
-        <ElevatedButton
-          text="Back"
-          variant="secondary"
-          size="md"
-          onClick={() => navigate("/")}
-          icon={MoveLeft}
-          iconPosition="left"
-        />
-      </div>
+      {!isStandalonePwa() && (
+        <div className="pt-4">
+          <ElevatedButton
+            text="Back"
+            variant="secondary"
+            size="md"
+            onClick={() => navigate("/")}
+            icon={MoveLeft}
+            iconPosition="left"
+          />
+        </div>
+      )}
 
       <div className="flex-1 flex items-center justify-center">
         <div className="w-full max-w-md flex flex-col items-center gap-8">
