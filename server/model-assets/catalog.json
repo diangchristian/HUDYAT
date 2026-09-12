@@ -1,0 +1,54 @@
+{
+  "categories": [
+    {
+      "id": "alphabet",
+      "name": "Alphabet",
+      "available": true,
+      "version": "1efc1d730f3d6431",
+      "modelUrl": "./models/alphabet/1efc1d730f3d6431/model.json",
+      "weightsUrl": "./models/alphabet/1efc1d730f3d6431/weights.bin",
+      "modelSha256": "24bfdccad8708f635849d51683913e9bc9757762074644ff2d9f6a237e821ab3",
+      "weightsSha256": "26c43b53d0a6cfa8f0953a773058c5e8570fca0a50dbe20586223192ca03b5c3",
+      "bytes": 1956045,
+      "handUrl": "./shared/fbc2a30080c3c557093b5ddfc334698132eb341044ccee322ccf8bcf3607cde1.task",
+      "handSha256": "fbc2a30080c3c557093b5ddfc334698132eb341044ccee322ccf8bcf3607cde1",
+      "handBytes": 7819105,
+      "classes": 26
+    },
+    {
+      "id": "colors",
+      "name": "Colors",
+      "available": true,
+      "version": "fd6cbabbd4b1082c",
+      "modelUrl": "./models/colors/fd6cbabbd4b1082c/model.json",
+      "weightsUrl": "./models/colors/fd6cbabbd4b1082c/weights.bin",
+      "modelSha256": "56c62b510b32a13916b278b3c9fa8d9ce40a9e353a061575fff0da75595c8a6e",
+      "weightsSha256": "5d7bc1c71d2df69ef9bcdb7b419f2cf69f2e457dc0b37704baa4e6b62569ec9b",
+      "bytes": 1951211,
+      "handUrl": "./shared/fbc2a30080c3c557093b5ddfc334698132eb341044ccee322ccf8bcf3607cde1.task",
+      "handSha256": "fbc2a30080c3c557093b5ddfc334698132eb341044ccee322ccf8bcf3607cde1",
+      "handBytes": 7819105,
+      "classes": 8
+    },
+    {
+      "id": "family",
+      "name": "Family",
+      "available": false
+    },
+    {
+      "id": "greetings",
+      "name": "Greetings",
+      "available": false
+    },
+    {
+      "id": "numbers",
+      "name": "Numbers",
+      "available": false
+    },
+    {
+      "id": "shapes",
+      "name": "Shapes",
+      "available": false
+    }
+  ]
+}

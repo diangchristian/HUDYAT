@@ -1,3 +1,4 @@
+import modelsRouter from "./routes/models.routes.js";
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
@@ -27,6 +28,7 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use("/api/models", modelsRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/learning", learningRouter);
 app.use("/api/categories", categoriesRouter);

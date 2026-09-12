@@ -70,6 +70,7 @@ model LearningArea {
 }
 
 model Category {
+  modelRelease Json?
   id             String             @id @default(uuid())
   learningAreaId String
   name           String

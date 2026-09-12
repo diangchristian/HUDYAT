@@ -17,6 +17,11 @@ function PracticeSession({ title, prompts }: { title: string; prompts: PracticeP
   const prompt = prompts[index];
   const isLast = index === prompts.length - 1;
 
+  const advance = () => {
+    if (isLast) setComplete(true);
+    else { setIndex(index + 1); headingRef.current?.focus(); }
+  };
+
   const restart = () => {
     setIndex(0);
     setComplete(false);
@@ -68,7 +73,7 @@ function PracticeSession({ title, prompts }: { title: string; prompts: PracticeP
         </div>
 
         <div className="min-w-0 space-y-6">
-          <PracticeCamera />
+          <PracticeCamera category={categorySlug(title)} targetLabel={prompt.label} onCorrect={advance} />
           <div className="flex items-center gap-3 sm:gap-5">
             <ElevatedButton
               text=""
@@ -100,13 +105,10 @@ function PracticeSession({ title, prompts }: { title: string; prompts: PracticeP
               iconPosition="right"
               size="sm"
               className="h-11 shrink-0 sm:h-9"
-              onClick={() => {
-                if (isLast) setComplete(true);
-                else { setIndex((current) => current + 1); headingRef.current?.focus(); }
-              }}
+              onClick={advance}
             />
           </div>
-          <p className="text-center text-xs text-muted-foreground">Self-guided practice. Choose Next when you're ready — no automatic scoring.</p>
+          <p className="text-center text-xs text-muted-foreground">Match the target sign to hear a sound and continue automatically. You can also use Next.</p>
         </div>
       </div>
 
