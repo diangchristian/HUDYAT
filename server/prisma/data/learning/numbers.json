@@ -1,63 +1,72 @@
-
 [
   {
     "label": "One",
     "meaning": "The number one.",
     "exampleUsage": "I have one book.",
-    "displayOrder": 1
+    "displayOrder": 1,
+    "referenceImageUrl": "https://res.cloudinary.com/ducnmdeii/image/upload/v1789227943/fsl-pwa/numbers/one.jpg"
   },
   {
     "label": "Two",
     "meaning": "The number two.",
     "exampleUsage": "I have two pencils.",
-    "displayOrder": 2
+    "displayOrder": 2,
+    "referenceImageUrl": "https://res.cloudinary.com/ducnmdeii/image/upload/v1789227945/fsl-pwa/numbers/two.jpg"
   },
   {
     "label": "Three",
     "meaning": "The number three.",
     "exampleUsage": "I have three apples.",
-    "displayOrder": 3
+    "displayOrder": 3,
+    "referenceImageUrl": "https://res.cloudinary.com/ducnmdeii/image/upload/v1789227946/fsl-pwa/numbers/three.jpg"
   },
   {
     "label": "Four",
     "meaning": "The number four.",
     "exampleUsage": "There are four chairs.",
-    "displayOrder": 4
+    "displayOrder": 4,
+    "referenceImageUrl": "https://res.cloudinary.com/ducnmdeii/image/upload/v1789227947/fsl-pwa/numbers/four.jpg"
   },
   {
     "label": "Five",
     "meaning": "The number five.",
     "exampleUsage": "I have five fingers on one hand.",
-    "displayOrder": 5
+    "displayOrder": 5,
+    "referenceImageUrl": "https://res.cloudinary.com/ducnmdeii/image/upload/v1789227948/fsl-pwa/numbers/five.jpg"
   },
   {
     "label": "Six",
     "meaning": "The number six.",
     "exampleUsage": "There are six students in the group.",
-    "displayOrder": 6
+    "displayOrder": 6,
+    "referenceImageUrl": "https://res.cloudinary.com/ducnmdeii/image/upload/v1789227949/fsl-pwa/numbers/six.jpg"
   },
   {
     "label": "Seven",
     "meaning": "The number seven.",
     "exampleUsage": "There are seven days in a week.",
-    "displayOrder": 7
+    "displayOrder": 7,
+    "referenceImageUrl": "https://res.cloudinary.com/ducnmdeii/image/upload/v1789227950/fsl-pwa/numbers/seven.jpg"
   },
   {
     "label": "Eight",
     "meaning": "The number eight.",
     "exampleUsage": "I have eight crayons.",
-    "displayOrder": 8
+    "displayOrder": 8,
+    "referenceImageUrl": "https://res.cloudinary.com/ducnmdeii/image/upload/v1789227951/fsl-pwa/numbers/eight.jpg"
   },
   {
     "label": "Nine",
     "meaning": "The number nine.",
     "exampleUsage": "There are nine books on the shelf.",
-    "displayOrder": 9
+    "displayOrder": 9,
+    "referenceImageUrl": "https://res.cloudinary.com/ducnmdeii/image/upload/v1789227952/fsl-pwa/numbers/nine.jpg"
   },
   {
     "label": "Ten",
     "meaning": "The number ten.",
     "exampleUsage": "I can count to ten.",
-    "displayOrder": 10
+    "displayOrder": 10,
+    "referenceImageUrl": "https://res.cloudinary.com/ducnmdeii/image/upload/v1789227944/fsl-pwa/numbers/ten.jpg"
   }
 ]

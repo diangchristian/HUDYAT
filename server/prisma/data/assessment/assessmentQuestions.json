@@ -47,136 +47,136 @@
   {
     "category": "Numbers",
     "question_number": 1,
-    "question_text": "Which one is the correct sign for One?",
-    "question_type": "VIDEO_GESTURE",
+    "question_text": "Which one is the correct sign for the number One?",
+    "question_type": "IMAGE_GESTURE",
     "gesture": "One",
-    "reference_media_url": "/videos/numbers/one.mp4",
+    "reference_media_url": null,
     "points": 1
   },
   {
     "category": "Numbers",
     "question_number": 2,
-    "question_text": "Which one is the correct sign for Four?",
-    "question_type": "VIDEO_GESTURE",
+    "question_text": "Which one is the correct sign for the number Four?",
+    "question_type": "IMAGE_GESTURE",
     "gesture": "Four",
-    "reference_media_url": "/videos/numbers/four.mp4",
+    "reference_media_url": null,
     "points": 1
   },
   {
     "category": "Numbers",
     "question_number": 3,
-    "question_text": "Which one is the correct sign for Six?",
-    "question_type": "VIDEO_GESTURE",
+    "question_text": "Which one is the correct sign for the number Six?",
+    "question_type": "IMAGE_GESTURE",
     "gesture": "Six",
-    "reference_media_url": "/videos/numbers/six.mp4",
+    "reference_media_url": null,
     "points": 1
   },
   {
     "category": "Numbers",
     "question_number": 4,
-    "question_text": "Which one is the correct sign for Eight?",
-    "question_type": "VIDEO_GESTURE",
+    "question_text": "Which one is the correct sign for the number Eight?",
+    "question_type": "IMAGE_GESTURE",
     "gesture": "Eight",
-    "reference_media_url": "/videos/numbers/eight.mp4",
+    "reference_media_url": null,
     "points": 1
   },
   {
     "category": "Numbers",
     "question_number": 5,
-    "question_text": "Which one is the correct sign for Ten?",
-    "question_type": "VIDEO_GESTURE",
+    "question_text": "Which one is the correct sign for the number Ten?",
+    "question_type": "IMAGE_GESTURE",
     "gesture": "Ten",
-    "reference_media_url": "/videos/numbers/ten.mp4",
+    "reference_media_url": null,
     "points": 1
   },
   {
     "category": "Calendar",
     "question_number": 1,
-    "question_text": "Which one is the correct sign for January?",
+    "question_text": "Select the correct gesture below",
     "question_type": "VIDEO_GESTURE",
     "gesture": "January",
-    "reference_media_url": "/videos/calendar/january.mp4",
+    "reference_media_url": null,
     "points": 1
   },
   {
     "category": "Calendar",
     "question_number": 2,
-    "question_text": "Which one is the correct sign for March?",
+    "question_text": "Select the correct gesture below",
     "question_type": "VIDEO_GESTURE",
     "gesture": "March",
-    "reference_media_url": "/videos/calendar/march.mp4",
+    "reference_media_url": null,
     "points": 1
   },
   {
     "category": "Calendar",
     "question_number": 3,
-    "question_text": "Which one is the correct sign for June?",
+    "question_text": "Select the correct gesture below",
     "question_type": "VIDEO_GESTURE",
     "gesture": "June",
-    "reference_media_url": "/videos/calendar/june.mp4",
+    "reference_media_url": null,
     "points": 1
   },
   {
     "category": "Calendar",
     "question_number": 4,
-    "question_text": "Which one is the correct sign for September?",
+    "question_text": "Select the correct gesture below",
     "question_type": "VIDEO_GESTURE",
     "gesture": "September",
-    "reference_media_url": "/videos/calendar/september.mp4",
+    "reference_media_url": null,
     "points": 1
   },
   {
     "category": "Calendar",
     "question_number": 5,
-    "question_text": "Which one is the correct sign for December?",
+    "question_text": "Select the correct gesture below",
     "question_type": "VIDEO_GESTURE",
     "gesture": "December",
-    "reference_media_url": "/videos/calendar/december.mp4",
+    "reference_media_url": null,
     "points": 1
   },
   {
     "category": "Greetings",
     "question_number": 1,
-    "question_text": "Which one is the correct sign for Good Morning?",
+    "question_text": "Select the correct gesture below",
     "question_type": "VIDEO_GESTURE",
     "gesture": "Good Morning",
-    "reference_media_url": "/videos/greetings/good-morning.mp4",
+    "reference_media_url": null,
     "points": 1
   },
   {
     "category": "Greetings",
     "question_number": 2,
-    "question_text": "Which one is the correct sign for Good Afternoon?",
+    "question_text": "Select the correct gesture below",
     "question_type": "VIDEO_GESTURE",
     "gesture": "Good Afternoon",
-    "reference_media_url": "/videos/greetings/good-afternoon.mp4",
+    "reference_media_url": null,
     "points": 1
   },
   {
     "category": "Greetings",
     "question_number": 3,
-    "question_text": "Which one is the correct sign for Hello?",
+    "question_text": "Select the correct gesture below",
     "question_type": "VIDEO_GESTURE",
     "gesture": "Hello",
-    "reference_media_url": "/videos/greetings/hello.mp4",
+    "reference_media_url": null,
     "points": 1
   },
   {
     "category": "Greetings",
     "question_number": 4,
-    "question_text": "Which one is the correct sign for Thank You?",
+    "question_text": "Select the correct gesture below",
     "question_type": "VIDEO_GESTURE",
     "gesture": "Thank you",
-    "reference_media_url": "/videos/greetings/thank-you.mp4",
+    "reference_media_url": null,
     "points": 1
   },
   {
     "category": "Greetings",
     "question_number": 5,
-    "question_text": "Which one is the correct sign for Nice to Meet You?",
+    "question_text": "Select the correct gesture below",
     "question_type": "VIDEO_GESTURE",
     "gesture": "Nice to meet you",
-    "reference_media_url": "/videos/greetings/nice-to-meet-you.mp4",
+    "reference_media_url": null,
     "points": 1
   },
   {
@@ -185,7 +185,7 @@
     "question_text": "Which one is the correct sign for Circle?",
     "question_type": "IMAGE_GESTURE",
     "gesture": "Circle",
-    "reference_media_url": "/images/shapes/circle.png",
+    "reference_media_url": null,
     "points": 1
   },
   {
@@ -194,7 +194,7 @@
     "question_text": "Which one is the correct sign for Square?",
     "question_type": "IMAGE_GESTURE",
     "gesture": "Square",
-    "reference_media_url": "/images/shapes/square.png",
+    "reference_media_url": null,
     "points": 1
   },
   {
@@ -203,7 +203,7 @@
     "question_text": "Which one is the correct sign for Triangle?",
     "question_type": "IMAGE_GESTURE",
     "gesture": "Triangle",
-    "reference_media_url": "/images/shapes/triangle.png",
+    "reference_media_url": null,
     "points": 1
   },
   {
@@ -212,7 +212,7 @@
     "question_text": "Which one is the correct sign for Rectangle?",
     "question_type": "IMAGE_GESTURE",
     "gesture": "Rectangle",
-    "reference_media_url": "/images/shapes/rectangle.png",
+    "reference_media_url": null,
     "points": 1
   },
   {
@@ -221,7 +221,7 @@
     "question_text": "Which one is the correct sign for Star?",
     "question_type": "IMAGE_GESTURE",
     "gesture": "Star",
-    "reference_media_url": "/images/shapes/star.png",
+    "reference_media_url": null,
     "points": 1
   },
   {
@@ -230,7 +230,7 @@
     "question_text": "Which one is the correct sign for Heart?",
     "question_type": "IMAGE_GESTURE",
     "gesture": "Heart",
-    "reference_media_url": "/images/shapes/heart.png",
+    "reference_media_url": null,
     "points": 1
   },
   {
@@ -239,7 +239,7 @@
     "question_text": "Which one is the correct sign for Diamond?",
     "question_type": "IMAGE_GESTURE",
     "gesture": "Diamond",
-    "reference_media_url": "/images/shapes/diamond.png",
+    "reference_media_url": null,
     "points": 1
   },
   {
@@ -248,7 +248,7 @@
     "question_text": "Which one is the correct sign for Oval?",
     "question_type": "IMAGE_GESTURE",
     "gesture": "Oval",
-    "reference_media_url": "/images/shapes/oval.png",
+    "reference_media_url": null,
     "points": 1
   },
   {
@@ -257,7 +257,7 @@
     "question_text": "Which one is the correct sign for Pentagon?",
     "question_type": "IMAGE_GESTURE",
     "gesture": "Pentagon",
-    "reference_media_url": "/images/shapes/pentagon.png",
+    "reference_media_url": null,
     "points": 1
   },
   {
@@ -266,277 +266,277 @@
     "question_text": "Which one is the correct sign for Hexagon?",
     "question_type": "IMAGE_GESTURE",
     "gesture": "Hexagon",
-    "reference_media_url": "/images/shapes/hexagon.png",
+    "reference_media_url": null,
     "points": 1
   },
   {
     "category": "Colors",
     "question_number": 1,
-    "question_text": "Which one is the correct sign for Red?",
+    "question_text": "Select the correct gesture below",
     "question_type": "VIDEO_GESTURE",
     "gesture": "Red",
-    "reference_media_url": "/videos/colors/red.mp4",
+    "reference_media_url": null,
     "points": 1
   },
   {
     "category": "Colors",
     "question_number": 2,
-    "question_text": "Which one is the correct sign for Blue?",
+    "question_text": "Select the correct gesture below",
     "question_type": "VIDEO_GESTURE",
     "gesture": "Blue",
-    "reference_media_url": "/videos/colors/blue.mp4",
+    "reference_media_url": null,
     "points": 1
   },
   {
     "category": "Colors",
     "question_number": 3,
-    "question_text": "Which one is the correct sign for Yellow?",
+    "question_text": "Select the correct gesture below",
     "question_type": "VIDEO_GESTURE",
     "gesture": "Yellow",
-    "reference_media_url": "/videos/colors/yellow.mp4",
+    "reference_media_url": null,
     "points": 1
   },
   {
     "category": "Colors",
     "question_number": 4,
-    "question_text": "Which one is the correct sign for Green?",
+    "question_text": "Select the correct gesture below",
     "question_type": "VIDEO_GESTURE",
     "gesture": "Green",
-    "reference_media_url": "/videos/colors/green.mp4",
+    "reference_media_url": null,
     "points": 1
   },
   {
     "category": "Colors",
     "question_number": 5,
-    "question_text": "Which one is the correct sign for Black?",
+    "question_text": "Select the correct gesture below",
     "question_type": "VIDEO_GESTURE",
     "gesture": "Black",
-    "reference_media_url": "/videos/colors/black.mp4",
+    "reference_media_url": null,
     "points": 1
   },
   {
     "category": "Colors",
     "question_number": 6,
-    "question_text": "Which one is the correct sign for White?",
+    "question_text": "Select the correct gesture below",
     "question_type": "VIDEO_GESTURE",
     "gesture": "White",
-    "reference_media_url": "/videos/colors/white.mp4",
+    "reference_media_url": null,
     "points": 1
   },
   {
     "category": "Colors",
     "question_number": 7,
-    "question_text": "Which one is the correct sign for Orange?",
+    "question_text": "Select the correct gesture below",
     "question_type": "VIDEO_GESTURE",
     "gesture": "Orange",
-    "reference_media_url": "/videos/colors/orange.mp4",
+    "reference_media_url": null,
     "points": 1
   },
   {
     "category": "Colors",
     "question_number": 8,
-    "question_text": "Which one is the correct sign for Purple?",
+    "question_text": "Select the correct gesture below",
     "question_type": "VIDEO_GESTURE",
     "gesture": "Purple",
-    "reference_media_url": "/videos/colors/purple.mp4",
+    "reference_media_url": null,
     "points": 1
   },
   {
     "category": "Colors",
     "question_number": 9,
-    "question_text": "Which one is the correct sign for Pink?",
+    "question_text": "Select the correct gesture below",
     "question_type": "VIDEO_GESTURE",
     "gesture": "Pink",
-    "reference_media_url": "/videos/colors/pink.mp4",
+    "reference_media_url": null,
     "points": 1
   },
   {
     "category": "Colors",
     "question_number": 10,
-    "question_text": "Which one is the correct sign for Brown?",
+    "question_text": "Select the correct gesture below",
     "question_type": "VIDEO_GESTURE",
     "gesture": "Brown",
-    "reference_media_url": "/videos/colors/brown.mp4",
+    "reference_media_url": null,
     "points": 1
   },
   {
     "category": "WH Questions",
     "question_number": 1,
-    "question_text": "Which one is the correct sign for What?",
+    "question_text": "Select the correct gesture below",
     "question_type": "VIDEO_GESTURE",
     "gesture": "What",
-    "reference_media_url": "/videos/wh-questions/what.mp4",
+    "reference_media_url": null,
     "points": 1
   },
   {
     "category": "WH Questions",
     "question_number": 2,
-    "question_text": "Which one is the correct sign for Who?",
+    "question_text": "Select the correct gesture below",
     "question_type": "VIDEO_GESTURE",
     "gesture": "Who",
-    "reference_media_url": "/videos/wh-questions/who.mp4",
+    "reference_media_url": null,
     "points": 1
   },
   {
     "category": "WH Questions",
     "question_number": 3,
-    "question_text": "Which one is the correct sign for Where?",
+    "question_text": "Select the correct gesture below",
     "question_type": "VIDEO_GESTURE",
     "gesture": "Where",
-    "reference_media_url": "/videos/wh-questions/where.mp4",
+    "reference_media_url": null,
     "points": 1
   },
   {
     "category": "WH Questions",
     "question_number": 4,
-    "question_text": "Which one is the correct sign for When?",
+    "question_text": "Select the correct gesture below",
     "question_type": "VIDEO_GESTURE",
     "gesture": "When",
-    "reference_media_url": "/videos/wh-questions/when.mp4",
+    "reference_media_url": null,
     "points": 1
   },
   {
     "category": "WH Questions",
     "question_number": 5,
-    "question_text": "Which one is the correct sign for Why?",
+    "question_text": "Select the correct gesture below",
     "question_type": "VIDEO_GESTURE",
     "gesture": "Why",
-    "reference_media_url": "/videos/wh-questions/why.mp4",
+    "reference_media_url": null,
     "points": 1
   },
   {
     "category": "WH Questions",
     "question_number": 6,
-    "question_text": "Which one is the correct sign for How?",
+    "question_text": "Select the correct gesture below",
     "question_type": "VIDEO_GESTURE",
     "gesture": "How",
-    "reference_media_url": "/videos/wh-questions/how.mp4",
+    "reference_media_url": null,
     "points": 1
   },
   {
     "category": "WH Questions",
     "question_number": 7,
-    "question_text": "Which one is the correct sign for Which?",
+    "question_text": "Select the correct gesture below",
     "question_type": "VIDEO_GESTURE",
     "gesture": "Which",
-    "reference_media_url": "/videos/wh-questions/which.mp4",
+    "reference_media_url": null,
     "points": 1
   },
   {
     "category": "WH Questions",
     "question_number": 8,
-    "question_text": "Which one is the correct sign for How Many?",
+    "question_text": "Select the correct gesture below",
     "question_type": "VIDEO_GESTURE",
     "gesture": "How Many",
-    "reference_media_url": "/videos/wh-questions/how-many.mp4",
+    "reference_media_url": null,
     "points": 1
   },
   {
     "category": "WH Questions",
     "question_number": 9,
-    "question_text": "Which one is the correct sign for How Much?",
+    "question_text": "Select the correct gesture below",
     "question_type": "VIDEO_GESTURE",
     "gesture": "How Much",
-    "reference_media_url": "/videos/wh-questions/how-much.mp4",
+    "reference_media_url": null,
     "points": 1
   },
   {
     "category": "WH Questions",
     "question_number": 10,
-    "question_text": "Which one is the correct sign for Whose?",
+    "question_text": "Select the correct gesture below",
     "question_type": "VIDEO_GESTURE",
     "gesture": "Whose",
-    "reference_media_url": "/videos/wh-questions/whose.mp4",
+    "reference_media_url": null,
     "points": 1
   },
   {
     "category": "Word Concepts",
     "question_number": 1,
-    "question_text": "Which one is the correct sign for Yes?",
+    "question_text": "Select the correct gesture below",
     "question_type": "VIDEO_GESTURE",
     "gesture": "Yes",
-    "reference_media_url": "/videos/word-concepts/yes.mp4",
+    "reference_media_url": null,
     "points": 1
   },
   {
     "category": "Word Concepts",
     "question_number": 2,
-    "question_text": "Which one is the correct sign for No?",
+    "question_text": "Select the correct gesture below",
     "question_type": "VIDEO_GESTURE",
     "gesture": "No",
-    "reference_media_url": "/videos/word-concepts/no.mp4",
+    "reference_media_url": null,
     "points": 1
   },
   {
     "category": "Word Concepts",
     "question_number": 3,
-    "question_text": "Which one is the correct sign for Please?",
+    "question_text": "Select the correct gesture below",
     "question_type": "VIDEO_GESTURE",
     "gesture": "Please",
-    "reference_media_url": "/videos/word-concepts/please.mp4",
+    "reference_media_url": null,
     "points": 1
   },
   {
     "category": "Word Concepts",
     "question_number": 4,
-    "question_text": "Which one is the correct sign for Sorry?",
+    "question_text": "Select the correct gesture below",
     "question_type": "VIDEO_GESTURE",
     "gesture": "Sorry",
-    "reference_media_url": "/videos/word-concepts/sorry.mp4",
+    "reference_media_url": null,
     "points": 1
   },
   {
     "category": "Word Concepts",
     "question_number": 5,
-    "question_text": "Which one is the correct sign for Love?",
+    "question_text": "Select the correct gesture below",
     "question_type": "VIDEO_GESTURE",
     "gesture": "Love",
-    "reference_media_url": "/videos/word-concepts/love.mp4",
+    "reference_media_url": null,
     "points": 1
   },
   {
     "category": "Word Concepts",
     "question_number": 6,
-    "question_text": "Which one is the correct sign for Friend?",
+    "question_text": "Select the correct gesture below",
     "question_type": "VIDEO_GESTURE",
     "gesture": "Friend",
-    "reference_media_url": "/videos/word-concepts/friend.mp4",
+    "reference_media_url": null,
     "points": 1
   },
   {
     "category": "Word Concepts",
     "question_number": 7,
-    "question_text": "Which one is the correct sign for Family?",
+    "question_text": "Select the correct gesture below",
     "question_type": "VIDEO_GESTURE",
     "gesture": "Family",
-    "reference_media_url": "/videos/word-concepts/family.mp4",
+    "reference_media_url": null,
     "points": 1
   },
   {
     "category": "Word Concepts",
     "question_number": 8,
-    "question_text": "Which one is the correct sign for Eat?",
+    "question_text": "Select the correct gesture below",
     "question_type": "VIDEO_GESTURE",
     "gesture": "Eat",
-    "reference_media_url": "/videos/word-concepts/eat.mp4",
+    "reference_media_url": null,
     "points": 1
   },
   {
     "category": "Word Concepts",
     "question_number": 9,
-    "question_text": "Which one is the correct sign for Drink?",
+    "question_text": "Select the correct gesture below",
     "question_type": "VIDEO_GESTURE",
     "gesture": "Drink",
-    "reference_media_url": "/videos/word-concepts/drink.mp4",
+    "reference_media_url": null,
     "points": 1
   },
   {
     "category": "Word Concepts",
     "question_number": 10,
-    "question_text": "Which one is the correct sign for Help?",
+    "question_text": "Select the correct gesture below",
     "question_type": "VIDEO_GESTURE",
     "gesture": "Help",
-    "reference_media_url": "/videos/word-concepts/help.mp4",
+    "reference_media_url": null,
     "points": 1
   }
 ]

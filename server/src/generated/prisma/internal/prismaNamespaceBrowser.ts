@@ -172,7 +172,6 @@ export const CategoryGestureScalarFieldEnum = {
   categoryId: 'categoryId',
   gestureId: 'gestureId',
   exampleUsage: 'exampleUsage',
-  demonstrationVideoUrl: 'demonstrationVideoUrl',
   displayOrder: 'displayOrder',
   createdAt: 'createdAt'
 } as const

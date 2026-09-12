@@ -130,6 +130,15 @@ export const getAssessmentByCategory = async (
           },
 
           include: {
+            gesture: {
+              select: {
+                id: true,
+                label: true,
+                referenceImageUrl: true,
+                referenceVideoUrl: true,
+              },
+            },
+
             choices: {
               orderBy: {
                 displayOrder: "asc",
@@ -204,6 +213,7 @@ export const getAssessmentByCategory = async (
           question.questionType,
         referenceMediaUrl:
           question.referenceMediaUrl,
+        gesture: question.gesture,
         points: question.points,
 
         choices: question.choices.map(

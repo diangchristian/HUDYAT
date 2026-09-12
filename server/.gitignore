@@ -3,3 +3,6 @@ node_modules
 .env
 
 /generated/prisma
+
+# Local gesture media, uploaded to Cloudinary and referenced by URL instead
+/FSL-VIDEOS
