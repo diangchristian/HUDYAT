@@ -19,6 +19,12 @@ export type AssessmentQuestion = {
   questionText: string;
   questionType: "IMAGE_GESTURE" | "VIDEO_GESTURE";
   referenceMediaUrl: string | null;
+  gesture: {
+    id: string;
+    label: string;
+    referenceImageUrl: string | null;
+    referenceVideoUrl: string | null;
+  };
   points: string;
   choices: AssessmentChoice[];
 };

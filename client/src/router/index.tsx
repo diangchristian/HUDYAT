@@ -87,11 +87,11 @@ export const router = createBrowserRouter([
             element: <TakeAssessmentPage />,
           },
           {
-            path: "/student/learn/:category",
+            path: "/student/learn/:categoryId",
             element: <CategoryLearnPage />,
           },
           {
-            path: "/student/practice/:category",
+            path: "/student/practice/:categoryId",
             element: <CategoryPracticePage />,
           },
         ],

@@ -19,7 +19,14 @@ api.interceptors.response.use(
   (response) => response,
   (error: unknown) => {
     if (axios.isAxiosError(error) && error.response?.status === 401) {
+      const isLoginRequest = error.config?.url?.includes("/api/auth/login");
+      const alreadyOnLogin = window.location.pathname === "/login";
+
       localStorage.removeItem("token");
+
+      if (!isLoginRequest && !alreadyOnLogin) {
+        window.location.assign("/login");
+      }
     }
 
     return Promise.reject(error);

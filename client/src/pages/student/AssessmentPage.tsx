@@ -95,7 +95,7 @@ const AssessmentPage = () => {
     return (
       <article
         key={category.categoryId}
-        className={`relative flex min-h-91.25 w-sm flex-col overflow-hidden rounded-2xl border border-[#dbc8ae] bg-white p-4 shadow-[0_2px_3px_rgb(0_0_0/0.06)] sm:w-full ${isLocked ? "opacity-60" : ""}`}
+        className={`relative flex min-h-91.25 w-full flex-col overflow-hidden rounded-2xl border border-[#dbc8ae] bg-white p-4 shadow-[0_2px_3px_rgb(0_0_0/0.06)] sm:w-full ${isLocked ? "opacity-60" : ""}`}
       >
         <div
           className="absolute inset-x-0 top-0 h-1"

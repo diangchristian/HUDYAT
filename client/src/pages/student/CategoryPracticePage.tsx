@@ -118,14 +118,14 @@ function PracticeSession({ title, prompts }: { title: string; prompts: PracticeP
 }
 
 export default function CategoryPracticePage() {
-  const { category: slug } = useParams();
+  const { categoryId: slug } = useParams();
   const navigate = useNavigate();
   const category = CATEGORIES.find((item) => categorySlug(item.title) === slug);
   const prompts = category && slug ? PRACTICE_PROMPTS[slug] : undefined;
 
   return (
     <div className="min-h-dvh bg-background font-body text-foreground">
-      <SessionHeader />
+      <SessionHeader backTo="/student/practice" backLabel="Hudyat — back to practice categories" />
       <main className="mx-auto w-full max-w-5xl px-5 py-10 sm:px-10 sm:py-12">
         {category && prompts?.length ? (
           <PracticeSession key={slug} title={category.title} prompts={prompts} />

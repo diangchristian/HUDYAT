@@ -59,7 +59,6 @@ export type CategoryLesson = {
   categoryGestures: Array<{
     id: string;
     exampleUsage: string | null;
-    demonstrationVideoUrl: string | null;
     displayOrder: number;
 
     gesture: {
