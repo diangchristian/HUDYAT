@@ -1,5 +1,7 @@
 import { Check, XCircle } from "lucide-react";
 
+import ReferenceMedia from "./reference-media";
+
 type VideoAnswer = {
   label: string;
   text: string;
@@ -7,7 +9,6 @@ type VideoAnswer = {
 
 type VideoQuestionProps = {
   title?: string;
-  videoSrc?: string;
   videoUrl?: string;
   answers?: VideoAnswer[];
   correctAnswer?: string;
@@ -18,7 +19,6 @@ type VideoQuestionProps = {
 
 const VideoQuestion = ({
   title,
-  videoSrc,
   videoUrl,
   answers,
   correctAnswer,
@@ -26,8 +26,6 @@ const VideoQuestion = ({
   checked,
   onSelect,
 }: VideoQuestionProps) => {
-  const source = videoSrc ?? videoUrl;
-
   return (
     <div className="flex h-full min-h-0 w-full flex-col">
       <h1 className="shrink-0 text-[clamp(1.25rem,3vh,1.875rem)] font-extrabold leading-tight">
@@ -35,14 +33,11 @@ const VideoQuestion = ({
       </h1>
 
       <div className="mt-[clamp(0.5rem,1.5vh,1rem)] flex w-full min-h-0 flex-1 justify-center">
-        <video
-          className="aspect-video max-h-full w-full max-w-md rounded-sm object-contain"
-          controls
-          preload="metadata"
-        >
-          <source src={source} type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
+        <ReferenceMedia
+          videoUrl={videoUrl}
+          label={title ?? "Reference video"}
+          className="max-h-full w-full max-w-md"
+        />
       </div>
 
       <div className="mt-[clamp(0.75rem,2vh,2rem)] grid w-full shrink-0 grid-cols-1 gap-[clamp(0.375rem,1vh,1rem)]">

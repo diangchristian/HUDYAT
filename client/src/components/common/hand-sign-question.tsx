@@ -1,13 +1,13 @@
+import { useState } from "react";
 import { Check, XCircle } from "lucide-react";
 
 type HandSignAnswer = {
   label: string;
   hand: string;
+  imageUrl?: string;
 };
 
 type HandSignQuestionProps = {
-  title?: string;
-  imageUrl?: string;
   answers?: HandSignAnswer[];
   correctAnswer?: string;
   selectedAnswer?: string | null;
@@ -16,29 +16,19 @@ type HandSignQuestionProps = {
 };
 
 const HandSignQuestion = ({
-  title,
-  imageUrl,
   answers,
   correctAnswer,
   selectedAnswer,
   checked,
   onSelect,
 }: HandSignQuestionProps) => {
+  const [failedChoices, setFailedChoices] = useState<Set<string>>(
+    () => new Set(),
+  );
+
   return (
-    <div className="flex h-full min-h-0 w-full flex-col">
-      <h1 className="shrink-0 text-[clamp(1.25rem,3vh,1.875rem)] font-extrabold leading-tight">
-        {title ?? "Reference sign"}
-      </h1>
-
-      {imageUrl && (
-        <img
-          src={imageUrl}
-          alt="Reference sign"
-          className="mx-auto mt-[clamp(0.5rem,1.5vh,1.5rem)] min-h-0 flex-1 rounded-lg object-contain"
-        />
-      )}
-
-      <div className="mt-[clamp(0.75rem,2vh,3rem)] grid shrink-0 grid-cols-1 gap-[clamp(0.375rem,1vh,1.5rem)] lg:grid-cols-3">
+    <div className="flex min-h-0 w-full flex-1 flex-col">
+      <div className="mx-auto grid min-h-0 w-full max-w-3xl flex-1 grid-cols-1 grid-rows-3 items-center gap-2 sm:grid-cols-3 sm:grid-rows-1 sm:gap-4 md:gap-5">
         {(answers ?? []).map((answer) => {
           const isSelected = selectedAnswer === answer.label;
           const isCorrect = answer.label === correctAnswer;
@@ -52,6 +42,9 @@ const HandSignQuestion = ({
               ? "border-[#5fc3fd] bg-[#f5fff1]"
               : "border-[#e1e1e1] hover:border-[#ffc145]";
 
+          const showImage =
+            answer.imageUrl && !failedChoices.has(answer.label);
+
           return (
             <button
               key={answer.label}
@@ -60,16 +53,35 @@ const HandSignQuestion = ({
               aria-pressed={isSelected}
               onClick={() => !checked && onSelect?.(answer.label)}
               disabled={checked}
-              className={`relative flex h-[clamp(3.5rem,10vh,6rem)] w-full items-center justify-center rounded-xl border-2 p-4 transition-all ${checked && !isSelected && isCorrect ? "animate-bounce" : ""} ${answerStyle}`}
+              className={`relative flex h-full max-h-56 min-h-0 w-full items-center justify-center overflow-hidden rounded-2xl border-2 transition-all sm:max-h-72 ${showImage ? "p-1.5 sm:p-2" : "p-4"} ${checked && !isSelected && isCorrect ? "animate-bounce" : ""} ${answerStyle}`}
             >
-              <span className="absolute left-2 top-2 flex size-8 items-center justify-center rounded-md border-2 border-[#e0e0e0] text-[10px] text-[#999]">
+              <span className="absolute left-2 top-2 z-10 flex size-8 items-center justify-center rounded-md border-2 border-[#e0e0e0] bg-white/90 text-xs font-bold text-[#999] backdrop-blur-sm sm:size-9 sm:text-sm">
                 {answer.label}
               </span>
-              <span className="text-[clamp(2rem,6vh,4rem)] leading-none" role="img" aria-label={`Hand sign ${answer.label}`}>
-                {answer.hand}
-              </span>
-              {checked && isCorrect && <Check className="absolute right-2 top-2 size-5 rounded-full bg-[#54b848] p-0.5 text-white" />}
-              {checked && isSelected && !isCorrect && <XCircle className="absolute right-2 top-2 size-5 rounded-full bg-[#ed6a5a] p-0.5 text-white" />}
+              {showImage ? (
+                <img
+                  src={answer.imageUrl}
+                  alt={`Hand sign for ${answer.label}`}
+                  className="h-full w-full rounded-xl object-contain"
+                  onError={() =>
+                    setFailedChoices((prev) => {
+                      const next = new Set(prev);
+                      next.add(answer.label);
+                      return next;
+                    })
+                  }
+                />
+              ) : (
+                <span
+                  className="text-[clamp(2.5rem,12vw,5rem)] leading-none"
+                  role="img"
+                  aria-label={`Hand sign ${answer.label}`}
+                >
+                  {answer.hand}
+                </span>
+              )}
+              {checked && isCorrect && <Check className="absolute right-2 top-2 z-10 size-6 rounded-full bg-[#54b848] p-1 text-white sm:size-7" />}
+              {checked && isSelected && !isCorrect && <XCircle className="absolute right-2 top-2 z-10 size-6 rounded-full bg-[#ed6a5a] p-1 text-white sm:size-7" />}
             </button>
           );
         })}

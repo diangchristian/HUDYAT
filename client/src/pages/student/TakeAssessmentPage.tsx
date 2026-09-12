@@ -150,6 +150,10 @@ const TakeAssessmentPage = () => {
       id: choice.id,
       label: String.fromCharCode(65 + index),
       text: choice.choiceText ?? choice.gesture.label,
+      imageUrl:
+        choice.imageUrl ??
+        choice.gesture.referenceImageUrl ??
+        undefined,
     }),
   );
 
@@ -355,7 +359,7 @@ const TakeAssessmentPage = () => {
               <VideoQuestion
                 videoUrl={
                   currentQuestion.referenceMediaUrl ??
-                  currentQuestion.choices[0]?.gesture
+                  currentQuestion.gesture
                     .referenceVideoUrl ??
                   undefined
                 }
@@ -370,15 +374,10 @@ const TakeAssessmentPage = () => {
               />
             ) : (
               <HandSignQuestion
-                imageUrl={
-                  currentQuestion.referenceMediaUrl ??
-                  currentQuestion.choices[0]?.gesture
-                    .referenceImageUrl ??
-                  undefined
-                }
                 answers={choiceOptions.map((option) => ({
                   label: option.label,
                   hand: option.text,
+                  imageUrl: option.imageUrl,
                 }))}
                 correctAnswer={labelForChoiceId(correctChoiceId)}
                 selectedAnswer={labelForChoiceId(selectedChoiceId)}

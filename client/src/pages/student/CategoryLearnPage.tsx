@@ -7,6 +7,9 @@ import {
   Hand,
   Lightbulb,
   MessageCircle,
+  Quote,
+  RotateCcw,
+  User,
 } from "lucide-react";
 
 import { useNavigate, useParams } from "react-router";
@@ -31,8 +34,6 @@ type LessonPrompt = PracticePrompt & {
   modelClass: string;
   meaning?: string | null;
   whenToUse?: string | null;
-  contextImageUrl?: string;
-  demonstrationVideoUrl?: string | null;
 };
 
 const STEP_ORDER: LessonStep[] = [
@@ -116,8 +117,11 @@ function LearnSession({
         lessonStep,
       });
     } catch {
-      // The lesson can continue even if
-      // checkpoint saving fails.
+      /*
+       * The lesson can continue even if checkpoint
+       * saving fails — checkpointMutation.isError
+       * drives a banner the learner can see below.
+       */
     }
   };
 
@@ -236,7 +240,7 @@ function LearnSession({
   return (
     <>
       {/* HEADER */}
-      <div className="mb-6 flex items-center justify-between gap-4">
+      <div className="mb-6 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
         <ElevatedButton
           text="BACK TO CATEGORIES"
           variant="secondary"
@@ -248,15 +252,38 @@ function LearnSession({
           }
         />
 
-        <h1 className="inline-flex min-h-8 items-center rounded-full bg-hudyat-gold px-5 py-2 text-xs font-extrabold uppercase text-primary-foreground">
+        <h1 className="inline-flex min-h-8 max-w-full min-w-0 items-center truncate rounded-full bg-hudyat-gold px-5 py-2 text-xs font-extrabold uppercase text-primary-foreground">
           Learning: {title}
         </h1>
       </div>
 
+      {/* CHECKPOINT SAVE FAILURE */}
+      {checkpointMutation.isError && (
+        <Card
+          role="status"
+          aria-live="polite"
+          className="mb-4 flex items-center justify-between gap-3 border-destructive/30 bg-destructive/10 px-4 py-2 text-sm text-destructive"
+        >
+          <span className="min-w-0 flex-1">
+            Your progress isn't saving right now.
+            You can keep going — we'll keep trying.
+          </span>
+
+          <button
+            type="button"
+            aria-label="Dismiss"
+            onClick={() => checkpointMutation.reset()}
+            className="shrink-0 text-xs font-bold underline"
+          >
+            Dismiss
+          </button>
+        </Card>
+      )}
+
       {/* MAIN LESSON */}
       <div className="grid items-start gap-5 md:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
         {/* LEFT SIDE */}
-        <div className="space-y-4">
+        <div className="order-2 space-y-4 md:order-none md:col-start-1">
           {/* TARGET SIGN */}
           <Card className="relative flex min-h-44 flex-col items-center justify-center border-hudyat-gold/30 bg-accent/10 px-5 py-6 text-center">
             <span className="absolute -top-4 left-4 rounded-full bg-hudyat-gold/75 px-6 py-1.5 text-xs font-extrabold text-primary-foreground">
@@ -275,7 +302,7 @@ function LearnSession({
               aria-atomic="true"
               className={`max-w-full wrap-break-word font-bold leading-tight ${
                 prompt.label.length <= 2
-                  ? "text-8xl"
+                  ? "text-6xl sm:text-7xl md:text-8xl"
                   : "text-3xl sm:text-4xl"
               }`}
             >
@@ -370,34 +397,38 @@ function LearnSession({
         </div>
 
         {/* RIGHT SIDE */}
-        <div className="min-w-0">
-          <div className="space-y-4">
-            {/* CONTENT AREA */}
+        <div className="order-1 min-w-0 space-y-4 md:order-none md:col-start-2">
+          {/* CONTENT AREA */}
+          {step === "meaning" || step === "context" ? (
             <div className="rounded-2xl border-2 border-hudyat-gold/30 bg-accent/20 p-2 sm:p-3">
-              <div className="relative aspect-video w-full overflow-hidden rounded-lg bg-muted sm:min-h-56">
+              <div className="flex min-h-60 w-full flex-col rounded-lg bg-gradient-to-br from-card to-muted/40 sm:min-h-56">
                 {/* =========================
                     MEANING
                    ========================= */}
                 {step === "meaning" && (
-                  <div className="flex h-full w-full flex-col items-center justify-center p-6 text-center">
-                    <div className="mb-4 flex size-12 items-center justify-center rounded-full bg-hudyat-gold/15">
-                      <Lightbulb
-                        aria-hidden="true"
-                        className="size-6 text-hudyat-gold"
-                      />
+                  <div className="flex w-full flex-1 flex-col items-center justify-center gap-5 p-6 text-center sm:flex-row sm:items-center sm:gap-8 sm:p-8 sm:text-left">
+                    <div className="flex shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-hudyat-gold/40 via-hudyat-gold/15 to-transparent p-1.5 shadow-card">
+                      <div className="flex size-16 items-center justify-center rounded-full bg-background ring-1 ring-hudyat-gold/10 sm:size-20">
+                        <Lightbulb
+                          aria-hidden="true"
+                          className="size-8 text-hudyat-gold sm:size-9"
+                        />
+                      </div>
                     </div>
 
-                    <p className="text-xs font-extrabold uppercase tracking-[0.15em] text-hudyat-gold">
-                      Meaning
-                    </p>
+                    <div className="min-w-0 max-w-xl">
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-hudyat-gold/15 px-3 py-1 text-xs font-extrabold uppercase tracking-[0.15em] text-hudyat-gold">
+                        Meaning
+                      </span>
 
-                    <h2 className="mt-3 text-3xl font-extrabold">
-                      {prompt.label}
-                    </h2>
+                      <h2 className="mt-3 wrap-break-word text-2xl font-extrabold text-foreground sm:text-3xl">
+                        {prompt.label}
+                      </h2>
 
-                    <p className="mt-4 max-w-xl text-sm leading-relaxed text-muted-foreground">
-                      {meaningText}
-                    </p>
+                      <p className="mt-3 border-l-4 border-hudyat-gold/30 pl-4 text-left text-base leading-relaxed text-foreground/80 sm:text-lg">
+                        {meaningText}
+                      </p>
+                    </div>
                   </div>
                 )}
 
@@ -405,137 +436,154 @@ function LearnSession({
                     WHEN TO USE
                    ========================= */}
                 {step === "context" && (
-                  <div className="h-full w-full p-3">
-                    <div className="mb-4 text-center">
-                      <p className="text-xs font-extrabold uppercase tracking-[0.15em] text-hudyat-gold">
-                        When to Use
-                      </p>
+                  <div className="flex w-full flex-1 flex-col items-center justify-center gap-5 p-6 text-center sm:gap-6 sm:p-8">
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-hudyat-gold/15 px-3 py-1 text-xs font-extrabold uppercase tracking-[0.15em] text-hudyat-gold">
+                      <MessageCircle
+                        aria-hidden="true"
+                        className="size-3.5"
+                      />
+                      When to Use
+                    </span>
 
-                      <h2 className="mt-2 text-2xl font-extrabold">
-                        See it in context
-                      </h2>
+                    <div className="relative w-full max-w-2xl text-left">
+                      <div className="relative overflow-hidden rounded-3xl border border-hudyat-gold/20 bg-card px-6 py-6 shadow-card sm:px-8 sm:py-7">
+                        <Quote
+                          aria-hidden="true"
+                          className="pointer-events-none absolute -top-2 -right-2 size-20 text-hudyat-gold/10"
+                        />
+
+                        <p className="relative mb-2 text-xs font-extrabold uppercase tracking-[0.15em] text-hudyat-gold/70">
+                          Example
+                        </p>
+
+                        <p className="relative text-lg font-semibold leading-relaxed text-foreground sm:text-xl">
+                          <span
+                            aria-hidden="true"
+                            className="mr-1 text-2xl font-black text-hudyat-gold/60"
+                          >
+                            &#8220;
+                          </span>
+                          {whenToUseText}
+                          <span
+                            aria-hidden="true"
+                            className="ml-1 text-2xl font-black text-hudyat-gold/60"
+                          >
+                            &#8221;
+                          </span>
+                        </p>
+                      </div>
+
+                      <span
+                        aria-hidden="true"
+                        className="absolute -bottom-2.5 left-10 size-5 rotate-45 rounded-sm border-r border-b border-hudyat-gold/20 bg-card"
+                      />
                     </div>
 
-                    {prompt.contextImageUrl ? (
-                      <div className="overflow-hidden rounded-2xl bg-muted">
-                        <img
-                          src={
-                            prompt.contextImageUrl
-                          }
-                          alt={`Context for the sign ${prompt.label}`}
-                          className="mx-auto aspect-video w-full object-contain"
+                    <div className="flex items-center gap-2 pl-2 sm:ml-10 sm:self-start">
+                      <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-hudyat-gold/20">
+                        <User
+                          aria-hidden="true"
+                          className="size-3.5 text-hudyat-gold"
                         />
                       </div>
-                    ) : (
-                      <div className="flex aspect-video w-full items-center justify-center rounded-2xl bg-muted/60 px-8 text-center">
-                        <div>
-                          <MessageCircle
-                            aria-hidden="true"
-                            className="mx-auto mb-4 size-12 text-hudyat-gold"
-                          />
 
-                          <p className="text-lg font-bold">
-                            {whenToUseText}
-                          </p>
-                        </div>
-                      </div>
-                    )}
+                      <p className="text-xs font-semibold text-muted-foreground">
+                        Someone using &#8220;{prompt.label}&#8221; in
+                        conversation
+                      </p>
+                    </div>
                   </div>
-                )}
-
-                {/* =========================
-                    HOW TO SIGN
-                   ========================= */}
-                {step === "how" && (
-                  <PracticeReference
-                    key={`${title}-${prompt.label}`}
-                    prompt={prompt}
-                  />
-                )}
-
-                {/* =========================
-                    TRY
-                   ========================= */}
-                {step === "try" && (
-                  <PracticeCamera />
                 )}
               </div>
             </div>
+          ) : step === "how" ? (
+            /* =========================
+               HOW TO SIGN
+              ========================= */
+            <PracticeReference
+              key={`${title}-${prompt.label}`}
+              prompt={prompt}
+            />
+          ) : (
+            /* =========================
+               TRY
+              ========================= */
+            <PracticeCamera />
+          )}
 
-            {/* NAVIGATION / CONTINUE */}
-            <div className="relative mt-28">
-              {/* CONTINUE ONLY APPEARS ON TRY */}
-              {step === "try" && (
-                <div className="absolute bottom-full left-0 mb-1 flex w-full justify-center translate-y-8">
-                  <ElevatedButton
-                    text={
-                      isLast
-                        ? "FINISH LESSON"
-                        : "CONTINUE"
-                    }
-                    icon={Check}
-                    iconPosition="right"
-                    className="min-h-10 w-full max-w-sm"
-                    onClick={() =>
-                      void continueLesson()
-                    }
-                  />
-                </div>
-              )}
-
-              {/* PREVIOUS + PROGRESS */}
-              <div className="relative top-10 flex items-center gap-3 sm:gap-5">
+          {/* NAVIGATION / CONTINUE */}
+          <div className="flex flex-col gap-3 sm:gap-4">
+            {/* CONTINUE ONLY APPEARS ON TRY */}
+            {step === "try" && (
+              <div className="flex w-full justify-center">
                 <ElevatedButton
-                  text=""
-                  aria-label="Previous step"
-                  title="Previous step"
-                  variant="secondary"
-                  icon={ArrowLeft}
-                  size="sm"
-                  className="h-11 w-12 shrink-0 px-0 sm:h-9"
-                  disabled={
-                    index === 0 &&
-                    step === "meaning"
+                  text={
+                    isLast
+                      ? "FINISH LESSON"
+                      : "CONTINUE"
                   }
+                  icon={Check}
+                  iconPosition="right"
+                  className="min-h-11 w-full max-w-sm sm:min-h-10"
                   onClick={() =>
-                    void previousStep()
+                    void continueLesson()
                   }
                 />
+              </div>
+            )}
 
-                <div className="min-w-0 flex-1">
+            {/* PREVIOUS + PROGRESS */}
+            <div className="flex items-center gap-3 sm:gap-5">
+              <ElevatedButton
+                text=""
+                aria-label="Previous step"
+                title="Previous step"
+                variant="secondary"
+                icon={ArrowLeft}
+                size="sm"
+                className="h-11 w-12 shrink-0 px-0 sm:h-9"
+                disabled={
+                  index === 0 &&
+                  step === "meaning"
+                }
+                onClick={() =>
+                  void previousStep()
+                }
+              />
+
+              <div className="min-w-0 flex-1">
+                <div
+                  role="progressbar"
+                  aria-label="Learning progress"
+                  aria-valuemin={0}
+                  aria-valuemax={
+                    prompts.length
+                  }
+                  aria-valuenow={
+                    index + 1
+                  }
+                  aria-valuetext={`Sign ${
+                    index + 1
+                  } of ${
+                    prompts.length
+                  }`}
+                  className="h-5 overflow-hidden rounded-full border border-hudyat-gold/20 bg-muted p-0.5"
+                >
                   <div
-                    role="progressbar"
-                    aria-label="Learning progress"
-                    aria-valuemin={0}
-                    aria-valuemax={
-                      prompts.length
-                    }
-                    aria-valuenow={
-                      index + 1
-                    }
-                    aria-valuetext={`Sign ${
-                      index + 1
-                    } of ${
-                      prompts.length
-                    }`}
-                    className="h-5 overflow-hidden rounded-full border border-hudyat-gold/20 bg-muted p-0.5"
-                  >
-                    <div
-                      className="h-full rounded-full bg-hudyat-gold shadow-sm transition-[width] motion-reduce:transition-none"
-                      style={{
-                        width: `${practicePosition(
-                          index,
-                          prompts.length,
-                        )}%`,
-                      }}
-                    />
-                  </div>
-
-                  <p className="mt-1 text-center text-xs text-muted-foreground">
-                    Sign {index + 1} of{" "}
-                    {prompts.length}
-                  </p>
+                    className="h-full rounded-full bg-hudyat-gold shadow-sm transition-[width] motion-reduce:transition-none"
+                    style={{
+                      width: `${practicePosition(
+                        index,
+                        prompts.length,
+                      )}%`,
+                    }}
+                  />
                 </div>
+
+                <p className="mt-1 text-center text-xs text-muted-foreground">
+                  Sign {index + 1} of{" "}
+                  {prompts.length}
+                </p>
               </div>
             </div>
           </div>
@@ -546,8 +594,7 @@ function LearnSession({
 }
 
 export default function CategoryLearnPage() {
-  const { category: categoryId } =
-    useParams();
+  const { categoryId } = useParams();
 
   const navigate = useNavigate();
 
@@ -558,6 +605,7 @@ export default function CategoryLearnPage() {
     data: lesson,
     isLoading,
     error,
+    refetch,
   } = useCategoryLesson(categoryId);
 
   const handleFinishLesson = () => {
@@ -596,7 +644,6 @@ export default function CategoryLearnPage() {
           undefined,
 
         referenceVideoUrl:
-          item.demonstrationVideoUrl ??
           item.gesture
             .referenceVideoUrl ??
           undefined,
@@ -605,7 +652,10 @@ export default function CategoryLearnPage() {
 
   return (
     <div className="min-h-dvh bg-background font-body text-foreground">
-      <SessionHeader />
+      <SessionHeader
+        backTo="/student/learn"
+        backLabel="Hudyat — back to learning categories"
+      />
 
       <main className="mx-auto w-full max-w-5xl px-5 py-10 sm:px-10 sm:py-12">
         {isLoading ? (
@@ -616,16 +666,29 @@ export default function CategoryLearnPage() {
             Loading this lesson...
           </p>
         ) : error || !categoryId ? (
-          <p
-            className="py-12 text-center text-sm font-bold text-destructive"
-            role="alert"
-          >
-            {error instanceof Error
-              ? error.message
-              : !categoryId
-                ? "Category not found."
-                : "We couldn't load this lesson right now."}
-          </p>
+          <div className="py-12 text-center">
+            <p
+              className="text-sm font-bold text-destructive"
+              role="alert"
+            >
+              {error instanceof Error
+                ? error.message
+                : !categoryId
+                  ? "Category not found."
+                  : "We couldn't load this lesson right now."}
+            </p>
+
+            {categoryId && error && (
+              <ElevatedButton
+                text="TRY AGAIN"
+                variant="secondary"
+                size="sm"
+                icon={RotateCcw}
+                className="mt-4 min-h-9"
+                onClick={() => void refetch()}
+              />
+            )}
+          </div>
         ) : lesson?.category &&
           prompts.length ? (
           <LearnSession
