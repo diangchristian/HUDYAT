@@ -3,6 +3,7 @@ import { Navigate, Outlet, useLocation } from "react-router";
 import type { UserRole } from "@/api/auth-api";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import LoadingScreen from "@/components/common/loading-screen";
+import { isStandalonePwa } from "@/lib/pwa";
 
 /*
  * Where a logged-in user of each role belongs. Roles without an
@@ -38,15 +39,28 @@ export function RequireGuest() {
   const location = useLocation();
   const { hasToken, user, isLoading } = useAuthState();
 
-  if (!hasToken) return <Outlet />;
-  if (isLoading) return <AuthLoading />;
-  if (!user) return <Outlet />;
+  if (hasToken && isLoading) return <AuthLoading />;
 
-  const homePath = roleHomePath(user.role);
+  if (hasToken && user) {
+    const homePath = roleHomePath(user.role);
 
-  if (homePath === location.pathname) return <Outlet />;
+    if (homePath !== location.pathname) {
+      return <Navigate to={homePath} replace />;
+    }
 
-  return <Navigate to={homePath} replace />;
+    return <Outlet />;
+  }
+
+  /*
+   * Guest (no token, or token present but user fetch failed). An
+   * installed/standalone PWA has no reason to show the marketing
+   * landing page — send it straight to the login screen instead.
+   */
+  if (isStandalonePwa() && location.pathname === "/") {
+    return <Navigate to="/login" replace />;
+  }
+
+  return <Outlet />;
 }
 
 /*
