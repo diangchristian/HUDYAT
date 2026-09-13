@@ -1,12 +1,28 @@
 import { Prisma } from "../generated/prisma/client.js";
 import { prisma } from "../config/db.js";
-import { assessmentAccess } from './assessment-access.js';
-const assertAssessmentIsUnlocked = async (categoryId, learnerId) => {
-    const list = await getAssessmentsForLearner(learnerId);
-    const category = list.learningAreas.flatMap(area => area.categories).find(category => category.categoryId === categoryId);
-    if (!category?.isUnlocked) {
-        const error = new Error(category?.lockedReason ?? 'Assessment category not found.');
-        error.statusCode = category ? 403 : 404;
+/*
+ * A category's assessment unlocks for a learner once they've
+ * finished that category's lesson content (or already passed
+ * the assessment before, e.g. a retake).
+ */
+const assertLessonIsUnlocked = async (categoryId, learnerId) => {
+    const categoryProgress = await prisma.categoryProgress.findUnique({
+        where: {
+            learnerId_categoryId: {
+                learnerId,
+                categoryId,
+            },
+        },
+        select: {
+            lessonCompletedAt: true,
+            status: true,
+        },
+    });
+    const isUnlocked = categoryProgress?.lessonCompletedAt != null ||
+        categoryProgress?.status === "COMPLETED";
+    if (!isUnlocked) {
+        const error = new Error("Finish this category's lesson before taking its assessment.");
+        error.statusCode = 403;
         throw error;
     }
 };
@@ -32,7 +48,7 @@ export const checkAnswer = async (categoryId, learnerId, questionId, selectedCho
     if (assessment.status !== "PUBLISHED") {
         throw new Error("This assessment is not available yet.");
     }
-    await assertAssessmentIsUnlocked(categoryId, learnerId);
+    await assertLessonIsUnlocked(categoryId, learnerId);
     const question = await prisma.assessmentQuestion.findFirst({
         where: {
             id: questionId,
@@ -112,7 +128,7 @@ export const getAssessmentByCategory = async (categoryId, learnerId) => {
     if (assessment.status !== "PUBLISHED") {
         throw new Error("This assessment is not available yet.");
     }
-    await assertAssessmentIsUnlocked(categoryId, learnerId);
+    await assertLessonIsUnlocked(categoryId, learnerId);
     const previousAttempt = await prisma.assessmentAttempt.findFirst({
         where: {
             assessmentId: assessment.id,
@@ -158,7 +174,7 @@ export const getAssessmentByCategory = async (categoryId, learnerId) => {
     };
 };
 export const submitAssessment = async (categoryId, learnerId, answers) => {
-    await assertAssessmentIsUnlocked(categoryId, learnerId);
+    await assertLessonIsUnlocked(categoryId, learnerId);
     return prisma.$transaction(async (tx) => {
         const assessment = await tx.assessment.findUnique({
             where: {
@@ -336,28 +352,133 @@ export const submitAssessment = async (categoryId, learnerId, answers) => {
     });
 };
 export const getAssessmentsForLearner = async (learnerId) => {
-    const [learningAreas, attempts] = await Promise.all([
+    const [learningAreas, progressRecords, completedAttempts] = await Promise.all([
         prisma.learningArea.findMany({
-            where: { isActive: true }, orderBy: [{ displayOrder: 'asc' }, { id: 'asc' }],
-            include: { categories: {
-                    where: { isActive: true }, orderBy: [{ displayOrder: 'asc' }, { id: 'asc' }],
-                    include: { assessment: { include: { _count: { select: { questions: true } } } } }
-                } }
+            orderBy: {
+                displayOrder: "asc",
+            },
+            include: {
+                categories: {
+                    where: {
+                        isActive: true,
+                        assessment: {
+                            status: "PUBLISHED",
+                        },
+                    },
+                    orderBy: {
+                        displayOrder: "asc",
+                    },
+                    include: {
+                        assessment: {
+                            include: {
+                                _count: {
+                                    select: {
+                                        questions: true,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
         }),
-        prisma.assessmentAttempt.findMany({ where: { learnerId, completedAt: { not: null } }, orderBy: [{ completedAt: 'desc' }, { id: 'asc' }], select: { assessmentId: true, score: true, totalPoints: true, completedAt: true, assessment: { select: { categoryId: true, passingScore: true } } } })
+        prisma.categoryProgress.findMany({
+            where: {
+                learnerId,
+            },
+            select: {
+                categoryId: true,
+                status: true,
+                lessonCompletedAt: true,
+            },
+        }),
+        prisma.assessmentAttempt.findMany({
+            where: {
+                learnerId,
+                completedAt: {
+                    not: null,
+                },
+            },
+            orderBy: {
+                completedAt: "desc",
+            },
+            select: {
+                assessmentId: true,
+                score: true,
+                totalPoints: true,
+                completedAt: true,
+                assessment: {
+                    select: {
+                        categoryId: true,
+                        passingScore: true,
+                    },
+                },
+            },
+        }),
     ]);
-    const passed = (attempt) => attempt.totalPoints.gt(0) && attempt.score.div(attempt.totalPoints).mul(100).gte(attempt.assessment.passingScore);
-    const categories = learningAreas.flatMap(area => area.categories);
-    const byCategory = new Map(categories.map(category => [category.id, attempts.filter(attempt => attempt.assessment.categoryId === category.id)]));
-    const access = assessmentAccess(categories.map(category => ({ passed: byCategory.get(category.id).some(passed), published: category.assessment?.status === 'PUBLISHED', questionCount: category.assessment?._count.questions ?? 0 })));
-    const accessById = new Map(categories.map((category, index) => [category.id, access[index]]));
-    return { learningAreas: learningAreas.map(area => ({ id: area.id, name: area.name, categories: area.categories.map(category => {
-                const assessment = category.assessment, history = byCategory.get(category.id), latest = history[0];
-                return { categoryId: category.id, categoryName: category.name, assessmentId: assessment?.id ?? null, title: assessment?.title ?? category.name,
-                    description: assessment?.description ?? category.description, totalQuestions: assessment?._count.questions ?? 0,
-                    ...accessById.get(category.id), attemptCount: history.length, latestAttempt: latest ? {
-                        score: latest.score, totalPoints: latest.totalPoints, percentage: latest.totalPoints.gt(0) ? latest.score.div(latest.totalPoints).mul(100) : new Prisma.Decimal(0), passed: passed(latest), completedAt: latest.completedAt
-                    } : null };
-            }) })).filter(area => area.categories.length > 0) };
+    const progressByCategoryId = new Map(progressRecords.map((progress) => [
+        progress.categoryId,
+        progress,
+    ]));
+    const attemptsByCategoryId = new Map();
+    for (const attempt of completedAttempts) {
+        const categoryId = attempt.assessment.categoryId;
+        const existing = attemptsByCategoryId.get(categoryId) ?? [];
+        existing.push(attempt);
+        attemptsByCategoryId.set(categoryId, existing);
+    }
+    return {
+        learningAreas: learningAreas
+            .map((area) => ({
+            id: area.id,
+            name: area.name,
+            categories: area.categories
+                .filter((category) => category.assessment !== null)
+                .map((category) => {
+                const assessment = category.assessment;
+                const progress = progressByCategoryId.get(category.id);
+                const isUnlocked = progress?.lessonCompletedAt != null ||
+                    progress?.status === "COMPLETED";
+                const attempts = attemptsByCategoryId.get(category.id) ?? [];
+                const attemptPassed = (attempt) => attempt.totalPoints.gt(0) &&
+                    attempt.score
+                        .div(attempt.totalPoints)
+                        .mul(100)
+                        .gte(attempt.assessment.passingScore);
+                const latestAttempt = attempts[0] ?? null;
+                const hasPassed = attempts.some(attemptPassed);
+                const status = !isUnlocked
+                    ? "locked"
+                    : hasPassed
+                        ? "completed"
+                        : "not-started";
+                return {
+                    categoryId: category.id,
+                    categoryName: category.name,
+                    assessmentId: assessment.id,
+                    title: assessment.title,
+                    description: assessment.description,
+                    totalQuestions: assessment._count.questions,
+                    isUnlocked,
+                    attemptCount: attempts.length,
+                    latestAttempt: latestAttempt
+                        ? {
+                            score: latestAttempt.score,
+                            totalPoints: latestAttempt.totalPoints,
+                            percentage: latestAttempt.totalPoints.gt(0)
+                                ? latestAttempt.score
+                                    .div(latestAttempt.totalPoints)
+                                    .mul(100)
+                                : new Prisma.Decimal(0),
+                            passed: attemptPassed(latestAttempt),
+                            completedAt: latestAttempt.completedAt,
+                        }
+                        : null,
+                    status,
+                };
+            }),
+        }))
+            .filter((area) => area.categories.length > 0),
+    };
 };
 //# sourceMappingURL=assessment.service.js.map
