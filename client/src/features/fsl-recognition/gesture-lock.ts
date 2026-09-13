@@ -1,6 +1,6 @@
 export type LockState={candidate?:string;since:number;last:number;count:number;locked?:string;missingSince?:number};
 export const emptyLock=():LockState=>({since:0,last:0,count:0});
-export function advanceLock(state:LockState,input:{now:number;present:boolean;label?:string;score?:number;margin?:number;steady:boolean}):LockState{
+export function advanceLock(state:LockState,input:{now:number;present:boolean;label?:string;score?:number;margin?:number;steady:boolean;maxGapMs?:number}):LockState{
  const {now}=input;
  if(!input.present){
   const missingSince=state.missingSince??now;
@@ -8,7 +8,7 @@ export function advanceLock(state:LockState,input:{now:number;present:boolean;la
  }
  if(state.locked)return {...state,missingSince:undefined};
  if(!input.label || (input.score??0)<.8 || (input.margin??0)<.15 || !input.steady)return emptyLock();
- const continuing=state.candidate===input.label && now-state.last<=600;
+ const continuing=state.candidate===input.label && now-state.last<=(input.maxGapMs??600);
  const next={candidate:input.label,since:continuing?state.since:now,last:now,count:continuing?state.count+1:1};
  return now-next.since>=1200 && next.count>=5?{...next,locked:input.label}:next;
 }

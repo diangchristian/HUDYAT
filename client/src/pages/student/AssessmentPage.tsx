@@ -72,7 +72,7 @@ const AssessmentPage = () => {
     const theme = CATEGORY_THEME[presentation?.color ?? "blue"];
     const ThumbnailIcon = presentation?.icon ?? Sparkles;
 
-    const isLocked = category.status === "locked";
+    const isLocked = !category.isUnlocked;
     const isCompleted = category.status === "completed";
     const hasAttempted = category.attemptCount > 0;
 
@@ -131,7 +131,7 @@ const AssessmentPage = () => {
 
           <p className="mt-1 text-sm leading-5 text-[#374151]">
             {isLocked
-              ? "Finish this category's lesson to unlock its assessment."
+              ? category.lockedReason ?? "Pass the previous assessments to unlock this category."
               : category.description}
           </p>
 

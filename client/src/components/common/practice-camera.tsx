@@ -1,4 +1,5 @@
 import {useEffect,useRef,useState} from "react";
+import type {RecognitionStatus} from "@/features/fsl-recognition/category-recognition";
 import {CategoryRecognition} from "@/features/fsl-recognition/category-recognition";
 import { Camera, CameraOff, LoaderCircle, Check, X } from "lucide-react";
 import ElevatedButton from "@/components/ui/elavated-button";
@@ -8,6 +9,8 @@ import { useCamera } from "@/hooks/use-camera";
 export default function PracticeCamera({category,targetLabel,onCorrect}: {category?:string;targetLabel?:string;onCorrect?:()=>void}) {
   const { videoRef, status, error, start, stop } = useCamera();
   const isLive = status === "live";
+  const [recognitionStatus,setRecognitionStatus]=useState<RecognitionStatus>({phase:'loading',message:'Preparing category model…'});
+  const [recognitionRetry,setRecognitionRetry]=useState(0);
   const [feedback,setFeedback]=useState<{kind:'correct'|'wrong';target?:string}|null>(null);
   const feedbackTimer=useRef<ReturnType<typeof setTimeout>|undefined>(undefined);
   useEffect(()=>()=>{clearTimeout(feedbackTimer.current);},[targetLabel,category,isLive]);
@@ -79,7 +82,7 @@ export default function PracticeCamera({category,targetLabel,onCorrect}: {catego
             </div>
           )}
 
-          {category && <CategoryRecognition key={category} category={category} targetLabel={targetLabel} video={videoRef} active={isLive} onCorrect={recognized} onWrong={incorrect} />}
+          {category && <CategoryRecognition key={category} category={category} targetLabel={targetLabel} video={videoRef} active={isLive} onCorrect={recognized} onWrong={incorrect} onStatus={setRecognitionStatus} retry={recognitionRetry} />}
 
           {isLive && (
             <div className="absolute inset-x-3 top-3 flex items-center justify-between gap-2">
@@ -102,6 +105,12 @@ export default function PracticeCamera({category,targetLabel,onCorrect}: {catego
           )}
         </div>
       </Card>
+      {category && <div className="mt-2 flex items-center justify-center gap-2 text-xs text-muted-foreground" role="status" aria-live="polite">
+        <span className={recognitionStatus.phase==='error'?'text-destructive':''} title={recognitionStatus.version?'Model version: '+recognitionStatus.version:undefined}>
+          {recognitionStatus.phase==='running'&&!isLive?'Model ready':recognitionStatus.message}
+        </span>
+        {recognitionStatus.phase==='error'&&<button className="shrink-0 underline" onClick={()=>{setRecognitionStatus({phase:'loading',message:'Retrying model…'});setRecognitionRetry(v=>v+1);}}>Retry</button>}
+      </div>}
 
     </div>
   );
