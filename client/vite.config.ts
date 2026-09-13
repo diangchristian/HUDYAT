@@ -13,7 +13,7 @@ export default defineConfig({
     tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.svg'],
+      includeAssets: ['favicon.svg', 'sounds/correct.mp3', 'sounds/wrong.mp3'],
       manifest: {
         name: 'HUDYAT - FSL Learning',
         short_name: 'HUDYAT',
@@ -43,7 +43,9 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,png,jpg,jpeg,woff2}'],
+        globIgnores: ['**/models/**','**/mediapipe/**'],
         runtimeCaching: [
+          {urlPattern: ({url})=>url.pathname.includes('/mediapipe/wasm/'),handler:'CacheFirst',options:{cacheName:'hudyat-mediapipe-runtime-v1',cacheableResponse:{statuses:[200]}}},
           {
             urlPattern: /^\/api\//,
             handler: 'NetworkFirst',

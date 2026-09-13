@@ -59,7 +59,7 @@ async function seedAssessments() {
         create: {
           categoryId: category.id,
           // Change this depending on how created_by is handled
-          createdBy: "9c92c146-7445-4512-a479-0309b58e350c",
+          createdBy: "356e27c6-fbde-4890-baa6-8aa508140a20",
           title: assessmentData.title,
           description: assessmentData.description,
           passingScore: assessmentData.passing_score,

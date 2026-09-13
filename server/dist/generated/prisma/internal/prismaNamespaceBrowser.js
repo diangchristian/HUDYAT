@@ -38,7 +38,24 @@ export const JsonNull = runtime.JsonNull;
  * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
  */
 export const AnyNull = runtime.AnyNull;
-export const ModelName = {};
+export const ModelName = {
+    User: 'User',
+    LearnerProfile: 'LearnerProfile',
+    TeacherProfile: 'TeacherProfile',
+    LearningArea: 'LearningArea',
+    Category: 'Category',
+    FslGesture: 'FslGesture',
+    CategoryGesture: 'CategoryGesture',
+    Assessment: 'Assessment',
+    AssessmentQuestion: 'AssessmentQuestion',
+    QuestionChoice: 'QuestionChoice',
+    AssessmentAttempt: 'AssessmentAttempt',
+    AssessmentAnswer: 'AssessmentAnswer',
+    PracticeSession: 'PracticeSession',
+    CategoryProgress: 'CategoryProgress',
+    SystemSetting: 'SystemSetting',
+    AuditLog: 'AuditLog'
+};
 /*
  * Enums
  */
@@ -48,4 +65,184 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
     RepeatableRead: 'RepeatableRead',
     Serializable: 'Serializable'
 });
+export const UserScalarFieldEnum = {
+    id: 'id',
+    username: 'username',
+    email: 'email',
+    password: 'password',
+    loginCode: 'loginCode',
+    role: 'role',
+    isActive: 'isActive',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+};
+export const LearnerProfileScalarFieldEnum = {
+    userId: 'userId',
+    fullName: 'fullName',
+    avatarKey: 'avatarKey',
+    dateJoined: 'dateJoined',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+};
+export const TeacherProfileScalarFieldEnum = {
+    userId: 'userId',
+    fullName: 'fullName',
+    email: 'email',
+    contactNumber: 'contactNumber',
+    dateJoined: 'dateJoined',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+};
+export const LearningAreaScalarFieldEnum = {
+    id: 'id',
+    name: 'name',
+    description: 'description',
+    displayOrder: 'displayOrder',
+    isActive: 'isActive',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+};
+export const CategoryScalarFieldEnum = {
+    modelRelease: 'modelRelease',
+    id: 'id',
+    learningAreaId: 'learningAreaId',
+    name: 'name',
+    description: 'description',
+    displayOrder: 'displayOrder',
+    isActive: 'isActive',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+};
+export const FslGestureScalarFieldEnum = {
+    id: 'id',
+    label: 'label',
+    meaning: 'meaning',
+    modelClass: 'modelClass',
+    referenceImageUrl: 'referenceImageUrl',
+    referenceVideoUrl: 'referenceVideoUrl',
+    isValidated: 'isValidated',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+};
+export const CategoryGestureScalarFieldEnum = {
+    id: 'id',
+    categoryId: 'categoryId',
+    gestureId: 'gestureId',
+    exampleUsage: 'exampleUsage',
+    displayOrder: 'displayOrder',
+    createdAt: 'createdAt'
+};
+export const AssessmentScalarFieldEnum = {
+    id: 'id',
+    categoryId: 'categoryId',
+    createdBy: 'createdBy',
+    title: 'title',
+    description: 'description',
+    passingScore: 'passingScore',
+    status: 'status',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+};
+export const AssessmentQuestionScalarFieldEnum = {
+    id: 'id',
+    assessmentId: 'assessmentId',
+    gestureId: 'gestureId',
+    questionNumber: 'questionNumber',
+    questionText: 'questionText',
+    questionType: 'questionType',
+    referenceMediaUrl: 'referenceMediaUrl',
+    points: 'points',
+    createdAt: 'createdAt'
+};
+export const QuestionChoiceScalarFieldEnum = {
+    id: 'id',
+    questionId: 'questionId',
+    gestureId: 'gestureId',
+    choiceText: 'choiceText',
+    imageUrl: 'imageUrl',
+    displayOrder: 'displayOrder'
+};
+export const AssessmentAttemptScalarFieldEnum = {
+    id: 'id',
+    assessmentId: 'assessmentId',
+    learnerId: 'learnerId',
+    score: 'score',
+    totalPoints: 'totalPoints',
+    startedAt: 'startedAt',
+    completedAt: 'completedAt'
+};
+export const AssessmentAnswerScalarFieldEnum = {
+    id: 'id',
+    attemptId: 'attemptId',
+    questionId: 'questionId',
+    selectedChoiceId: 'selectedChoiceId',
+    isCorrect: 'isCorrect',
+    pointsEarned: 'pointsEarned',
+    answeredAt: 'answeredAt'
+};
+export const PracticeSessionScalarFieldEnum = {
+    id: 'id',
+    learnerId: 'learnerId',
+    gestureId: 'gestureId',
+    recognizedLabel: 'recognizedLabel',
+    confidence: 'confidence',
+    isCorrect: 'isCorrect',
+    attemptedAt: 'attemptedAt'
+};
+export const CategoryProgressScalarFieldEnum = {
+    id: 'id',
+    learnerId: 'learnerId',
+    categoryId: 'categoryId',
+    status: 'status',
+    startedAt: 'startedAt',
+    completedAt: 'completedAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    lastGestureIndex: 'lastGestureIndex',
+    lastLessonStep: 'lastLessonStep',
+    lessonCompletedAt: 'lessonCompletedAt'
+};
+export const SystemSettingScalarFieldEnum = {
+    id: 'id',
+    systemName: 'systemName',
+    systemVersion: 'systemVersion',
+    schoolName: 'schoolName',
+    unitName: 'unitName',
+    logoUrl: 'logoUrl',
+    defaultLanguage: 'defaultLanguage',
+    maintenanceMode: 'maintenanceMode',
+    updatedBy: 'updatedBy',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+};
+export const AuditLogScalarFieldEnum = {
+    id: 'id',
+    userId: 'userId',
+    action: 'action',
+    entityType: 'entityType',
+    entityId: 'entityId',
+    description: 'description',
+    createdAt: 'createdAt'
+};
+export const SortOrder = {
+    asc: 'asc',
+    desc: 'desc'
+};
+export const NullableJsonNullValueInput = {
+    DbNull: DbNull,
+    JsonNull: JsonNull
+};
+export const QueryMode = {
+    default: 'default',
+    insensitive: 'insensitive'
+};
+export const NullsOrder = {
+    first: 'first',
+    last: 'last'
+};
+export const JsonNullValueFilter = {
+    DbNull: DbNull,
+    JsonNull: JsonNull,
+    AnyNull: AnyNull
+};
 //# sourceMappingURL=prismaNamespaceBrowser.js.map

@@ -57,6 +57,7 @@ export type CategoryMaxAggregateOutputType = {
 }
 
 export type CategoryCountAggregateOutputType = {
+  modelRelease: number
   id: number
   learningAreaId: number
   name: number
@@ -100,6 +101,7 @@ export type CategoryMaxAggregateInputType = {
 }
 
 export type CategoryCountAggregateInputType = {
+  modelRelease?: true
   id?: true
   learningAreaId?: true
   name?: true
@@ -198,6 +200,7 @@ export type CategoryGroupByArgs<ExtArgs extends runtime.Types.Extensions.Interna
 }
 
 export type CategoryGroupByOutputType = {
+  modelRelease: runtime.JsonValue | null
   id: string
   learningAreaId: string
   name: string
@@ -232,6 +235,7 @@ export type CategoryWhereInput = {
   AND?: Prisma.CategoryWhereInput | Prisma.CategoryWhereInput[]
   OR?: Prisma.CategoryWhereInput[]
   NOT?: Prisma.CategoryWhereInput | Prisma.CategoryWhereInput[]
+  modelRelease?: Prisma.JsonNullableFilter<"Category">
   id?: Prisma.StringFilter<"Category"> | string
   learningAreaId?: Prisma.StringFilter<"Category"> | string
   name?: Prisma.StringFilter<"Category"> | string
@@ -247,6 +251,7 @@ export type CategoryWhereInput = {
 }
 
 export type CategoryOrderByWithRelationInput = {
+  modelRelease?: Prisma.SortOrderInput | Prisma.SortOrder
   id?: Prisma.SortOrder
   learningAreaId?: Prisma.SortOrder
   name?: Prisma.SortOrder
@@ -268,6 +273,7 @@ export type CategoryWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.CategoryWhereInput | Prisma.CategoryWhereInput[]
   OR?: Prisma.CategoryWhereInput[]
   NOT?: Prisma.CategoryWhereInput | Prisma.CategoryWhereInput[]
+  modelRelease?: Prisma.JsonNullableFilter<"Category">
   learningAreaId?: Prisma.StringFilter<"Category"> | string
   name?: Prisma.StringFilter<"Category"> | string
   description?: Prisma.StringNullableFilter<"Category"> | string | null
@@ -282,6 +288,7 @@ export type CategoryWhereUniqueInput = Prisma.AtLeast<{
 }, "id" | "learningAreaId_name" | "learningAreaId_displayOrder">
 
 export type CategoryOrderByWithAggregationInput = {
+  modelRelease?: Prisma.SortOrderInput | Prisma.SortOrder
   id?: Prisma.SortOrder
   learningAreaId?: Prisma.SortOrder
   name?: Prisma.SortOrder
@@ -301,6 +308,7 @@ export type CategoryScalarWhereWithAggregatesInput = {
   AND?: Prisma.CategoryScalarWhereWithAggregatesInput | Prisma.CategoryScalarWhereWithAggregatesInput[]
   OR?: Prisma.CategoryScalarWhereWithAggregatesInput[]
   NOT?: Prisma.CategoryScalarWhereWithAggregatesInput | Prisma.CategoryScalarWhereWithAggregatesInput[]
+  modelRelease?: Prisma.JsonNullableWithAggregatesFilter<"Category">
   id?: Prisma.StringWithAggregatesFilter<"Category"> | string
   learningAreaId?: Prisma.StringWithAggregatesFilter<"Category"> | string
   name?: Prisma.StringWithAggregatesFilter<"Category"> | string
@@ -312,6 +320,7 @@ export type CategoryScalarWhereWithAggregatesInput = {
 }
 
 export type CategoryCreateInput = {
+  modelRelease?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   id?: string
   name: string
   description?: string | null
@@ -326,6 +335,7 @@ export type CategoryCreateInput = {
 }
 
 export type CategoryUncheckedCreateInput = {
+  modelRelease?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   id?: string
   learningAreaId: string
   name: string
@@ -340,6 +350,7 @@ export type CategoryUncheckedCreateInput = {
 }
 
 export type CategoryUpdateInput = {
+  modelRelease?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -354,6 +365,7 @@ export type CategoryUpdateInput = {
 }
 
 export type CategoryUncheckedUpdateInput = {
+  modelRelease?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   id?: Prisma.StringFieldUpdateOperationsInput | string
   learningAreaId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
@@ -368,6 +380,7 @@ export type CategoryUncheckedUpdateInput = {
 }
 
 export type CategoryCreateManyInput = {
+  modelRelease?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   id?: string
   learningAreaId: string
   name: string
@@ -379,6 +392,7 @@ export type CategoryCreateManyInput = {
 }
 
 export type CategoryUpdateManyMutationInput = {
+  modelRelease?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -389,6 +403,7 @@ export type CategoryUpdateManyMutationInput = {
 }
 
 export type CategoryUncheckedUpdateManyInput = {
+  modelRelease?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   id?: Prisma.StringFieldUpdateOperationsInput | string
   learningAreaId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
@@ -420,6 +435,7 @@ export type CategoryLearningAreaIdDisplayOrderCompoundUniqueInput = {
 }
 
 export type CategoryCountOrderByAggregateInput = {
+  modelRelease?: Prisma.SortOrder
   id?: Prisma.SortOrder
   learningAreaId?: Prisma.SortOrder
   name?: Prisma.SortOrder
@@ -550,6 +566,7 @@ export type CategoryUpdateOneRequiredWithoutProgressNestedInput = {
 }
 
 export type CategoryCreateWithoutLearningAreaInput = {
+  modelRelease?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   id?: string
   name: string
   description?: string | null
@@ -563,6 +580,7 @@ export type CategoryCreateWithoutLearningAreaInput = {
 }
 
 export type CategoryUncheckedCreateWithoutLearningAreaInput = {
+  modelRelease?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   id?: string
   name: string
   description?: string | null
@@ -605,6 +623,7 @@ export type CategoryScalarWhereInput = {
   AND?: Prisma.CategoryScalarWhereInput | Prisma.CategoryScalarWhereInput[]
   OR?: Prisma.CategoryScalarWhereInput[]
   NOT?: Prisma.CategoryScalarWhereInput | Prisma.CategoryScalarWhereInput[]
+  modelRelease?: Prisma.JsonNullableFilter<"Category">
   id?: Prisma.StringFilter<"Category"> | string
   learningAreaId?: Prisma.StringFilter<"Category"> | string
   name?: Prisma.StringFilter<"Category"> | string
@@ -616,6 +635,7 @@ export type CategoryScalarWhereInput = {
 }
 
 export type CategoryCreateWithoutGesturesInput = {
+  modelRelease?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   id?: string
   name: string
   description?: string | null
@@ -629,6 +649,7 @@ export type CategoryCreateWithoutGesturesInput = {
 }
 
 export type CategoryUncheckedCreateWithoutGesturesInput = {
+  modelRelease?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   id?: string
   learningAreaId: string
   name: string
@@ -658,6 +679,7 @@ export type CategoryUpdateToOneWithWhereWithoutGesturesInput = {
 }
 
 export type CategoryUpdateWithoutGesturesInput = {
+  modelRelease?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -671,6 +693,7 @@ export type CategoryUpdateWithoutGesturesInput = {
 }
 
 export type CategoryUncheckedUpdateWithoutGesturesInput = {
+  modelRelease?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   id?: Prisma.StringFieldUpdateOperationsInput | string
   learningAreaId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
@@ -684,6 +707,7 @@ export type CategoryUncheckedUpdateWithoutGesturesInput = {
 }
 
 export type CategoryCreateWithoutAssessmentInput = {
+  modelRelease?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   id?: string
   name: string
   description?: string | null
@@ -697,6 +721,7 @@ export type CategoryCreateWithoutAssessmentInput = {
 }
 
 export type CategoryUncheckedCreateWithoutAssessmentInput = {
+  modelRelease?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   id?: string
   learningAreaId: string
   name: string
@@ -726,6 +751,7 @@ export type CategoryUpdateToOneWithWhereWithoutAssessmentInput = {
 }
 
 export type CategoryUpdateWithoutAssessmentInput = {
+  modelRelease?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -739,6 +765,7 @@ export type CategoryUpdateWithoutAssessmentInput = {
 }
 
 export type CategoryUncheckedUpdateWithoutAssessmentInput = {
+  modelRelease?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   id?: Prisma.StringFieldUpdateOperationsInput | string
   learningAreaId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
@@ -752,6 +779,7 @@ export type CategoryUncheckedUpdateWithoutAssessmentInput = {
 }
 
 export type CategoryCreateWithoutProgressInput = {
+  modelRelease?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   id?: string
   name: string
   description?: string | null
@@ -765,6 +793,7 @@ export type CategoryCreateWithoutProgressInput = {
 }
 
 export type CategoryUncheckedCreateWithoutProgressInput = {
+  modelRelease?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   id?: string
   learningAreaId: string
   name: string
@@ -794,6 +823,7 @@ export type CategoryUpdateToOneWithWhereWithoutProgressInput = {
 }
 
 export type CategoryUpdateWithoutProgressInput = {
+  modelRelease?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -807,6 +837,7 @@ export type CategoryUpdateWithoutProgressInput = {
 }
 
 export type CategoryUncheckedUpdateWithoutProgressInput = {
+  modelRelease?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   id?: Prisma.StringFieldUpdateOperationsInput | string
   learningAreaId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
@@ -820,6 +851,7 @@ export type CategoryUncheckedUpdateWithoutProgressInput = {
 }
 
 export type CategoryCreateManyLearningAreaInput = {
+  modelRelease?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   id?: string
   name: string
   description?: string | null
@@ -830,6 +862,7 @@ export type CategoryCreateManyLearningAreaInput = {
 }
 
 export type CategoryUpdateWithoutLearningAreaInput = {
+  modelRelease?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -843,6 +876,7 @@ export type CategoryUpdateWithoutLearningAreaInput = {
 }
 
 export type CategoryUncheckedUpdateWithoutLearningAreaInput = {
+  modelRelease?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -856,6 +890,7 @@ export type CategoryUncheckedUpdateWithoutLearningAreaInput = {
 }
 
 export type CategoryUncheckedUpdateManyWithoutLearningAreaInput = {
+  modelRelease?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -906,6 +941,7 @@ export type CategoryCountOutputTypeCountProgressArgs<ExtArgs extends runtime.Typ
 
 
 export type CategorySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  modelRelease?: boolean
   id?: boolean
   learningAreaId?: boolean
   name?: boolean
@@ -922,6 +958,7 @@ export type CategorySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
 }, ExtArgs["result"]["category"]>
 
 export type CategorySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  modelRelease?: boolean
   id?: boolean
   learningAreaId?: boolean
   name?: boolean
@@ -934,6 +971,7 @@ export type CategorySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
 }, ExtArgs["result"]["category"]>
 
 export type CategorySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  modelRelease?: boolean
   id?: boolean
   learningAreaId?: boolean
   name?: boolean
@@ -946,6 +984,7 @@ export type CategorySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
 }, ExtArgs["result"]["category"]>
 
 export type CategorySelectScalar = {
+  modelRelease?: boolean
   id?: boolean
   learningAreaId?: boolean
   name?: boolean
@@ -956,7 +995,7 @@ export type CategorySelectScalar = {
   updatedAt?: boolean
 }
 
-export type CategoryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "learningAreaId" | "name" | "description" | "displayOrder" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["category"]>
+export type CategoryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"modelRelease" | "id" | "learningAreaId" | "name" | "description" | "displayOrder" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["category"]>
 export type CategoryInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   assessment?: boolean | Prisma.Category$assessmentArgs<ExtArgs>
   learningArea?: boolean | Prisma.LearningAreaDefaultArgs<ExtArgs>
@@ -980,6 +1019,7 @@ export type $CategoryPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     progress: Prisma.$CategoryProgressPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
+    modelRelease: runtime.JsonValue | null
     id: string
     learningAreaId: string
     name: string
@@ -1071,8 +1111,8 @@ export interface CategoryDelegate<ExtArgs extends runtime.Types.Extensions.Inter
    * // Get first 10 Categories
    * const categories = await prisma.category.findMany({ take: 10 })
    * 
-   * // Only select the `id`
-   * const categoryWithIdOnly = await prisma.category.findMany({ select: { id: true } })
+   * // Only select the `modelRelease`
+   * const categoryWithModelReleaseOnly = await prisma.category.findMany({ select: { modelRelease: true } })
    * 
    */
   findMany<T extends CategoryFindManyArgs>(args?: Prisma.SelectSubset<T, CategoryFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
@@ -1116,9 +1156,9 @@ export interface CategoryDelegate<ExtArgs extends runtime.Types.Extensions.Inter
    *   ]
    * })
    * 
-   * // Create many Categories and only return the `id`
-   * const categoryWithIdOnly = await prisma.category.createManyAndReturn({
-   *   select: { id: true },
+   * // Create many Categories and only return the `modelRelease`
+   * const categoryWithModelReleaseOnly = await prisma.category.createManyAndReturn({
+   *   select: { modelRelease: true },
    *   data: [
    *     // ... provide data here
    *   ]
@@ -1207,9 +1247,9 @@ export interface CategoryDelegate<ExtArgs extends runtime.Types.Extensions.Inter
    *   ]
    * })
    * 
-   * // Update zero or more Categories and only return the `id`
-   * const categoryWithIdOnly = await prisma.category.updateManyAndReturn({
-   *   select: { id: true },
+   * // Update zero or more Categories and only return the `modelRelease`
+   * const categoryWithModelReleaseOnly = await prisma.category.updateManyAndReturn({
+   *   select: { modelRelease: true },
    *   where: {
    *     // ... provide filter here
    *   },
@@ -1415,6 +1455,7 @@ export interface Prisma__CategoryClient<T, Null = never, ExtArgs extends runtime
  * Fields of the Category model
  */
 export interface CategoryFieldRefs {
+  readonly modelRelease: Prisma.FieldRef<"Category", 'Json'>
   readonly id: Prisma.FieldRef<"Category", 'String'>
   readonly learningAreaId: Prisma.FieldRef<"Category", 'String'>
   readonly name: Prisma.FieldRef<"Category", 'String'>

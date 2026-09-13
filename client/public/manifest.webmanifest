@@ -1,0 +1,11 @@
+{
+  "id": "./",
+  "name": "HUDYAT — Filipino Sign Language",
+  "short_name": "HUDYAT",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#b49150",
+  "icons": [{"src": "./hudyat-icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any"}]
+}

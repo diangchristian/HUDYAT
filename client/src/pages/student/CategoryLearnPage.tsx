@@ -1,3 +1,4 @@
+import {CategoryDownload} from "@/features/fsl-recognition/category-download";
 import { useState } from "react";
 
 import {
@@ -239,6 +240,7 @@ function LearnSession({
 
   return (
     <>
+      <CategoryDownload category={title.toLowerCase().replace(/\s+/g,"-")} />
       {/* HEADER */}
       <div className="mb-6 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
         <ElevatedButton
@@ -508,7 +510,7 @@ function LearnSession({
             /* =========================
                TRY
               ========================= */
-            <PracticeCamera />
+            <PracticeCamera category={title.toLowerCase().replace(/\s+/g, "-")} targetLabel={prompt.modelClass} onCorrect={() => { void continueLesson(); }} />
           )}
 
           {/* NAVIGATION / CONTINUE */}

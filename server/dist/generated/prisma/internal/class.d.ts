@@ -117,6 +117,182 @@ export interface PrismaClient<in LogOpts extends Prisma.LogLevel = never, in out
     $extends: runtime.Types.Extensions.ExtendsHook<"extends", Prisma.TypeMapCb<OmitOpts>, ExtArgs, runtime.Types.Utils.Call<Prisma.TypeMapCb<OmitOpts>, {
         extArgs: ExtArgs;
     }>>;
+    /**
+ * `prisma.user`: Exposes CRUD operations for the **User** model.
+  * Example usage:
+  * ```ts
+  * // Fetch zero or more Users
+  * const users = await prisma.user.findMany()
+  * ```
+  */
+    get user(): Prisma.UserDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
+    /**
+     * `prisma.learnerProfile`: Exposes CRUD operations for the **LearnerProfile** model.
+      * Example usage:
+      * ```ts
+      * // Fetch zero or more LearnerProfiles
+      * const learnerProfiles = await prisma.learnerProfile.findMany()
+      * ```
+      */
+    get learnerProfile(): Prisma.LearnerProfileDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
+    /**
+     * `prisma.teacherProfile`: Exposes CRUD operations for the **TeacherProfile** model.
+      * Example usage:
+      * ```ts
+      * // Fetch zero or more TeacherProfiles
+      * const teacherProfiles = await prisma.teacherProfile.findMany()
+      * ```
+      */
+    get teacherProfile(): Prisma.TeacherProfileDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
+    /**
+     * `prisma.learningArea`: Exposes CRUD operations for the **LearningArea** model.
+      * Example usage:
+      * ```ts
+      * // Fetch zero or more LearningAreas
+      * const learningAreas = await prisma.learningArea.findMany()
+      * ```
+      */
+    get learningArea(): Prisma.LearningAreaDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
+    /**
+     * `prisma.category`: Exposes CRUD operations for the **Category** model.
+      * Example usage:
+      * ```ts
+      * // Fetch zero or more Categories
+      * const categories = await prisma.category.findMany()
+      * ```
+      */
+    get category(): Prisma.CategoryDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
+    /**
+     * `prisma.fslGesture`: Exposes CRUD operations for the **FslGesture** model.
+      * Example usage:
+      * ```ts
+      * // Fetch zero or more FslGestures
+      * const fslGestures = await prisma.fslGesture.findMany()
+      * ```
+      */
+    get fslGesture(): Prisma.FslGestureDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
+    /**
+     * `prisma.categoryGesture`: Exposes CRUD operations for the **CategoryGesture** model.
+      * Example usage:
+      * ```ts
+      * // Fetch zero or more CategoryGestures
+      * const categoryGestures = await prisma.categoryGesture.findMany()
+      * ```
+      */
+    get categoryGesture(): Prisma.CategoryGestureDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
+    /**
+     * `prisma.assessment`: Exposes CRUD operations for the **Assessment** model.
+      * Example usage:
+      * ```ts
+      * // Fetch zero or more Assessments
+      * const assessments = await prisma.assessment.findMany()
+      * ```
+      */
+    get assessment(): Prisma.AssessmentDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
+    /**
+     * `prisma.assessmentQuestion`: Exposes CRUD operations for the **AssessmentQuestion** model.
+      * Example usage:
+      * ```ts
+      * // Fetch zero or more AssessmentQuestions
+      * const assessmentQuestions = await prisma.assessmentQuestion.findMany()
+      * ```
+      */
+    get assessmentQuestion(): Prisma.AssessmentQuestionDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
+    /**
+     * `prisma.questionChoice`: Exposes CRUD operations for the **QuestionChoice** model.
+      * Example usage:
+      * ```ts
+      * // Fetch zero or more QuestionChoices
+      * const questionChoices = await prisma.questionChoice.findMany()
+      * ```
+      */
+    get questionChoice(): Prisma.QuestionChoiceDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
+    /**
+     * `prisma.assessmentAttempt`: Exposes CRUD operations for the **AssessmentAttempt** model.
+      * Example usage:
+      * ```ts
+      * // Fetch zero or more AssessmentAttempts
+      * const assessmentAttempts = await prisma.assessmentAttempt.findMany()
+      * ```
+      */
+    get assessmentAttempt(): Prisma.AssessmentAttemptDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
+    /**
+     * `prisma.assessmentAnswer`: Exposes CRUD operations for the **AssessmentAnswer** model.
+      * Example usage:
+      * ```ts
+      * // Fetch zero or more AssessmentAnswers
+      * const assessmentAnswers = await prisma.assessmentAnswer.findMany()
+      * ```
+      */
+    get assessmentAnswer(): Prisma.AssessmentAnswerDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
+    /**
+     * `prisma.practiceSession`: Exposes CRUD operations for the **PracticeSession** model.
+      * Example usage:
+      * ```ts
+      * // Fetch zero or more PracticeSessions
+      * const practiceSessions = await prisma.practiceSession.findMany()
+      * ```
+      */
+    get practiceSession(): Prisma.PracticeSessionDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
+    /**
+     * `prisma.categoryProgress`: Exposes CRUD operations for the **CategoryProgress** model.
+      * Example usage:
+      * ```ts
+      * // Fetch zero or more CategoryProgresses
+      * const categoryProgresses = await prisma.categoryProgress.findMany()
+      * ```
+      */
+    get categoryProgress(): Prisma.CategoryProgressDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
+    /**
+     * `prisma.systemSetting`: Exposes CRUD operations for the **SystemSetting** model.
+      * Example usage:
+      * ```ts
+      * // Fetch zero or more SystemSettings
+      * const systemSettings = await prisma.systemSetting.findMany()
+      * ```
+      */
+    get systemSetting(): Prisma.SystemSettingDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
+    /**
+     * `prisma.auditLog`: Exposes CRUD operations for the **AuditLog** model.
+      * Example usage:
+      * ```ts
+      * // Fetch zero or more AuditLogs
+      * const auditLogs = await prisma.auditLog.findMany()
+      * ```
+      */
+    get auditLog(): Prisma.AuditLogDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
 }
 export declare function getPrismaClientClass(): PrismaClientConstructor;
 //# sourceMappingURL=class.d.ts.map

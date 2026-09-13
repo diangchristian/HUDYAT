@@ -67,7 +67,8 @@ export type AssessmentListStatus = "locked" | "not-started" | "completed";
 export type AssessmentListCategory = {
   categoryId: string;
   categoryName: string;
-  assessmentId: string;
+  assessmentId: string | null;
+  lockedReason: string | null;
   title: string;
   description: string | null;
   totalQuestions: number;
