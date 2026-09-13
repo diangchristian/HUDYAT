@@ -69,13 +69,15 @@ export declare const getAssessmentsForLearner: (learnerId: string) => Promise<{
         id: string;
         name: string;
         categories: {
+            isUnlocked: boolean;
+            lockedReason: string | null;
+            status: 'completed' | 'not-started' | 'locked';
             categoryId: string;
             categoryName: string;
-            assessmentId: string;
+            assessmentId: string | null;
             title: string;
             description: string | null;
             totalQuestions: number;
-            isUnlocked: boolean;
             attemptCount: number;
             latestAttempt: {
                 score: import("@prisma/client-runtime-utils").Decimal;
@@ -84,7 +86,6 @@ export declare const getAssessmentsForLearner: (learnerId: string) => Promise<{
                 passed: boolean;
                 completedAt: Date | null;
             } | null;
-            status: "completed" | "locked" | "not-started";
         }[];
     }[];
 }>;
