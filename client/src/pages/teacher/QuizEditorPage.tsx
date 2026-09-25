@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useParams } from "react-router";
-import { ArrowLeft, Lock, Plus, Send } from "lucide-react";
+import { AlertTriangle, ArrowLeft, Lock, Plus, Send } from "lucide-react";
 
 import LessonIcon from "@/components/staff/lesson-icon";
 import QueryState from "@/components/staff/query-state";
@@ -12,6 +12,7 @@ import QuestionForm from "@/components/staff/quiz-editor/question-form";
 import {
   QUESTION_TYPES,
   errorMessage,
+  isMissingVideo,
   type Feedback,
 } from "@/components/staff/quiz-editor/question-types";
 import {
@@ -199,7 +200,7 @@ function QuizDetails({ data }: { data: AuthoringAssessment }) {
                 id="quiz-title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="h-10 bg-muted/60"
+                className="h-10"
               />
             </div>
 
@@ -212,7 +213,7 @@ function QuizDetails({ data }: { data: AuthoringAssessment }) {
                   id="quiz-lesson"
                   value={category.name}
                   readOnly
-                  className="h-10 bg-muted/60 text-muted-foreground"
+                  className="h-10 text-muted-foreground"
                 />
               </div>
               <div className="space-y-2">
@@ -230,7 +231,7 @@ function QuizDetails({ data }: { data: AuthoringAssessment }) {
                     assessment?.isLocked ? "quiz-passing-locked" : undefined
                   }
                   onChange={(e) => setPassingScore(e.target.value)}
-                  className="h-10 bg-muted/60"
+                  className="h-10"
                 />
                 {assessment?.isLocked && (
                   <p
@@ -254,7 +255,7 @@ function QuizDetails({ data }: { data: AuthoringAssessment }) {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Tell learners what this quiz covers."
-              className="min-h-24 flex-1 bg-muted/60"
+              className="min-h-24 flex-1"
             />
           </div>
 
@@ -395,6 +396,10 @@ function QuestionsSection({
             <ol className="max-h-[50vh] space-y-1 overflow-y-auto p-2">
               {questions.map((question) => {
                 const TypeIcon = QUESTION_TYPES[question.questionType].icon;
+                const missingVideo = isMissingVideo(
+                  question.questionType,
+                  question.gesture,
+                );
                 return (
                   <li key={question.id}>
                     <button
@@ -408,16 +413,22 @@ function QuestionsSection({
                       <span className="flex size-7 shrink-0 items-center justify-center rounded-lg border border-border bg-white text-xs font-bold">
                         {question.questionNumber}
                       </span>
-                      <span className="min-w-0">
+                      <span className="min-w-0 flex-1">
                         <span className="block truncate text-sm font-semibold text-foreground">
                           {question.questionText}
                         </span>
                         <span className="flex items-center gap-1 text-xs font-bold text-muted-foreground">
                           <TypeIcon aria-hidden="true" className="size-3" />
-                          {QUESTION_TYPES[question.questionType].label} ·{" "}
+                          {QUESTION_TYPES[question.questionType].shortLabel} ·{" "}
                           {question.gesture.label}
                         </span>
                       </span>
+                      {missingVideo && (
+                        <AlertTriangle
+                          aria-label="No video for this sign"
+                          className="size-4 shrink-0 text-amber-600"
+                        />
+                      )}
                     </button>
                   </li>
                 );

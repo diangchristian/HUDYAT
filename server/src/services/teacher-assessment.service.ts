@@ -147,7 +147,6 @@ export const getAssessment = async (categoryId: string) => {
         questionNumber: question.questionNumber,
         questionText: question.questionText,
         questionType: question.questionType,
-        referenceMediaUrl: question.referenceMediaUrl,
         points: Number(question.points),
         gesture: question.gesture,
         choices: question.choices.map((choice) => ({
@@ -275,7 +274,6 @@ export const saveAssessment = async (
 export type QuestionInput = {
   questionText?: unknown;
   questionType?: unknown;
-  referenceMediaUrl?: unknown;
   points?: unknown;
   gestureId?: unknown;
   choiceGestureIds?: unknown;
@@ -284,7 +282,6 @@ export type QuestionInput = {
 type ParsedQuestion = {
   questionText?: string;
   questionType?: AssessmentQuestionType;
-  referenceMediaUrl?: string | null;
   points?: number;
   gestureId?: string;
   choiceGestureIds?: string[];
@@ -309,16 +306,6 @@ const parseQuestionInput = async (
       throw httpError(400, "Invalid question type.");
     }
     parsed.questionType = input.questionType as AssessmentQuestionType;
-  }
-
-  if (input.referenceMediaUrl !== undefined) {
-    if (
-      input.referenceMediaUrl !== null &&
-      typeof input.referenceMediaUrl !== "string"
-    ) {
-      throw httpError(400, "Invalid reference media URL.");
-    }
-    parsed.referenceMediaUrl = input.referenceMediaUrl?.trim() || null;
   }
 
   if (input.points !== undefined) {
@@ -381,6 +368,29 @@ const parseQuestionInput = async (
   return parsed;
 };
 
+/*
+ * A video question plays the target sign's own reference video (there's
+ * no per-question media), so that sign must actually have one.
+ */
+const assertVideoAvailable = async (
+  questionType: AssessmentQuestionType,
+  gestureId: string,
+) => {
+  if (questionType !== "VIDEO_GESTURE") return;
+
+  const gesture = await prisma.fslGesture.findUnique({
+    where: { id: gestureId },
+    select: { label: true, referenceVideoUrl: true },
+  });
+
+  if (!gesture?.referenceVideoUrl) {
+    throw httpError(
+      400,
+      `"${gesture?.label ?? "This sign"}" has no reference video, so it can't be a "Name the sign" video question. Switch it to "Pick the sign" or choose a different correct sign.`,
+    );
+  }
+};
+
 const buildChoices = async (gestureIds: string[]) => {
   const gestures = await prisma.fslGesture.findMany({
     where: { id: { in: gestureIds } },
@@ -427,6 +437,7 @@ export const createQuestion = async (
   }
 
   const parsed = await parseQuestionInput(categoryId, input, { partial: false });
+  await assertVideoAvailable(parsed.questionType!, parsed.gestureId!);
   const choices = await buildChoices(parsed.choiceGestureIds!);
 
   const last = await prisma.assessmentQuestion.findFirst({
@@ -442,7 +453,6 @@ export const createQuestion = async (
       questionNumber: (last?.questionNumber ?? 0) + 1,
       questionText: parsed.questionText!,
       questionType: parsed.questionType!,
-      referenceMediaUrl: parsed.referenceMediaUrl ?? null,
       points: parsed.points ?? 1,
       choices: { create: choices },
     },
@@ -469,20 +479,29 @@ export const updateQuestion = async (
   input: QuestionInput,
 ) => {
   const { assessment, isLocked } = await findEditableAssessment(categoryId);
-  await findQuestion(assessment.id, questionId);
+  const existing = await findQuestion(assessment.id, questionId);
 
   const parsed = await parseQuestionInput(categoryId, input, { partial: true });
 
-  // The reference media is part of what's being asked (it *is* the
-  // question for video questions), so only the text counts as wording.
   const changesScoring =
     parsed.gestureId !== undefined ||
     parsed.points !== undefined ||
-    parsed.questionType !== undefined ||
-    parsed.referenceMediaUrl !== undefined;
+    parsed.questionType !== undefined;
 
   if (isLocked && changesScoring) {
     throw httpError(409, LOCKED_MESSAGE);
+  }
+
+  // Only re-check media when the type or target sign actually changes,
+  // so re-saving an older question (e.g. to fix its wording) is never
+  // blocked by a problem it already had.
+  const nextType = parsed.questionType ?? existing.questionType;
+  const nextGestureId = parsed.gestureId ?? existing.gestureId;
+  if (
+    nextType !== existing.questionType ||
+    nextGestureId !== existing.gestureId
+  ) {
+    await assertVideoAvailable(nextType, nextGestureId);
   }
 
   const { choiceGestureIds, ...fields } = parsed;

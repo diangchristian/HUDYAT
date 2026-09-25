@@ -24,6 +24,7 @@ import type {
 import { useCreateQuestion } from "@/hooks/use-create-question";
 import { useUpdateQuestion } from "@/hooks/use-update-question";
 import FeedbackMessage from "./feedback-message";
+import QuestionMediaPreview from "./question-media-preview";
 import {
   MAX_CHOICES,
   MIN_CHOICES,
@@ -31,6 +32,8 @@ import {
   QUESTION_TYPE_ITEMS,
   choiceLetter,
   errorMessage,
+  isMissingVideo,
+  missingVideoMessage,
   type Feedback,
 } from "./question-types";
 
@@ -68,9 +71,6 @@ export default function QuestionForm({
     question?.questionType ?? "IMAGE_GESTURE",
   );
   const [points, setPoints] = useState(String(question?.points ?? 1));
-  const [referenceMediaUrl, setReferenceMediaUrl] = useState(
-    question?.referenceMediaUrl ?? "",
-  );
   const [choiceIds, setChoiceIds] = useState<string[]>(
     question?.choices.map((choice) => choice.gesture.id) ?? [],
   );
@@ -87,6 +87,16 @@ export default function QuestionForm({
   const availableItems = Object.fromEntries(
     availableGestures.map((gesture) => [gesture.id, gesture.label]),
   );
+  const correctGesture = correctId ? gestureById.get(correctId) : undefined;
+  // "Name the sign (video)" needs the correct sign to have a video.
+  const videoUnavailable =
+    Boolean(correctGesture) && isMissingVideo("VIDEO_GESTURE", correctGesture);
+  // Like the server, only enforce that when the type or correct sign
+  // changes, so an older broken question can still be re-worded.
+  const mediaChanged =
+    !question ||
+    questionType !== question.questionType ||
+    correctId !== question.gesture.id;
 
   const markCorrect = (gestureId: string) => {
     setCorrectId(gestureId);
@@ -151,10 +161,16 @@ export default function QuestionForm({
         setFeedback({ type: "error", message: "Mark which choice is correct." });
         return;
       }
+      if (mediaChanged && isMissingVideo(questionType, correctGesture)) {
+        setFeedback({
+          type: "error",
+          message: missingVideoMessage(correctGesture?.label ?? "This sign"),
+        });
+        return;
+      }
 
       data = {
         ...data,
-        referenceMediaUrl: referenceMediaUrl.trim() || null,
         questionType,
         points: pointsValue,
         gestureId: correctId,
@@ -210,24 +226,25 @@ export default function QuestionForm({
             <p className="flex items-start gap-2 rounded-xl bg-amber-50 p-3 text-sm text-amber-900">
               <Lock aria-hidden="true" className="mt-0.5 size-4 shrink-0" />
               Learners have already taken this quiz, so only the wording can
-              change. Choices, points, type and media are locked.
+              change. Choices, points and type are locked.
             </p>
           )}
 
-          <div className="grid gap-5 sm:grid-cols-[1fr_140px_120px]">
-            <div className="space-y-2">
-              <Label htmlFor={fieldId("text")} className="font-bold">
-                Question <span className="text-red-600">*</span>
-              </Label>
-              <Textarea
-                id={fieldId("text")}
-                rows={2}
-                value={questionText}
-                onChange={(e) => setQuestionText(e.target.value)}
-                placeholder="e.g. Which one is the correct sign for “A”?"
-                className="bg-muted/60"
-              />
-            </div>
+          <div className="space-y-2">
+            <Label htmlFor={fieldId("text")} className="font-bold">
+              Question <span className="text-red-600">*</span>
+            </Label>
+            <Textarea
+              id={fieldId("text")}
+              rows={2}
+              value={questionText}
+              onChange={(e) => setQuestionText(e.target.value)}
+              placeholder="e.g. Which one is the correct sign for “A”?"
+              className="bg-muted/60"
+            />
+          </div>
+
+          <div className="grid gap-5 sm:grid-cols-[minmax(0,1fr)_120px]">
 
             <div className="space-y-2">
               <Label htmlFor={fieldId("type")} className="font-bold">
@@ -246,12 +263,21 @@ export default function QuestionForm({
                 </SelectTrigger>
                 <SelectContent>
                   {Object.entries(QUESTION_TYPES).map(([value, { label }]) => (
-                    <SelectItem key={value} value={value}>
+                    <SelectItem
+                      key={value}
+                      value={value}
+                      disabled={value === "VIDEO_GESTURE" && videoUnavailable}
+                    >
                       {label}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
+              <p className="text-xs text-muted-foreground">
+                {QUESTION_TYPES[questionType].hint}
+                {videoUnavailable && questionType !== "VIDEO_GESTURE" &&
+                  " Video isn't available for this sign."}
+              </p>
             </div>
 
             <div className="space-y-2">
@@ -403,22 +429,9 @@ export default function QuestionForm({
             )}
           </fieldset>
 
-          <div className="space-y-2">
-            <Label htmlFor={fieldId("media")} className="font-bold">
-              Reference media URL{" "}
-              <span className="font-normal text-muted-foreground">
-                (optional)
-              </span>
-            </Label>
-            <Input
-              id={fieldId("media")}
-              value={referenceMediaUrl}
-              disabled={wordingOnly}
-              onChange={(e) => setReferenceMediaUrl(e.target.value)}
-              placeholder="https://…"
-              className="h-10"
-            />
-          </div>
+          {questionType === "VIDEO_GESTURE" && (
+            <QuestionMediaPreview gesture={correctGesture} />
+          )}
 
           <FeedbackMessage feedback={feedback} />
         </div>

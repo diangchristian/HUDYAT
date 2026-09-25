@@ -80,7 +80,13 @@ auth, learning, categories, assessment, progress, teacher. Each router is mounte
   (`services/teacher-assessment.service.ts`) enforces that the choices include the
   target gesture and come from the category's gestures. Once an assessment has any
   attempts it is "locked": only question text can change — gestures, choices, points,
-  type, reference media and the passing score are frozen (409 otherwise).
+  type and the passing score are frozen (409 otherwise).
+- **Question media comes from the gesture, not the question**: `IMAGE_GESTURE`
+  ("Pick the sign") shows choice gestures' `referenceImageUrl`s; `VIDEO_GESTURE`
+  ("Name the sign") plays the target gesture's `referenceVideoUrl`, so the server
+  rejects video questions whose target sign has no video.
+  `AssessmentQuestion.referenceMediaUrl` is legacy: never written by the teacher
+  API (all null), only read as an override by the student quiz.
 - Services signal HTTP errors by throwing `httpError(status, message)`
   (`src/utils/httpError.ts`); controllers map `statusCode` to the response.
   Learners see choices in `displayOrder` (no shuffling).

@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import type { AuthoringQuestion } from "@/api/teacher-api";
 import GestureTile from "./gesture-tile";
+import QuestionMediaPreview from "./question-media-preview";
 import { QUESTION_TYPES, choiceLetter } from "./question-types";
 
 /* =========================================================
@@ -88,6 +89,10 @@ export default function QuestionCard({
             {question.questionText}
           </p>
         </div>
+
+        {question.questionType === "VIDEO_GESTURE" && (
+          <QuestionMediaPreview gesture={question.gesture} />
+        )}
 
         <ul
           aria-label="Choices"

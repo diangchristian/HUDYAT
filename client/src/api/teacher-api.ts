@@ -65,7 +65,6 @@ export type AuthoringQuestion = {
   questionNumber: number;
   questionText: string;
   questionType: QuestionType;
-  referenceMediaUrl: string | null;
   points: number;
   gesture: Gesture;
   choices: Array<{
@@ -111,7 +110,6 @@ export type AssessmentInput = {
 export type QuestionInput = {
   questionText?: string;
   questionType?: QuestionType;
-  referenceMediaUrl?: string | null;
   points?: number;
   gestureId?: string;
   choiceGestureIds?: string[];
