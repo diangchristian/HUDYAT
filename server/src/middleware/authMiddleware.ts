@@ -38,7 +38,7 @@ export const authMiddleware = async (
 
     const user = await prisma.user.findUnique({
       where: { id: decoded.id },
-      include: { learnerProfile: true },
+      include: { learnerProfile: true, teacherProfile: true },
     });
 
     if (!user) {

@@ -1,7 +1,7 @@
 import type { Prisma } from "../generated/prisma/client.js";
 
 type AuthenticatedUser = Prisma.UserGetPayload<{
-  include: { learnerProfile: true };
+  include: { learnerProfile: true; teacherProfile: true };
 }>;
 
 declare global {

@@ -8,10 +8,11 @@ import {
 } from "../controllers/assessment.controller.js";
 
 import { authMiddleware } from "../middleware/authMiddleware.js";
+import { requireRole } from "../middleware/requireRole.js";
 
 const assessmentRouter = Router();
 
-assessmentRouter.use(authMiddleware);
+assessmentRouter.use(authMiddleware, requireRole("LEARNER"));
 
 assessmentRouter.get(
   "/",

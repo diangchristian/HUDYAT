@@ -17,6 +17,8 @@ import assessments from "../data/assessment/assessment.json";
 import assessmentQuestions from "../data/assessment/assessmentQuestions.json";
 import questionChoices from "../data/assessment/questionChoices.json";
 
+const TEST_TEACHER_EMAIL = "testteacher@hudyat.local";
+
 
 async function seedAssessments() {
   console.log("🌱 Seeding assessments...");
@@ -27,6 +29,18 @@ async function seedAssessments() {
      * 1. SEED ASSESSMENTS
      * ============================================================
      */
+
+    // Seeded assessments are attributed to the test teacher
+    // (run `npm run seed:test-teacher` first).
+    const teacher = await prisma.teacherProfile.findUnique({
+      where: { email: TEST_TEACHER_EMAIL },
+    });
+
+    if (!teacher) {
+      throw new Error(
+        `Teacher "${TEST_TEACHER_EMAIL}" was not found. Run \`npm run seed:test-teacher\` first.`
+      );
+    }
 
     const assessmentMap = new Map<string, string>();
 
@@ -58,8 +72,7 @@ async function seedAssessments() {
         },
         create: {
           categoryId: category.id,
-          // Change this depending on how created_by is handled
-          createdBy: "356e27c6-fbde-4890-baa6-8aa508140a20",
+          createdBy: teacher.userId,
           title: assessmentData.title,
           description: assessmentData.description,
           passingScore: assessmentData.passing_score,
