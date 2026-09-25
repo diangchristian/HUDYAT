@@ -10,6 +10,7 @@
 
 @import "@fontsource-variable/inter";
 @import "@fontsource-variable/nunito-sans";
+@import "@fontsource-variable/manrope";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -213,7 +214,7 @@
   /* Fonts */
   --font-sans: "Inter Variable", sans-serif;
   --font-body: "Nunito";
-  --font-staff: "Nunito Sans Variable", "Nunito", sans-serif;
+  --font-staff: "Manrope Variable", sans-serif;
 
   /* Shadcn semantic colors */
   --color-background: var(--background);

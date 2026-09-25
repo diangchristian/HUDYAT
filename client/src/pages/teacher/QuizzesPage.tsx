@@ -43,14 +43,19 @@ import {
 } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  flattenLessons,
+  lessonsWithoutQuiz,
+  quizzesOf,
+  type Lesson,
+  type Quiz,
+} from "@/lib/lessons";
 import { cn } from "@/lib/utils";
-import type { AssessmentListArea, AssessmentStatus } from "@/api/teacher-api";
+import type { AssessmentStatus } from "@/api/teacher-api";
 import { useCreateQuiz } from "@/hooks/use-create-quiz";
 import { useSaveAssessment } from "@/hooks/use-save-assessment";
 import { useTeacherAssessments } from "@/hooks/use-teacher-assessments";
 
-type Lesson = AssessmentListArea["categories"][number] & { areaName: string };
-type Quiz = Lesson & { assessment: NonNullable<Lesson["assessment"]> };
 
 type StatusFilter = "ALL" | AssessmentStatus;
 
@@ -132,7 +137,7 @@ function QuizCard({ quiz }: { quiz: Quiz }) {
         </DropdownMenu>
       </div>
 
-      <h2 className="relative mt-4 font-body text-xl font-bold text-foreground">
+      <h2 className="relative mt-4 text-xl font-bold text-foreground">
         {assessment.title}
       </h2>
       <p className="relative mt-1 flex items-center gap-1.5 text-sm text-muted-foreground">
@@ -252,7 +257,7 @@ function CreateQuizDialog({
       <DialogContent className="gap-0 p-0 font-staff sm:max-w-lg">
         <form onSubmit={handleSubmit}>
           <DialogHeader className="border-b border-border p-6">
-            <DialogTitle className="font-body text-2xl font-bold">
+            <DialogTitle className="text-2xl font-bold">
               Quiz details
             </DialogTitle>
             <DialogDescription>
@@ -378,13 +383,9 @@ export default function QuizzesPage() {
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("ALL");
   const [createOpen, setCreateOpen] = useState(false);
 
-  const lessons: Lesson[] = (areas ?? []).flatMap((area) =>
-    area.categories.map((category) => ({ ...category, areaName: area.name })),
-  );
-  const quizzes = lessons.filter((lesson): lesson is Quiz =>
-    Boolean(lesson.assessment),
-  );
-  const lessonsWithoutQuiz = lessons.filter((lesson) => !lesson.assessment);
+  const lessons = flattenLessons(areas ?? []);
+  const quizzes = quizzesOf(lessons);
+  const lessonsMissingQuiz = lessonsWithoutQuiz(lessons);
   const visibleQuizzes = quizzes.filter(
     (quiz) => statusFilter === "ALL" || quiz.assessment.status === statusFilter,
   );
@@ -469,7 +470,7 @@ export default function QuizzesPage() {
           {/* Remount per open so the form starts empty each time. */}
           {createOpen && (
             <CreateQuizDialog
-              lessons={lessonsWithoutQuiz}
+              lessons={lessonsMissingQuiz}
               open={createOpen}
               onOpenChange={setCreateOpen}
             />

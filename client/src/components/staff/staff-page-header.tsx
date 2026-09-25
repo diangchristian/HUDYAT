@@ -15,7 +15,7 @@ export default function StaffPageHeader({
   return (
     <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
       <div className="min-w-0">
-        <h1 className="font-body text-2xl font-bold text-foreground sm:text-[32px] sm:leading-10">
+        <h1 className="text-2xl font-bold text-foreground sm:text-[32px] sm:leading-10">
           {title}
         </h1>
         {description && (

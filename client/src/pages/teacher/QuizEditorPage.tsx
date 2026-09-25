@@ -100,7 +100,7 @@ function QuizDetails({ data }: { data: AuthoringAssessment }) {
           <LessonIcon name={category.name} className="size-12" />
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
-              <h1 className="font-body text-2xl font-bold text-foreground sm:text-[32px] sm:leading-10">
+              <h1 className="text-2xl font-bold text-foreground sm:text-[32px] sm:leading-10">
                 {assessment ? "Edit quiz" : "Create quiz"}
               </h1>
               {status && <QuizStatusBadge status={status} />}

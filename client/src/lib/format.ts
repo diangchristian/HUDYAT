@@ -24,6 +24,11 @@ export function formatRelativeTime(value: string | Date, now = new Date()) {
   return "just now";
 }
 
+/** "1 lesson", "3 lessons". */
+export function plural(count: number, word: string) {
+  return `${count} ${word}${count === 1 ? "" : "s"}`;
+}
+
 export function formatDate(value: string | Date) {
   return new Date(value).toLocaleDateString(undefined, {
     year: "numeric",

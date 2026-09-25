@@ -1,29 +1,37 @@
 import { Link } from "react-router";
 import {
-  ArrowRight,
   BookOpen,
-  CheckCircle2,
-  FileQuestion,
+  ClipboardCheck,
+  FileCheck2,
+  FilePlus2,
   Hand,
   Star,
+  TrendingUp,
   Users,
-  XCircle,
-  type LucideIcon,
 } from "lucide-react";
 
+import QuickActionList, {
+  type QuickAction,
+} from "@/components/staff/dashboard/quick-action-list";
+import QuizPerformanceTable from "@/components/staff/dashboard/quiz-performance-table";
+import RecentActivityFeed from "@/components/staff/dashboard/recent-activity-feed";
 import QueryState from "@/components/staff/query-state";
-import InitialsAvatar from "@/components/staff/initials-avatar";
 import {
   StaffCard,
   StaffCardHeader,
   StaffCardTitle,
 } from "@/components/staff/staff-card";
-import StaffPageHeader from "@/components/staff/staff-page-header";
 import StatCard from "@/components/staff/stat-card";
-import { buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import { useCurrentUser } from "@/hooks/use-current-user";
+import { useTeacherAssessments } from "@/hooks/use-teacher-assessments";
 import { useTeacherDashboard } from "@/hooks/use-teacher-dashboard";
+import { plural } from "@/lib/format";
+import {
+  flattenLessons,
+  lessonsWithoutQuiz,
+  quizzesOf,
+  type Lesson,
+} from "@/lib/lessons";
 
 function greeting(date = new Date()) {
   const hour = date.getHours();
@@ -32,191 +40,173 @@ function greeting(date = new Date()) {
   return "Good evening";
 }
 
-const ACTIONS: Array<{
-  title: string;
-  description: string;
-  to: string;
-  cta: string;
-  icon: LucideIcon;
-  iconTone: string;
-  buttonTone: string;
-}> = [
-  {
-    title: "Manage Lessons",
-    description:
-      "Browse the curriculum by learning area and see which lessons still need a quiz.",
-    to: "/teacher/lessons",
-    cta: "Go to Lessons",
-    icon: BookOpen,
-    iconTone: "bg-staff-nav text-white",
-    buttonTone: "bg-staff-brand hover:bg-staff-brand/90",
-  },
-  {
-    title: "Manage Quizzes",
-    description:
-      "Author quiz questions, publish them to learners and track submissions.",
-    to: "/teacher/quizzes",
-    cta: "Go to Quizzes",
-    icon: FileQuestion,
-    iconTone: "bg-green-300 text-green-950",
-    buttonTone: "bg-green-800 hover:bg-green-800/90",
-  },
-  {
-    title: "View Students",
-    description:
-      "Monitor each learner's lesson progress, quiz results and practice.",
-    to: "/teacher/students",
-    cta: "Go to Students",
-    icon: Users,
-    iconTone: "bg-amber-200 text-amber-900",
-    buttonTone: "bg-slate-500 hover:bg-slate-500/90",
-  },
-];
+/** Shortcuts with live hints drawn from the lessons' quiz status. */
+function buildQuickActions(lessons: Lesson[]): QuickAction[] {
+  const withoutQuiz = lessonsWithoutQuiz(lessons).length;
+  const drafts = lessons.filter(
+    (lesson) => lesson.assessment?.status === "DRAFT",
+  ).length;
+
+  return [
+    {
+      label: "Create quiz",
+      description: withoutQuiz
+        ? `${plural(withoutQuiz, "lesson")} still need one`
+        : "Every lesson has a quiz",
+      to: "/teacher/quizzes",
+      icon: FilePlus2,
+      color: "primary",
+      badge: withoutQuiz,
+    },
+    {
+      label: "Review drafts",
+      description: drafts
+        ? `${plural(drafts, "draft")} waiting to publish`
+        : "No drafts waiting",
+      to: "/teacher/quizzes",
+      icon: ClipboardCheck,
+      color: "amber",
+      badge: drafts,
+    },
+    {
+      label: "Browse lessons",
+      description: "See the curriculum by area",
+      to: "/teacher/lessons",
+      icon: BookOpen,
+      color: "emerald",
+    },
+    {
+      label: "Student progress",
+      description: "Check who needs a hand",
+      to: "/teacher/students",
+      icon: TrendingUp,
+      color: "sky",
+    },
+  ];
+}
 
 export default function TeacherDashboardPage() {
   const { data: user } = useCurrentUser();
-  const { data: dashboard, isLoading, error, refetch } = useTeacherDashboard();
+  const dashboardQuery = useTeacherDashboard();
+  const assessmentsQuery = useTeacherAssessments();
+
+  const dashboard = dashboardQuery.data;
+  const areas = assessmentsQuery.data;
+  // Counted from the active-lesson list (not the server's all-assessment
+  // totals) so the stats agree with the table and quick actions.
+  const lessons = areas ? flattenLessons(areas) : [];
+  const quizzes = quizzesOf(lessons);
+  const publishedCount = quizzes.filter(
+    (quiz) => quiz.assessment.status === "PUBLISHED",
+  ).length;
+  const firstName = user?.fullName.split(" ")[0] ?? "Teacher";
 
   return (
-    <div className="space-y-8">
-      <StaffPageHeader
-        title={`${greeting()}, ${user?.fullName ?? "Teacher"}!`}
-        description="Here's an overview of your classroom activity today."
-      />
+    <div className="space-y-6">
+      <header>
+        <p className="text-sm font-semibold text-primary">
+          {greeting()}, {firstName}
+        </p>
+        <h1 className="text-3xl font-extrabold tracking-tight text-foreground">
+          Class overview
+        </h1>
+      </header>
 
       <QueryState
-        isLoading={isLoading}
-        error={error}
+        isLoading={dashboardQuery.isLoading || assessmentsQuery.isLoading}
+        error={dashboardQuery.error ?? assessmentsQuery.error}
         loadingText="Loading dashboard..."
         errorText="Unable to load the dashboard."
-        onRetry={() => void refetch()}
+        onRetry={() => {
+          void dashboardQuery.refetch();
+          void assessmentsQuery.refetch();
+        }}
       />
 
-      {dashboard && (
-        <>
-          <section
-            aria-label="Summary"
-            className="grid grid-cols-2 gap-4 lg:grid-cols-4 lg:gap-6"
-          >
-            <StatCard
-              icon={Users}
-              label="Total students"
-              value={dashboard.learnerCount}
-              tone="bg-staff-nav text-white"
-            />
-            <StatCard
-              icon={BookOpen}
-              label="Active lessons"
-              value={dashboard.categoryCount}
-              tone="bg-green-300 text-green-950"
-            />
-            <StatCard
-              icon={Star}
-              label="Avg quiz score"
-              value={
-                dashboard.averageQuizScore === null
-                  ? "—"
-                  : `${dashboard.averageQuizScore}%`
-              }
-              tone="bg-amber-200 text-amber-900"
-            />
-            <StatCard
-              icon={Hand}
-              label="Practiced today"
-              value={dashboard.practicedTodayCount}
-              tone="bg-blue-200 text-blue-900"
-            />
-          </section>
+      {dashboard && areas && (
+        <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_300px]">
+          <div className="space-y-6">
+            <section aria-label="Key metrics" className="grid gap-4 sm:grid-cols-2">
+              <StatCard
+                icon={Users}
+                label="Active students"
+                value={dashboard.activeLearnerCount}
+                suffix={`of ${dashboard.learnerCount}`}
+                color="sky"
+                progress={{
+                  value: dashboard.activeLearnerCount,
+                  max: dashboard.learnerCount,
+                }}
+              />
+              <StatCard
+                icon={FileCheck2}
+                label="Quizzes published"
+                value={publishedCount}
+                suffix={`of ${plural(lessons.length, "lesson")}`}
+                color="emerald"
+                progress={{ value: publishedCount, max: lessons.length }}
+              />
+              <StatCard
+                icon={Star}
+                label="Average score"
+                value={
+                  dashboard.averageQuizScore === null
+                    ? "—"
+                    : `${dashboard.averageQuizScore}%`
+                }
+                suffix="all submissions"
+                color="amber"
+                progress={{ value: dashboard.averageQuizScore ?? 0, max: 100 }}
+              />
+              <StatCard
+                icon={Hand}
+                label="Practiced today"
+                value={dashboard.practicedTodayCount}
+                suffix={`of ${dashboard.learnerCount}`}
+                color="violet"
+                progress={{
+                  value: dashboard.practicedTodayCount,
+                  max: dashboard.learnerCount,
+                }}
+              />
+            </section>
 
-          <section
-            aria-label="Quick actions"
-            className="grid gap-4 md:grid-cols-3 lg:gap-6"
-          >
-            {ACTIONS.map((action) => (
-              <StaffCard key={action.to} className="flex flex-col p-6">
-                <span
-                  className={cn(
-                    "flex size-16 items-center justify-center rounded-2xl",
-                    action.iconTone,
-                  )}
-                >
-                  <action.icon aria-hidden="true" className="size-7" />
-                </span>
-                <h2 className="mt-6 font-body text-xl font-extrabold text-foreground">
-                  {action.title}
-                </h2>
-                <p className="mt-2 mb-6 flex-1 text-muted-foreground">
-                  {action.description}
-                </p>
+            <StaffCard className="overflow-hidden">
+              <StaffCardHeader>
+                <StaffCardTitle className="text-base">
+                  Quiz performance
+                </StaffCardTitle>
                 <Link
-                  to={action.to}
-                  className={cn(
-                    buttonVariants(),
-                    "h-11 w-full rounded-full text-white",
-                    action.buttonTone,
-                  )}
+                  to="/teacher/quizzes"
+                  className="text-xs font-bold text-primary hover:underline"
                 >
-                  {action.cta}
-                  <ArrowRight aria-hidden="true" />
+                  Manage quizzes
                 </Link>
-              </StaffCard>
-            ))}
-          </section>
+              </StaffCardHeader>
+              <QuizPerformanceTable quizzes={quizzes} />
+            </StaffCard>
+          </div>
 
-          <StaffCard>
-            <StaffCardHeader>
-              <StaffCardTitle>Recent quiz results</StaffCardTitle>
-              <Link
-                to="/teacher/students"
-                className="text-sm font-bold text-primary hover:underline"
-              >
-                All students
-              </Link>
-            </StaffCardHeader>
+          <aside className="space-y-6 lg:sticky lg:top-8">
+            <StaffCard className="p-2">
+              <h2 className="px-3 pt-2 pb-1 text-xs font-bold tracking-wider text-muted-foreground uppercase">
+                Quick actions
+              </h2>
+              <QuickActionList actions={buildQuickActions(lessons)} />
+            </StaffCard>
 
-            {dashboard.recentAttempts.length === 0 ? (
-              <p className="px-6 py-8 text-center text-sm text-muted-foreground">
-                No learner has submitted a quiz yet.
-              </p>
-            ) : (
-              <ul className="divide-y divide-border">
-                {dashboard.recentAttempts.map((attempt) => (
-                  <li key={attempt.id}>
-                    <Link
-                      to={`/teacher/students/${attempt.learnerId}`}
-                      className="flex items-center gap-3 px-5 py-3 transition-colors hover:bg-muted/60 sm:px-6"
-                    >
-                      <InitialsAvatar name={attempt.learnerName} />
-                      <div className="min-w-0 flex-1">
-                        <p className="truncate font-bold text-foreground">
-                          {attempt.learnerName}
-                        </p>
-                        <p className="truncate text-xs text-muted-foreground">
-                          {attempt.assessmentTitle} ·{" "}
-                          {new Date(attempt.completedAt).toLocaleDateString()}
-                        </p>
-                      </div>
-                      <span className="flex shrink-0 items-center gap-1.5 text-sm font-bold">
-                        {attempt.passed ? (
-                          <CheckCircle2
-                            aria-label="Passed"
-                            className="size-4 text-emerald-600"
-                          />
-                        ) : (
-                          <XCircle
-                            aria-label="Did not pass"
-                            className="size-4 text-red-500"
-                          />
-                        )}
-                        {attempt.percentage}%
-                      </span>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </StaffCard>
-        </>
+            <StaffCard>
+              <StaffCardHeader>
+                <StaffCardTitle className="text-base">
+                  Recent activity
+                </StaffCardTitle>
+              </StaffCardHeader>
+              <RecentActivityFeed
+                attempts={dashboard.recentAttempts.slice(0, 5)}
+              />
+            </StaffCard>
+          </aside>
+        </div>
       )}
     </div>
   );

@@ -10,6 +10,7 @@ import StaffPageHeader from "@/components/staff/staff-page-header";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { formatRelativeTime } from "@/lib/format";
+import { flattenLessons } from "@/lib/lessons";
 import { cn } from "@/lib/utils";
 import { useTeacherAssessments } from "@/hooks/use-teacher-assessments";
 
@@ -19,11 +20,9 @@ export default function LessonsPage() {
   const { data: areas, isLoading, error, refetch } = useTeacherAssessments();
   const [areaFilter, setAreaFilter] = useState(ALL);
 
-  const lessons = (areas ?? [])
-    .filter((area) => areaFilter === ALL || area.id === areaFilter)
-    .flatMap((area) =>
-      area.categories.map((category) => ({ ...category, areaName: area.name })),
-    );
+  const lessons = flattenLessons(
+    (areas ?? []).filter((area) => areaFilter === ALL || area.id === areaFilter),
+  );
 
   return (
     <div className="space-y-8">
@@ -84,7 +83,7 @@ export default function LessonsPage() {
                       />
                     </div>
 
-                    <h2 className="mt-4 font-body text-xl font-bold text-foreground">
+                    <h2 className="mt-4 text-xl font-bold text-foreground">
                       {lesson.categoryName}
                     </h2>
                     <Badge

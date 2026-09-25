@@ -121,6 +121,9 @@ auth, learning, categories, assessment, progress, teacher. Each router is mounte
   prop, not `asChild`) plus staff building blocks in `components/staff/*`. The staff
   theme is the `.theme-staff` token override in `index.css`, applied to `<html>` by
   `useStaffTheme()` so portaled dialogs/selects inherit it.
+  Staff typography is Manrope (`font-staff`, self-hosted via
+  `@fontsource-variable/manrope`); only the HUDYAT wordmark/"H" badge keep Nunito
+  (`font-body`) to match the student brand. Don't add `font-body` to staff UI.
 - When adding shadcn components (`npx shadcn@latest add ...`), check the generated
   imports: the CLI has resolved `cn` to the unrelated npm package `"cn"` instead of
   `@/lib/utils` — fix the imports and don't keep that dependency. Decline overwriting

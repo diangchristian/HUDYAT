@@ -1,43 +1,62 @@
 import type { LucideIcon } from "lucide-react";
 
+import ProgressBar from "./progress-bar";
 import { StaffCard } from "./staff-card";
+import { STAFF_COLORS, type StaffColor } from "./staff-colors";
 import { cn } from "@/lib/utils";
 
 type StatCardProps = {
   icon: LucideIcon;
   label: string;
   value: string | number;
-  /** Tailwind classes for the icon bubble, e.g. "bg-sky-100 text-sky-700". */
-  tone: string;
-  hint?: string;
+  /** Small context after the value, e.g. "of 24" or "all submissions". */
+  suffix?: string;
+  color: StaffColor;
+  /** Optional ratio bar under the value, e.g. { value: 3, max: 4 }. */
+  progress?: { value: number; max: number };
 };
 
 export default function StatCard({
   icon: Icon,
   label,
   value,
-  tone,
-  hint,
+  suffix,
+  color,
+  progress,
 }: StatCardProps) {
+  const { tile, bar } = STAFF_COLORS[color];
+
   return (
-    <StaffCard className="flex flex-col gap-4 p-5 sm:p-6">
+    <StaffCard className="flex gap-4 p-5">
       <span
         className={cn(
-          "flex size-10 items-center justify-center rounded-full",
-          tone,
+          "flex size-12 shrink-0 items-center justify-center rounded-2xl",
+          tile,
         )}
       >
-        <Icon aria-hidden="true" className="size-5" />
+        <Icon aria-hidden="true" className="size-6" />
       </span>
 
-      <div>
-        <p className="text-xs font-extrabold tracking-wide text-muted-foreground uppercase">
-          {label}
+      <div className="min-w-0 flex-1">
+        <p className="text-sm font-semibold text-muted-foreground">{label}</p>
+        <p className="flex flex-wrap items-baseline gap-x-2">
+          <span className="text-3xl font-extrabold text-foreground tabular-nums">
+            {value}
+          </span>
+          {suffix && (
+            <span className="text-xs font-medium text-muted-foreground">
+              {suffix}
+            </span>
+          )}
         </p>
-        <p className="mt-1 font-body text-[32px] leading-10 font-bold text-foreground">
-          {value}
-        </p>
-        {hint && <p className="text-xs text-muted-foreground">{hint}</p>}
+        {progress && (
+          <ProgressBar
+            {...progress}
+            label={label}
+            barClassName={bar}
+            className="mt-2"
+          />
+        )}
       </div>
     </StaffCard>
   );

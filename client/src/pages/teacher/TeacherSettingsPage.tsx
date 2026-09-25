@@ -140,7 +140,7 @@ export default function TeacherSettingsPage() {
                 name={user.fullName}
                 className="size-20 text-3xl ring-4 ring-accent"
               />
-              <h2 className="mt-4 font-body text-lg font-bold text-foreground">
+              <h2 className="mt-4 text-lg font-bold text-foreground">
                 {user.fullName}
               </h2>
               <Badge className="mt-2 h-6 border-amber-300 bg-amber-100 px-3 font-bold text-amber-900">
@@ -206,7 +206,7 @@ export default function TeacherSettingsPage() {
                 H
               </span>
               <div>
-                <p className="font-body text-lg font-bold text-foreground">
+                <p className="text-lg font-bold text-foreground">
                   HUDYAT Teacher Portal
                 </p>
                 <p className="text-sm text-muted-foreground">

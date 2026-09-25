@@ -62,7 +62,7 @@ const TeacherLoginPage = () => {
         </div>
 
         <form onSubmit={handleSubmit} className="mt-8 space-y-5" noValidate>
-          <h2 className="font-body text-xl font-bold text-foreground">Log in</h2>
+          <h2 className="text-xl font-bold text-foreground">Log in</h2>
 
           <div className="space-y-2">
             <Label htmlFor="identifier" className="font-bold">

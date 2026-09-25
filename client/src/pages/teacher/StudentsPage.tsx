@@ -4,6 +4,7 @@ import { ChevronLeft, ChevronRight, Eye, Search } from "lucide-react";
 
 import QueryState from "@/components/staff/query-state";
 import InitialsAvatar from "@/components/staff/initials-avatar";
+import ProgressBar from "@/components/staff/progress-bar";
 import {
   StaffCard,
   StaffCardHeader,
@@ -120,14 +121,6 @@ export default function StudentsPage() {
                 </TableHeader>
                 <TableBody>
                   {visible.map((learner) => {
-                    const percent =
-                      learner.totalCategories > 0
-                        ? Math.round(
-                            (learner.completedCategories /
-                              learner.totalCategories) *
-                              100,
-                          )
-                        : 0;
                     const detailPath = `/teacher/students/${learner.id}`;
 
                     return (
@@ -160,19 +153,13 @@ export default function StudentsPage() {
                         </TableCell>
                         <TableCell>
                           <div className="flex items-center gap-2">
-                            <div
-                              role="progressbar"
-                              aria-label={`${learner.fullName} lessons completed`}
-                              aria-valuemin={0}
-                              aria-valuemax={100}
-                              aria-valuenow={percent}
-                              className="hidden h-2 w-16 overflow-hidden rounded-full bg-muted sm:block"
-                            >
-                              <div
-                                className="h-full rounded-full bg-staff-nav"
-                                style={{ width: `${percent}%` }}
-                              />
-                            </div>
+                            <ProgressBar
+                              value={learner.completedCategories}
+                              max={learner.totalCategories}
+                              label={`${learner.fullName} lessons completed`}
+                              barClassName="bg-staff-nav"
+                              className="hidden h-2 w-16 sm:block"
+                            />
                             <span className="text-sm font-semibold">
                               {learner.completedCategories}/
                               {learner.totalCategories}

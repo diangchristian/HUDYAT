@@ -20,6 +20,8 @@ export type AttemptSummary = {
 
 export type TeacherDashboard = {
   learnerCount: number;
+  /** Learners who have started or finished at least one lesson. */
+  activeLearnerCount: number;
   categoryCount: number;
   /** Mean percentage across all completed quiz attempts; null if none. */
   averageQuizScore: number | null;

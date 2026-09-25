@@ -59,6 +59,7 @@ export const getDashboard = async () => {
 
   const [
     learnerCount,
+    activeLearnerCount,
     assessmentsByStatus,
     categoryCount,
     recentAttempts,
@@ -66,6 +67,17 @@ export const getDashboard = async () => {
     practicedToday,
   ] = await Promise.all([
     prisma.learnerProfile.count(),
+    // Learners who have started (or finished) at least one active lesson.
+    prisma.learnerProfile.count({
+      where: {
+        categoryProgress: {
+          some: {
+            status: { in: ["IN_PROGRESS", "COMPLETED"] },
+            category: { isActive: true },
+          },
+        },
+      },
+    }),
     prisma.assessment.groupBy({ by: ["status"], _count: { _all: true } }),
     prisma.category.count({ where: { isActive: true } }),
     prisma.assessmentAttempt.findMany({
@@ -104,6 +116,7 @@ export const getDashboard = async () => {
 
   return {
     learnerCount,
+    activeLearnerCount,
     categoryCount,
     averageQuizScore,
     practicedTodayCount: practicedToday.length,

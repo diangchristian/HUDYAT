@@ -18,6 +18,7 @@ import {
   StaffCardHeader,
   StaffCardTitle,
 } from "@/components/staff/staff-card";
+import ProgressBar from "@/components/staff/progress-bar";
 import StatCard from "@/components/staff/stat-card";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -86,7 +87,7 @@ export default function StudentDetailPage() {
             />
             <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-2">
-                <h1 className="font-body text-2xl font-bold text-foreground sm:text-3xl">
+                <h1 className="text-2xl font-bold text-foreground sm:text-3xl">
                   {data.learner.fullName}
                 </h1>
                 {!data.learner.isActive && (
@@ -105,14 +106,19 @@ export default function StudentDetailPage() {
             <StatCard
               icon={BookOpen}
               label="Lessons completed"
-              value={`${data.progress.summary.completedCategories}/${data.progress.summary.totalCategories}`}
-              tone="bg-staff-nav text-white"
+              value={data.progress.summary.completedCategories}
+              suffix={`of ${data.progress.summary.totalCategories}`}
+              color="sky"
+              progress={{
+                value: data.progress.summary.completedCategories,
+                max: data.progress.summary.totalCategories,
+              }}
             />
             <StatCard
               icon={FileQuestion}
               label="Quizzes submitted"
               value={data.attempts.length}
-              tone="bg-green-300 text-green-950"
+              color="emerald"
             />
             <StatCard
               icon={Hand}
@@ -122,8 +128,9 @@ export default function StudentDetailPage() {
                   ? `${data.practice.accuracy}%`
                   : "—"
               }
-              hint={`${data.practice.totalAttempts} practice attempts`}
-              tone="bg-blue-200 text-blue-900"
+              suffix={`${data.practice.totalAttempts} tries`}
+              color="violet"
+              progress={{ value: data.practice.accuracy, max: 100 }}
             />
           </section>
 
@@ -163,19 +170,13 @@ export default function StudentDetailPage() {
                         </TableCell>
                         <TableCell>
                           <div className="flex items-center gap-2">
-                            <div
-                              role="progressbar"
-                              aria-label={`${category.name} lesson progress`}
-                              aria-valuemin={0}
-                              aria-valuemax={100}
-                              aria-valuenow={category.progressPercent}
-                              className="h-2 w-20 overflow-hidden rounded-full bg-muted"
-                            >
-                              <div
-                                className="h-full rounded-full bg-staff-nav"
-                                style={{ width: `${category.progressPercent}%` }}
-                              />
-                            </div>
+                            <ProgressBar
+                              value={category.progressPercent}
+                              max={100}
+                              label={`${category.name} lesson progress`}
+                              barClassName="bg-staff-nav"
+                              className="h-2 w-20"
+                            />
                             <span className="text-xs font-semibold">
                               {category.progressPercent}%
                             </span>

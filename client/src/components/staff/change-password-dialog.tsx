@@ -122,7 +122,7 @@ export default function ChangePasswordDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="font-staff sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="font-body text-xl font-bold">
+          <DialogTitle className="text-xl font-bold">
             Change password
           </DialogTitle>
           <DialogDescription>

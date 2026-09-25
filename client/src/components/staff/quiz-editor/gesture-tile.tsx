@@ -43,7 +43,7 @@ export default function GestureTile({
           className="aspect-square w-full object-contain p-2"
         />
       ) : (
-        <span className="flex aspect-square w-full items-center justify-center font-body text-3xl font-bold text-muted-foreground">
+        <span className="flex aspect-square w-full items-center justify-center text-3xl font-bold text-muted-foreground">
           {gesture.label}
         </span>
       )}

@@ -32,7 +32,7 @@ export function StaffCardHeader({
 export function StaffCardTitle({ className, ...props }: ComponentProps<"h2">) {
   return (
     <h2
-      className={cn("font-body text-lg font-bold text-foreground", className)}
+      className={cn("text-lg font-bold text-foreground", className)}
       {...props}
     />
   );
