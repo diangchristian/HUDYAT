@@ -11,6 +11,7 @@ import categoriesRouter from "./routes/categories.routes.js";
 import learningRouter from "./routes/learning.routes.js";
 import assessmentRouter from "./routes/assessment.routes.js";
 import progressRouter from "./routes/progress.routes.js";
+import teacherRouter from "./routes/teacher.routes.js";
 
 dotenv.config();
 connectDB()
@@ -34,6 +35,7 @@ app.use("/api/learning", learningRouter);
 app.use("/api/categories", categoriesRouter);
 app.use("/api/assessments", assessmentRouter);
 app.use("/api/progress", progressRouter);
+app.use("/api/teacher", teacherRouter);
 
 
 

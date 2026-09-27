@@ -2,6 +2,7 @@ import Router from "express";
 import {
   register,
   login,
+  teacherLogin,
   logout,
   me,
   updateProfile,
@@ -18,6 +19,7 @@ authRouter.get("/test", (req, res) => {
 
 authRouter.post("/register", register)
 authRouter.post("/login", login)
+authRouter.post("/teacher/login", teacherLogin)
 authRouter.post("/logout", logout)
 authRouter.get("/me", authMiddleware, me)
 authRouter.patch("/me", authMiddleware, updateProfile)

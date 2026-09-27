@@ -12,6 +12,7 @@
     "seed:categories": "tsx prisma/seeder/categoriesSeeder.ts",
     "seed:fsl-gestures": "tsx prisma/seeder/fslGesturesSeeder.ts",
     "seed:assessments": "tsx prisma/seeder/assessmentsSeeder.ts",
+    "seed:test-teacher": "tsx prisma/seeder/testTeacherSeeder.ts",
     "upload:media": "tsx prisma/scripts/uploadGestureMedia.ts",
     "models:register": "tsx prisma/scripts/registerModels.ts",
     "predev": "prisma generate",

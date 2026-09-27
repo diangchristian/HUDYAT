@@ -1,11 +1,13 @@
-import { createBrowserRouter } from "react-router";
+import { createBrowserRouter, Navigate } from "react-router";
 
 import StudentPageLayout from "@/layouts/StudentPageLayout";
 import NoSidebarLayout from "@/layouts/NoSidebarLayout";
+import TeacherPageLayout from "@/layouts/TeacherPageLayout";
 import { RequireGuest, RequireRole } from "./route-guards";
 
 import HomePage from "@/pages/HomePage";
 import LoginPage from "@/pages/auth/LoginPage";
+import TeacherLoginPage from "@/pages/auth/TeacherLoginPage";
 
 import StudentHomePage from "@/pages/student/StudentHomePage";
 import LearnPage from "@/pages/student/LearnPage";
@@ -17,6 +19,14 @@ import AssessmentPage from "@/pages/student/AssessmentPage";
 import AssessmentResultPage from "@/pages/student/AssessmentResultPage";
 import TakeAssessmentPage from "@/pages/student/TakeAssessmentPage";
 import SettingsPage from "@/pages/student/SettingsPage";
+
+import TeacherDashboardPage from "@/pages/teacher/TeacherDashboardPage";
+import LessonsPage from "@/pages/teacher/LessonsPage";
+import QuizzesPage from "@/pages/teacher/QuizzesPage";
+import QuizEditorPage from "@/pages/teacher/QuizEditorPage";
+import StudentsPage from "@/pages/teacher/StudentsPage";
+import StudentDetailPage from "@/pages/teacher/StudentDetailPage";
+import TeacherSettingsPage from "@/pages/teacher/TeacherSettingsPage";
 
 export const router = createBrowserRouter([
   // =========================
@@ -32,6 +42,10 @@ export const router = createBrowserRouter([
       {
         path: "/login",
         element: <LoginPage />,
+      },
+      {
+        path: "/teacher/login",
+        element: <TeacherLoginPage />,
       },
     ],
   },
@@ -93,6 +107,54 @@ export const router = createBrowserRouter([
           {
             path: "/student/practice/:categoryId",
             element: <CategoryPracticePage />,
+          },
+        ],
+      },
+    ],
+  },
+
+  // =========================
+  // TEACHER ROUTES (TEACHER role only)
+  // =========================
+  {
+    element: (
+      <RequireRole allowedRoles={["TEACHER"]} loginPath="/teacher/login" />
+    ),
+    children: [
+      {
+        element: <TeacherPageLayout />,
+        children: [
+          {
+            path: "/teacher",
+            element: <Navigate to="/teacher/dashboard" replace />,
+          },
+          {
+            path: "/teacher/dashboard",
+            element: <TeacherDashboardPage />,
+          },
+          {
+            path: "/teacher/lessons",
+            element: <LessonsPage />,
+          },
+          {
+            path: "/teacher/quizzes",
+            element: <QuizzesPage />,
+          },
+          {
+            path: "/teacher/quizzes/:categoryId",
+            element: <QuizEditorPage />,
+          },
+          {
+            path: "/teacher/students",
+            element: <StudentsPage />,
+          },
+          {
+            path: "/teacher/students/:learnerId",
+            element: <StudentDetailPage />,
+          },
+          {
+            path: "/teacher/settings",
+            element: <TeacherSettingsPage />,
           },
         ],
       },

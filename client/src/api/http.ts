@@ -19,13 +19,21 @@ api.interceptors.response.use(
   (response) => response,
   (error: unknown) => {
     if (axios.isAxiosError(error) && error.response?.status === 401) {
-      const isLoginRequest = error.config?.url?.includes("/api/auth/login");
-      const alreadyOnLogin = window.location.pathname === "/login";
+      const url = error.config?.url ?? "";
+      const isLoginRequest =
+        url.includes("/api/auth/login") ||
+        url.includes("/api/auth/teacher/login");
+
+      // Teachers have their own login screen; send them back to it.
+      const loginPath = window.location.pathname.startsWith("/teacher")
+        ? "/teacher/login"
+        : "/login";
+      const alreadyOnLogin = window.location.pathname === loginPath;
 
       localStorage.removeItem("token");
 
       if (!isLoginRequest && !alreadyOnLogin) {
-        window.location.assign("/login");
+        window.location.assign(loginPath);
       }
     }
 

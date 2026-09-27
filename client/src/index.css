@@ -10,6 +10,7 @@
 
 @import "@fontsource-variable/inter";
 @import "@fontsource-variable/nunito-sans";
+@import "@fontsource-variable/manrope";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -34,6 +35,10 @@
   --student-primary: var(--hudyat-gold);
   --teacher-primary: var(--hudyat-blue);
   --admin-primary: var(--hudyat-blue);
+
+  /* Staff (teacher/admin) portal accents */
+  --staff-brand: #005EA4;
+  --staff-nav-active: var(--hudyat-blue);
 
 
   /* ----------------------------------------
@@ -118,6 +123,46 @@
 
 
 /* ========================================
+   STAFF THEME (TEACHER / ADMIN)
+   Applied to <html> by StaffLayout so that
+   portaled popups (dialogs, selects, sheets)
+   inherit it too.
+   ======================================== */
+
+.theme-staff {
+  --foreground: #191C1E;
+  --card-foreground: #191C1E;
+  --popover-foreground: #191C1E;
+
+  --primary: var(--staff-brand);
+  --primary-foreground: #FFFFFF;
+
+  --secondary: #F1F4F8;
+  --secondary-foreground: #191C1E;
+
+  --muted: #F1F4F8;
+  --muted-foreground: #546E7A;
+
+  --accent: #E6F1FA;
+  --accent-foreground: var(--staff-brand);
+
+  --border: #ECEFF1;
+  --input: #DDE3E8;
+  --ring: var(--staff-nav-active);
+
+  --sidebar-primary: var(--staff-nav-active);
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #E6F1FA;
+  --sidebar-accent-foreground: var(--staff-brand);
+  --sidebar-border: #ECEFF1;
+  --sidebar-ring: var(--staff-nav-active);
+
+  --shadow-card: 0 4px 6px rgb(0 0 0 / 0.06);
+  --shadow-card-hover: 0 8px 16px rgb(0 0 0 / 0.08);
+}
+
+
+/* ========================================
    DARK MODE
    ======================================== */
 
@@ -169,6 +214,7 @@
   /* Fonts */
   --font-sans: "Inter Variable", sans-serif;
   --font-body: "Nunito";
+  --font-staff: "Manrope Variable", sans-serif;
 
   /* Shadcn semantic colors */
   --color-background: var(--background);
@@ -212,6 +258,8 @@
   /* HUDYAT brand */
   --color-hudyat-gold: var(--hudyat-gold);
   --color-hudyat-blue: var(--hudyat-blue);
+  --color-staff-brand: var(--staff-brand);
+  --color-staff-nav: var(--staff-nav-active);
 
   /* HUDYAT categories */
   --color-category-alphabet: var(--category-alphabet);
