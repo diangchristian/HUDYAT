@@ -3,8 +3,11 @@ import {readFile} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import * as tf from '@tensorflow/tfjs';
 import {buildModel,loadWeights} from '../src/features/fsl-recognition/category-core.js';
+
 const api=process.env.MODEL_TEST_API || 'http://localhost:5011';
+
 await tf.setBackend('cpu');
+
 for(const category of ['alphabet','colors']){
  const response=await fetch(api+'/api/models/'+category);
  if(!response.ok)throw Error('API failed '+response.status);
