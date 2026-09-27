@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useParams } from "react-router";
+import { Link, useParams, useSearchParams } from "react-router";
 import { AlertTriangle, ArrowLeft, Lock, Plus, Send } from "lucide-react";
 
 import LessonIcon from "@/components/staff/lesson-icon";
@@ -31,10 +31,39 @@ import type {
   AuthoringQuestion,
 } from "@/api/teacher-api";
 import { useCategoryGestures } from "@/hooks/use-category-gestures";
+import PrototypeSwitcher from "@/components/prototype/prototype-switcher";
+import * as BrandPanel from "./quiz-editor-prototype/ColorBrandPanel";
+import * as LessonColor from "./quiz-editor-prototype/ColorLessonColor";
+import * as TypeTint from "./quiz-editor-prototype/ColorTypeTint";
+import type {
+  CardProps,
+  OutlineProps,
+} from "./quiz-editor-prototype/outline-props";
 import { useSaveAssessment } from "@/hooks/use-save-assessment";
 import { useTeacherAssessment } from "@/hooks/use-teacher-assessment";
 
 type Assessment = NonNullable<AuthoringAssessment["assessment"]>;
+
+/* PROTOTYPE — throwaway: aside variants for `?variant=` (dev only). */
+const PROTOTYPE_VARIANTS = [
+  { key: "0", name: "Current (white)" },
+  { key: "1", name: "Color · By question type" },
+  { key: "2", name: "Color · Brand blue panel" },
+  { key: "3", name: "Color · Lesson color" },
+];
+type PrototypeTheme = {
+  Outline: (props: OutlineProps) => React.ReactNode;
+  Card: (props: CardProps) => React.ReactNode;
+  sectionClassName?: string;
+};
+const PROTOTYPE_THEMES: Record<string, PrototypeTheme> = {
+  "1": TypeTint,
+  "2": BrandPanel,
+  "3": {
+    ...LessonColor,
+    sectionClassName: "rounded-3xl bg-slate-100 p-3 sm:p-4",
+  },
+};
 
 /* =========================================================
  * Quiz details + status actions
@@ -272,11 +301,118 @@ function QuizDetails({ data }: { data: AuthoringAssessment }) {
  * Questions section (list + outline sidebar)
  * ======================================================= */
 
+/* PROTOTYPE: the aside is swappable via `?variant=` (dev only). */
+function CurrentOutline({
+  questions,
+  editingId,
+  canAdd,
+  onAdd,
+  onJump,
+  totalPoints,
+  attemptCount,
+}: OutlineProps) {
+  return (
+    <StaffCard>
+      <StaffCardHeader className="py-3">
+        <h2 className="text-xs font-extrabold tracking-wide text-muted-foreground uppercase">
+          Questions ({questions.length})
+        </h2>
+        {canAdd && (
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            aria-label="Add question"
+            onClick={onAdd}
+          >
+            <Plus aria-hidden="true" />
+          </Button>
+        )}
+      </StaffCardHeader>
+
+      {questions.length > 0 ? (
+        <ol className="max-h-[50vh] space-y-1 overflow-y-auto p-2">
+          {questions.map((question) => {
+            const TypeIcon = QUESTION_TYPES[question.questionType].icon;
+            const missingVideo = isMissingVideo(
+              question.questionType,
+              question.gesture,
+            );
+            return (
+              <li key={question.id}>
+                <button
+                  type="button"
+                  onClick={() => onJump(question.id)}
+                  className={cn(
+                    "flex w-full items-center gap-3 rounded-xl p-2 text-left transition-colors hover:bg-muted",
+                    editingId === question.id && "bg-accent",
+                  )}
+                >
+                  <span className="flex size-7 shrink-0 items-center justify-center rounded-lg border border-border bg-white text-xs font-bold">
+                    {question.questionNumber}
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate text-sm font-semibold text-foreground">
+                      {question.questionText}
+                    </span>
+                    <span className="flex items-center gap-1 text-xs font-bold text-muted-foreground">
+                      <TypeIcon aria-hidden="true" className="size-3" />
+                      {QUESTION_TYPES[question.questionType].shortLabel} ·{" "}
+                      {question.gesture.label}
+                    </span>
+                  </span>
+                  {missingVideo && (
+                    <AlertTriangle
+                      aria-label="No video for this sign"
+                      className="size-4 shrink-0 text-amber-600"
+                    />
+                  )}
+                </button>
+              </li>
+            );
+          })}
+        </ol>
+      ) : (
+        <p className="p-4 text-sm text-muted-foreground">
+          Questions you add appear here.
+        </p>
+      )}
+
+      <dl className="grid grid-cols-2 gap-2 border-t border-border p-4 text-center">
+        <div className="rounded-xl bg-muted/60 p-2">
+          <dt className="text-xs text-muted-foreground">Total points</dt>
+          <dd className="font-bold text-foreground">{totalPoints}</dd>
+        </div>
+        <div className="rounded-xl bg-muted/60 p-2">
+          <dt className="text-xs text-muted-foreground">Submissions</dt>
+          <dd className="font-bold text-foreground">
+            {attemptCount}
+          </dd>
+        </div>
+      </dl>
+    </StaffCard>
+  );
+}
+
+/* PROTOTYPE: adapter so the current card fits the variant contract. */
+function CurrentCard(props: CardProps) {
+  return (
+    <QuestionCard
+      question={props.question}
+      canEdit={props.canEdit}
+      canDelete={props.canDelete}
+      onEdit={props.onEdit}
+      onDelete={props.onDelete}
+    />
+  );
+}
+
 function QuestionsSection({
   categoryId,
+  categoryName,
   assessment,
 }: {
   categoryId: string;
+  categoryName: string;
   assessment: Assessment;
 }) {
   const { data: gestures = [], isLoading: gesturesLoading } =
@@ -286,6 +422,12 @@ function QuestionsSection({
 
   const { isLocked, questions } = assessment;
   const canAdd = !isLocked && editing === null && !gesturesLoading;
+  const [searchParams] = useSearchParams();
+  const theme = import.meta.env.DEV
+    ? PROTOTYPE_THEMES[searchParams.get("variant") ?? ""]
+    : undefined;
+  const Outline = theme?.Outline ?? CurrentOutline;
+  const Card = theme?.Card ?? CurrentCard;
   const totalPoints = questions.reduce((total, q) => total + q.points, 0);
 
   const startAdding = () => {
@@ -304,7 +446,10 @@ function QuestionsSection({
 
   return (
     <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_280px]">
-      <section aria-label="Questions" className="space-y-4">
+      <section
+        aria-label="Questions"
+        className={cn("space-y-4", theme?.sectionClassName)}
+      >
         {isLocked && (
           <p className="flex items-start gap-2 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
             <Lock aria-hidden="true" className="mt-0.5 size-4 shrink-0" />
@@ -341,8 +486,9 @@ function QuestionsSection({
               onDone={() => setEditing(null)}
             />
           ) : (
-            <QuestionCard
+            <Card
               key={question.id}
+              categoryName={categoryName}
               question={question}
               canEdit={editing === null}
               canDelete={editing === null && !isLocked}
@@ -375,84 +521,17 @@ function QuestionsSection({
       </section>
 
       <aside className="lg:sticky lg:top-6">
-        <StaffCard>
-          <StaffCardHeader className="py-3">
-            <h2 className="text-xs font-extrabold tracking-wide text-muted-foreground uppercase">
-              Questions ({questions.length})
-            </h2>
-            {canAdd && (
-              <Button
-                variant="ghost"
-                size="icon-sm"
-                aria-label="Add question"
-                onClick={startAdding}
-              >
-                <Plus aria-hidden="true" />
-              </Button>
-            )}
-          </StaffCardHeader>
-
-          {questions.length > 0 ? (
-            <ol className="max-h-[50vh] space-y-1 overflow-y-auto p-2">
-              {questions.map((question) => {
-                const TypeIcon = QUESTION_TYPES[question.questionType].icon;
-                const missingVideo = isMissingVideo(
-                  question.questionType,
-                  question.gesture,
-                );
-                return (
-                  <li key={question.id}>
-                    <button
-                      type="button"
-                      onClick={() => jumpTo(question.id)}
-                      className={cn(
-                        "flex w-full items-center gap-3 rounded-xl p-2 text-left transition-colors hover:bg-muted",
-                        editing === question.id && "bg-accent",
-                      )}
-                    >
-                      <span className="flex size-7 shrink-0 items-center justify-center rounded-lg border border-border bg-white text-xs font-bold">
-                        {question.questionNumber}
-                      </span>
-                      <span className="min-w-0 flex-1">
-                        <span className="block truncate text-sm font-semibold text-foreground">
-                          {question.questionText}
-                        </span>
-                        <span className="flex items-center gap-1 text-xs font-bold text-muted-foreground">
-                          <TypeIcon aria-hidden="true" className="size-3" />
-                          {QUESTION_TYPES[question.questionType].shortLabel} ·{" "}
-                          {question.gesture.label}
-                        </span>
-                      </span>
-                      {missingVideo && (
-                        <AlertTriangle
-                          aria-label="No video for this sign"
-                          className="size-4 shrink-0 text-amber-600"
-                        />
-                      )}
-                    </button>
-                  </li>
-                );
-              })}
-            </ol>
-          ) : (
-            <p className="p-4 text-sm text-muted-foreground">
-              Questions you add appear here.
-            </p>
-          )}
-
-          <dl className="grid grid-cols-2 gap-2 border-t border-border p-4 text-center">
-            <div className="rounded-xl bg-muted/60 p-2">
-              <dt className="text-xs text-muted-foreground">Total points</dt>
-              <dd className="font-bold text-foreground">{totalPoints}</dd>
-            </div>
-            <div className="rounded-xl bg-muted/60 p-2">
-              <dt className="text-xs text-muted-foreground">Submissions</dt>
-              <dd className="font-bold text-foreground">
-                {assessment.attemptCount}
-              </dd>
-            </div>
-          </dl>
-        </StaffCard>
+        <Outline
+          questions={questions}
+          editingId={editing}
+          canAdd={canAdd}
+          onAdd={startAdding}
+          onJump={jumpTo}
+          totalPoints={totalPoints}
+          attemptCount={assessment.attemptCount}
+          passingScore={assessment.passingScore}
+          categoryName={categoryName}
+        />
       </aside>
 
       <DeleteQuestionDialog
@@ -471,6 +550,7 @@ function QuestionsSection({
 export default function QuizEditorPage() {
   const { categoryId } = useParams();
   const { data, isLoading, error, refetch } = useTeacherAssessment(categoryId);
+  const prototypeVariant = useSearchParams()[0].get("variant");
 
   return (
     <div className="space-y-6">
@@ -499,9 +579,19 @@ export default function QuizEditorPage() {
           {data.assessment && (
             <QuestionsSection
               categoryId={categoryId}
+              categoryName={data.category.name}
               assessment={data.assessment}
             />
           )}
+        </>
+      )}
+      {import.meta.env.DEV && prototypeVariant && (
+        <>
+          <div className="h-16" />
+          <PrototypeSwitcher
+            variants={PROTOTYPE_VARIANTS}
+            current={prototypeVariant}
+          />
         </>
       )}
     </div>
