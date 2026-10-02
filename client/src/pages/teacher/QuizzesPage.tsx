@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 
 import QueryState from "@/components/staff/query-state";
+import { CardGridSkeleton } from "@/components/staff/skeletons";
 import { lessonPresentation } from "@/components/staff/lesson-presentation";
 import QuizStatusBadge from "@/components/staff/quiz-status-badge";
 import { StaffCard } from "@/components/staff/staff-card";
@@ -416,6 +417,12 @@ export default function QuizzesPage() {
         isLoading={isLoading}
         error={error}
         loadingText="Loading quizzes..."
+        skeleton={
+          <CardGridSkeleton
+            count={6}
+            className="grid gap-4 md:grid-cols-2 xl:grid-cols-3 lg:gap-6"
+          />
+        }
         errorText="Unable to load quizzes."
         onRetry={() => void refetch()}
       />

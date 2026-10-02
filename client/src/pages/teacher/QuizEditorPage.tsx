@@ -4,6 +4,8 @@ import { AlertTriangle, ArrowLeft, Lock, Plus, Send } from "lucide-react";
 
 import LessonIcon from "@/components/staff/lesson-icon";
 import QueryState from "@/components/staff/query-state";
+import { SidePanelSkeleton } from "@/components/staff/skeletons";
+import { Skeleton } from "@/components/ui/skeleton";
 import QuizStatusBadge from "@/components/staff/quiz-status-badge";
 import DeleteQuestionDialog from "@/components/staff/quiz-editor/delete-question-dialog";
 import FeedbackMessage from "@/components/staff/quiz-editor/feedback-message";
@@ -566,6 +568,16 @@ export default function QuizEditorPage() {
         isLoading={isLoading}
         error={error}
         loadingText="Loading quiz..."
+        skeleton={
+          <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_280px]">
+            <div className="space-y-4">
+              <Skeleton className="h-48 rounded-2xl" />
+              <Skeleton className="h-48 rounded-2xl" />
+              <Skeleton className="h-48 rounded-2xl" />
+            </div>
+            <SidePanelSkeleton rows={6} />
+          </div>
+        }
         errorText="Unable to load this quiz."
         onRetry={() => void refetch()}
       />

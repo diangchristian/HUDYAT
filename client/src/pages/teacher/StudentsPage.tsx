@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router";
 import { ChevronLeft, ChevronRight, Eye, Search } from "lucide-react";
 
 import QueryState from "@/components/staff/query-state";
+import { TableSkeleton } from "@/components/staff/skeletons";
 import InitialsAvatar from "@/components/staff/initials-avatar";
 import ProgressBar from "@/components/staff/progress-bar";
 import {
@@ -59,6 +60,7 @@ export default function StudentsPage() {
         isLoading={isLoading}
         error={error}
         loadingText="Loading students..."
+        skeleton={<TableSkeleton />}
         errorText="Unable to load students."
         onRetry={() => void refetch()}
       />
