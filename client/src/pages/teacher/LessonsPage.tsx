@@ -4,6 +4,7 @@ import { ArrowRight, Clock, Plus } from "lucide-react";
 
 import PrototypeSwitcher from "@/components/prototype/prototype-switcher";
 import QueryState from "@/components/staff/query-state";
+import { CardGridSkeleton } from "@/components/staff/skeletons";
 import CardSignPreview from "./lessons-prototype/CardSignPreview";
 import CardStatsFooter from "./lessons-prototype/CardStatsFooter";
 import CardColorHeader from "./lessons-prototype/CardColorHeader";
@@ -104,6 +105,12 @@ function CurrentLessons({
         isLoading={isLoading}
         error={error}
         loadingText="Loading lessons..."
+        skeleton={
+          <CardGridSkeleton
+            count={8}
+            className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 lg:gap-6"
+          />
+        }
         errorText="Unable to load lessons."
         onRetry={() => void refetch()}
       />

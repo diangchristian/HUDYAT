@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 
 import QueryState from "@/components/staff/query-state";
+import { ProfileHeaderSkeleton, StatGridSkeleton, TableSkeleton } from "@/components/staff/skeletons";
 import InitialsAvatar from "@/components/staff/initials-avatar";
 import LessonIcon from "@/components/staff/lesson-icon";
 import {
@@ -73,6 +74,13 @@ export default function StudentDetailPage() {
         isLoading={isLoading}
         error={error}
         loadingText="Loading student..."
+        skeleton={
+          <>
+            <ProfileHeaderSkeleton />
+            <StatGridSkeleton count={3} className="grid gap-4 sm:grid-cols-3" />
+            <TableSkeleton />
+          </>
+        }
         errorText="Unable to load this student."
         onRetry={() => void refetch()}
       />

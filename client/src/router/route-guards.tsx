@@ -3,6 +3,7 @@ import { Navigate, Outlet, useLocation } from "react-router";
 import type { UserRole } from "@/api/auth-api";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import LoadingScreen from "@/components/common/loading-screen";
+import StaffLoadingScreen from "@/components/staff/staff-loading-screen";
 import { isStandalonePwa } from "@/lib/pwa";
 
 /*
@@ -26,8 +27,13 @@ function useAuthState() {
   return { hasToken, user, isLoading };
 }
 
+// The Hudyat loading screen is student-only; staff areas get a plain loader.
+const STAFF_PATH = /^\/(teacher|admin)(\/|$)/;
+
 function AuthLoading() {
-  return <LoadingScreen />;
+  const { pathname } = useLocation();
+
+  return STAFF_PATH.test(pathname) ? <StaffLoadingScreen /> : <LoadingScreen />;
 }
 
 /*

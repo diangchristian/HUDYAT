@@ -16,6 +16,7 @@ import QuickActionList, {
 import QuizPerformanceTable from "@/components/staff/dashboard/quiz-performance-table";
 import RecentActivityFeed from "@/components/staff/dashboard/recent-activity-feed";
 import QueryState from "@/components/staff/query-state";
+import { StatGridSkeleton, SidePanelSkeleton } from "@/components/staff/skeletons";
 import {
   StaffCard,
   StaffCardHeader,
@@ -116,6 +117,12 @@ export default function TeacherDashboardPage() {
         isLoading={dashboardQuery.isLoading || assessmentsQuery.isLoading}
         error={dashboardQuery.error ?? assessmentsQuery.error}
         loadingText="Loading dashboard..."
+        skeleton={
+          <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_300px]">
+            <StatGridSkeleton count={4} className="grid gap-4 sm:grid-cols-2" />
+            <SidePanelSkeleton />
+          </div>
+        }
         errorText="Unable to load the dashboard."
         onRetry={() => {
           void dashboardQuery.refetch();

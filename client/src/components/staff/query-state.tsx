@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { Loader2, RefreshCw } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -8,10 +9,12 @@ type QueryStateProps = {
   loadingText: string;
   errorText: string;
   onRetry: () => void;
+  /** Layout placeholder shown instead of the spinner while loading. */
+  skeleton?: ReactNode;
 };
 
 /*
- * The loading spinner / error-with-retry block pages show while a
+ * The loading placeholder / error-with-retry block pages show while a
  * query hasn't produced data. Renders nothing once it has.
  */
 export default function QueryState({
@@ -20,7 +23,17 @@ export default function QueryState({
   loadingText,
   errorText,
   onRetry,
+  skeleton,
 }: QueryStateProps) {
+  if (isLoading && skeleton) {
+    return (
+      <div role="status" className="space-y-6">
+        <span className="sr-only">{loadingText}</span>
+        {skeleton}
+      </div>
+    );
+  }
+
   if (isLoading) {
     return (
       <div
