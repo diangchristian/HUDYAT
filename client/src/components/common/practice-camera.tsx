@@ -1,6 +1,10 @@
 import {useEffect,useRef,useState} from "react";
 import type {RecognitionStatus} from "@/features/fsl-recognition/category-recognition";
 import {CategoryRecognition} from "@/features/fsl-recognition/category-recognition";
+// EXPERIMENT (feature/recog-enhancement): switchable enhancements + ?lab=1 panel.
+import {BlurredPreview} from "@/features/fsl-recognition/blurred-preview";
+import {isLabEnabled,loadSettings,saveSettings,type RecognitionSettings} from "@/features/fsl-recognition/experiment";
+import {RecognitionLab} from "@/features/fsl-recognition/recognition-lab";
 import { Camera, CameraOff, LoaderCircle, Check, X } from "lucide-react";
 import ElevatedButton from "@/components/ui/elavated-button";
 import { Card } from "@/components/ui/card";
@@ -11,6 +15,9 @@ export default function PracticeCamera({category,targetLabel,onCorrect}: {catego
   const isLive = status === "live";
   const [recognitionStatus,setRecognitionStatus]=useState<RecognitionStatus>({phase:'loading',message:'Preparing category model…'});
   const [recognitionRetry,setRecognitionRetry]=useState(0);
+  const [settings,setSettings]=useState<RecognitionSettings>(loadSettings);
+  const [lab]=useState(isLabEnabled);
+  const changeSettings=(next:RecognitionSettings)=>{saveSettings(next);setSettings(next);};
   const [feedback,setFeedback]=useState<{kind:'correct'|'wrong';target?:string}|null>(null);
   const feedbackTimer=useRef<ReturnType<typeof setTimeout>|undefined>(undefined);
   useEffect(()=>()=>{clearTimeout(feedbackTimer.current);},[targetLabel,category,isLive]);
@@ -82,7 +89,11 @@ export default function PracticeCamera({category,targetLabel,onCorrect}: {catego
             </div>
           )}
 
-          {category && <CategoryRecognition key={category} category={category} targetLabel={targetLabel} video={videoRef} active={isLive} onCorrect={recognized} onWrong={incorrect} onStatus={setRecognitionStatus} retry={recognitionRetry} />}
+          {category && <CategoryRecognition key={category} category={category} targetLabel={targetLabel} video={videoRef} active={isLive} onCorrect={recognized} onWrong={incorrect} onStatus={setRecognitionStatus} retry={recognitionRetry} settings={settings} />}
+
+          {isLive && settings.previewBlur && (
+            <BlurredPreview video={videoRef} className="absolute inset-0 h-full w-full -scale-x-100 object-contain" />
+          )}
 
           {isLive && (
             <div className="absolute inset-x-3 top-3 flex items-center justify-between gap-2">
@@ -111,6 +122,7 @@ export default function PracticeCamera({category,targetLabel,onCorrect}: {catego
         </span>
         {recognitionStatus.phase==='error'&&<button className="shrink-0 underline" onClick={()=>{setRecognitionStatus({phase:'loading',message:'Retrying model…'});setRecognitionRetry(v=>v+1);}}>Retry</button>}
       </div>}
+      {lab && <RecognitionLab settings={settings} onChange={changeSettings} />}
 
     </div>
   );

@@ -43,3 +43,27 @@ test('wrong sound fires once per wrong hold and rearms after hand removal',()=>{
  c.observePresence(false,400);c.observePresence(false,1000);c.accept('N');assert.equal(wrong,2);
  c.accept('M');c.accept('N');assert.equal(right,1);assert.equal(wrong,2);
 });
+const relaxed={holdMs:600,minFrames:3,graceFrames:1};
+test('relaxed rules lock after a shorter hold with fewer frames',()=>{
+ let s=emptyLock();
+ for(const t of [0,200,400]){s=advanceLock(s,sample(t),relaxed);assert.equal(s.locked,undefined);}
+ s=advanceLock(s,sample(600),relaxed);assert.equal(s.locked,'M');
+});
+test('relaxed rules tolerate one bad frame mid-hold but not two in a row',()=>{
+ let s=emptyLock();
+ s=advanceLock(s,sample(0),relaxed);s=advanceLock(s,sample(100),relaxed);
+ s=advanceLock(s,sample(200,{score:.5}),relaxed);
+ s=advanceLock(s,sample(300),relaxed);s=advanceLock(s,sample(600),relaxed);
+ assert.equal(s.locked,'M');
+ s=emptyLock();
+ s=advanceLock(s,sample(0),relaxed);
+ s=advanceLock(s,sample(100,{steady:false}),relaxed);s=advanceLock(s,sample(200,{steady:false}),relaxed);
+ s=advanceLock(s,sample(300),relaxed);s=advanceLock(s,sample(600),relaxed);
+ assert.equal(s.locked,undefined);
+});
+test('a different confident label is never forgiven as a bad frame',()=>{
+ let s=emptyLock();
+ s=advanceLock(s,sample(0),relaxed);s=advanceLock(s,sample(200),relaxed);
+ s=advanceLock(s,sample(400,{label:'N'}),relaxed);s=advanceLock(s,sample(600),relaxed);
+ assert.notEqual(s.locked,'M');
+});

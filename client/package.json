@@ -12,7 +12,7 @@
     "models:assets": "node tools/copy-vision.mjs",
     "predev": "npm run models:assets",
     "prebuild": "npm run models:assets",
-    "test": "node --test tests/gesture-lock.test.mjs tests/recognition.test.mjs",
+    "test": "node --experimental-strip-types --test tests/gesture-lock.test.mjs tests/sliding-window.test.mjs tests/recognition.test.mjs",
     "test:models": "node tests/category-model.test.mjs"
   },
   "dependencies": {

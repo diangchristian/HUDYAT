@@ -25,7 +25,9 @@ teachers author assessments and monitor learner progress.
 - `npm run build` — `tsc -b && vite build`
 - `npm run lint` — ESLint (flat config)
 - `npm run preview` — preview a production build
-- No test script/framework is configured on the client.
+- `npm test` — `node:test` suites in `tests/*.test.mjs` that import `src/**/*.ts`
+  directly; needs `--experimental-strip-types` (already in the script) on Node 22.13.
+  Model-fixture checks run separately via `npm run test:models`.
 
 ### Server (`cd server`)
 - `npm run dev` — `tsx watch src/index.ts` (default port 5001, or `PORT` env var)

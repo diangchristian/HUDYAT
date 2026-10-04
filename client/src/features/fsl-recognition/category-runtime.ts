@@ -47,7 +47,7 @@ export async function createCategoryRuntime(category:string,signal:AbortSignal,e
   if(signal.aborted)throw Error('Cancelled');
   let disposed=false;
   return {version:release.version,category:release.id,classes:metadata.classes as string[],
-   capture(video:HTMLVideoElement){if(disposed)throw Error('Model released');return packResult(release.id==='alphabet'?detector!.detect(video):detector!.detectForVideo(video,performance.now()),metadata.preprocessing.extraction.swap_hands);},
+   capture(video:HTMLVideoElement|HTMLCanvasElement){if(disposed)throw Error('Model released');return packResult(release.id==='alphabet'?detector!.detect(video):detector!.detectForVideo(video,performance.now()),metadata.preprocessing.extraction.swap_hands);},
    async predict(frames:Float32Array[]){
     if(disposed)throw Error('Model released');
     if(!frames.some(f=>f[126]||f[127]))return {message:'No hand detected.'};
