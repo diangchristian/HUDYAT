@@ -20,6 +20,8 @@ import { useCategoryLesson } from "@/hooks/use-category-lesson";
 import { useSaveLessonCheckpoint } from "@/hooks/use-save-lesson-checkpoint";
 
 import PracticeCamera from "@/components/common/practice-camera";
+import { usePreloadRecognition } from "@/features/fsl-recognition/preload";
+import { categorySlug } from "@/lib/practice";
 import PracticeReference from "@/components/common/practice-reference";
 import SessionHeader from "@/components/common/session-header";
 import LoadingScreen from "@/components/common/loading-screen";
@@ -95,6 +97,9 @@ function LearnSession({
 
   const checkpointMutation =
     useSaveLessonCheckpoint(categoryId);
+
+  // EXPERIMENT: warm recognition up while the student reads and watches the lesson.
+  usePreloadRecognition(categorySlug(title));
 
   const prompt = prompts[index];
 
@@ -510,7 +515,7 @@ function LearnSession({
             /* =========================
                TRY
               ========================= */
-            <PracticeCamera category={title.toLowerCase().replace(/\s+/g, "-")} targetLabel={prompt.modelClass} onCorrect={() => { void continueLesson(); }} />
+            <PracticeCamera category={categorySlug(title)} targetLabel={prompt.modelClass} onCorrect={() => { void continueLesson(); }} />
           )}
 
           {/* NAVIGATION / CONTINUE */}

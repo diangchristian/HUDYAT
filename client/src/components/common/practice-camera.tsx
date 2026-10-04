@@ -1,9 +1,9 @@
 import {useEffect,useRef,useState} from "react";
-import type {RecognitionStatus} from "@/features/fsl-recognition/category-recognition";
+import type {HoldFeedback,RecognitionStatus} from "@/features/fsl-recognition/category-recognition";
 import {CategoryRecognition} from "@/features/fsl-recognition/category-recognition";
 // EXPERIMENT (feature/recog-enhancement): switchable enhancements + ?lab=1 panel.
 import {BlurredPreview} from "@/features/fsl-recognition/blurred-preview";
-import {isLabEnabled,loadSettings,saveSettings,type RecognitionSettings} from "@/features/fsl-recognition/experiment";
+import {CAMERA_SIZE,isLabEnabled,loadSettings,saveSettings,type RecognitionSettings} from "@/features/fsl-recognition/experiment";
 import {RecognitionLab} from "@/features/fsl-recognition/recognition-lab";
 import { Camera, CameraOff, LoaderCircle, Check, X } from "lucide-react";
 import ElevatedButton from "@/components/ui/elavated-button";
@@ -18,6 +18,7 @@ export default function PracticeCamera({category,targetLabel,onCorrect}: {catego
   const [settings,setSettings]=useState<RecognitionSettings>(loadSettings);
   const [lab]=useState(isLabEnabled);
   const changeSettings=(next:RecognitionSettings)=>{saveSettings(next);setSettings(next);};
+  const [hold,setHold]=useState<HoldFeedback|null>(null);
   const [feedback,setFeedback]=useState<{kind:'correct'|'wrong';target?:string}|null>(null);
   const feedbackTimer=useRef<ReturnType<typeof setTimeout>|undefined>(undefined);
   useEffect(()=>()=>{clearTimeout(feedbackTimer.current);},[targetLabel,category,isLive]);
@@ -32,7 +33,7 @@ export default function PracticeCamera({category,targetLabel,onCorrect}: {catego
     const wrong=wrongSound.current??new Audio(import.meta.env.BASE_URL+'sounds/wrong.mp3');
     wrongSound.current=wrong;wrong.muted=true;
     void wrong.play().then(()=>{wrong.pause();wrong.currentTime=0;wrong.muted=false;}).catch(()=>{wrong.muted=false;});
-    void start();
+    void start(CAMERA_SIZE[settings.cameraResolution]);
   };
   const incorrect=()=>{
     clearTimeout(feedbackTimer.current);
@@ -89,7 +90,18 @@ export default function PracticeCamera({category,targetLabel,onCorrect}: {catego
             </div>
           )}
 
-          {category && <CategoryRecognition key={category} category={category} targetLabel={targetLabel} video={videoRef} active={isLive} onCorrect={recognized} onWrong={incorrect} onStatus={setRecognitionStatus} retry={recognitionRetry} settings={settings} />}
+          {category && <CategoryRecognition key={category} category={category} targetLabel={targetLabel} video={videoRef} active={isLive} onCorrect={recognized} onWrong={incorrect} onStatus={setRecognitionStatus} retry={recognitionRetry} settings={settings} onHold={setHold} />}
+
+          {isLive && settings.holdFeedback && hold && !feedback && (
+            <div className="pointer-events-none absolute inset-x-3 bottom-3 flex flex-col items-center gap-2">
+              {hold.hint && (
+                <span role="status" className="rounded-full bg-background/95 px-3 py-1 text-xs font-bold text-foreground shadow-sm">{hold.hint}</span>
+              )}
+              <div aria-hidden="true" className="h-2.5 w-full max-w-xs overflow-hidden rounded-full bg-background/80">
+                <div className="h-full rounded-full bg-hudyat-gold transition-[width] duration-150 ease-out motion-reduce:transition-none" style={{width:`${Math.round(hold.progress*100)}%`}} />
+              </div>
+            </div>
+          )}
 
           {isLive && settings.previewBlur && (
             <BlurredPreview video={videoRef} className="absolute inset-0 h-full w-full -scale-x-100 object-contain" />

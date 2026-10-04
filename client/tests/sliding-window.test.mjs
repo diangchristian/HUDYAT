@@ -32,3 +32,15 @@ test('accepts a label only after consecutive confident agreeing guesses',()=>{
  assert.equal(w.vote(sure('red')),undefined,'a weak guess breaks the streak');
  assert.equal(w.vote(sure('red')),'red');
 });
+test('progress counts buffering and agreeing guesses, so a full buffer is not shown as done',()=>{
+ const w=createSlidingWindow(options);const sure={prediction:'red',score:.9,margin:.3};
+ assert.equal(w.progress(0),0);
+ for(let t=0;t<=900;t+=100)w.push(frame(),t);
+ assert.equal(w.progress(900),.25,'buffer 3/4 full of the first of three steps');
+ for(let t=1000;t<=1500;t+=100)w.push(frame(),t);
+ assert.equal(w.progress(1500),1/3);
+ w.vote(sure);
+ assert.equal(w.progress(1500),2/3);
+ w.vote({prediction:'red',score:.5,margin:.3});
+ assert.equal(w.progress(1500),1/3,'a weak guess loses the agreement');
+});

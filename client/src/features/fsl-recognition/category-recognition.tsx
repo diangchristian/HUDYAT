@@ -2,15 +2,26 @@ import {useEffect,useEffectEvent,useRef,useState} from 'react';
 import type {RefObject} from 'react';
 import type {CategoryRuntime} from './category-runtime';
 import type {BackgroundProcessor} from './background';
-import {BASELINE,type RecognitionSettings} from './experiment';
-import {advanceLock,emptyLock,isSteady,lockResetCause,matchesTarget,createMatchCompletion} from './gesture-lock';
+import {BASELINE,runtimeOptions,type RecognitionSettings} from './experiment';
+import {advanceLock,emptyLock,frameIssue,holdProgress,isSteady,lockResetCause,matchesTarget,motionLimit,createMatchCompletion,type FrameIssue} from './gesture-lock';
+import {takeRuntime} from './preload';
 import {recognitionMetrics,type FrameTiming} from './metrics';
 import {createSlidingWindow} from './sliding-window';
 
 export type RecognitionStatus={phase:'loading'|'ready'|'running'|'error';message:string;version?:string};
+/** EXPERIMENT: how close the current sign is to being accepted, plus a coaching hint. */
+export type HoldFeedback={progress:number;hint?:string};
+
+type HintCause=FrameIssue|'small hand';
+const HINTS:Partial<Record<HintCause,string>>={'no hand':'Keep your hand in view','unsteady':'Hold still','low score':'Make the handshape clearer','low margin':'Make the handshape clearer','small hand':'Move your hand closer'};
+/** Wrist-to-middle-knuckle length (frame coordinates) of the first present hand; small = far from the camera. */
+function handSize(frame:Float32Array){
+ for(let h=0;h<2;h++)if(frame[126+h]){const o=h*63;return Math.hypot(frame[o+27]-frame[o],frame[o+28]-frame[o+1]);}
+ return 0;
+}
 
 /** Headless recognition: no predictions or overlays are rendered. */
-export function CategoryRecognition({category,targetLabel,video,active,onCorrect,onWrong,onStatus,retry,settings=BASELINE}:{category:string;targetLabel?:string;video:RefObject<HTMLVideoElement|null>;active:boolean;onCorrect:()=>void;onWrong:()=>void;onStatus:(status:RecognitionStatus)=>void;retry:number;settings?:RecognitionSettings}){
+export function CategoryRecognition({category,targetLabel,video,active,onCorrect,onWrong,onStatus,retry,settings=BASELINE,onHold}:{category:string;targetLabel?:string;video:RefObject<HTMLVideoElement|null>;active:boolean;onCorrect:()=>void;onWrong:()=>void;onStatus:(status:RecognitionStatus)=>void;retry:number;settings?:RecognitionSettings;onHold?:(hold:HoldFeedback|null)=>void}){
  const [ready,setReady]=useState(false);
  const runtime=useRef<CategoryRuntime|null>(null),inFlight=useRef(false);
  // EXPERIMENT: optional background segmentation before hand detection.
@@ -20,13 +31,27 @@ export function CategoryRecognition({category,targetLabel,video,active,onCorrect
  const notifyCorrect=useEffectEvent(onCorrect);
  const notifyWrong=useEffectEvent(onWrong);
  const notifyStatus=useEffectEvent(onStatus);
+ const notifyHold=useEffectEvent((hold:HoldFeedback|null)=>onHold?.(hold));
+ // Only these settings need a different runtime; the rest apply to the running loop.
+ const {alphabetTracking,delegate,alphabetHands}=settings;
  useEffect(()=>{
-  const abort=new AbortController();let loaded:CategoryRuntime|undefined;
-  void import('./category-runtime').then(m=>m.createCategoryRuntime(category,abort.signal,s=>{if(!abort.signal.aborted)notifyStatus({phase:'loading',message:s.message,version:s.version});}))
-   .then(value=>{loaded=value;if(abort.signal.aborted){value.dispose();return;}runtime.current=value;setReady(true);notifyStatus({phase:'ready',message:'Model ready',version:value.version});})
+  const abort=new AbortController();
+  const taken=takeRuntime(category,runtimeOptions({...BASELINE,alphabetTracking,delegate,alphabetHands}),s=>{if(!abort.signal.aborted)notifyStatus({phase:'loading',message:s.message,version:s.version});});
+  if(taken.preloaded)notifyStatus({phase:'loading',message:'Starting recognition engine…'});
+  void taken.promise
+   .then(value=>{if(abort.signal.aborted)return;runtime.current=value;recognitionMetrics.runtime({delegate:value.delegate,preloaded:taken.preloaded});setReady(true);notifyStatus({phase:'ready',message:'Model ready',version:value.version});})
    .catch(error=>{if(!abort.signal.aborted)notifyStatus({phase:'error',message:error instanceof Error?error.message:'Could not load the model.'});});
-  return ()=>{abort.abort();runtime.current=null;const release=()=>{if(inFlight.current)setTimeout(release,20);else loaded?.dispose();};release();};
- },[category,retry]);
+  // A preloading page keeps the runtime for the next camera step; otherwise release disposes it.
+  return ()=>{abort.abort();runtime.current=null;setReady(false);const release=()=>{if(inFlight.current)setTimeout(release,20);else taken.release();};release();};
+ },[category,retry,alphabetTracking,delegate,alphabetHands]);
+ // EXPERIMENT metrics: time the camera was live before recognition could start.
+ const waitingSince=useRef<number|undefined>(undefined);
+ useEffect(()=>{
+  if(!active){waitingSince.current=undefined;return;}
+  if(!ready){waitingSince.current??=performance.now();return;}
+  recognitionMetrics.modelWait(waitingSince.current===undefined?0:performance.now()-waitingSince.current);
+  waitingSince.current=undefined;
+ },[active,ready]);
  useEffect(()=>{
   if(backgroundMode==='off')return;
   let cancelled=false,loaded:BackgroundProcessor|undefined;
@@ -39,6 +64,18 @@ export function CategoryRecognition({category,targetLabel,video,active,onCorrect
   if(!active||!ready||!targetLabel||(backgroundMode!=='off'&&!backgroundReady))return;
   let cancelled=false,timer:ReturnType<typeof setTimeout>;let frames:Float32Array[]=[],start=0,lastTime=-1;
   let lock=emptyLock(),previous:Float32Array|undefined;let previousProcessingMs=0;
+  let hint:{text:string;at:number}|undefined,lastProgress=0;
+  const feedback=(progress:number,cause:HintCause|undefined,now:number)=>{
+   if(!settings.holdFeedback)return;
+   const text=cause&&HINTS[cause];
+   if(text)hint={text,at:now};
+   // A hint fades after 1.5s, or once the sign starts progressing again.
+   else if(hint&&(now-hint.at>1500||progress>lastProgress))hint=undefined;
+   lastProgress=progress;
+   notifyHold({progress,hint:hint?.text});
+  };
+  const issueFor=(frame:Float32Array,present:boolean,issue?:FrameIssue):HintCause|undefined=>
+   !present?'no hand':issue??(handSize(frame)<.08?'small hand':undefined);
   const newWindow=()=>settings.dynamicCapture==='sliding'?createSlidingWindow(settings.window):undefined;
   let sliding=newWindow();
   recognitionMetrics.prompt(targetLabel,performance.now());
@@ -64,9 +101,10 @@ export function CategoryRecognition({category,targetLabel,video,active,onCorrect
      if(current.category==='alphabet'){
       const result=present?await predict([frame]):undefined;
       if(cancelled)return;
-      const lockInput={now:performance.now(),present,label:result?.prediction,score:result?.score,margin:result?.margin,steady:isSteady(previous,frame),maxGapMs:Math.max(600,previousProcessingMs+(performance.now()-frameStarted)+350)};
+      const lockInput={now:performance.now(),present,label:result?.prediction,score:result?.score,margin:result?.margin,steady:isSteady(previous,frame,motionLimit(settings.lock)),maxGapMs:Math.max(600,previousProcessingMs+(performance.now()-frameStarted)+350)};
       const before=lock;lock=advanceLock(lock,lockInput,settings.lock);
-      const resetCause=lockResetCause(before,lock,lockInput);if(resetCause)recognitionMetrics.lockReset(resetCause);
+      const resetCause=lockResetCause(before,lock,lockInput,settings.lock);if(resetCause)recognitionMetrics.lockReset(resetCause);
+      feedback(holdProgress(lock,settings.lock,lockInput.now),issueFor(frame,present,frameIssue(lockInput,settings.lock)),lockInput.now);
       previous=frame;previousProcessingMs=performance.now()-frameStarted;
       notifyStatus({phase:'running',message:present?'Recognition running · hold your sign steady':'Recognition running · no hand detected',version:current.version});
       if(lock.locked){completion.accept(lock.locked);lock=emptyLock();}
@@ -74,6 +112,7 @@ export function CategoryRecognition({category,targetLabel,video,active,onCorrect
       notifyStatus({phase:'running',message:present?'Recognition running · checking gesture':'Recognition running · no hand detected',version:current.version});
       if(sliding){
       const clip=sliding.push(frame,performance.now());
+      feedback(sliding.progress(performance.now()),issueFor(frame,present),performance.now());
       if(clip){
        const result=await predict(clip);
        if(cancelled)return;
@@ -82,6 +121,7 @@ export function CategoryRecognition({category,targetLabel,video,active,onCorrect
       }
       }else{
       // Start a complete two-second clip when a hand enters view; retry automatically.
+      feedback(start?Math.min(1,(performance.now()-start)/2000):0,issueFor(frame,present),performance.now());
       if(!start && !present)return;
       if(!start)start=performance.now();frames.push(frame);
       if(performance.now()-start>=2000){
@@ -95,7 +135,7 @@ export function CategoryRecognition({category,targetLabel,video,active,onCorrect
    }catch(error){if(!cancelled){lock=emptyLock();frames=[];start=0;sliding=newWindow();notifyStatus({phase:'error',message:error instanceof Error?error.message:'Recognition failed.'});}}
    finally{if(timing&&!cancelled)recognitionMetrics.frame(timing);if(ownsInference)inFlight.current=false;if(!cancelled&&!completion.completed())timer=setTimeout(run,category==='alphabet'?settings.alphabetPollMs:40);}
   };
-  void run();return()=>{cancelled=true;clearTimeout(timer);};
+  void run();return()=>{cancelled=true;clearTimeout(timer);notifyHold(null);};
  },[active,ready,category,targetLabel,video,retry,settings,backgroundMode,backgroundReady]);
  return null;
 }

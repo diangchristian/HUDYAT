@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {advanceLock,emptyLock,isSteady,matchesTarget} from '../src/features/fsl-recognition/gesture-lock.ts';
+import {advanceLock,emptyLock,frameIssue,holdProgress,isSteady,matchesTarget} from '../src/features/fsl-recognition/gesture-lock.ts';
 const sample=(now,overrides={})=>({now,present:true,label:'M',score:.95,margin:.5,steady:true,...overrides});
 const hold=()=>{let s=emptyLock();for(let t=0;t<=1200;t+=200)s=advanceLock(s,sample(t));return s;};
 test('consistent confident hold locks only after the duration',()=>{
@@ -66,4 +66,37 @@ test('a different confident label is never forgiven as a bad frame',()=>{
  s=advanceLock(s,sample(0),relaxed);s=advanceLock(s,sample(200),relaxed);
  s=advanceLock(s,sample(400,{label:'N'}),relaxed);s=advanceLock(s,sample(600),relaxed);
  assert.notEqual(s.locked,'M');
+});
+test('confidence, margin and motion gates are tunable lock rules',()=>{
+ const loose={...relaxed,minScore:.6,minMargin:.05,maxMotion:.05};
+ let s=emptyLock();
+ for(const t of [0,200,400])s=advanceLock(s,sample(t,{score:.7,margin:.08}),loose);
+ s=advanceLock(s,sample(600,{score:.7,margin:.08}),loose);
+ assert.equal(s.locked,'M');
+ s=emptyLock();
+ for(const t of [0,200,400,600])s=advanceLock(s,sample(t,{score:.7,margin:.08}),relaxed);
+ assert.equal(s.locked,undefined,'default gates still require .8 confidence');
+});
+test('steadiness threshold is configurable',()=>{
+ const a=new Float32Array(128);a[126]=1;const b=a.slice();b.fill(.04,0,63);
+ assert.equal(isSteady(a,b),false);
+ assert.equal(isSteady(a,b,.05),true);
+});
+test('hold progress reports how close a hold is to locking',()=>{
+ let s=emptyLock();
+ assert.equal(holdProgress(s,relaxed,0),0);
+ s=advanceLock(s,sample(0),relaxed);s=advanceLock(s,sample(300),relaxed);
+ assert.equal(holdProgress(s,relaxed,300),.5,'limited by hold time (300/600) and frames (2/3)');
+ s=advanceLock(s,sample(450),relaxed);
+ assert.equal(holdProgress(s,relaxed,450),.75);
+ s=advanceLock(s,sample(600),relaxed);
+ assert.equal(holdProgress(s,relaxed,600),1);
+});
+test('frameIssue names why a frame cannot count towards a hold, even before any hold exists',()=>{
+ assert.equal(frameIssue(sample(0)),undefined);
+ assert.equal(frameIssue(sample(0,{present:false})),'no hand');
+ assert.equal(frameIssue(sample(0,{score:.5})),'low score');
+ assert.equal(frameIssue(sample(0,{score:.5}),{...relaxed,minScore:.4}),undefined);
+ assert.equal(frameIssue(sample(0,{margin:.05})),'low margin');
+ assert.equal(frameIssue(sample(0,{steady:false})),'unsteady');
 });

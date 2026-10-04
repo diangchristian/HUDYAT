@@ -4,6 +4,8 @@
  * enough of a sign is buffered, and accept a label only after `agree`
  * consecutive confident guesses agree (one guess mid-transition is noise).
  */
+import {DEFAULT_GATES} from './gesture-lock.ts';
+
 export type SlidingWindowOptions={spanMs:number;minSpanMs:number;everyMs:number;minFrames:number;agree:number};
 export type WindowGuess={prediction?:string;score?:number;margin?:number}|undefined;
 
@@ -29,9 +31,11 @@ export function createSlidingWindow(options:SlidingWindowOptions){
    lastAsk=now;
    return frames.map(entry=>entry.frame);
   },
+  /** 0–1 towards acceptance: buffering the first clip is one step, each agreeing confident guess another. */
+  progress(now:number){const buffered=frames.length?Math.min(1,(now-frames[0].at)/options.minSpanMs):0;return (buffered+streak.count)/(1+options.agree);},
   /** Feeds a guess back; returns the label once enough guesses agree. */
   vote(guess:WindowGuess):string|undefined{
-   if(!guess?.prediction || (guess.score??0)<.8 || (guess.margin??0)<.15){streak={count:0};return undefined;}
+   if(!guess?.prediction || (guess.score??0)<DEFAULT_GATES.minScore || (guess.margin??0)<DEFAULT_GATES.minMargin){streak={count:0};return undefined;}
    streak=streak.label===guess.prediction?{label:guess.prediction,count:streak.count+1}:{label:guess.prediction,count:1};
    if(streak.count<options.agree)return undefined;
    streak={count:0};

@@ -2,6 +2,8 @@ import * as tf from '@tensorflow/tfjs';
 import { HandLandmarker,FilesetResolver } from '@mediapipe/tasks-vision';
 import {fetchModelRelease,modelAssetUrl} from '../../api/model-api';
 import {buildModel,loadWeights,packResult,resample,sha256} from './category-core.js';
+import {BASELINE,runtimeOptions,type RuntimeOptions} from './experiment';
+const BASELINE_OPTIONS=runtimeOptions(BASELINE);
 export type Update={message:string;prediction?:string;score?:number;version?:string;ready?:boolean};
 const cacheName='hudyat-model-files-v1';
 async function artifact(url:string,hash:string,signal:AbortSignal,emit:(s:Update)=>void,label:string){
@@ -31,7 +33,7 @@ export async function downloadCategory(category:string,signal:AbortSignal,emit:(
  const hand=await artifact(release.handUrl,release.handSha256,signal,emit,'hand detector');
  return {release,metadata,weights,hand};
 }
-export async function createCategoryRuntime(category:string,signal:AbortSignal,emit:(s:Update)=>void){
+export async function createCategoryRuntime(category:string,signal:AbortSignal,emit:(s:Update)=>void,options:RuntimeOptions=BASELINE_OPTIONS){
  const {release,metadata,weights,hand}=await downloadCategory(category,signal,emit);
  if(signal.aborted)throw Error('Cancelled');
  emit({message:'Starting recognition engine…',version:release.version});
@@ -42,12 +44,28 @@ export async function createCategoryRuntime(category:string,signal:AbortSignal,e
   loadWeights(tf,model,metadata,weights);
   emit({message:'Starting hand tracking…',version:release.version});
   const vision=await FilesetResolver.forVisionTasks(import.meta.env.BASE_URL+'mediapipe/wasm');
-  detector=await HandLandmarker.createFromOptions(vision,{baseOptions:{modelAssetBuffer:new Uint8Array(hand),delegate:'CPU'},runningMode:release.id==='alphabet'?'IMAGE':'VIDEO',numHands:2,
+  const alphabet=release.id==='alphabet',imageMode=alphabet&&!options.alphabetTracking;
+  const createDetector=(delegate:'CPU'|'GPU')=>HandLandmarker.createFromOptions(vision,{baseOptions:{modelAssetBuffer:new Uint8Array(hand),delegate},runningMode:imageMode?'IMAGE':'VIDEO',numHands:alphabet?options.alphabetHands:2,
    minHandDetectionConfidence:metadata.preprocessing.extraction.detection_confidence,minHandPresenceConfidence:metadata.preprocessing.extraction.detection_confidence,minTrackingConfidence:.5});
+  let delegate=options.delegate;
+  try{detector=await createDetector(delegate);}
+  catch(error){
+   if(delegate==='CPU')throw error;
+   // GPU needs WebGL2 support MediaPipe can use; older phones/tablets refuse it, so fall back.
+   console.warn('GPU hand tracking unavailable; using CPU.',error);
+   delegate='CPU';detector=await createDetector(delegate);
+  }
+  let lastTimestamp=0;
   if(signal.aborted)throw Error('Cancelled');
   let disposed=false;
-  return {version:release.version,category:release.id,classes:metadata.classes as string[],
-   capture(video:HTMLVideoElement|HTMLCanvasElement){if(disposed)throw Error('Model released');return packResult(release.id==='alphabet'?detector!.detect(video):detector!.detectForVideo(video,performance.now()),metadata.preprocessing.extraction.swap_hands);},
+  return {version:release.version,category:release.id,classes:metadata.classes as string[],delegate,
+   capture(video:HTMLVideoElement|HTMLCanvasElement){
+    if(disposed)throw Error('Model released');
+    if(imageMode)return packResult(detector!.detect(video),metadata.preprocessing.extraction.swap_hands);
+    // VIDEO mode requires strictly increasing timestamps.
+    lastTimestamp=Math.max(lastTimestamp+1,performance.now());
+    return packResult(detector!.detectForVideo(video,lastTimestamp),metadata.preprocessing.extraction.swap_hands);
+   },
    async predict(frames:Float32Array[]){
     if(disposed)throw Error('Model released');
     if(!frames.some(f=>f[126]||f[127]))return {message:'No hand detected.'};
