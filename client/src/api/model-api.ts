@@ -1,6 +1,15 @@
 export type Release={id:string;name:string;version:string;modelUrl:string;weightsUrl:string;handUrl:string;modelSha256:string;weightsSha256:string;handSha256:string};
 const base=import.meta.env.VITE_API_URL || '';
 export const modelAssetUrl=(url:string)=>new URL(url,base || location.origin).href;
+/** EXPERIMENT: the alphabet model being A/B tested in the Recognition lab, before it is published. */
+export async function fetchCandidateRelease(category:string,signal:AbortSignal):Promise<Release>{
+ const response=await fetch(modelAssetUrl('/api/models/files/models/'+encodeURIComponent(category)+'/candidate.json'),{signal,cache:'no-store'});
+ if(response.status===404)throw Error('No candidate model has been published for this category.');
+ if(!response.ok)throw Error('Candidate model unavailable.');
+ const release=await response.json() as Release;
+ if(!release.version||!release.modelUrl)throw Error('Invalid candidate release.');
+ return release;
+}
 export async function fetchModelRelease(category:string,signal:AbortSignal):Promise<Release>{
  const cache=await caches.open('hudyat-model-catalog-v1');
  const url=modelAssetUrl('/api/models/'+encodeURIComponent(category));

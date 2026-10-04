@@ -34,17 +34,19 @@ export type RecognitionSettings={
  preload:boolean;
  /** Show hold progress and coaching ("Hold still") while a sign is being recognized. */
  holdFeedback:boolean;
+ /** Alphabet model: the published release, or the retrained candidate (candidate.json). */
+ alphabetModel:'published'|'candidate';
 };
 
-export type RuntimeOptions=Pick<RecognitionSettings,'alphabetTracking'|'delegate'|'alphabetHands'>;
-export const runtimeOptions=(settings:RecognitionSettings):RuntimeOptions=>({alphabetTracking:settings.alphabetTracking,delegate:settings.delegate,alphabetHands:settings.alphabetHands});
+export type RuntimeOptions=Pick<RecognitionSettings,'alphabetTracking'|'delegate'|'alphabetHands'|'alphabetModel'>;
+export const runtimeOptions=(settings:RecognitionSettings):RuntimeOptions=>({alphabetTracking:settings.alphabetTracking,delegate:settings.delegate,alphabetHands:settings.alphabetHands,alphabetModel:settings.alphabetModel});
 export const CAMERA_SIZE={'720p':{width:1280,height:720},'480p':{width:640,height:480}} as const;
 
 export const BASELINE:RecognitionSettings={
  profile:'baseline',alphabetPollMs:200,lock:DEFAULT_LOCK_RULES,
  dynamicCapture:'fixed',window:{spanMs:2000,minSpanMs:1800,everyMs:500,minFrames:8,agree:2},
  detectionBackground:'off',previewBlur:false,
- alphabetTracking:false,delegate:'CPU',cameraResolution:'720p',alphabetHands:2,preload:false,holdFeedback:false,
+ alphabetTracking:false,delegate:'CPU',cameraResolution:'720p',alphabetHands:2,preload:false,holdFeedback:false,alphabetModel:'published',
 };
 
 export const ENHANCED:RecognitionSettings={

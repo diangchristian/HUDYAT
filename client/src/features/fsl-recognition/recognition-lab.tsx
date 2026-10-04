@@ -47,6 +47,11 @@ export function RecognitionLab({settings,onChange}:{settings:RecognitionSettings
       <option value="off">off</option><option value="blur">blur</option><option value="remove">remove</option>
      </select>
     </label>
+    <label className="flex items-center justify-between gap-2">Alphabet model
+     <select value={settings.alphabetModel} onChange={e=>custom({alphabetModel:e.target.value as RecognitionSettings['alphabetModel']})} className="rounded border border-border bg-background px-1 py-0.5">
+      <option value="published">published</option><option value="candidate">retrained candidate</option>
+     </select>
+    </label>
     <label className="flex items-center justify-between gap-2">Alphabet tracking (VIDEO mode)
      <input type="checkbox" checked={settings.alphabetTracking} onChange={e=>custom({alphabetTracking:e.target.checked})}/>
     </label>
@@ -111,7 +116,7 @@ export function RecognitionLab({settings,onChange}:{settings:RecognitionSettings
     <div><dt className="text-muted-foreground">hand→correct</dt><dd className="font-bold">{ms(summary.msToCorrect)}</dd></div>
    </dl>
 
-   <p className="text-muted-foreground">tracking on {summary.delegate??'–'} · {summary.preloaded?'preloaded':'not preloaded'} · waited for model {summary.modelWaitMs===undefined?'–':ms(summary.modelWaitMs)||'0ms'}</p>
+   <p className="text-muted-foreground">model {summary.model??'–'} · tracking on {summary.delegate??'–'} · {summary.preloaded?'preloaded':'not preloaded'} · waited for model {summary.modelWaitMs===undefined?'–':ms(summary.modelWaitMs)||'0ms'}</p>
    {Object.keys(summary.lockResets).length>0&&<p className="text-muted-foreground">lock resets: {Object.entries(summary.lockResets).map(([cause,n])=>cause+' ×'+n).join(' · ')}</p>}
 
    <div className="flex gap-2">

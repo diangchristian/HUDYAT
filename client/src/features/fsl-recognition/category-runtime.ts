@@ -1,6 +1,7 @@
 import * as tf from '@tensorflow/tfjs';
 import { HandLandmarker,FilesetResolver } from '@mediapipe/tasks-vision';
-import {fetchModelRelease,modelAssetUrl} from '../../api/model-api';
+import {fetchCandidateRelease,fetchModelRelease,modelAssetUrl} from '../../api/model-api';
+import {HAND_RELATIVE,normalizeFrame} from './normalize';
 import {buildModel,loadWeights,packResult,resample,sha256} from './category-core.js';
 import {BASELINE,runtimeOptions,type RuntimeOptions} from './experiment';
 const BASELINE_OPTIONS=runtimeOptions(BASELINE);
@@ -23,10 +24,10 @@ async function artifact(url:string,hash:string,signal:AbortSignal,emit:(s:Update
  if(await sha256(bytes)!==hash)throw Error('Model file integrity check failed.');
  await cache.put(key,new Response(bytes));return bytes;
 }
-export async function downloadCategory(category:string,signal:AbortSignal,emit:(s:Update)=>void){
+export async function downloadCategory(category:string,signal:AbortSignal,emit:(s:Update)=>void,candidate=false){
  if(!window.isSecureContext || !('caches' in window))throw Error('Recognition requires HTTPS or localhost.');
  emit({message:'Checking category model…'});
- const release=await fetchModelRelease(category,signal);
+ const release=candidate?await fetchCandidateRelease(category,signal):await fetchModelRelease(category,signal);
  const metadata=JSON.parse(new TextDecoder().decode(await artifact(release.modelUrl,release.modelSha256,signal,emit,'model details')));
  if(metadata.category!==release.id || metadata.format!=='fsl-conv1d-bilstm-v1'||metadata.inputShape?.join(',')!=='32,128')throw Error('Unsupported category model.');
  const weights=await artifact(release.weightsUrl,release.weightsSha256,signal,emit,'recognition model');
@@ -34,7 +35,11 @@ export async function downloadCategory(category:string,signal:AbortSignal,emit:(
  return {release,metadata,weights,hand};
 }
 export async function createCategoryRuntime(category:string,signal:AbortSignal,emit:(s:Update)=>void,options:RuntimeOptions=BASELINE_OPTIONS){
- const {release,metadata,weights,hand}=await downloadCategory(category,signal,emit);
+ const {release,metadata,weights,hand}=await downloadCategory(category,signal,emit,category==='alphabet'&&options.alphabetModel==='candidate');
+ // Models trained on hand-relative landmarks get the same normalization at prediction time.
+ const handRelative=metadata.preprocessing?.normalization===HAND_RELATIVE;
+ // Each captured frame remembers the size of the image it came from, for normalization.
+ const frameSizes=new WeakMap<Float32Array,{width:number;height:number}>();
  if(signal.aborted)throw Error('Cancelled');
  emit({message:'Starting recognition engine…',version:release.version});
  await tf.ready();
@@ -61,15 +66,24 @@ export async function createCategoryRuntime(category:string,signal:AbortSignal,e
   return {version:release.version,category:release.id,classes:metadata.classes as string[],delegate,
    capture(video:HTMLVideoElement|HTMLCanvasElement){
     if(disposed)throw Error('Model released');
-    if(imageMode)return packResult(detector!.detect(video),metadata.preprocessing.extraction.swap_hands);
-    // VIDEO mode requires strictly increasing timestamps.
-    lastTimestamp=Math.max(lastTimestamp+1,performance.now());
-    return packResult(detector!.detectForVideo(video,lastTimestamp),metadata.preprocessing.extraction.swap_hands);
+    const size=video instanceof HTMLVideoElement?{width:video.videoWidth,height:video.videoHeight}:{width:video.width,height:video.height};
+    let frame:Float32Array;
+    if(imageMode)frame=packResult(detector!.detect(video),metadata.preprocessing.extraction.swap_hands);
+    else{
+     // VIDEO mode requires strictly increasing timestamps.
+     lastTimestamp=Math.max(lastTimestamp+1,performance.now());
+     frame=packResult(detector!.detectForVideo(video,lastTimestamp),metadata.preprocessing.extraction.swap_hands);
+    }
+    frameSizes.set(frame,size);
+    return frame;
    },
    async predict(frames:Float32Array[]){
     if(disposed)throw Error('Model released');
-    if(!frames.some(f=>f[126]||f[127]))return {message:'No hand detected.'};
-    const input=tf.tensor3d(resample(frames),[1,32,128]);let output:tf.Tensor|undefined;
+    // Frames stay raw (steadiness and hints use them); only the model's input is normalized.
+    const modelFrames=handRelative?frames.map(frame=>{const size=frameSizes.get(frame)??{width:0,height:0};return normalizeFrame(frame,size.width,size.height);}):frames;
+    // Checked after normalization: a hand that can't be scaled is dropped, never sent as zeros.
+    if(!modelFrames.some(f=>f[126]||f[127]))return {message:'No hand detected.'};
+    const input=tf.tensor3d(resample(modelFrames),[1,32,128]);let output:tf.Tensor|undefined;
     try{output=model.predict(input) as tf.Tensor;const scores=await output.data();const index=scores.indexOf(Math.max(...scores));
      return {message:scores[index]>=.6?'Model estimate — compare with the reference.':'Not sure yet. Try the sign again.',prediction:metadata.classes[index] as string,score:scores[index],margin:scores[index]-Math.max(...Array.from(scores).filter((_,i)=>i!==index))};
     }finally{input.dispose();output?.dispose();}

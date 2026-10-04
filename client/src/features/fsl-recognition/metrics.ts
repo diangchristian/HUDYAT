@@ -11,7 +11,7 @@ const RECENT_FRAMES=60;
 let frames:FrameTiming[]=[];
 let trials:Trial[]=[];
 let lockResets:Record<string,number>={};
-let engine:{delegate?:string;preloaded?:boolean;modelWaitMs?:number}={};
+let engine:{delegate?:string;preloaded?:boolean;model?:string;modelWaitMs?:number}={};
 const listeners=new Set<()=>void>();
 let notifyQueued=false;
 
@@ -38,7 +38,7 @@ export const recognitionMetrics={
  /** An alphabet hold in progress was dropped, and why. */
  lockReset(cause:string){lockResets[cause]=(lockResets[cause]??0)+1;notify();},
  /** Which processor hand tracking ended up on, and whether the runtime was preloaded. */
- runtime(info:{delegate:string;preloaded:boolean}){engine={...engine,...info};notify();},
+ runtime(info:{delegate:string;preloaded:boolean;model:string}){engine={...engine,...info};notify();},
  /** How long the camera was live before recognition could start. */
  modelWait(ms:number){engine={...engine,modelWaitMs:ms};notify();},
  reset(){frames=[];trials=[];lockResets={};notify();},

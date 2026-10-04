@@ -33,17 +33,17 @@ export function CategoryRecognition({category,targetLabel,video,active,onCorrect
  const notifyStatus=useEffectEvent(onStatus);
  const notifyHold=useEffectEvent((hold:HoldFeedback|null)=>onHold?.(hold));
  // Only these settings need a different runtime; the rest apply to the running loop.
- const {alphabetTracking,delegate,alphabetHands}=settings;
+ const {alphabetTracking,delegate,alphabetHands,alphabetModel}=settings;
  useEffect(()=>{
   const abort=new AbortController();
-  const taken=takeRuntime(category,runtimeOptions({...BASELINE,alphabetTracking,delegate,alphabetHands}),s=>{if(!abort.signal.aborted)notifyStatus({phase:'loading',message:s.message,version:s.version});});
+  const taken=takeRuntime(category,runtimeOptions({...BASELINE,alphabetTracking,delegate,alphabetHands,alphabetModel}),s=>{if(!abort.signal.aborted)notifyStatus({phase:'loading',message:s.message,version:s.version});});
   if(taken.preloaded)notifyStatus({phase:'loading',message:'Starting recognition engine…'});
   void taken.promise
-   .then(value=>{if(abort.signal.aborted)return;runtime.current=value;recognitionMetrics.runtime({delegate:value.delegate,preloaded:taken.preloaded});setReady(true);notifyStatus({phase:'ready',message:'Model ready',version:value.version});})
+   .then(value=>{if(abort.signal.aborted)return;runtime.current=value;recognitionMetrics.runtime({delegate:value.delegate,preloaded:taken.preloaded,model:value.version});setReady(true);notifyStatus({phase:'ready',message:'Model ready',version:value.version});})
    .catch(error=>{if(!abort.signal.aborted)notifyStatus({phase:'error',message:error instanceof Error?error.message:'Could not load the model.'});});
   // A preloading page keeps the runtime for the next camera step; otherwise release disposes it.
   return ()=>{abort.abort();runtime.current=null;setReady(false);const release=()=>{if(inFlight.current)setTimeout(release,20);else taken.release();};release();};
- },[category,retry,alphabetTracking,delegate,alphabetHands]);
+ },[category,retry,alphabetTracking,delegate,alphabetHands,alphabetModel]);
  // EXPERIMENT metrics: time the camera was live before recognition could start.
  const waitingSince=useRef<number|undefined>(undefined);
  useEffect(()=>{
