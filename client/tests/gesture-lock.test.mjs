@@ -100,3 +100,10 @@ test('frameIssue names why a frame cannot count towards a hold, even before any 
  assert.equal(frameIssue(sample(0,{margin:.05})),'low margin');
  assert.equal(frameIssue(sample(0,{steady:false})),'unsteady');
 });
+test('matchesTarget ignores case, spaces, underscores and apostrophes',()=>{
+ assert.equal(matchesTarget('good_afternoon','Good Afternoon'),true);
+ assert.equal(matchesTarget('how_are_you','How are you'),true);
+ assert.equal(matchesTarget('im_fine',"I'm fine"),true);
+ assert.equal(matchesTarget('youre_welcome',"You're welcome"),true);
+ assert.equal(matchesTarget('good_morning','Good Afternoon'),false);
+});
