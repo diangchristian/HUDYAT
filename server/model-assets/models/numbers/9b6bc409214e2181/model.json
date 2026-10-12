@@ -1,20 +1,22 @@
 {
   "format": "fsl-conv1d-bilstm-v1",
-  "category": "colors",
-  "version": "fd6cbabbd4b1082c",
+  "category": "numbers",
+  "version": "9b6bc409214e2181",
   "inputShape": [
     32,
     128
   ],
   "classes": [
-    "blue",
-    "dark",
-    "green",
-    "light",
-    "orange",
-    "red",
-    "violet",
-    "yellow"
+    "eight",
+    "five",
+    "four",
+    "nine",
+    "one",
+    "seven",
+    "six",
+    "ten",
+    "three",
+    "two"
   ],
   "preprocessing": {
     "frames": 32,
@@ -32,7 +34,18 @@
     "test_fraction": 0.15,
     "static_variants": 8,
     "jitter_std": 0.0075,
-    "static_method": "repeat + independent per-timestep Gaussian coordinate noise",
+    "static_method": "deterministic repeat; training variants only",
+    "augmentation": {
+      "version": 1,
+      "split": "train",
+      "target_per_class": 500,
+      "rotation_degrees": 5.0,
+      "scale_range": 0.05,
+      "jitter_std": 0.0075,
+      "includes_original": true,
+      "method": "shared sequence XY pivot; Z rotation; uniform XYZ scale; Gaussian noise",
+      "static_variants_includes_original": true
+    },
     "grouping": "source path with Roboflow .rf. siblings grouped",
     "extraction": {
       "backend": "MediaPipe HandLandmarker",
@@ -272,21 +285,21 @@
     {
       "shape": [
         64,
-        8
+        10
       ],
       "dtype": "float32",
       "offset": 1943552,
-      "bytes": 2048
+      "bytes": 2560
     },
     {
       "shape": [
-        8
+        10
       ],
       "dtype": "float32",
-      "offset": 1945600,
-      "bytes": 32
+      "offset": 1946112,
+      "bytes": 40
     }
   ],
-  "weightBytes": 1945632,
-  "weightSha256": "5d7bc1c71d2df69ef9bcdb7b419f2cf69f2e457dc0b37704baa4e6b62569ec9b"
+  "weightBytes": 1946152,
+  "weightSha256": "7b1546282d83944ba24ff0f8bc6d94a88be278f607007c5d9fe18b7e667dd4e9"
 }
