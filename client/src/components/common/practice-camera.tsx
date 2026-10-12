@@ -9,9 +9,10 @@ import { Camera, CameraOff, LoaderCircle, Check, X } from "lucide-react";
 import ElevatedButton from "@/components/ui/elavated-button";
 import { Card } from "@/components/ui/card";
 import { useCamera } from "@/hooks/use-camera";
+import { useCameraPreference } from "@/lib/camera-preference";
 
 export default function PracticeCamera({category,targetLabel,onCorrect}: {category?:string;targetLabel?:string;onCorrect?:()=>void}) {
-  const { videoRef, status, error, start, stop } = useCamera();
+  const { videoRef, status, error, start, stop: stopCamera } = useCamera();
   const isLive = status === "live";
   const [recognitionStatus,setRecognitionStatus]=useState<RecognitionStatus>({phase:'loading',message:'Preparing category model…'});
   const [recognitionRetry,setRecognitionRetry]=useState(0);
@@ -24,7 +25,12 @@ export default function PracticeCamera({category,targetLabel,onCorrect}: {catego
   useEffect(()=>()=>{clearTimeout(feedbackTimer.current);},[targetLabel,category,isLive]);
   const successSound=useRef<HTMLAudioElement|null>(null);
   const wrongSound=useRef<HTMLAudioElement|null>(null);
+  // Only an explicit STOP forgets the choice; leaving the page just releases the stream.
+  const stop=()=>{useCameraPreference.getState().decline();stopCamera();};
+  // Resume without a click when the camera was already started on an earlier screen.
+  useEffect(()=>{if(useCameraPreference.getState().wanted)void start(CAMERA_SIZE[settings.cameraResolution]);},[]); // eslint-disable-line react-hooks/exhaustive-deps
   const beginCamera=()=>{
+    useCameraPreference.getState().want();
     setFeedback(null);
     // Unlock this audio element within the user's camera-button click.
     const sound=successSound.current??new Audio(import.meta.env.BASE_URL+'sounds/correct.mp3');
