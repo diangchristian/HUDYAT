@@ -9,10 +9,10 @@ export const DABEST_CATEGORIES = ["Alphabet", "Numbers", "Colors", "Greetings"];
 
 /*
  * Signs DABEST shows inside a category, when it shows only some of them.
- * Colors: the six the Colors model recognizes (Purple is its "violet").
+ * Colors: the six the Colors model recognizes.
  */
 export const DABEST_GESTURES: Record<string, string[]> = {
-  Colors: ["Red", "Orange", "Yellow", "Green", "Blue", "Purple"],
+  Colors: ["Red", "Orange", "Yellow", "Green", "Blue", "Violet"],
 };
 
 /* A category DABEST shows (replaces `isActive: true` on category queries). */
