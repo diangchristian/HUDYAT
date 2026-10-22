@@ -25,3 +25,24 @@ export function normalizeFrame(frame:Float32Array,width:number,height:number):Fl
  }
  return out;
 }
+
+/*
+ * "hand-relative-sequence-v1" (Russel's trainer exports): landmarks 1-20 exactly as hand-relative-v1; the wrist,
+ * instead of 0, is how far it moved since the hand's first valid frame, in the clip's median palm length.
+ * For a single frame this equals normalizeFrame. tests/normalize.test.mjs checks it against the model's own parity cases.
+ */
+export const HAND_RELATIVE_SEQUENCE='hand-relative-sequence-v1';
+
+export function normalizeSequence(frames:Float32Array[],width:number,height:number):Float32Array[]{
+ const out=frames.map(frame=>normalizeFrame(frame,width,height));
+ for(let slot=0;slot<2;slot++){
+  const base=slot*63,valid=out.flatMap((frame,t)=>frame[126+slot]?[t]:[]);
+  if(!valid.length)continue;
+  const wrist=(f:Float32Array)=>[f[base]*width,f[base+1]*height,f[base+2]*width];
+  const palms=valid.map(t=>{const f=frames[t]!;return Math.hypot((f[base+27]-f[base])*width,(f[base+28]-f[base+1])*height);}).sort((a,b)=>a-b);
+  const mid=palms.length>>1,scale=palms.length%2?palms[mid]!:(palms[mid-1]!+palms[mid]!)/2;
+  const origin=wrist(frames[valid[0]!]!);
+  for(const t of valid)out[t]!.set(wrist(frames[t]!).map((v,c)=>(v-origin[c]!)/scale),base);
+ }
+ return out;
+}

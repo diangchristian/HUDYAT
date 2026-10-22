@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {existsSync,readFileSync} from 'node:fs';
-import {normalizeFrame} from '../src/features/fsl-recognition/normalize.ts';
+import {normalizeFrame,normalizeSequence} from '../src/features/fsl-recognition/normalize.ts';
 
 /** A right-hand frame from pixel positions (wrist, middle knuckle, one fingertip) in a width×height image. */
 const frameFrom=(points,width,height)=>{
@@ -33,4 +33,28 @@ const fixture=new URL('./fixtures-normalize.json',import.meta.url);
 test('matches the training pipeline (fixture exported by fsl-alphabet-model)',{skip:!existsSync(fixture)&&'no fixture yet'},()=>{
  const {cases}=JSON.parse(readFileSync(fixture,'utf8'));
  for(const c of cases)close(Array.from(normalizeFrame(Float32Array.from(c.raw),c.width,c.height)),c.expected);
+});
+
+test('a single frame gives the same sequence features as hand-relative-v1',()=>{
+ const hand=Array.from({length:21},(_,i)=>[30+i*2,40+i,i*.5]);
+ const frame=frameFrom(hand,640,480);
+ close(Array.from(normalizeSequence([frame],640,480)[0]),Array.from(normalizeFrame(frame,640,480)));
+});
+test('the wrist is its movement since the first frame, in median palm lengths',()=>{
+ // Palm 10px in every frame; the wrist moves 5px right, then 20px down.
+ const at=(dx,dy)=>{const p=Array.from({length:21},()=>[50+dx,50+dy,0]);p[9]=[50+dx,40+dy,0];return frameFrom(p,100,100);};
+ const out=normalizeSequence([at(0,0),at(5,0),at(5,20)],100,100);
+ close(out[0].slice(63,66),[0,0,0]);
+ close(out[1].slice(63,66),[.5,0,0]);
+ close(out[2].slice(63,66),[.5,2,0]);
+ close(out[2].slice(63+9*3,63+10*3),[0,-1,0]);
+});
+const sequenceFixture=new URL('./fixtures-normalize-sequence.json',import.meta.url);
+test('matches hand-relative-sequence-v1 models (camera parity cases exported with the model)',()=>{
+ const {preprocessing,cases}=JSON.parse(readFileSync(sequenceFixture,'utf8'));
+ assert.equal(preprocessing.normalization,'hand-relative-sequence-v1');
+ for(const c of cases){
+  const out=normalizeSequence(c.frames.map(f=>Float32Array.from(f)),c.width,c.height);
+  out.forEach((frame,t)=>close(Array.from(frame),c.expected[t]));
+ }
 });

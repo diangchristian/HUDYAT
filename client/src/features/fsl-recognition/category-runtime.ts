@@ -1,7 +1,7 @@
 import * as tf from '@tensorflow/tfjs';
 import { HandLandmarker,FilesetResolver } from '@mediapipe/tasks-vision';
 import {fetchCandidateRelease,fetchModelRelease,modelAssetUrl} from '../../api/model-api';
-import {HAND_RELATIVE,normalizeFrame} from './normalize';
+import {HAND_RELATIVE,HAND_RELATIVE_SEQUENCE,normalizeFrame,normalizeSequence} from './normalize';
 import {buildModel,loadWeights,packResult,resample,sha256} from './category-core.js';
 import {BASELINE,runtimeOptions,type RuntimeOptions} from './experiment';
 const BASELINE_OPTIONS=runtimeOptions(BASELINE);
@@ -37,7 +37,9 @@ export async function downloadCategory(category:string,signal:AbortSignal,emit:(
 export async function createCategoryRuntime(category:string,signal:AbortSignal,emit:(s:Update)=>void,options:RuntimeOptions=BASELINE_OPTIONS){
  const {release,metadata,weights,hand}=await downloadCategory(category,signal,emit,category==='alphabet'&&options.alphabetModel==='candidate');
  // Models trained on hand-relative landmarks get the same normalization at prediction time.
+ // handRelative: each frame on its own; handRelativeSequence: the whole clip (the wrist moves from its first frame).
  const handRelative=metadata.preprocessing?.normalization===HAND_RELATIVE;
+ const handRelativeSequence=metadata.preprocessing?.normalization===HAND_RELATIVE_SEQUENCE;
  // Each captured frame remembers the size of the image it came from, for normalization.
  const frameSizes=new WeakMap<Float32Array,{width:number;height:number}>();
  if(signal.aborted)throw Error('Cancelled');
@@ -80,7 +82,11 @@ export async function createCategoryRuntime(category:string,signal:AbortSignal,e
    async predict(frames:Float32Array[]){
     if(disposed)throw Error('Model released');
     // Frames stay raw (steadiness and hints use them); only the model's input is normalized.
-    const modelFrames=handRelative?frames.map(frame=>{const size=frameSizes.get(frame)??{width:0,height:0};return normalizeFrame(frame,size.width,size.height);}):frames;
+    const sizeOf=(frame:Float32Array)=>frameSizes.get(frame)??{width:0,height:0};
+    let modelFrames=frames;
+    if(handRelative)modelFrames=frames.map(frame=>{const size=sizeOf(frame);return normalizeFrame(frame,size.width,size.height);});
+    // A clip comes from one camera, so its first frame's size is the clip's.
+    else if(handRelativeSequence&&frames.length){const size=sizeOf(frames[0]!);modelFrames=normalizeSequence(frames,size.width,size.height);}
     // Checked after normalization: a hand that can't be scaled is dropped, never sent as zeros.
     if(!modelFrames.some(f=>f[126]||f[127]))return {message:'No hand detected.'};
     const input=tf.tensor3d(resample(modelFrames),[1,32,128]);let output:tf.Tensor|undefined;
