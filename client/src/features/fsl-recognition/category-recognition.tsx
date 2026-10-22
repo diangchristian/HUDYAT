@@ -7,7 +7,8 @@ import {advanceLock,emptyLock,frameIssue,holdProgress,isSteady,lockResetCause,ma
 import {takeRuntime} from './preload';
 import {recognitionMetrics,type FrameTiming} from './metrics';
 import {createSlidingWindow} from './sliding-window';
-import {createSignSegmenter,recommendedInput} from './sign-capture.js';
+import {recommendedInput} from './sign-capture.js';
+import {createTimedSegmenter} from './timed-segmenter';
 import {createEarlyCheck} from './early-check';
 import {longestGap,signLog,type SignDecision} from './sign-log';
 
@@ -89,9 +90,10 @@ export function CategoryRecognition({category,targetLabel,video,active,onCorrect
    !present?'no hand':issue??(handSize(frame)<.08?'small hand':undefined);
   const newWindow=()=>settings.dynamicCapture==='sliding'?createSlidingWindow(settings.window):undefined;
   let sliding=newWindow();
-  // DABEST sign capture: rebuilt while no sign is in progress if the frame rate drifts by more than 15%.
+  // DABEST sign capture: start and end of a sign in real time; the rate meter is only a fallback frame rate.
   const rate=createRateMeter();
-  let segmenter:ReturnType<typeof createSignSegmenter<CapturedFrame>>|undefined,segmenterFps=0,signStart=0;
+  const newSegmenter=()=>createTimedSegmenter<CapturedFrame>({endAbsentS:settings.endAbsentMs/1000});
+  let segmenter=newSegmenter(),signStart=0;
   const newEarly=()=>createEarlyCheck<CapturedFrame>(undefined,settings.earlyMinHandsMs);
   let early=newEarly(),agreed=0;
   recognitionMetrics.prompt(targetLabel,performance.now());
@@ -128,12 +130,11 @@ export function CategoryRecognition({category,targetLabel,video,active,onCorrect
      }else{
       notifyStatus({phase:'running',message:present?'Recognition running · checking gesture':'Recognition running · no hand detected',version:current.version});
       if(settings.dynamicCapture==='sign'&&current.handRelative){
-      // The sign ends when no hand has been seen for 0.2 s (or after 3 s); then it is cut and squeezed like training.
+      // The sign ends when no hand has been seen for 0.5 s (or after 3 s); then it is cut and squeezed like training.
       const now=performance.now();rate.push(now);const fps=rate.fps();
-      if(!segmenter||(!segmenter.signing&&Math.abs(fps-segmenterFps)>.15*segmenterFps)){segmenter=createSignSegmenter<CapturedFrame>(fps);segmenterFps=fps;}
       const wasSigning=segmenter.signing;
       const item={raw:frame,norm:current.normalize(frame),at:now};
-      const ended=segmenter.push(item,present);
+      const ended=segmenter.push(item,present,now);
       if(segmenter.signing&&!wasSigning)signStart=now;
       feedback(segmenter.signing?Math.min(1,(now-signStart)/3000):0,issueFor(frame,present),now);
       const check=async(items:CapturedFrame[])=>{
@@ -192,7 +193,7 @@ export function CategoryRecognition({category,targetLabel,video,active,onCorrect
       }
      }
     }
-   }catch(error){if(!cancelled){lock=emptyLock();frames=[];start=0;sliding=newWindow();segmenter=undefined;early=newEarly();agreed=0;notifyStatus({phase:'error',message:error instanceof Error?error.message:'Recognition failed.'});}}
+   }catch(error){if(!cancelled){lock=emptyLock();frames=[];start=0;sliding=newWindow();segmenter=newSegmenter();early=newEarly();agreed=0;notifyStatus({phase:'error',message:error instanceof Error?error.message:'Recognition failed.'});}}
    finally{if(timing&&!cancelled)recognitionMetrics.frame(timing);if(ownsInference)inFlight.current=false;if(!cancelled&&!completion.completed())timer=setTimeout(run,category==='alphabet'?settings.alphabetPollMs:40);}
   };
   void run();return()=>{cancelled=true;clearTimeout(timer);notifyHold(null);};

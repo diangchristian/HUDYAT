@@ -9,7 +9,7 @@ import {DEFAULT_GATES,type LockRules} from './gesture-lock';
 import {recognitionMetrics} from './metrics';
 import {signLog} from './sign-log';
 
-const WHY={hands_gone:'hands down (no hand 0.2 s)',max_length:'3 s limit',early:'early check'} as const;
+const WHY={hands_gone:'hands down',max_length:'3 s limit',early:'early check'} as const;
 
 const ms=(value:number)=>value?Math.round(value)+'ms':'–';
 
@@ -89,6 +89,9 @@ export function RecognitionLab({settings,onChange}:{settings:RecognitionSettings
       <option value="sign">sign ends when hands go down</option><option value="fixed">fixed 2s clips</option><option value="sliding">sliding window</option>
      </select>
     </label>
+    {settings.dynamicCapture==='sign'&&<label className="flex items-center justify-between gap-2">Sign ends after no hand for (ms)
+     <input type="number" min={100} max={1500} step={50} value={settings.endAbsentMs} onChange={e=>custom({endAbsentMs:Math.min(1500,Math.max(100,Number(e.target.value)||500))})} className="w-16 rounded border border-border bg-background px-1"/>
+    </label>}
     {settings.dynamicCapture==='sign'&&<label className="flex items-center justify-between gap-2">Answer a held sign early
      <input type="checkbox" checked={settings.earlyCheck} onChange={e=>custom({earlyCheck:e.target.checked})}/>
     </label>}

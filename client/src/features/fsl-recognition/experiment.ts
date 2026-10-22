@@ -7,6 +7,7 @@
 import {DEFAULT_LOCK_RULES,type LockRules} from './gesture-lock';
 import type {SlidingWindowOptions} from './sliding-window';
 import {EARLY_AGREE,EARLY_MIN_HANDS_MS} from './early-check';
+import {END_ABSENT_S} from './timed-segmenter';
 
 /** What the segmenter does to the background before hand detection. */
 export type BackgroundMode='off'|'blur'|'remove';
@@ -22,6 +23,8 @@ export type RecognitionSettings={
  earlyCheck:boolean;
  /** Early check: hand time before the first check (ms), and consecutive confident target answers needed. */
  earlyMinHandsMs:number;
+ /** Sign capture: how long no hand must be seen before a sign has ended (ms). */
+ endAbsentMs:number;
  earlyAgree:number;
  window:SlidingWindowOptions;
  /** Background processing applied to the frames the hand detector sees. */
@@ -50,7 +53,7 @@ export const CAMERA_SIZE={'720p':{width:1280,height:720},'480p':{width:640,heigh
 
 export const BASELINE:RecognitionSettings={
  profile:'baseline',alphabetPollMs:200,lock:DEFAULT_LOCK_RULES,
- dynamicCapture:'sign',earlyCheck:true,earlyMinHandsMs:EARLY_MIN_HANDS_MS,earlyAgree:EARLY_AGREE,window:{spanMs:2000,minSpanMs:1800,everyMs:500,minFrames:8,agree:2},
+ dynamicCapture:'sign',earlyCheck:true,earlyMinHandsMs:EARLY_MIN_HANDS_MS,earlyAgree:EARLY_AGREE,endAbsentMs:END_ABSENT_S*1000,window:{spanMs:2000,minSpanMs:1800,everyMs:500,minFrames:8,agree:2},
  detectionBackground:'off',previewBlur:false,
  alphabetTracking:false,delegate:'CPU',cameraResolution:'720p',alphabetHands:2,preload:false,holdFeedback:false,alphabetModel:'published',
 };
