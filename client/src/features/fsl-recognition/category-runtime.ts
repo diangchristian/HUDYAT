@@ -2,6 +2,7 @@ import * as tf from '@tensorflow/tfjs';
 import { HandLandmarker,FilesetResolver } from '@mediapipe/tasks-vision';
 import {fetchModelRelease,modelAssetUrl} from '../../api/model-api';
 import {buildModel,loadWeights,packResult,resample,sha256} from './category-core.js';
+import {normalizationFor,preprocessSequence} from './model-preprocessing.js';
 export type Update={message:string;prediction?:string;score?:number;version?:string;ready?:boolean};
 const cacheName='hudyat-model-files-v1';
 async function artifact(url:string,hash:string,signal:AbortSignal,emit:(s:Update)=>void,label:string){
@@ -36,6 +37,7 @@ export async function createCategoryRuntime(category:string,signal:AbortSignal,e
  if(signal.aborted)throw Error('Cancelled');
  emit({message:'Starting recognition engine…',version:release.version});
  await tf.ready();
+ normalizationFor(metadata.preprocessing);
  const model=buildModel(tf,metadata.classes.length);
  let detector:HandLandmarker|undefined;
  try {
@@ -46,12 +48,13 @@ export async function createCategoryRuntime(category:string,signal:AbortSignal,e
    minHandDetectionConfidence:metadata.preprocessing.extraction.detection_confidence,minHandPresenceConfidence:metadata.preprocessing.extraction.detection_confidence,minTrackingConfidence:.5});
   if(signal.aborted)throw Error('Cancelled');
   let disposed=false;
+  let frameWidth=0,frameHeight=0;
   return {version:release.version,category:release.id,classes:metadata.classes as string[],
-   capture(video:HTMLVideoElement){if(disposed)throw Error('Model released');return packResult(release.id==='alphabet'?detector!.detect(video):detector!.detectForVideo(video,performance.now()),metadata.preprocessing.extraction.swap_hands);},
+   capture(video:HTMLVideoElement){if(disposed)throw Error('Model released');frameWidth=video.videoWidth;frameHeight=video.videoHeight;return packResult(release.id==='alphabet'?detector!.detect(video):detector!.detectForVideo(video,performance.now()),metadata.preprocessing.extraction.swap_hands);},
    async predict(frames:Float32Array[]){
     if(disposed)throw Error('Model released');
     if(!frames.some(f=>f[126]||f[127]))return {message:'No hand detected.'};
-    const input=tf.tensor3d(resample(frames),[1,32,128]);let output:tf.Tensor|undefined;
+    const input=tf.tensor3d(resample(preprocessSequence(frames,frameWidth,frameHeight,metadata.preprocessing)),[1,32,128]);let output:tf.Tensor|undefined;
     try{output=model.predict(input) as tf.Tensor;const scores=await output.data();const index=scores.indexOf(Math.max(...scores));
      return {message:scores[index]>=.6?'Model estimate — compare with the reference.':'Not sure yet. Try the sign again.',prediction:metadata.classes[index] as string,score:scores[index],margin:scores[index]-Math.max(...Array.from(scores).filter((_,i)=>i!==index))};
     }finally{input.dispose();output?.dispose();}
