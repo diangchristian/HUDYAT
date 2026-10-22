@@ -9,6 +9,7 @@ import {recognitionMetrics,type FrameTiming} from './metrics';
 import {createSlidingWindow} from './sliding-window';
 import {createSignSegmenter,recommendedInput} from './sign-capture.js';
 import {createEarlyCheck} from './early-check';
+import {longestGap,signLog,type SignDecision} from './sign-log';
 
 type CapturedFrame={raw:Float32Array;norm:Float32Array;at:number};
 /** Frames per second the camera loop is actually running at, from the last 25 frames. */
@@ -140,23 +141,33 @@ export function CategoryRecognition({category,targetLabel,video,active,onCorrect
        const {width,height}=current.frameSize(frame);
        const {input}=recommendedInput(items,items.length>1&&span>0?(items.length-1)/span:fps,width,height,'auto');
        const result=await timed(()=>current.predictInput(input));
-       return result.prediction && (result.score??0)>=.8 && (result.margin??0)>=.15?result.prediction:undefined;
+       const label=result.prediction && (result.score??0)>=.8 && (result.margin??0)>=.15?result.prediction:undefined;
+       // Diagnostics for the Recognition lab: why and when this answer came.
+       const hands=items.map(it=>Boolean(it.raw[126]||it.raw[127]));
+       const firstHand=items[Math.max(0,hands.indexOf(true))]!.at;
+       const log=(reason:SignDecision['reason'],accepted:boolean)=>signLog.add({at:now,reason,target:targetLabel,
+        signMs:now-firstHand,longestGapMs:longestGap(items,hands),prediction:result.prediction,score:result.score,
+        margin:result.margin,accepted});
+       return {label,log};
       };
       if(ended){
        early=newEarly();agreed=0;
-       const label=await check(ended.items);
+       const {label,log}=await check(ended.items);
        if(cancelled)return;
+       log(ended.reason,Boolean(label));
        if(label)completion.accept(label);
       }else{
        // A sign held steady: check it so far; only a confident match with the target is accepted before it ends.
        const sofar=settings.earlyCheck?early.push(item,present,segmenter.signing):null;
        if(!segmenter.signing)agreed=0;
        if(sofar){
-        const label=await check(sofar);
+        const {label,log}=await check(sofar);
         if(cancelled)return;
         // Accepted only after the same confident answer on settings.earlyAgree checks in a row.
         agreed=label&&matchesTarget(label,targetLabel)?agreed+1:0;
-        if(label&&agreed>=settings.earlyAgree)completion.accept(label);
+        const accept=Boolean(label&&agreed>=settings.earlyAgree);
+        if(label&&matchesTarget(label,targetLabel))log('early',accept);
+        if(accept)completion.accept(label!);
        }
       }
       }else if(sliding){

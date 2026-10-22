@@ -7,6 +7,9 @@ import {useEffect,useState} from 'react';
 import {BASELINE,ENHANCED,type BackgroundMode,type RecognitionSettings} from './experiment';
 import {DEFAULT_GATES,type LockRules} from './gesture-lock';
 import {recognitionMetrics} from './metrics';
+import {signLog} from './sign-log';
+
+const WHY={hands_gone:'hands down (no hand 0.2 s)',max_length:'3 s limit',early:'early check'} as const;
 
 const ms=(value:number)=>value?Math.round(value)+'ms':'–';
 
@@ -15,6 +18,8 @@ export function RecognitionLab({settings,onChange}:{settings:RecognitionSettings
  const [copied,setCopied]=useState(false);
  const [condition,setCondition]=useState('');
  useEffect(()=>recognitionMetrics.subscribe(()=>setSummary(recognitionMetrics.summary())),[]);
+ const [decisions,setDecisions]=useState(signLog.entries);
+ useEffect(()=>signLog.subscribe(()=>setDecisions(signLog.entries())),[]);
  // Any settings change starts a fresh result set, so one export never mixes configurations.
  const apply=(next:RecognitionSettings)=>{recognitionMetrics.reset();onChange(next);};
  const custom=(patch:Partial<RecognitionSettings>)=>apply({...settings,...patch,profile:'custom'});
@@ -133,6 +138,15 @@ export function RecognitionLab({settings,onChange}:{settings:RecognitionSettings
     <button type="button" onClick={()=>recognitionMetrics.reset()} className="rounded-full border border-border px-3 py-1 font-bold">Reset results</button>
     <button type="button" onClick={copy} className="rounded-full border border-border px-3 py-1 font-bold">{copied?'Copied!':'Copy results (JSON)'}</button>
    </div>
+
+   {decisions.length>0&&<div>
+    <p className="font-bold">Moving-sign answers (newest first) <button type="button" onClick={()=>signLog.clear()} className="ml-2 underline">clear</button></p>
+    <ul className="space-y-0.5">
+     {decisions.map(d=><li key={d.at} className={d.accepted?'':'text-muted-foreground'}>
+      {d.accepted?'✓':'·'} {WHY[d.reason]} after {(d.signMs/1000).toFixed(1)} s · {d.prediction??'–'} {d.score===undefined?'':Math.round(d.score*100)+'%'} (target {d.target}){d.longestGapMs>=150?` · tracking gap ${Math.round(d.longestGapMs)} ms`:''}
+     </li>)}
+    </ul>
+   </div>}
   </section>
  );
 }
