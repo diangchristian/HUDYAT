@@ -31,6 +31,21 @@
       "classes": 6
     },
     {
+      "id": "family",
+      "name": "Family",
+      "available": true,
+      "version": "b02d4f9c72857438",
+      "modelUrl": "./models/family/b02d4f9c72857438/model.json",
+      "weightsUrl": "./models/family/b02d4f9c72857438/weights.bin",
+      "modelSha256": "3c48863f44306b1fc4f58373fabe8f07e145d52c042a0a2dea2112c245df5cbf",
+      "weightsSha256": "13e19405155b20960fdc81b931fb6e0f66f2ea091ce1816ff297deff4abdf3ce",
+      "bytes": 1952139,
+      "handUrl": "./shared/fbc2a30080c3c557093b5ddfc334698132eb341044ccee322ccf8bcf3607cde1.task",
+      "handSha256": "fbc2a30080c3c557093b5ddfc334698132eb341044ccee322ccf8bcf3607cde1",
+      "handBytes": 7819105,
+      "classes": 10
+    },
+    {
       "id": "greetings",
       "name": "Greetings",
       "available": true,
@@ -59,6 +74,11 @@
       "handSha256": "fbc2a30080c3c557093b5ddfc334698132eb341044ccee322ccf8bcf3607cde1",
       "handBytes": 7819105,
       "classes": 10
+    },
+    {
+      "id": "shapes",
+      "name": "Shapes",
+      "available": false
     }
   ]
 }
