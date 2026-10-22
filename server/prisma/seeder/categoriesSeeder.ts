@@ -3,6 +3,7 @@ import "dotenv/config";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../../src/generated/prisma/client.js";
 import { DABEST_CATEGORIES, DABEST_LEARNING_AREA } from "../../src/config/dabest.js";
+import { assertDabestDatabase } from "./dabestGuard.js";
 
 const connectionString = process.env.DATABASE_URL;
 
@@ -24,6 +25,8 @@ const prisma = new PrismaClient({
  * `npm run seed:fsl-gestures`, which needs these categories to exist.
  */
 async function main() {
+  await assertDabestDatabase(prisma);
+
   const area = await prisma.learningArea.findFirst({
     where: {
       name: DABEST_LEARNING_AREA.name,

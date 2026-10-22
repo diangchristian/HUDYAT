@@ -103,6 +103,8 @@ export async function createCategoryRuntime(category:string,signal:AbortSignal,e
    async predictInput(rows:ArrayLike<number>[]){
     if(disposed)throw Error('Model released');
     if(rows.length!==32||rows.some(row=>row.length!==128))throw Error('The model needs 32 frames of 128 values.');
+    // As in predict(): a clip whose hands were all dropped by normalization is never sent as zeros.
+    if(!rows.some(row=>row[126]||row[127]))return {message:'No hand detected.'};
     const input=new Float32Array(32*128);rows.forEach((row,t)=>input.set(row,t*128));
     return score(tf.tensor3d(input,[1,32,128]));
    },

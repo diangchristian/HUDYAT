@@ -104,7 +104,7 @@ export function CategoryRecognition({category,targetLabel,video,active,onCorrect
    const current=runtime.current,element=video.current;
    let ownsInference=false,timing:FrameTiming|undefined;
    try{
-    if(document.hidden){lock=emptyLock();previous=undefined;frames=[];start=0;}
+    if(document.hidden){lock=emptyLock();previous=undefined;frames=[];start=0;segmenter=newSegmenter();early=newEarly();agreed=0;}
     else if(!cancelled&&current&&element&&element.readyState>=2&&!inFlight.current&&element.currentTime!==lastTime){
      lastTime=element.currentTime;inFlight.current=true;ownsInference=true;
      if(!current.classes.some(label=>matchesTarget(label,targetLabel))){notifyStatus({phase:'error',message:'This sign is not in the downloaded model.',version:current.version});return;}

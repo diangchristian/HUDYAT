@@ -8,6 +8,7 @@ import numbers from "../data/learning/numbers.json";
 import greetings from "../data/learning/greetings.json";
 import colors from "../data/learning/colors.json";
 import { DABEST_CATEGORIES, isShownSign } from "../../src/config/dabest.js";
+import { assertDabestDatabase } from "./dabestGuard.js";
 
 const connectionString = process.env.DATABASE_URL;
 
@@ -106,6 +107,8 @@ const SIGNS: Record<string, GestureData[]> = {
 };
 
 async function main() {
+  await assertDabestDatabase(prisma);
+
   for (const name of DABEST_CATEGORIES) {
     // In Colors only the six colors the Colors model knows (src/config/dabest.ts).
     const signs = (SIGNS[name] ?? []).filter((sign) => isShownSign(name, sign.label));

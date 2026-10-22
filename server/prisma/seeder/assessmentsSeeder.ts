@@ -17,6 +17,7 @@ import assessments from "../data/assessment/assessment.json";
 import assessmentQuestions from "../data/assessment/assessmentQuestions.json";
 import questionChoices from "../data/assessment/questionChoices.json";
 import { isDabestCategory, isShownSign } from "../../src/config/dabest.js";
+import { assertDabestDatabase } from "./dabestGuard.js";
 
 /*
  * DABEST: only the assessments of its four categories, and only questions
@@ -45,6 +46,8 @@ async function seedAssessments() {
   console.log("🌱 Seeding assessments...");
 
   try {
+    await assertDabestDatabase(prisma);
+
     /*
      * ============================================================
      * 1. SEED ASSESSMENTS

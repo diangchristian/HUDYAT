@@ -1,6 +1,6 @@
 /*
  * DABEST diagnostics: why each moving-sign answer was given (hands down, a 3 s cut, or the early check),
- * shown in the Recognition lab (?lab=1) and in the browser console.
+ * shown in the Recognition lab (?lab=1) and, while the lab is on, in the browser console.
  */
 export type SignDecision={
  at:number;
@@ -17,6 +17,9 @@ export type SignDecision={
  accepted:boolean;
 };
 
+// The flag experiment.ts's isLabEnabled() keeps for this tab (the page has read ?lab= before any sign).
+const labOn=()=>{try{return sessionStorage.getItem('hudyat-lab')==='1';}catch{return false;}};
+
 const KEEP=12;
 let entries:SignDecision[]=[];
 const listeners=new Set<()=>void>();
@@ -24,7 +27,7 @@ const listeners=new Set<()=>void>();
 export const signLog={
  add(entry:SignDecision){
   entries=[entry,...entries].slice(0,KEEP);
-  console.info('[DABEST sign]',entry.reason,`${Math.round(entry.signMs)} ms`,entry.prediction,entry.score?.toFixed(2),
+  if(labOn())console.info('[DABEST sign]',entry.reason,`${Math.round(entry.signMs)} ms`,entry.prediction,entry.score?.toFixed(2),
    entry.accepted?'accepted':'not accepted',`longest gap ${Math.round(entry.longestGapMs)} ms`);
   listeners.forEach(listener=>listener());
  },
