@@ -8,6 +8,7 @@ import {takeRuntime} from './preload';
 import {recognitionMetrics,type FrameTiming} from './metrics';
 import {createSlidingWindow} from './sliding-window';
 import {createSignSegmenter,recommendedInput} from './sign-capture.js';
+import {createEarlyCheck} from './early-check';
 
 type CapturedFrame={raw:Float32Array;norm:Float32Array;at:number};
 /** Frames per second the camera loop is actually running at, from the last 25 frames. */
@@ -90,6 +91,7 @@ export function CategoryRecognition({category,targetLabel,video,active,onCorrect
   // DABEST sign capture: rebuilt while no sign is in progress if the frame rate drifts by more than 15%.
   const rate=createRateMeter();
   let segmenter:ReturnType<typeof createSignSegmenter<CapturedFrame>>|undefined,segmenterFps=0,signStart=0;
+  let early=createEarlyCheck<CapturedFrame>();
   recognitionMetrics.prompt(targetLabel,performance.now());
   const completion=createMatchCompletion(targetLabel,
    ()=>{recognitionMetrics.correct(targetLabel,performance.now());notifyCorrect();},
@@ -128,16 +130,30 @@ export function CategoryRecognition({category,targetLabel,video,active,onCorrect
       const now=performance.now();rate.push(now);const fps=rate.fps();
       if(!segmenter||(!segmenter.signing&&Math.abs(fps-segmenterFps)>.15*segmenterFps)){segmenter=createSignSegmenter<CapturedFrame>(fps);segmenterFps=fps;}
       const wasSigning=segmenter.signing;
-      const ended=segmenter.push({raw:frame,norm:current.normalize(frame),at:now},present);
+      const item={raw:frame,norm:current.normalize(frame),at:now};
+      const ended=segmenter.push(item,present);
       if(segmenter.signing&&!wasSigning)signStart=now;
       feedback(segmenter.signing?Math.min(1,(now-signStart)/3000):0,issueFor(frame,present),now);
-      if(ended){
-       const items=ended.items,span=(items[items.length-1]!.at-items[0]!.at)/1000;
+      const check=async(items:CapturedFrame[])=>{
+       const span=(items[items.length-1]!.at-items[0]!.at)/1000;
        const {width,height}=current.frameSize(frame);
        const {input}=recommendedInput(items,items.length>1&&span>0?(items.length-1)/span:fps,width,height,'auto');
        const result=await timed(()=>current.predictInput(input));
+       return result.prediction && (result.score??0)>=.8 && (result.margin??0)>=.15?result.prediction:undefined;
+      };
+      if(ended){
+       early=createEarlyCheck<CapturedFrame>();
+       const label=await check(ended.items);
        if(cancelled)return;
-       if(result.prediction && (result.score??0)>=.8 && (result.margin??0)>=.15)completion.accept(result.prediction);
+       if(label)completion.accept(label);
+      }else{
+       // A sign held steady: check it so far; only a confident match with the target is accepted before it ends.
+       const sofar=settings.earlyCheck?early.push(item,present,segmenter.signing):null;
+       if(sofar){
+        const label=await check(sofar);
+        if(cancelled)return;
+        if(label&&matchesTarget(label,targetLabel))completion.accept(label);
+       }
       }
       }else if(sliding){
       const clip=sliding.push(frame,performance.now());
@@ -161,7 +177,7 @@ export function CategoryRecognition({category,targetLabel,video,active,onCorrect
       }
      }
     }
-   }catch(error){if(!cancelled){lock=emptyLock();frames=[];start=0;sliding=newWindow();segmenter=undefined;notifyStatus({phase:'error',message:error instanceof Error?error.message:'Recognition failed.'});}}
+   }catch(error){if(!cancelled){lock=emptyLock();frames=[];start=0;sliding=newWindow();segmenter=undefined;early=createEarlyCheck<CapturedFrame>();notifyStatus({phase:'error',message:error instanceof Error?error.message:'Recognition failed.'});}}
    finally{if(timing&&!cancelled)recognitionMetrics.frame(timing);if(ownsInference)inFlight.current=false;if(!cancelled&&!completion.completed())timer=setTimeout(run,category==='alphabet'?settings.alphabetPollMs:40);}
   };
   void run();return()=>{cancelled=true;clearTimeout(timer);notifyHold(null);};

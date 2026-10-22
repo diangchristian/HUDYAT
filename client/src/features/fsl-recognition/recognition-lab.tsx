@@ -84,6 +84,9 @@ export function RecognitionLab({settings,onChange}:{settings:RecognitionSettings
       <option value="sign">sign ends when hands go down</option><option value="fixed">fixed 2s clips</option><option value="sliding">sliding window</option>
      </select>
     </label>
+    {settings.dynamicCapture==='sign'&&<label className="flex items-center justify-between gap-2">Answer a held sign early
+     <input type="checkbox" checked={settings.earlyCheck} onChange={e=>custom({earlyCheck:e.target.checked})}/>
+    </label>}
     <label className="flex items-center justify-between gap-2">Alphabet poll (ms)
      <input type="number" min={33} step={10} value={settings.alphabetPollMs} onChange={e=>custom({alphabetPollMs:Math.max(33,Number(e.target.value)||200)})} className="w-16 rounded border border-border bg-background px-1"/>
     </label>
