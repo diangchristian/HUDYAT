@@ -1,15 +1,37 @@
-import CategoryCard from "@/components/common/category-card";
-import { SHOWN_CATEGORIES } from "@/components/common/categories.constants";
 import { useNavigate } from "react-router";
+import CategoryCard from "@/components/common/category-card";
+import { CATEGORIES } from "@/components/common/categories.constants";
+import type { LearningArea } from "@/api/learning-api";
+import { useLearningAreas } from "@/hooks/use-learning-areas";
 import { categorySlug } from "@/lib/practice";
 
-const DESCRIPTIONS: Record<string, string> = {
-  "WH Questions": "Who, What, Where, When, Why",
-  "Word Concepts": "Action words, opposites",
-};
-
+// Laid out like the Learn page (same learning areas, order and cards), but nothing is locked.
 export default function PracticePage() {
   const navigate = useNavigate();
+  const { data: learningAreas = [], isLoading, error } = useLearningAreas();
+
+  // Practice uses each category's lesson signs (CategoryPracticePage).
+  const areas = learningAreas.filter((area) => area.categories.length > 0);
+
+  const renderCategory = (category: LearningArea["categories"][number]) => {
+    const presentation = CATEGORIES.find((item) => item.title === category.name);
+    const slug = categorySlug(category.name);
+    return (
+      <CategoryCard
+        key={category.id}
+        title={category.name}
+        icon={presentation?.icon}
+        color={presentation?.color ?? "blue"}
+        variant="progress"
+        status="current"
+        statusLabel="Free play"
+        desc="Practice the signs as often as you like"
+        className="min-h-44 justify-center border-2"
+        onClick={() => navigate(`/student/practice/${slug}`)}
+      />
+    );
+  };
+
   return (
     <section className="w-full font-body" aria-labelledby="practice-heading">
       <header className="text-center">
@@ -27,17 +49,38 @@ export default function PracticePage() {
         </p>
       </header>
 
-      <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
-        {SHOWN_CATEGORIES.map((category) => (
-          <CategoryCard
-            key={category.title}
-            {...category}
-            desc={DESCRIPTIONS[category.title]}
-            className="min-h-40 justify-center border-3"
-            onClick={() => navigate(`/student/practice/${categorySlug(category.title)}`)}
-          />
-        ))}
-      </div>
+      {isLoading && (
+        <p className="mt-12 text-center text-sm text-muted-foreground" role="status">
+          Loading your practice topics...
+        </p>
+      )}
+
+      {!isLoading && error && (
+        <p className="mt-12 text-center text-sm font-bold text-destructive" role="alert">
+          {error instanceof Error ? error.message : "We couldn't load your practice topics right now."}
+        </p>
+      )}
+
+      {!isLoading && !error && areas.length === 0 && (
+        <p className="mt-12 text-center text-sm text-muted-foreground" role="status">
+          No practice topics are available yet.
+        </p>
+      )}
+
+      {!isLoading && !error && areas.length > 0 && (
+        <div className="mt-10">
+          {areas.map((area) => (
+            <section key={area.id} aria-labelledby={`practice-area-${area.id}`} className="mb-12 last:mb-0">
+              <h3 id={`practice-area-${area.id}`} className="mb-4 text-lg font-bold text-foreground sm:text-xl">
+                {area.name}
+              </h3>
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {area.categories.map(renderCategory)}
+              </div>
+            </section>
+          ))}
+        </div>
+      )}
     </section>
   );
 }
