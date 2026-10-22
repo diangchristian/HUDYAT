@@ -7,6 +7,15 @@ import {advanceLock,emptyLock,frameIssue,holdProgress,isSteady,lockResetCause,ma
 import {takeRuntime} from './preload';
 import {recognitionMetrics,type FrameTiming} from './metrics';
 import {createSlidingWindow} from './sliding-window';
+import {createSignSegmenter,recommendedInput} from './sign-capture.js';
+
+type CapturedFrame={raw:Float32Array;norm:Float32Array;at:number};
+/** Frames per second the camera loop is actually running at, from the last 25 frames. */
+function createRateMeter(){
+ const times:number[]=[];
+ return {push(at:number){times.push(at);if(times.length>25)times.shift();},
+  fps(){const span=times.length>4?times[times.length-1]!-times[0]!:0;return span>0?(times.length-1)*1000/span:20;}};
+}
 
 export type RecognitionStatus={phase:'loading'|'ready'|'running'|'error';message:string;version?:string};
 /** EXPERIMENT: how close the current sign is to being accepted, plus a coaching hint. */
@@ -78,6 +87,9 @@ export function CategoryRecognition({category,targetLabel,video,active,onCorrect
    !present?'no hand':issue??(handSize(frame)<.08?'small hand':undefined);
   const newWindow=()=>settings.dynamicCapture==='sliding'?createSlidingWindow(settings.window):undefined;
   let sliding=newWindow();
+  // DABEST sign capture: rebuilt while no sign is in progress if the frame rate drifts by more than 15%.
+  const rate=createRateMeter();
+  let segmenter:ReturnType<typeof createSignSegmenter<CapturedFrame>>|undefined,segmenterFps=0,signStart=0;
   recognitionMetrics.prompt(targetLabel,performance.now());
   const completion=createMatchCompletion(targetLabel,
    ()=>{recognitionMetrics.correct(targetLabel,performance.now());notifyCorrect();},
@@ -97,7 +109,8 @@ export function CategoryRecognition({category,targetLabel,video,active,onCorrect
      const frameTiming:FrameTiming={at:frameStarted,segmentMs:processed?.segmentMs??0,captureMs:performance.now()-captureStarted};timing=frameTiming;
      completion.observePresence(present,performance.now());
      if(present)recognitionMetrics.handSeen(targetLabel,frameStarted);
-     const predict=async(input:Float32Array[])=>{const t=performance.now();const result=await current.predict(input);frameTiming.predictMs=performance.now()-t;return result;};
+     const timed=async<T,>(work:()=>Promise<T>)=>{const t=performance.now();const result=await work();frameTiming.predictMs=performance.now()-t;return result;};
+     const predict=(input:Float32Array[])=>timed(()=>current.predict(input));
      if(current.category==='alphabet'){
       const result=present?await predict([frame]):undefined;
       if(cancelled)return;
@@ -110,7 +123,23 @@ export function CategoryRecognition({category,targetLabel,video,active,onCorrect
       if(lock.locked){completion.accept(lock.locked);lock=emptyLock();}
      }else{
       notifyStatus({phase:'running',message:present?'Recognition running · checking gesture':'Recognition running · no hand detected',version:current.version});
-      if(sliding){
+      if(settings.dynamicCapture==='sign'&&current.handRelative){
+      // The sign ends when no hand has been seen for 0.2 s (or after 3 s); then it is cut and squeezed like training.
+      const now=performance.now();rate.push(now);const fps=rate.fps();
+      if(!segmenter||(!segmenter.signing&&Math.abs(fps-segmenterFps)>.15*segmenterFps)){segmenter=createSignSegmenter<CapturedFrame>(fps);segmenterFps=fps;}
+      const wasSigning=segmenter.signing;
+      const ended=segmenter.push({raw:frame,norm:current.normalize(frame),at:now},present);
+      if(segmenter.signing&&!wasSigning)signStart=now;
+      feedback(segmenter.signing?Math.min(1,(now-signStart)/3000):0,issueFor(frame,present),now);
+      if(ended){
+       const items=ended.items,span=(items[items.length-1]!.at-items[0]!.at)/1000;
+       const {width,height}=current.frameSize(frame);
+       const {input}=recommendedInput(items,items.length>1&&span>0?(items.length-1)/span:fps,width,height,'auto');
+       const result=await timed(()=>current.predictInput(input));
+       if(cancelled)return;
+       if(result.prediction && (result.score??0)>=.8 && (result.margin??0)>=.15)completion.accept(result.prediction);
+      }
+      }else if(sliding){
       const clip=sliding.push(frame,performance.now());
       feedback(sliding.progress(performance.now()),issueFor(frame,present),performance.now());
       if(clip){
@@ -132,7 +161,7 @@ export function CategoryRecognition({category,targetLabel,video,active,onCorrect
       }
      }
     }
-   }catch(error){if(!cancelled){lock=emptyLock();frames=[];start=0;sliding=newWindow();notifyStatus({phase:'error',message:error instanceof Error?error.message:'Recognition failed.'});}}
+   }catch(error){if(!cancelled){lock=emptyLock();frames=[];start=0;sliding=newWindow();segmenter=undefined;notifyStatus({phase:'error',message:error instanceof Error?error.message:'Recognition failed.'});}}
    finally{if(timing&&!cancelled)recognitionMetrics.frame(timing);if(ownsInference)inFlight.current=false;if(!cancelled&&!completion.completed())timer=setTimeout(run,category==='alphabet'?settings.alphabetPollMs:40);}
   };
   void run();return()=>{cancelled=true;clearTimeout(timer);notifyHold(null);};

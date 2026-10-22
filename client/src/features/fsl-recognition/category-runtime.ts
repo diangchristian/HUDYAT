@@ -6,6 +6,7 @@ import {buildModel,loadWeights,packResult,resample,sha256} from './category-core
 import {BASELINE,runtimeOptions,type RuntimeOptions} from './experiment';
 const BASELINE_OPTIONS=runtimeOptions(BASELINE);
 export type Update={message:string;prediction?:string;score?:number;version?:string;ready?:boolean};
+export type Prediction={message:string;prediction?:string;score?:number;margin?:number};
 const cacheName='hudyat-model-files-v1';
 async function artifact(url:string,hash:string,signal:AbortSignal,emit:(s:Update)=>void,label:string){
  const cache=await caches.open(cacheName),key=modelAssetUrl(url);
@@ -61,9 +62,15 @@ export async function createCategoryRuntime(category:string,signal:AbortSignal,e
    delegate='CPU';detector=await createDetector(delegate);
   }
   let lastTimestamp=0;
+  const score=async(input:tf.Tensor):Promise<Prediction>=>{
+   let output:tf.Tensor|undefined;
+   try{output=model.predict(input) as tf.Tensor;const scores=await output.data();const index=scores.indexOf(Math.max(...scores));
+    return {message:scores[index]>=.6?'Model estimate — compare with the reference.':'Not sure yet. Try the sign again.',prediction:metadata.classes[index] as string,score:scores[index],margin:scores[index]-Math.max(...Array.from(scores).filter((_,i)=>i!==index))};
+   }finally{input.dispose();output?.dispose();}
+  };
   if(signal.aborted)throw Error('Cancelled');
   let disposed=false;
-  return {version:release.version,category:release.id,classes:metadata.classes as string[],delegate,
+  return {version:release.version,category:release.id,classes:metadata.classes as string[],delegate,handRelative,
    capture(video:HTMLVideoElement|HTMLCanvasElement){
     if(disposed)throw Error('Model released');
     const size=video instanceof HTMLVideoElement?{width:video.videoWidth,height:video.videoHeight}:{width:video.width,height:video.height};
@@ -77,16 +84,27 @@ export async function createCategoryRuntime(category:string,signal:AbortSignal,e
     frameSizes.set(frame,size);
     return frame;
    },
-   async predict(frames:Float32Array[]){
+   async predict(frames:Float32Array[]):Promise<Prediction>{
     if(disposed)throw Error('Model released');
     // Frames stay raw (steadiness and hints use them); only the model's input is normalized.
     const modelFrames=handRelative?frames.map(frame=>{const size=frameSizes.get(frame)??{width:0,height:0};return normalizeFrame(frame,size.width,size.height);}):frames;
     // Checked after normalization: a hand that can't be scaled is dropped, never sent as zeros.
     if(!modelFrames.some(f=>f[126]||f[127]))return {message:'No hand detected.'};
-    const input=tf.tensor3d(resample(modelFrames),[1,32,128]);let output:tf.Tensor|undefined;
-    try{output=model.predict(input) as tf.Tensor;const scores=await output.data();const index=scores.indexOf(Math.max(...scores));
-     return {message:scores[index]>=.6?'Model estimate — compare with the reference.':'Not sure yet. Try the sign again.',prediction:metadata.classes[index] as string,score:scores[index],margin:scores[index]-Math.max(...Array.from(scores).filter((_,i)=>i!==index))};
-    }finally{input.dispose();output?.dispose();}
+    return score(tf.tensor3d(resample(modelFrames),[1,32,128]));
+   },
+   /** DABEST: the size of the image a captured frame came from. */
+   frameSize(frame:Float32Array){return frameSizes.get(frame)??{width:0,height:0};},
+   /** DABEST: a captured frame as the model sees it (hand-relative when the model is). */
+   normalize(frame:Float32Array){
+    if(!handRelative)return frame;
+    const size=frameSizes.get(frame)??{width:0,height:0};return normalizeFrame(frame,size.width,size.height);
+   },
+   /** DABEST: predict a ready 32 x 128 input (from sign-capture's recommendedInput). */
+   async predictInput(rows:ArrayLike<number>[]){
+    if(disposed)throw Error('Model released');
+    if(rows.length!==32||rows.some(row=>row.length!==128))throw Error('The model needs 32 frames of 128 values.');
+    const input=new Float32Array(32*128);rows.forEach((row,t)=>input.set(row,t*128));
+    return score(tf.tensor3d(input,[1,32,128]));
    },
    dispose(){if(!disposed){disposed=true;detector?.close();model.dispose();}}
   };

@@ -15,8 +15,8 @@ export type RecognitionSettings={
  /** Alphabet: ms between frames. */
  alphabetPollMs:number;
  lock:LockRules;
- /** Moving signs: fixed 2s clips (today) or a sliding window. */
- dynamicCapture:'fixed'|'sliding';
+ /** Moving signs: fixed 2s clips (the app before DABEST), a sliding window, or a sign that ends when the hands go down. */
+ dynamicCapture:'fixed'|'sliding'|'sign';
  window:SlidingWindowOptions;
  /** Background processing applied to the frames the hand detector sees. */
  detectionBackground:BackgroundMode;
@@ -44,7 +44,7 @@ export const CAMERA_SIZE={'720p':{width:1280,height:720},'480p':{width:640,heigh
 
 export const BASELINE:RecognitionSettings={
  profile:'baseline',alphabetPollMs:200,lock:DEFAULT_LOCK_RULES,
- dynamicCapture:'fixed',window:{spanMs:2000,minSpanMs:1800,everyMs:500,minFrames:8,agree:2},
+ dynamicCapture:'sign',window:{spanMs:2000,minSpanMs:1800,everyMs:500,minFrames:8,agree:2},
  detectionBackground:'off',previewBlur:false,
  alphabetTracking:false,delegate:'CPU',cameraResolution:'720p',alphabetHands:2,preload:false,holdFeedback:false,alphabetModel:'published',
 };

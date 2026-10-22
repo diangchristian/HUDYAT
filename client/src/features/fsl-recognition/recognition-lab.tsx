@@ -81,7 +81,7 @@ export function RecognitionLab({settings,onChange}:{settings:RecognitionSettings
     </label>
     <label className="flex items-center justify-between gap-2">Moving signs
      <select value={settings.dynamicCapture} onChange={e=>custom({dynamicCapture:e.target.value as RecognitionSettings['dynamicCapture']})} className="rounded border border-border bg-background px-1 py-0.5">
-      <option value="fixed">fixed 2s clips</option><option value="sliding">sliding window</option>
+      <option value="sign">sign ends when hands go down</option><option value="fixed">fixed 2s clips</option><option value="sliding">sliding window</option>
      </select>
     </label>
     <label className="flex items-center justify-between gap-2">Alphabet poll (ms)
