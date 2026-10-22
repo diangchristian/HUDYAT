@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {createEarlyCheck} from '../src/features/fsl-recognition/early-check.ts';
 
 // 25 frames per second: one frame every 40 ms.
-const run=(frames)=>{const early=createEarlyCheck(),checks=[];
+const run=(frames,minHandsMs=400)=>{const early=createEarlyCheck(undefined,minHandsMs),checks=[];
  frames.forEach(([present,signing],i)=>{const sofar=early.push({at:i*40,i},present,signing);if(sofar)checks.push(sofar.map(f=>f.i));});
  return checks;};
 
@@ -13,6 +13,9 @@ test('a held sign is checked every 0.5 s once it has 0.4 s of hands, from just b
  assert.equal(checks[0][0],0);                                     // starts with the frames before the hand
  assert.equal(checks[0].at(-1),5+13);
  assert.deepEqual(checks.map(c=>c.length),[19,32,45]);
+});
+test('with 0.8 s of hands first (the default), the first check is at frame 20',()=>{
+ assert.equal(run(Array(50).fill([true,true]),800)[0].at(-1),20);   // 0.8 s of hands = frame 20, then 0.5 s steps
 });
 test('nothing is checked while no sign is in progress, or before 0.4 s of hands',()=>{
  assert.equal(run(Array(30).fill([false,false])).length,0);

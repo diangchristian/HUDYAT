@@ -5,7 +5,9 @@
  */
 export const EARLY_EVERY_MS=500;
 /** A sign so far with less hand time than this is too short to check. */
-export const EARLY_MIN_HANDS_MS=400;
+export const EARLY_MIN_HANDS_MS=800;
+/** Consecutive checks that must give the same confident target before it is accepted. */
+export const EARLY_AGREE=2;
 /** Frames kept from before the first hand; recommendedInput cuts the window to the hands ±0.1 s anyway. */
 const KEEP_BEFORE=10;
 

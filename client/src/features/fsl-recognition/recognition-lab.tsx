@@ -87,6 +87,13 @@ export function RecognitionLab({settings,onChange}:{settings:RecognitionSettings
     {settings.dynamicCapture==='sign'&&<label className="flex items-center justify-between gap-2">Answer a held sign early
      <input type="checkbox" checked={settings.earlyCheck} onChange={e=>custom({earlyCheck:e.target.checked})}/>
     </label>}
+    {settings.dynamicCapture==='sign'&&settings.earlyCheck&&<>
+    <label className="flex items-center justify-between gap-2">Early: hands first (ms)
+     <input type="number" min={200} step={100} value={settings.earlyMinHandsMs} onChange={e=>custom({earlyMinHandsMs:Math.max(200,Number(e.target.value)||800)})} className="w-16 rounded border border-border bg-background px-1"/>
+    </label>
+    <label className="flex items-center justify-between gap-2">Early: same answer × checks
+     <input type="number" min={1} max={5} step={1} value={settings.earlyAgree} onChange={e=>custom({earlyAgree:Math.min(5,Math.max(1,Math.round(Number(e.target.value))||2))})} className="w-16 rounded border border-border bg-background px-1"/>
+    </label></>}
     <label className="flex items-center justify-between gap-2">Alphabet poll (ms)
      <input type="number" min={33} step={10} value={settings.alphabetPollMs} onChange={e=>custom({alphabetPollMs:Math.max(33,Number(e.target.value)||200)})} className="w-16 rounded border border-border bg-background px-1"/>
     </label>

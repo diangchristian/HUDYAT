@@ -91,7 +91,8 @@ export function CategoryRecognition({category,targetLabel,video,active,onCorrect
   // DABEST sign capture: rebuilt while no sign is in progress if the frame rate drifts by more than 15%.
   const rate=createRateMeter();
   let segmenter:ReturnType<typeof createSignSegmenter<CapturedFrame>>|undefined,segmenterFps=0,signStart=0;
-  let early=createEarlyCheck<CapturedFrame>();
+  const newEarly=()=>createEarlyCheck<CapturedFrame>(undefined,settings.earlyMinHandsMs);
+  let early=newEarly(),agreed=0;
   recognitionMetrics.prompt(targetLabel,performance.now());
   const completion=createMatchCompletion(targetLabel,
    ()=>{recognitionMetrics.correct(targetLabel,performance.now());notifyCorrect();},
@@ -142,17 +143,20 @@ export function CategoryRecognition({category,targetLabel,video,active,onCorrect
        return result.prediction && (result.score??0)>=.8 && (result.margin??0)>=.15?result.prediction:undefined;
       };
       if(ended){
-       early=createEarlyCheck<CapturedFrame>();
+       early=newEarly();agreed=0;
        const label=await check(ended.items);
        if(cancelled)return;
        if(label)completion.accept(label);
       }else{
        // A sign held steady: check it so far; only a confident match with the target is accepted before it ends.
        const sofar=settings.earlyCheck?early.push(item,present,segmenter.signing):null;
+       if(!segmenter.signing)agreed=0;
        if(sofar){
         const label=await check(sofar);
         if(cancelled)return;
-        if(label&&matchesTarget(label,targetLabel))completion.accept(label);
+        // Accepted only after the same confident answer on settings.earlyAgree checks in a row.
+        agreed=label&&matchesTarget(label,targetLabel)?agreed+1:0;
+        if(label&&agreed>=settings.earlyAgree)completion.accept(label);
        }
       }
       }else if(sliding){
@@ -177,7 +181,7 @@ export function CategoryRecognition({category,targetLabel,video,active,onCorrect
       }
      }
     }
-   }catch(error){if(!cancelled){lock=emptyLock();frames=[];start=0;sliding=newWindow();segmenter=undefined;early=createEarlyCheck<CapturedFrame>();notifyStatus({phase:'error',message:error instanceof Error?error.message:'Recognition failed.'});}}
+   }catch(error){if(!cancelled){lock=emptyLock();frames=[];start=0;sliding=newWindow();segmenter=undefined;early=newEarly();agreed=0;notifyStatus({phase:'error',message:error instanceof Error?error.message:'Recognition failed.'});}}
    finally{if(timing&&!cancelled)recognitionMetrics.frame(timing);if(ownsInference)inFlight.current=false;if(!cancelled&&!completion.completed())timer=setTimeout(run,category==='alphabet'?settings.alphabetPollMs:40);}
   };
   void run();return()=>{cancelled=true;clearTimeout(timer);notifyHold(null);};
