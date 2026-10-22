@@ -1,5 +1,6 @@
 import { Prisma } from "../generated/prisma/client.js";
 import { prisma } from "../config/db.js";
+import { shownCategory, shownQuestion } from "../config/dabest.js";
 
 /*
  * A category's assessment unlocks for a learner once they've
@@ -125,6 +126,7 @@ export const getAssessmentByCategory = async (
         },
 
         questions: {
+          where: shownQuestion,
           orderBy: {
             questionNumber: "asc",
           },
@@ -203,10 +205,10 @@ export const getAssessmentByCategory = async (
     category: assessment.category,
 
     questions: assessment.questions.map(
-      (question) => ({
+      (question, index) => ({
         id: question.id,
-        questionNumber:
-          question.questionNumber,
+        // DABEST may hide some questions; number the shown ones 1, 2, 3…
+        questionNumber: index + 1,
         questionText:
           question.questionText,
         questionType:
@@ -275,6 +277,7 @@ export const submitAssessment = async (
             },
 
             questions: {
+              where: shownQuestion,
               include: {
                 choices: true,
               },
@@ -472,7 +475,7 @@ export const submitAssessment = async (
                 assessment.category
                   .learningAreaId,
 
-              isActive: true,
+              ...shownCategory,
 
               displayOrder: {
                 gt: assessment.category
@@ -554,7 +557,7 @@ export const getAssessmentsForLearner = async (
         include: {
           categories: {
             where: {
-              isActive: true,
+              ...shownCategory,
               assessment: {
                 status: "PUBLISHED",
               },
@@ -567,7 +570,7 @@ export const getAssessmentsForLearner = async (
                 include: {
                   _count: {
                     select: {
-                      questions: true,
+                      questions: { where: shownQuestion },
                     },
                   },
                 },

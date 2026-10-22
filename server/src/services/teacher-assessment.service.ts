@@ -4,6 +4,7 @@ import type {
   AssessmentStatus,
 } from "../generated/prisma/enums.js";
 import { prisma } from "../config/db.js";
+import { shownCategory } from "../config/dabest.js";
 import { httpError } from "../utils/httpError.js";
 
 
@@ -37,7 +38,7 @@ export const listAssessments = async () => {
     orderBy: { displayOrder: "asc" },
     include: {
       categories: {
-        where: { isActive: true },
+        where: shownCategory,
         orderBy: { displayOrder: "asc" },
         include: {
           _count: { select: { gestures: true } },
@@ -53,7 +54,7 @@ export const listAssessments = async () => {
     },
   });
 
-  return learningAreas.map((area) => ({
+  return learningAreas.filter((area) => area.categories.length > 0).map((area) => ({
     id: area.id,
     name: area.name,
     categories: area.categories.map((category) => ({

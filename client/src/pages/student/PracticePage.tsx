@@ -1,5 +1,5 @@
 import CategoryCard from "@/components/common/category-card";
-import { CATEGORIES } from "@/components/common/categories.constants";
+import { SHOWN_CATEGORIES } from "@/components/common/categories.constants";
 import { useNavigate } from "react-router";
 import { categorySlug } from "@/lib/practice";
 
@@ -28,7 +28,7 @@ export default function PracticePage() {
       </header>
 
       <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
-        {CATEGORIES.map((category) => (
+        {SHOWN_CATEGORIES.map((category) => (
           <CategoryCard
             key={category.title}
             {...category}

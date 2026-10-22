@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, Check, RotateCcw } from "lucide-react";
 import { useNavigate, useParams } from "react-router";
-import { CATEGORIES } from "@/components/common/categories.constants";
+import { SHOWN_CATEGORIES } from "@/components/common/categories.constants";
 import SessionHeader from "@/components/common/session-header";
 import PracticeCamera from "@/components/common/practice-camera";
 import PracticeReference from "@/components/common/practice-reference";
@@ -122,7 +122,7 @@ function PracticeSession({ title, prompts }: { title: string; prompts: PracticeP
 export default function CategoryPracticePage() {
   const { categoryId: slug } = useParams();
   const navigate = useNavigate();
-  const category = CATEGORIES.find((item) => categorySlug(item.title) === slug);
+  const category = SHOWN_CATEGORIES.find((item) => categorySlug(item.title) === slug);
   const prompts = category && slug ? PRACTICE_PROMPTS[slug] : undefined;
 
   return (

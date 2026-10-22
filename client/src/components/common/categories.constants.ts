@@ -43,6 +43,12 @@ export const CATEGORIES: {
   },
 ];
 
+// DABEST build: the conference version shows only these categories (the others stay in the data).
+export const DABEST_CATEGORIES = ["Alphabet", "Numbers", "Colors", "Greetings"];
+export const SHOWN_CATEGORIES = CATEGORIES.filter((category) =>
+  DABEST_CATEGORIES.includes(category.title),
+);
+
 export type CategoryThemeToken = {
   bg: string;
   icon: string;

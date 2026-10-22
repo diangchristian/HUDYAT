@@ -1,4 +1,5 @@
 import { prisma } from "../config/db.js";
+import { shownCategory } from "../config/dabest.js";
 import { httpError } from "../utils/httpError.js";
 import { getMyProgress } from "./progress.service.js";
 
@@ -73,21 +74,29 @@ export const getDashboard = async () => {
         categoryProgress: {
           some: {
             status: { in: ["IN_PROGRESS", "COMPLETED"] },
-            category: { isActive: true },
+            category: shownCategory,
           },
         },
       },
     }),
-    prisma.assessment.groupBy({ by: ["status"], _count: { _all: true } }),
-    prisma.category.count({ where: { isActive: true } }),
+    prisma.assessment.groupBy({
+      by: ["status"],
+      where: { category: shownCategory },
+      _count: { _all: true },
+    }),
+    prisma.category.count({ where: shownCategory }),
     prisma.assessmentAttempt.findMany({
-      where: { completedAt: { not: null } },
+      where: { completedAt: { not: null }, assessment: { category: shownCategory } },
       orderBy: { completedAt: "desc" },
       take: 8,
       select: attemptSelect,
     }),
     prisma.assessmentAttempt.findMany({
-      where: { completedAt: { not: null }, totalPoints: { gt: 0 } },
+      where: {
+        completedAt: { not: null },
+        totalPoints: { gt: 0 },
+        assessment: { category: shownCategory },
+      },
       select: { score: true, totalPoints: true },
     }),
     // Distinct learners with at least one practice attempt today
@@ -145,7 +154,7 @@ export const listLearners = async () => {
         user: { select: { username: true, email: true, isActive: true } },
         // Match `totalCategories`, which only counts active lessons.
         categoryProgress: {
-          where: { category: { isActive: true } },
+          where: { category: shownCategory },
           select: { status: true },
         },
         assessmentAttempts: {
@@ -155,7 +164,7 @@ export const listLearners = async () => {
         },
       },
     }),
-    prisma.category.count({ where: { isActive: true } }),
+    prisma.category.count({ where: shownCategory }),
   ]);
 
   return learners.map((learner) => ({
@@ -197,7 +206,11 @@ export const getLearnerDetail = async (learnerId: string) => {
   const [progress, attempts, practiceTotals] = await Promise.all([
     getMyProgress(learnerId),
     prisma.assessmentAttempt.findMany({
-      where: { learnerId, completedAt: { not: null } },
+      where: {
+        learnerId,
+        completedAt: { not: null },
+        assessment: { category: shownCategory },
+      },
       orderBy: { completedAt: "desc" },
       select: attemptSelect,
     }),

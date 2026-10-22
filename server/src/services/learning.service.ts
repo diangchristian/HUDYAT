@@ -1,4 +1,5 @@
 import { prisma } from "../config/db.js";
+import { shownCategory, shownCategoryGesture } from "../config/dabest.js";
 
 export const getLearningAreas = async (learnerId: string) => {
   const [learningAreas, progressRecords] = await Promise.all([
@@ -8,16 +9,14 @@ export const getLearningAreas = async (learnerId: string) => {
       },
       include: {
         categories: {
-          where: {
-            isActive: true,
-          },
+          where: shownCategory,
           orderBy: {
             displayOrder: "asc",
           },
           include: {
             _count: {
               select: {
-                gestures: true,
+                gestures: { where: shownCategoryGesture },
               },
             },
           },
@@ -49,7 +48,7 @@ export const getLearningAreas = async (learnerId: string) => {
 
   let currentCategoryFound = false;
 
-  return learningAreas.map((area) => ({
+  return learningAreas.filter((area) => area.categories.length > 0).map((area) => ({
     ...area,
 
     categories: area.categories.map((category) => {
@@ -171,6 +170,7 @@ export const getCategoryLesson = async (
     prisma.categoryGesture.findMany({
       where: {
         categoryId,
+        ...shownCategoryGesture,
       },
 
       /*
@@ -250,6 +250,7 @@ export const saveLessonCheckpoint = async (
 
       include: {
         gestures: {
+          where: shownCategoryGesture,
           orderBy: {
             displayOrder: "asc",
           },
