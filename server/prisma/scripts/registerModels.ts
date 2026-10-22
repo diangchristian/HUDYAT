@@ -1,8 +1,10 @@
 import { readFile } from 'node:fs/promises';
 import { prisma } from '../../src/config/db.js';
+import { isDabestCategory } from '../../src/config/dabest.js';
 const catalog=JSON.parse(await readFile('model-assets/catalog.json','utf8'));
 try {
- for(const entry of catalog.categories.filter((e:{available:boolean})=>e.available)){
+ // DABEST: only its categories (its database has no others).
+ for(const entry of catalog.categories.filter((e:{available:boolean;name:string})=>e.available&&isDabestCategory(e.name))){
   const categories=await prisma.category.findMany({where:{name:{equals:entry.name,mode:'insensitive'}},select:{id:true,name:true}});
   if(categories.length!==1)throw Error('Expected exactly one category named '+entry.name+'; found '+categories.length);
   const release={...entry};

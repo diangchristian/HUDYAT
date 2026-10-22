@@ -5,13 +5,9 @@ import { PrismaClient } from "../../src/generated/prisma/client.js";
 
 import alphabet from "../data/learning/alphabet.json";
 import numbers from "../data/learning/numbers.json";
-import days from "../data/learning/days.json";
-import calendar from "../data/learning/calendar.json";
 import greetings from "../data/learning/greetings.json";
-import shapes from "../data/learning/shapes.json";
 import colors from "../data/learning/colors.json";
-import whQuestions from "../data/learning/wh-questions.json";
-import wordConcepts from "../data/learning/word-concepts.json";
+import { DABEST_CATEGORIES, isShownSign } from "../../src/config/dabest.js";
 
 const connectionString = process.env.DATABASE_URL;
 
@@ -101,65 +97,20 @@ async function seedCategoryGestures(
   );
 }
 
+// DABEST: the signs of its four categories (the other categories' data files are not seeded).
+const SIGNS: Record<string, GestureData[]> = {
+  Alphabet: alphabet,
+  Numbers: numbers,
+  Greetings: greetings,
+  Colors: colors,
+};
+
 async function main() {
-  await seedCategoryGestures(
-    "Alphabet",
-    alphabet,
-  );
-
-  await seedCategoryGestures(
-    "Numbers",
-    numbers,
-  );
-
-  await seedCategoryGestures(
-    "Greetings",
-    greetings,
-  );
-
-  // Merge Days into Calendar.
-  //
-  // Calendar:
-  // 1–12  = January–December
-  // 13–22 = Monday–Tomorrow
-  const mergedCalendarGestures: GestureData[] = [
-    ...calendar,
-
-    ...days.map((gesture, index) => ({
-      ...gesture,
-      displayOrder:
-        calendar.length + index + 1,
-    })),
-  ];
-
-  await seedCategoryGestures(
-    "Calendar",
-    mergedCalendarGestures,
-  );
-
-  console.log(
-    "✓ Calendar: Days and months merged successfully",
-  );
-
-  await seedCategoryGestures(
-    "Shapes",
-    shapes,
-  );
-
-  await seedCategoryGestures(
-    "Colors",
-    colors,
-  );
-
-  await seedCategoryGestures(
-    "WH Questions",
-    whQuestions,
-  );
-
-  await seedCategoryGestures(
-    "Word Concepts",
-    wordConcepts,
-  );
+  for (const name of DABEST_CATEGORIES) {
+    // In Colors only the six colors the Colors model knows (src/config/dabest.ts).
+    const signs = (SIGNS[name] ?? []).filter((sign) => isShownSign(name, sign.label));
+    await seedCategoryGestures(name, signs);
+  }
 
   console.log(
     "FSL gestures seeded successfully.",

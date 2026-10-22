@@ -676,8 +676,8 @@
     "question_number": 3,
     "choices": [
       {
-        "gesture": "Black",
-        "choice_text": "Black",
+        "gesture": "Red",
+        "choice_text": "Red",
         "display_order": 1
       },
       {
@@ -702,13 +702,13 @@
         "display_order": 1
       },
       {
-        "gesture": "Black",
-        "choice_text": "Black",
+        "gesture": "Orange",
+        "choice_text": "Orange",
         "display_order": 2
       },
       {
-        "gesture": "White",
-        "choice_text": "White",
+        "gesture": "Blue",
+        "choice_text": "Blue",
         "display_order": 3
       }
     ]
@@ -770,8 +770,8 @@
         "display_order": 2
       },
       {
-        "gesture": "Pink",
-        "choice_text": "Pink",
+        "gesture": "Red",
+        "choice_text": "Red",
         "display_order": 3
       }
     ]
@@ -781,13 +781,13 @@
     "question_number": 8,
     "choices": [
       {
-        "gesture": "Pink",
-        "choice_text": "Pink",
+        "gesture": "Yellow",
+        "choice_text": "Yellow",
         "display_order": 1
       },
       {
-        "gesture": "Brown",
-        "choice_text": "Brown",
+        "gesture": "Blue",
+        "choice_text": "Blue",
         "display_order": 2
       },
       {

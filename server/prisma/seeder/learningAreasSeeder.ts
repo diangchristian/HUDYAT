@@ -1,6 +1,7 @@
 import "dotenv/config";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../../src/generated/prisma/client.js";
+import { DABEST_LEARNING_AREA } from "../../src/config/dabest.js";
 
 const connectionString = process.env.DATABASE_URL;
 
@@ -14,25 +15,17 @@ const prisma = new PrismaClient({ adapter });
 
 
 async function main() {
-  await prisma.learningArea.createMany({
-    data: [
-      {
-        name: "Basic Filipino Sign Language",
-        description:
-          "Learn the fundamental Filipino Sign Language signs, including the alphabet, numbers, shapes, colors, greetings, and calendar concepts.",
-        displayOrder: 1,
-        isActive: true,
-      },
-      {
-        name: "Communication",
-        description:
-          "Learn Filipino Sign Language concepts used for everyday communication, including WH questions and word concepts.",
-        displayOrder: 2,
-        isActive: true,
-      },
-    ],
-    skipDuplicates: true,
+  // DABEST: one learning area, holding its four categories (src/config/dabest.ts).
+  // Found by name, so running the seeder again does not add a second one.
+  const existing = await prisma.learningArea.findFirst({
+    where: { name: DABEST_LEARNING_AREA.name },
   });
+
+  if (!existing) {
+    await prisma.learningArea.create({
+      data: { ...DABEST_LEARNING_AREA, displayOrder: 1, isActive: true },
+    });
+  }
 
   console.log("Learning areas seeded successfully.");
 }

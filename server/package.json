@@ -13,6 +13,8 @@
     "seed:fsl-gestures": "tsx prisma/seeder/fslGesturesSeeder.ts",
     "seed:assessments": "tsx prisma/seeder/assessmentsSeeder.ts",
     "seed:test-teacher": "tsx prisma/seeder/testTeacherSeeder.ts",
+    "seed:test-learner": "tsx prisma/seeder/testLearnerSeeder.ts",
+    "seed:dabest": "npm run seed:learning-areas && npm run seed:categories && npm run seed:fsl-gestures && npm run seed:test-teacher && npm run seed:test-learner && npm run seed:assessments && npm run models:register",
     "upload:media": "tsx prisma/scripts/uploadGestureMedia.ts",
     "models:register": "tsx prisma/scripts/registerModels.ts",
     "predev": "prisma generate",

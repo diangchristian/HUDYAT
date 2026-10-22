@@ -16,6 +16,27 @@ const prisma = new PrismaClient({adapter});
 import assessments from "../data/assessment/assessment.json";
 import assessmentQuestions from "../data/assessment/assessmentQuestions.json";
 import questionChoices from "../data/assessment/questionChoices.json";
+import { isDabestCategory, isShownSign } from "../../src/config/dabest.js";
+
+/*
+ * DABEST: only the assessments of its four categories, and only questions
+ * about the signs it shows (Colors: six of ten), numbered 1, 2, 3... again.
+ * Keys are "<category>-<question_number in the data files>".
+ */
+const shownAssessments = assessments.filter((a) => isDabestCategory(a.category));
+const shownQuestions = assessmentQuestions.filter(
+  (q) => isDabestCategory(q.category) && isShownSign(q.category, q.gesture),
+);
+const questionNumber = new Map<string, number>();
+for (const { category } of shownAssessments) {
+  shownQuestions
+    .filter((q) => q.category === category)
+    .sort((a, b) => a.question_number - b.question_number)
+    .forEach((q, index) => questionNumber.set(`${q.category}-${q.question_number}`, index + 1));
+}
+const shownChoices = questionChoices.filter((c) =>
+  questionNumber.has(`${c.category}-${c.question_number}`),
+);
 
 const TEST_TEACHER_EMAIL = "testteacher@hudyat.local";
 
@@ -44,7 +65,7 @@ async function seedAssessments() {
 
     const assessmentMap = new Map<string, string>();
 
-    for (const assessmentData of assessments) {
+    for (const assessmentData of shownAssessments) {
       // Find the existing category
       const category = await prisma.category.findFirst({
         where: {
@@ -93,7 +114,7 @@ async function seedAssessments() {
 
     const questionMap = new Map<string, string>();
 
-    for (const questionData of assessmentQuestions) {
+    for (const questionData of shownQuestions) {
       // Get assessment ID using category name
       const assessmentId = assessmentMap.get(questionData.category);
 
@@ -126,7 +147,7 @@ async function seedAssessments() {
         where: {
           assessmentId_questionNumber: {
             assessmentId: assessmentId,
-            questionNumber: questionData.question_number,
+            questionNumber: questionNumber.get(`${questionData.category}-${questionData.question_number}`)!,
           },
         },
         update: {
@@ -139,7 +160,7 @@ async function seedAssessments() {
         create: {
           assessmentId: assessmentId,
           gestureId: gesture.id,
-          questionNumber: questionData.question_number,
+          questionNumber: questionNumber.get(`${questionData.category}-${questionData.question_number}`)!,
           questionText: questionData.question_text,
           questionType: questionData.question_type === "IMAGE_GESTURE" ? "IMAGE_GESTURE" : "VIDEO_GESTURE",
           referenceMediaUrl: questionData.reference_media_url,
@@ -169,7 +190,7 @@ async function seedAssessments() {
      * ============================================================
      */
 
-    for (const questionData of questionChoices) {
+    for (const questionData of shownChoices) {
       const questionKey =
         `${questionData.category}-${questionData.question_number}`;
 
