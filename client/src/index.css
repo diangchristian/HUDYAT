@@ -51,6 +51,7 @@
   --category-colors: #EF4444;
   --category-greetings: #22C55E;
   --category-calendar: #F59E0B;
+  --category-family: #14B8A6;
   --category-wh-questions: #EC4899;
   --category-word-concepts: #F97316;
 
@@ -268,6 +269,7 @@
   --color-category-colors: var(--category-colors);
   --color-category-greetings: var(--category-greetings);
   --color-category-calendar: var(--category-calendar);
+  --color-category-family: var(--category-family);
   --color-category-wh-questions: var(--category-wh-questions);
   --color-category-word-concepts: var(--category-word-concepts);
 

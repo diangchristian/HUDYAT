@@ -16,6 +16,7 @@ export const PRACTICE_PROMPTS: Record<string, PracticePrompt[]> = {
   colors: ["Red", "Blue", "Yellow", "Green", "Orange", "Purple"].map((label) => ({ label })),
   greetings: ["Hello", "Good morning", "Good afternoon", "Thank you", "Goodbye"].map((label) => ({ label })),
   calendar: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"].map((label) => ({ label })),
+  family: ["Father", "Mother", "Son", "Daughter", "Grandfather", "Grandmother", "Uncle", "Auntie", "Cousin", "Parents"].map((label) => ({ label })),
   "wh-questions": ["Who", "What", "Where", "When", "Why"].map((label) => ({ label })),
   "word-concepts": ["Eat", "Drink", "Read", "Big", "Small"].map((label) => ({ label })),
 };

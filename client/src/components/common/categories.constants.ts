@@ -6,6 +6,7 @@ import {
   Hand,
   Calendar,
   MessageCircle,
+  Users,
   BookOpen,
 } from "lucide-react";
 
@@ -29,6 +30,7 @@ export const CATEGORIES: {
   { title: "Colors", icon: Palette, color: "purple", desc: "" },
   { title: "Greetings", icon: Hand, color: "orange", desc: "" },
   { title: "Calendar", icon: Calendar, color: "red", desc: "" },
+  { title: "Family", icon: Users, color: "blue", desc: "" },
   {
     title: "WH Questions",
     icon: MessageCircle,

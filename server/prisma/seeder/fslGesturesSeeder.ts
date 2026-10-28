@@ -10,6 +10,7 @@ import calendar from "../data/learning/calendar.json";
 import greetings from "../data/learning/greetings.json";
 import shapes from "../data/learning/shapes.json";
 import colors from "../data/learning/colors.json";
+import family from "../data/learning/family.json";
 import whQuestions from "../data/learning/wh-questions.json";
 import wordConcepts from "../data/learning/word-concepts.json";
 
@@ -149,6 +150,11 @@ async function main() {
   await seedCategoryGestures(
     "Colors",
     colors,
+  );
+
+  await seedCategoryGestures(
+    "Family",
+    family,
   );
 
   await seedCategoryGestures(
