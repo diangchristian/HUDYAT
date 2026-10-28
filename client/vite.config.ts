@@ -3,12 +3,17 @@ import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 import tailwindcss from '@tailwindcss/vite'
 import { VitePWA } from 'vite-plugin-pwa'
+import basicSsl from '@vitejs/plugin-basic-ssl'
 
 const srcPath = fileURLToPath(new URL('./src', import.meta.url));
 
+// Camera + recognition need a secure context; plain http only counts as
+// secure on localhost. `npm run dev:https` serves a self-signed cert so
+// phones/other PCs on the LAN can use the camera.
 // https://vite.dev/config/
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   plugins: [
+    ...(mode === 'https' ? [basicSsl()] : []),
     react(),
     tailwindcss(),
     VitePWA({
@@ -79,4 +84,4 @@ export default defineConfig({
     },
     }
   },
-})
+}))
