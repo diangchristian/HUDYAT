@@ -8,11 +8,11 @@
 import {hasHand,signWindow} from './sign-capture.js';
 import type {RecognitionSettings} from './experiment.ts';
 
-type Model={category:string;handRelative:boolean;handRelativeSequence:boolean};
+type Model={category:string;handRelative:boolean;handRelativeSequence:boolean;faceLocation?:boolean};
 
 export function usesSignCapture(model:Model,settings:Pick<RecognitionSettings,'alphabetMotion'|'dynamicCapture'>){
  if(model.category==='alphabet')return settings.alphabetMotion&&model.handRelativeSequence;
- return settings.dynamicCapture==='sign'&&(model.handRelative||model.handRelativeSequence);
+ return settings.dynamicCapture==='sign'&&(model.handRelative||model.handRelativeSequence||Boolean(model.faceLocation));
 }
 
 /** The raw frames of a finished sign, cut to its hands ±0.1 s (sign-capture.js); for models that convert the whole clip. */

@@ -63,21 +63,25 @@ function signWindow(present, fps) {
 // Recorder README 6.5 in the app's layout: a hand is interpolated only when it is present in both frames,
 // otherwise copied from the nearest frame; its flag always comes from the nearest frame.
 // `extra` (optional) = per hand, more values that travel with it: [[indices of hand 0], [indices of hand 1]].
+// Feature v3 frames (141 values): a hand's location against the face (128-133 Left, 134-139 Right) is interpolated
+// only when the hand and the face (flag 140) are in both frames; the face flag comes from the nearest frame.
 function resampleSign(frames, n = 32, extra = null) {
   const T = frames.length, D = frames[0].length, out = [];
   const slots = [0, 1].map(h => {
     const idx = Array.from({length: 63}, (_, i) => h * 63 + i);
-    return [extra ? idx.concat(extra[h]) : idx, 126 + h];
+    return [extra ? idx.concat(extra[h]) : idx, [126 + h], 126 + h];
   });
+  if (D === 141) slots.push([[128, 129, 130, 131, 132, 133], [126, 140], null],
+                            [[134, 135, 136, 137, 138, 139], [127, 140], null], [[], [], 140]);
   for (let j = 0; j < n; j++) {
     const t = n > 1 ? j * (T - 1) / (n - 1) : 0;
     const i0 = Math.floor(t), i1 = Math.min(i0 + 1, T - 1), w = t - i0;
     const near = w < 0.5 ? i0 : i1;
     const o = new Array(D).fill(0);
-    for (const [idx, flag] of slots) {
-      const both = frames[i0][flag] > 0.5 && frames[i1][flag] > 0.5;
+    for (const [idx, flags, flag] of slots) {
+      const both = flags.every(f => frames[i0][f] > 0.5 && frames[i1][f] > 0.5);
       for (const k of idx) o[k] = both ? (1 - w) * frames[i0][k] + w * frames[i1][k] : frames[near][k];
-      o[flag] = frames[near][flag];
+      if (flag !== null) o[flag] = frames[near][flag];
     }
     out.push(o);
   }
@@ -85,11 +89,15 @@ function resampleSign(frames, n = 32, extra = null) {
 }
 
 // The mirror image of normalized frames (a left-handed signer -> right-handed): every x negated, hands swapped.
+// Feature v3 (141 values): the location x negated too, Left and Right location swapped, the face flag stays.
 function mirrorFrames(frames) {
   return frames.map(f => {
     const x = Array.from(f);                          // plain array: frames may be Float32Array
     for (let i = 0; i < 126; i += 3) x[i] = -x[i];
-    return x.slice(63, 126).concat(x.slice(0, 63), [x[127], x[126]]);
+    const out = x.slice(63, 126).concat(x.slice(0, 63), [x[127], x[126]]);
+    if (x.length !== 141) return out;
+    for (let i = 128; i < 140; i += 2) x[i] = -x[i];
+    return out.concat(x.slice(134, 140), x.slice(128, 134), [x[140]]);
   });
 }
 
@@ -129,8 +137,9 @@ function autoHand(raws, W, H) {
   return path(lp, 128) > path(rp, 132) ? "left" : "right";
 }
 
-// items: what the segmenter returned, each {raw: packResult frame, norm: normalizeFrame(raw, W, H)}.
-// hand: "right" | "left" | "auto" (the learner's setting). Returns the model's (32 x 128) input and the hand used.
+// items: what the segmenter returned, each {raw: packResult frame, norm: normalizeFrame(raw, W, H)} (feature v3:
+// norm = normalizeFrameLocation, 141 values). hand: "right" | "left" | "auto" (the learner's setting).
+// Returns the model's (32 x 128, or 32 x 141) input and the hand used.
 function recommendedInput(items, fps, W, H, hand = "auto") {
   const [s, e] = signWindow(items.map(it => hasHand(it.raw)), fps);
   const cut = items.slice(s, e + 1);

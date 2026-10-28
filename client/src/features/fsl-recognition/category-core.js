@@ -1,7 +1,7 @@
-export function buildModel(tf, classes) {
+export function buildModel(tf, classes, features = 128) {
   const l = tf.layers;
   const model = tf.sequential();
-  model.add(l.conv1d({inputShape:[32,128], filters:64, kernelSize:3, padding:'same', activation:'relu'}));
+  model.add(l.conv1d({inputShape:[32,features], filters:64, kernelSize:3, padding:'same', activation:'relu'}));
   model.add(l.batchNormalization({momentum:0.99, epsilon:0.0001}));
   model.add(l.maxPooling1d({poolSize:2}));
   model.add(l.dropout({rate:0.3}));
@@ -20,7 +20,9 @@ export function buildModel(tf, classes) {
 }
 
 export function loadWeights(tf, model, metadata, buffer) {
-  if (metadata.format !== 'fsl-conv1d-bilstm-v1' || metadata.inputShape.join(',') !== '32,128')
+  // hand-face-location-v1 (Family): the 128 hand values + 13 for where the hands are against the face.
+  const features = metadata.preprocessing?.normalization === 'hand-face-location-v1' ? 141 : 128;
+  if (metadata.format !== 'fsl-conv1d-bilstm-v1' || metadata.inputShape.join(',') !== '32,' + features)
     throw new Error('This model format is unsupported.');
   const tensors = [];
   try {

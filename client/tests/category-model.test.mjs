@@ -8,7 +8,7 @@ const api=process.env.MODEL_TEST_API || 'http://localhost:5011';
 
 await tf.setBackend('cpu');
 
-for(const category of ['alphabet','colors']){
+for(const category of ['alphabet','colors','family']){
  const response=await fetch(api+'/api/models/'+category);
  if(!response.ok)throw Error('API failed '+response.status);
  const {data:entry}=await response.json();
@@ -18,7 +18,9 @@ for(const category of ['alphabet','colors']){
  for(const [buffer,hash] of [[metaBytes,entry.modelSha256],[bytes,entry.weightsSha256]])if(createHash('sha256').update(new Uint8Array(buffer)).digest('hex')!==hash)throw Error('Integrity mismatch');
  const metadata=JSON.parse(new TextDecoder().decode(metaBytes));
  const probe=JSON.parse(await readFile('../server/model-assets/models/'+category+'/'+entry.version+'/parity.json','utf8'));
- const model=buildModel(tf,metadata.classes.length);loadWeights(tf,model,metadata,bytes);
+ const model=buildModel(tf,metadata.classes.length,metadata.inputShape[1]);loadWeights(tf,model,metadata,bytes);
+ // Family (hand-face-location-v1) also needs the face detector, checked like the other files.
+ if(metadata.preprocessing.normalization==='hand-face-location-v1'){const face=await (await fetch(api+entry.faceUrl)).arrayBuffer();if(createHash('sha256').update(new Uint8Array(face)).digest('hex')!==entry.faceSha256)throw Error('Face detector integrity mismatch');}
  const input=tf.tensor(probe.inputs),output=model.predict(input),actual=await output.array();
  let max=0;actual.forEach((row,i)=>row.forEach((v,j)=>max=Math.max(max,Math.abs(v-probe.expected[i][j]))));
  if(max>0.0002)throw Error('Prediction mismatch '+max);

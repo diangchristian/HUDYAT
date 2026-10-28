@@ -1,4 +1,6 @@
-export type Release={id:string;name:string;version:string;modelUrl:string;weightsUrl:string;handUrl:string;modelSha256:string;weightsSha256:string;handSha256:string};
+export type Release={id:string;name:string;version:string;modelUrl:string;weightsUrl:string;handUrl:string;modelSha256:string;weightsSha256:string;handSha256:string;
+ /** Only for models that use where the hands are against the face (hand-face-location-v1, Family). */
+ faceUrl?:string;faceSha256?:string};
 const base=import.meta.env.VITE_API_URL || '';
 export const modelAssetUrl=(url:string)=>new URL(url,base || location.origin).href;
 /** EXPERIMENT: the alphabet model being A/B tested in the Recognition lab, before it is published. */

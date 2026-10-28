@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {existsSync,readFileSync} from 'node:fs';
-import {normalizeFrame,normalizeSequence} from '../src/features/fsl-recognition/normalize.ts';
+import {locationFeatures,normalizeFrame,normalizeFrameLocation,normalizeSequence} from '../src/features/fsl-recognition/normalize.ts';
 
 /** A right-hand frame from pixel positions (wrist, middle knuckle, one fingertip) in a width×height image. */
 const frameFrom=(points,width,height)=>{
@@ -57,4 +57,39 @@ test('matches hand-relative-sequence-v1 models (camera parity cases exported wit
   const out=normalizeSequence(c.frames.map(f=>Float32Array.from(f)),c.width,c.height);
   out.forEach((frame,t)=>close(Array.from(frame),c.expected[t]));
  }
+});
+
+/** A face where only the nose (1), forehead (10) and chin (152) matter; positions in pixels of a width×height image. */
+const faceFrom=(nose,forehead,chin,width,height)=>{
+ const face=Array.from({length:478},()=>({x:.5,y:.5}));
+ [[1,nose],[10,forehead],[152,chin]].forEach(([i,[x,y]])=>face[i]={x:x/width,y:y/height});
+ return face;
+};
+
+test('hand-face-location-v1: the hand against the face, in forehead-to-chin lengths (Father above Mother)',()=>{
+ // 1280x720, nose (640,300), forehead (640,200), chin (640,400): one face length is 200 px.
+ const face=faceFrom([640,300],[640,200],[640,400],1280,720);
+ const at=(x,y)=>{const points=Array.from({length:21},()=>[x,y,0]);points[9]=[x,y-40,0];return frameFrom(points,1280,720);};
+ const father=locationFeatures(at(700,180),face,1280,720),mother=locationFeatures(at(700,420),face,1280,720);
+ close(father,[0,0,0,0,0,0,.3,-.6,.3,-.6,.3,-.6,1]);       // Right wrist, thumb tip, index tip: 60 px right, 120 px up
+ close(mother.slice(6,8),[.3,.6]);                         // the same hand at the chin: below the nose
+ assert.ok(father[7]<0&&mother[7]>0);
+});
+test('hand-face-location-v1: no face, or no hand, gives zeros; the face flag says whether a face was found',()=>{
+ const points=Array.from({length:21},()=>[700,300,0]);points[9]=[700,260,0];
+ const frame=frameFrom(points,1280,720);
+ close(locationFeatures(frame,null,1280,720),Array(13).fill(0));
+ const face=faceFrom([640,300],[640,200],[640,400],1280,720);
+ const out=locationFeatures(new Float32Array(128),face,1280,720);
+ close(out,[...Array(12).fill(0),1]);
+});
+test('hand-face-location-v1: the model frame is normalizeFrame then 13 location values; a dropped hand has none',()=>{
+ const face=faceFrom([640,300],[640,200],[640,400],1280,720);
+ const points=Array.from({length:21},()=>[700,180,0]);points[9]=[700,140,0];
+ const frame=frameFrom(points,1280,720),out=normalizeFrameLocation(frame,face,1280,720);
+ assert.equal(out.length,141);
+ close(out.slice(0,128),normalizeFrame(frame,1280,720));
+ close(out.slice(134,141),[.3,-.6,.3,-.6,.3,-.6,1]);
+ const flat=frameFrom(Array.from({length:21},()=>[700,180,0]),1280,720);   // palm length 0: dropped like training
+ close(normalizeFrameLocation(flat,face,1280,720).slice(128),[...Array(12).fill(0),1]);
 });

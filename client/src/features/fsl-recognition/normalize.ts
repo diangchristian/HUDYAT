@@ -46,3 +46,41 @@ export function normalizeSequence(frames:Float32Array[],width:number,height:numb
  }
  return out;
 }
+
+/*
+ * "hand-face-location-v1" (Family: Father at the forehead, Mother at the chin): hand-relative-v1 plus 13 values for
+ * where the hands are against the face (HAND TRACKER README 6.7, trainer docs/FEATURES.md 2c). Per hand (Left, then
+ * Right): wrist, thumb tip and index tip as (x, y) minus the nose, x multiplied by width / height first, divided by
+ * the 2D forehead-to-chin length; then the face flag. An absent hand, or a frame without a face, gives zeros.
+ */
+export const HAND_FACE_LOCATION='hand-face-location-v1';
+export type FacePoint={x:number;y:number};
+const NOSE=1,FOREHEAD=10,CHIN=152,LOCATION_POINTS=[0,4,8];
+
+/** The 13 location values of a packResult frame (raw), from the face found in the same camera frame (or null). */
+export function locationFeatures(frame:ArrayLike<number>,face:FacePoint[]|null,width:number,height:number):Float32Array{
+ const out=new Float32Array(13);
+ if(!face||face.length<=CHIN||!(height>0))return out;
+ const a=width/height,nose=face[NOSE]!;
+ const size=Math.hypot((face[FOREHEAD]!.x-face[CHIN]!.x)*a,face[FOREHEAD]!.y-face[CHIN]!.y);
+ if(!Number.isFinite(size)||size<1e-6)return out;
+ for(let slot=0;slot<2;slot++){
+  if(!frame[126+slot])continue;
+  LOCATION_POINTS.forEach((point,i)=>{
+   const base=slot*63+point*3;
+   out[slot*6+i*2]=(frame[base]!-nose.x)*a/size;
+   out[slot*6+i*2+1]=(frame[base+1]!-nose.y)/size;
+  });
+ }
+ out[12]=1;
+ return out;
+}
+
+/** The model's 141 values of one frame: normalizeFrame, then the location values (zero for a hand it dropped). */
+export function normalizeFrameLocation(frame:Float32Array,face:FacePoint[]|null,width:number,height:number):Float32Array{
+ const out=new Float32Array(141),hands=normalizeFrame(frame,width,height),location=locationFeatures(frame,face,width,height);
+ out.set(hands);
+ for(let slot=0;slot<2;slot++)if(!hands[126+slot])location.fill(0,slot*6,slot*6+6);
+ out.set(location,128);
+ return out;
+}

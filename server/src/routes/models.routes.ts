@@ -12,7 +12,7 @@ async function fileRelease(name:string){
  const entry=catalog.categories.find((e:{id:string;available:boolean})=>e.id===name.toLowerCase()&&e.available);
  if(!entry)return null;
  const release={...entry,name};
- for(const field of ['modelUrl','weightsUrl','handUrl'])release[field]='/api/models/files/'+entry[field].replace(/^\.\//,'');
+ for(const field of ['modelUrl','weightsUrl','handUrl','faceUrl'])if(entry[field])release[field]='/api/models/files/'+entry[field].replace(/^\.\//,'');
  return release;
 }
 // Public inference artifacts contain model parameters only, never camera recordings.

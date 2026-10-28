@@ -132,7 +132,9 @@ export function CategoryRecognition({category,targetLabel,video,active,onCorrect
       if(lock.locked){completion.accept(lock.locked);lock=emptyLock();}
      }else{
       const signing=current.category==='alphabet'?'Recognition running · show the letter and hold it, or lower your hand when done':'Recognition running · checking gesture';
-      notifyStatus({phase:'running',message:present?signing:'Recognition running · no hand detected',version:current.version});
+      // Family's model also reads where the hands are against the face, so the face must be in the picture.
+      const noFace=current.faceFound(frame)===false;
+      notifyStatus({phase:'running',message:!present?'Recognition running · no hand detected':noFace?'Recognition running · keep your face in the picture':signing,version:current.version});
       if(signCapture){
       // The sign ends when no hand has been seen for 0.5 s (or after 3 s); then it is cut and squeezed like training.
       const now=performance.now();rate.push(now);const fps=rate.fps();
