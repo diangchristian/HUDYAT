@@ -7,6 +7,19 @@ import {advanceLock,emptyLock,frameIssue,holdProgress,isSteady,lockResetCause,ma
 import {takeRuntime} from './preload';
 import {recognitionMetrics,type FrameTiming} from './metrics';
 import {createSlidingWindow} from './sliding-window';
+import {recommendedInput} from './sign-capture.js';
+import {createTimedSegmenter} from './timed-segmenter';
+import {createEarlyCheck} from './early-check';
+import {longestGap,signLog,type SignDecision} from './sign-log';
+import {cutSign,usesSignCapture} from './sign-mode';
+
+type CapturedFrame={raw:Float32Array;norm:Float32Array;at:number};
+/** Frames per second the camera loop is actually running at, from the last 25 frames. */
+function createRateMeter(){
+ const times:number[]=[];
+ return {push(at:number){times.push(at);if(times.length>25)times.shift();},
+  fps(){const span=times.length>4?times[times.length-1]!-times[0]!:0;return span>0?(times.length-1)*1000/span:20;}};
+}
 
 export type RecognitionStatus={phase:'loading'|'ready'|'running'|'error';message:string;version?:string};
 /** EXPERIMENT: how close the current sign is to being accepted, plus a coaching hint. */
@@ -78,6 +91,12 @@ export function CategoryRecognition({category,targetLabel,video,active,onCorrect
    !present?'no hand':issue??(handSize(frame)<.08?'small hand':undefined);
   const newWindow=()=>settings.dynamicCapture==='sliding'?createSlidingWindow(settings.window):undefined;
   let sliding=newWindow();
+  // DABEST sign capture: start and end of a sign in real time; the rate meter is only a fallback frame rate.
+  const rate=createRateMeter();
+  const newSegmenter=()=>createTimedSegmenter<CapturedFrame>({endAbsentS:settings.endAbsentMs/1000});
+  let segmenter=newSegmenter(),signStart=0;
+  const newEarly=()=>createEarlyCheck<CapturedFrame>(undefined,settings.earlyMinHandsMs);
+  let early=newEarly(),agreed=0;
   recognitionMetrics.prompt(targetLabel,performance.now());
   const completion=createMatchCompletion(targetLabel,
    ()=>{recognitionMetrics.correct(targetLabel,performance.now());notifyCorrect();},
@@ -86,7 +105,7 @@ export function CategoryRecognition({category,targetLabel,video,active,onCorrect
    const current=runtime.current,element=video.current;
    let ownsInference=false,timing:FrameTiming|undefined;
    try{
-    if(document.hidden){lock=emptyLock();previous=undefined;frames=[];start=0;}
+    if(document.hidden){lock=emptyLock();previous=undefined;frames=[];start=0;segmenter=newSegmenter();early=newEarly();agreed=0;}
     else if(!cancelled&&current&&element&&element.readyState>=2&&!inFlight.current&&element.currentTime!==lastTime){
      lastTime=element.currentTime;inFlight.current=true;ownsInference=true;
      if(!current.classes.some(label=>matchesTarget(label,targetLabel))){notifyStatus({phase:'error',message:'This sign is not in the downloaded model.',version:current.version});return;}
@@ -97,8 +116,11 @@ export function CategoryRecognition({category,targetLabel,video,active,onCorrect
      const frameTiming:FrameTiming={at:frameStarted,segmentMs:processed?.segmentMs??0,captureMs:performance.now()-captureStarted};timing=frameTiming;
      completion.observePresence(present,performance.now());
      if(present)recognitionMetrics.handSeen(targetLabel,frameStarted);
-     const predict=async(input:Float32Array[])=>{const t=performance.now();const result=await current.predict(input);frameTiming.predictMs=performance.now()-t;return result;};
-     if(current.category==='alphabet'){
+     const timed=async<T,>(work:()=>Promise<T>)=>{const t=performance.now();const result=await work();frameTiming.predictMs=performance.now()-t;return result;};
+     const predict=(input:Float32Array[])=>timed(()=>current.predict(input));
+     // Moving signs, and every letter when the Alphabet model can read motion (like Numbers), are recorded sign by sign.
+     const signCapture=usesSignCapture(current,settings);
+     if(current.category==='alphabet'&&!signCapture){
       const result=present?await predict([frame]):undefined;
       if(cancelled)return;
       const lockInput={now:performance.now(),present,label:result?.prediction,score:result?.score,margin:result?.margin,steady:isSteady(previous,frame,motionLimit(settings.lock)),maxGapMs:Math.max(600,previousProcessingMs+(performance.now()-frameStarted)+350)};
@@ -109,8 +131,54 @@ export function CategoryRecognition({category,targetLabel,video,active,onCorrect
       notifyStatus({phase:'running',message:present?'Recognition running · hold your sign steady':'Recognition running · no hand detected',version:current.version});
       if(lock.locked){completion.accept(lock.locked);lock=emptyLock();}
      }else{
-      notifyStatus({phase:'running',message:present?'Recognition running · checking gesture':'Recognition running · no hand detected',version:current.version});
-      if(sliding){
+      const signing=current.category==='alphabet'?'Recognition running · show the letter and hold it, or lower your hand when done':'Recognition running · checking gesture';
+      notifyStatus({phase:'running',message:present?signing:'Recognition running · no hand detected',version:current.version});
+      if(signCapture){
+      // The sign ends when no hand has been seen for 0.5 s (or after 3 s); then it is cut and squeezed like training.
+      const now=performance.now();rate.push(now);const fps=rate.fps();
+      const wasSigning=segmenter.signing;
+      const item={raw:frame,norm:current.normalize(frame),at:now};
+      const ended=segmenter.push(item,present,now);
+      if(segmenter.signing&&!wasSigning)signStart=now;
+      feedback(segmenter.signing?Math.min(1,(now-signStart)/3000):0,issueFor(frame,present),now);
+      const check=async(items:CapturedFrame[])=>{
+       const span=(items[items.length-1]!.at-items[0]!.at)/1000;
+       const signFps=items.length>1&&span>0?(items.length-1)/span:fps;
+       const {width,height}=current.frameSize(frame);
+       // A sequence model converts the whole cut clip itself (its wrist moves from the first frame); it was trained
+       // with mirrored hands, so a left-handed sign needs no mirroring.
+       const result=current.handRelativeSequence?await predict(cutSign(items,signFps))
+        :await timed(()=>current.predictInput(recommendedInput(items,signFps,width,height,'auto').input));
+       const label=result.prediction && (result.score??0)>=.8 && (result.margin??0)>=.15?result.prediction:undefined;
+       // Diagnostics for the Recognition lab: why and when this answer came.
+       const hands=items.map(it=>Boolean(it.raw[126]||it.raw[127]));
+       const firstHand=items[Math.max(0,hands.indexOf(true))]!.at;
+       const log=(reason:SignDecision['reason'],accepted:boolean)=>signLog.add({at:now,reason,target:targetLabel,
+        signMs:now-firstHand,longestGapMs:longestGap(items,hands),prediction:result.prediction,score:result.score,
+        margin:result.margin,accepted});
+       return {label,log};
+      };
+      if(ended){
+       early=newEarly();agreed=0;
+       const {label,log}=await check(ended.items);
+       if(cancelled)return;
+       log(ended.reason,Boolean(label));
+       if(label)completion.accept(label);
+      }else{
+       // A sign held steady: check it so far; only a confident match with the target is accepted before it ends.
+       const sofar=settings.earlyCheck?early.push(item,present,segmenter.signing):null;
+       if(!segmenter.signing)agreed=0;
+       if(sofar){
+        const {label,log}=await check(sofar);
+        if(cancelled)return;
+        // Accepted only after the same confident answer on settings.earlyAgree checks in a row.
+        agreed=label&&matchesTarget(label,targetLabel)?agreed+1:0;
+        const accept=Boolean(label&&agreed>=settings.earlyAgree);
+        if(label&&matchesTarget(label,targetLabel))log('early',accept);
+        if(accept)completion.accept(label!);
+       }
+      }
+      }else if(sliding){
       const clip=sliding.push(frame,performance.now());
       feedback(sliding.progress(performance.now()),issueFor(frame,present),performance.now());
       if(clip){
@@ -132,8 +200,8 @@ export function CategoryRecognition({category,targetLabel,video,active,onCorrect
       }
      }
     }
-   }catch(error){if(!cancelled){lock=emptyLock();frames=[];start=0;sliding=newWindow();notifyStatus({phase:'error',message:error instanceof Error?error.message:'Recognition failed.'});}}
-   finally{if(timing&&!cancelled)recognitionMetrics.frame(timing);if(ownsInference)inFlight.current=false;if(!cancelled&&!completion.completed())timer=setTimeout(run,category==='alphabet'?settings.alphabetPollMs:40);}
+   }catch(error){if(!cancelled){lock=emptyLock();frames=[];start=0;sliding=newWindow();segmenter=newSegmenter();early=newEarly();agreed=0;notifyStatus({phase:'error',message:error instanceof Error?error.message:'Recognition failed.'});}}
+   finally{if(timing&&!cancelled)recognitionMetrics.frame(timing);if(ownsInference)inFlight.current=false;if(!cancelled&&!completion.completed())timer=setTimeout(run,category==='alphabet'&&!(current&&usesSignCapture(current,settings))?settings.alphabetPollMs:40);}
   };
   void run();return()=>{cancelled=true;clearTimeout(timer);notifyHold(null);};
  },[active,ready,category,targetLabel,video,retry,settings,backgroundMode,backgroundReady]);

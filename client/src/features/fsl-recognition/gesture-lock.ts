@@ -58,7 +58,9 @@ export function isSteady(previous:Float32Array|undefined,current:Float32Array,ma
  for(let h=0;h<2;h++)if(current[126+h])for(let i=h*63;i<(h+1)*63;i++){sum+=(current[i]-previous[i])**2;count++;}
  return count>0 && Math.sqrt(sum/count)<=maxMotion;
 }
-const signKey=(name:string)=>name.toLocaleLowerCase().replace(/[\s_'’-]/g,'');
+// Names that mean the same sign: the Colors model calls Purple "violet".
+const SAME_SIGN:Record<string,string>={violet:'purple'};
+const signKey=(name:string)=>{const key=name.toLocaleLowerCase().replace(/[\s_'’-]/g,'');return SAME_SIGN[key]??key;};
 export function matchesTarget(predicted:string,target:string){return signKey(predicted)===signKey(target);}
 
 /** A prompt can complete once, regardless of how many matching frames arrive. */
