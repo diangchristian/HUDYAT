@@ -65,7 +65,27 @@ const categories: CategoryConfig[] = [
     urlField: "referenceVideoUrl",
     toCandidateLabel: (stem) => stem,
   },
+  {
+    name: "greetings",
+    mediaDir: path.join(mediaRoot, "Greetings"),
+    jsonFile: path.join(dataRoot, "greetings.json"),
+    resourceType: "video",
+    urlField: "referenceVideoUrl",
+    toCandidateLabel: (stem) => stem,
+  },
+  {
+    name: "family",
+    mediaDir: path.join(mediaRoot, "Family"),
+    jsonFile: path.join(dataRoot, "family.json"),
+    resourceType: "video",
+    urlField: "referenceVideoUrl",
+    // Reference files are numbered ("01 Father.mp4").
+    toCandidateLabel: (stem) => stem.replace(/^\d+\s*/, ""),
+  },
 ];
+
+// File names match signs ignoring case, spaces, "_", "-" and apostrophes ("im_fine.mp4" is "I'm fine").
+const nameKey = (name: string) => name.toLowerCase().replace(/[\s_'’-]/g, "");
 
 function slugify(label: string): string {
   return label
@@ -97,7 +117,7 @@ async function processCategory(category: CategoryConfig) {
     }
 
     const gesture = gestures.find(
-      (g) => g.label.toLowerCase() === candidateLabel.toLowerCase(),
+      (g) => nameKey(g.label) === nameKey(candidateLabel),
     );
 
     if (!gesture) {

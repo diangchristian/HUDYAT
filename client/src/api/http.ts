@@ -1,7 +1,9 @@
 import axios from "axios";
 
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL ?? "http://localhost:5001",
+  // Empty = same-origin /api, which the Vite dev/preview server proxies to
+  // localhost:5001. This keeps LAN access (phones, other PCs) working without CORS.
+  baseURL: import.meta.env.VITE_API_URL || "",
   withCredentials: true,
 });
 

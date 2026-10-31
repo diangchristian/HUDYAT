@@ -1,22 +1,36 @@
 import {useEffect,useRef,useState} from "react";
-import type {RecognitionStatus} from "@/features/fsl-recognition/category-recognition";
+import type {HoldFeedback,RecognitionStatus} from "@/features/fsl-recognition/category-recognition";
 import {CategoryRecognition} from "@/features/fsl-recognition/category-recognition";
+// EXPERIMENT (feature/recog-enhancement): switchable enhancements + ?lab=1 panel.
+import {BlurredPreview} from "@/features/fsl-recognition/blurred-preview";
+import {CAMERA_SIZE,isLabEnabled,loadSettings,saveSettings,type RecognitionSettings} from "@/features/fsl-recognition/experiment";
+import {RecognitionLab} from "@/features/fsl-recognition/recognition-lab";
 import { Camera, CameraOff, LoaderCircle, Check, X } from "lucide-react";
 import ElevatedButton from "@/components/ui/elavated-button";
 import { Card } from "@/components/ui/card";
 import { useCamera } from "@/hooks/use-camera";
+import { useCameraPreference } from "@/lib/camera-preference";
 
 export default function PracticeCamera({category,targetLabel,onCorrect}: {category?:string;targetLabel?:string;onCorrect?:()=>void}) {
-  const { videoRef, status, error, start, stop } = useCamera();
+  const { videoRef, status, error, start, stop: stopCamera } = useCamera();
   const isLive = status === "live";
   const [recognitionStatus,setRecognitionStatus]=useState<RecognitionStatus>({phase:'loading',message:'Preparing category model…'});
   const [recognitionRetry,setRecognitionRetry]=useState(0);
+  const [settings,setSettings]=useState<RecognitionSettings>(loadSettings);
+  const [lab]=useState(isLabEnabled);
+  const changeSettings=(next:RecognitionSettings)=>{saveSettings(next);setSettings(next);};
+  const [hold,setHold]=useState<HoldFeedback|null>(null);
   const [feedback,setFeedback]=useState<{kind:'correct'|'wrong';target?:string}|null>(null);
   const feedbackTimer=useRef<ReturnType<typeof setTimeout>|undefined>(undefined);
   useEffect(()=>()=>{clearTimeout(feedbackTimer.current);},[targetLabel,category,isLive]);
   const successSound=useRef<HTMLAudioElement|null>(null);
   const wrongSound=useRef<HTMLAudioElement|null>(null);
+  // Only an explicit STOP forgets the choice; leaving the page just releases the stream.
+  const stop=()=>{useCameraPreference.getState().decline();stopCamera();};
+  // Resume without a click when the camera was already started on an earlier screen.
+  useEffect(()=>{if(useCameraPreference.getState().wanted)void start(CAMERA_SIZE[settings.cameraResolution]);},[]); // eslint-disable-line react-hooks/exhaustive-deps
   const beginCamera=()=>{
+    useCameraPreference.getState().want();
     setFeedback(null);
     // Unlock this audio element within the user's camera-button click.
     const sound=successSound.current??new Audio(import.meta.env.BASE_URL+'sounds/correct.mp3');
@@ -25,7 +39,7 @@ export default function PracticeCamera({category,targetLabel,onCorrect}: {catego
     const wrong=wrongSound.current??new Audio(import.meta.env.BASE_URL+'sounds/wrong.mp3');
     wrongSound.current=wrong;wrong.muted=true;
     void wrong.play().then(()=>{wrong.pause();wrong.currentTime=0;wrong.muted=false;}).catch(()=>{wrong.muted=false;});
-    void start();
+    void start(CAMERA_SIZE[settings.cameraResolution]);
   };
   const incorrect=()=>{
     clearTimeout(feedbackTimer.current);
@@ -82,7 +96,22 @@ export default function PracticeCamera({category,targetLabel,onCorrect}: {catego
             </div>
           )}
 
-          {category && <CategoryRecognition key={category} category={category} targetLabel={targetLabel} video={videoRef} active={isLive} onCorrect={recognized} onWrong={incorrect} onStatus={setRecognitionStatus} retry={recognitionRetry} />}
+          {category && <CategoryRecognition key={category} category={category} targetLabel={targetLabel} video={videoRef} active={isLive} onCorrect={recognized} onWrong={incorrect} onStatus={setRecognitionStatus} retry={recognitionRetry} settings={settings} onHold={setHold} />}
+
+          {isLive && settings.holdFeedback && hold && !feedback && (
+            <div className="pointer-events-none absolute inset-x-3 bottom-3 flex flex-col items-center gap-2">
+              {hold.hint && (
+                <span role="status" className="rounded-full bg-background/95 px-3 py-1 text-xs font-bold text-foreground shadow-sm">{hold.hint}</span>
+              )}
+              <div aria-hidden="true" className="h-2.5 w-full max-w-xs overflow-hidden rounded-full bg-background/80">
+                <div className="h-full rounded-full bg-hudyat-gold transition-[width] duration-150 ease-out motion-reduce:transition-none" style={{width:`${Math.round(hold.progress*100)}%`}} />
+              </div>
+            </div>
+          )}
+
+          {isLive && settings.previewBlur && (
+            <BlurredPreview video={videoRef} className="absolute inset-0 h-full w-full -scale-x-100 object-contain" />
+          )}
 
           {isLive && (
             <div className="absolute inset-x-3 top-3 flex items-center justify-between gap-2">
@@ -111,6 +140,7 @@ export default function PracticeCamera({category,targetLabel,onCorrect}: {catego
         </span>
         {recognitionStatus.phase==='error'&&<button className="shrink-0 underline" onClick={()=>{setRecognitionStatus({phase:'loading',message:'Retrying model…'});setRecognitionRetry(v=>v+1);}}>Retry</button>}
       </div>}
+      {lab && <RecognitionLab settings={settings} onChange={changeSettings} />}
 
     </div>
   );

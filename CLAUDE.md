@@ -22,10 +22,15 @@ teachers author assessments and monitor learner progress.
 ### Client (`cd client`)
 - `npm run dev` — Vite dev server (default port 5173). Dev server proxies `/api/*`
   to `http://localhost:5001` (see `vite.config.ts`).
+- `npm run dev:https` — same, but HTTPS with a self-signed cert (`--mode https` →
+  `@vitejs/plugin-basic-ssl`). Use this to test from phones/other PCs on the LAN:
+  camera and recognition need a secure context, which plain http only is on localhost.
 - `npm run build` — `tsc -b && vite build`
 - `npm run lint` — ESLint (flat config)
 - `npm run preview` — preview a production build
-- No test script/framework is configured on the client.
+- `npm test` — `node:test` suites in `tests/*.test.mjs` that import `src/**/*.ts`
+  directly; needs `--experimental-strip-types` (already in the script) on Node 22.13.
+  Model-fixture checks run separately via `npm run test:models`.
 
 ### Server (`cd server`)
 - `npm run dev` — `tsx watch src/index.ts` (default port 5001, or `PORT` env var)
@@ -139,7 +144,7 @@ auth, learning, categories, assessment, progress, teacher. Each router is mounte
   only (`utils.ts`, `camera-session.ts`, `practice.ts`). Put new backend-communication
   modules in `src/api/`, not `src/lib/`.
 - All `api/*.ts` modules share the axios instance in `src/api/http.ts` (base URL from
-  `import.meta.env.VITE_API_URL`, falling back to `http://localhost:5001`; attaches
+  `import.meta.env.VITE_API_URL`, falling back to same-origin `/api` via the Vite proxy; attaches
   `Authorization: Bearer <token>` from `localStorage`) and unwrap `{ data: T }`
   responses with `unwrap()`. A 401 clears the token and redirects to `/login`, or
   `/teacher/login` when on a `/teacher/*` page. `VITE_API_URL` isn't documented

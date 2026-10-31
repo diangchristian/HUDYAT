@@ -33,7 +33,8 @@ export function useCamera() {
     };
   }, [release, stop]);
 
-  const start = async () => {
+  /** `size` is the ideal frame size; smaller frames make hand tracking cheaper. */
+  const start = async (size: { width: number; height: number } = { width: 1280, height: 720 }) => {
     if (pendingRef.current) return;
     if (!window.isSecureContext || !navigator.mediaDevices?.getUserMedia) {
       setError("Camera access needs a supported browser on HTTPS or localhost.");
@@ -49,7 +50,7 @@ export function useCamera() {
     try {
       const stream = await session.start(() => navigator.mediaDevices.getUserMedia({
         audio: false,
-        video: { facingMode: "user", width: { ideal: 1280 }, height: { ideal: 720 } },
+        video: { facingMode: "user", width: { ideal: size.width }, height: { ideal: size.height } },
       }));
       if (!stream || attempt !== attemptRef.current) return;
 

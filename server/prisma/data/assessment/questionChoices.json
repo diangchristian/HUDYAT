@@ -1258,5 +1258,215 @@
         "display_order": 3
       }
     ]
+  },
+  {
+    "category": "Family",
+    "question_number": 1,
+    "choices": [
+      {
+        "gesture": "Father",
+        "choice_text": "Father",
+        "display_order": 1
+      },
+      {
+        "gesture": "Mother",
+        "choice_text": "Mother",
+        "display_order": 2
+      },
+      {
+        "gesture": "Grandfather",
+        "choice_text": "Grandfather",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "Family",
+    "question_number": 2,
+    "choices": [
+      {
+        "gesture": "Father",
+        "choice_text": "Father",
+        "display_order": 1
+      },
+      {
+        "gesture": "Mother",
+        "choice_text": "Mother",
+        "display_order": 2
+      },
+      {
+        "gesture": "Grandmother",
+        "choice_text": "Grandmother",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "Family",
+    "question_number": 3,
+    "choices": [
+      {
+        "gesture": "Daughter",
+        "choice_text": "Daughter",
+        "display_order": 1
+      },
+      {
+        "gesture": "Cousin",
+        "choice_text": "Cousin",
+        "display_order": 2
+      },
+      {
+        "gesture": "Son",
+        "choice_text": "Son",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "Family",
+    "question_number": 4,
+    "choices": [
+      {
+        "gesture": "Daughter",
+        "choice_text": "Daughter",
+        "display_order": 1
+      },
+      {
+        "gesture": "Son",
+        "choice_text": "Son",
+        "display_order": 2
+      },
+      {
+        "gesture": "Mother",
+        "choice_text": "Mother",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "Family",
+    "question_number": 5,
+    "choices": [
+      {
+        "gesture": "Grandmother",
+        "choice_text": "Grandmother",
+        "display_order": 1
+      },
+      {
+        "gesture": "Grandfather",
+        "choice_text": "Grandfather",
+        "display_order": 2
+      },
+      {
+        "gesture": "Father",
+        "choice_text": "Father",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "Family",
+    "question_number": 6,
+    "choices": [
+      {
+        "gesture": "Grandfather",
+        "choice_text": "Grandfather",
+        "display_order": 1
+      },
+      {
+        "gesture": "Auntie",
+        "choice_text": "Auntie",
+        "display_order": 2
+      },
+      {
+        "gesture": "Grandmother",
+        "choice_text": "Grandmother",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "Family",
+    "question_number": 7,
+    "choices": [
+      {
+        "gesture": "Uncle",
+        "choice_text": "Uncle",
+        "display_order": 1
+      },
+      {
+        "gesture": "Auntie",
+        "choice_text": "Auntie",
+        "display_order": 2
+      },
+      {
+        "gesture": "Father",
+        "choice_text": "Father",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "Family",
+    "question_number": 8,
+    "choices": [
+      {
+        "gesture": "Uncle",
+        "choice_text": "Uncle",
+        "display_order": 1
+      },
+      {
+        "gesture": "Auntie",
+        "choice_text": "Auntie",
+        "display_order": 2
+      },
+      {
+        "gesture": "Mother",
+        "choice_text": "Mother",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "Family",
+    "question_number": 9,
+    "choices": [
+      {
+        "gesture": "Son",
+        "choice_text": "Son",
+        "display_order": 1
+      },
+      {
+        "gesture": "Uncle",
+        "choice_text": "Uncle",
+        "display_order": 2
+      },
+      {
+        "gesture": "Cousin",
+        "choice_text": "Cousin",
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "category": "Family",
+    "question_number": 10,
+    "choices": [
+      {
+        "gesture": "Parents",
+        "choice_text": "Parents",
+        "display_order": 1
+      },
+      {
+        "gesture": "Father",
+        "choice_text": "Father",
+        "display_order": 2
+      },
+      {
+        "gesture": "Mother",
+        "choice_text": "Mother",
+        "display_order": 3
+      }
+    ]
   }
 ]

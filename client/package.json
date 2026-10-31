@@ -12,8 +12,9 @@
     "models:assets": "node tools/copy-vision.mjs",
     "predev": "npm run models:assets",
     "prebuild": "npm run models:assets",
-    "test": "node --test tests/gesture-lock.test.mjs tests/recognition.test.mjs",
-    "test:models": "node tests/category-model.test.mjs"
+    "test": "node --experimental-strip-types --test tests/gesture-lock.test.mjs tests/sliding-window.test.mjs tests/normalize.test.mjs tests/candidate-model.test.mjs tests/recognition.test.mjs tests/sign-capture.test.mjs tests/early-check.test.mjs tests/sign-log.test.mjs tests/timed-segmenter.test.mjs tests/sign-mode.test.mjs",
+    "test:models": "node tests/category-model.test.mjs",
+    "dev:https": "vite --mode https"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
@@ -45,6 +46,7 @@
     "@types/node": "^24.13.3",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",
+    "@vitejs/plugin-basic-ssl": "^2.3.0",
     "@vitejs/plugin-react": "^6.1.0",
     "eslint": "^10.9.0",
     "eslint-plugin-react-hooks": "^7.1.1",
