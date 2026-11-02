@@ -5,6 +5,8 @@ import {CategoryRecognition} from "@/features/fsl-recognition/category-recogniti
 import {BlurredPreview} from "@/features/fsl-recognition/blurred-preview";
 import {CAMERA_SIZE,isLabEnabled,loadSettings,saveSettings,type RecognitionSettings} from "@/features/fsl-recognition/experiment";
 import {RecognitionLab} from "@/features/fsl-recognition/recognition-lab";
+import {isDiagnosticsEnabled} from "@/features/fsl-recognition/landmark-diagnostics";
+import {LandmarkDiagnosticsPanel} from "@/features/fsl-recognition/landmark-diagnostics-panel";
 import { Camera, CameraOff, LoaderCircle, Check, X } from "lucide-react";
 import ElevatedButton from "@/components/ui/elavated-button";
 import { Card } from "@/components/ui/card";
@@ -18,6 +20,7 @@ export default function PracticeCamera({category,targetLabel,onCorrect}: {catego
   const [recognitionRetry,setRecognitionRetry]=useState(0);
   const [settings,setSettings]=useState<RecognitionSettings>(loadSettings);
   const [lab]=useState(isLabEnabled);
+  const [diagnostics]=useState(isDiagnosticsEnabled);
   const changeSettings=(next:RecognitionSettings)=>{saveSettings(next);setSettings(next);};
   const [hold,setHold]=useState<HoldFeedback|null>(null);
   const [feedback,setFeedback]=useState<{kind:'correct'|'wrong';target?:string}|null>(null);
@@ -41,6 +44,15 @@ export default function PracticeCamera({category,targetLabel,onCorrect}: {catego
     void wrong.play().then(()=>{wrong.pause();wrong.currentTime=0;wrong.muted=false;}).catch(()=>{wrong.muted=false;});
     void start(CAMERA_SIZE[settings.cameraResolution]);
   };
+  // Lessons remount this component on every Try step, so reuse the earlier grant instead of asking for a click again.
+  useEffect(()=>{
+    let cancelled=false;
+    void cameraGrantRemembered().then(remembered=>{if(remembered&&!cancelled)void start(CAMERA_SIZE[settings.cameraResolution]);});
+    return ()=>{cancelled=true;};
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- only on mount
+  },[]);
+  // An explicit Stop/Cancel means "camera off": don't turn it back on until they press Start again.
+  const turnOff=()=>{forgetCameraGrant();stop();};
   const incorrect=()=>{
     clearTimeout(feedbackTimer.current);
     setFeedback({kind:'wrong',target:targetLabel});
@@ -89,7 +101,7 @@ export default function PracticeCamera({category,targetLabel,onCorrect}: {catego
                 </p>
               </div>
               {status === "requesting" ? (
-                <ElevatedButton text="CANCEL" variant="secondary" size="sm" className="min-h-11 sm:min-h-8" onClick={stop} />
+                <ElevatedButton text="CANCEL" variant="secondary" size="sm" className="min-h-11 sm:min-h-8" onClick={turnOff} />
               ) : (
                 <ElevatedButton text={error ? "TRY AGAIN" : "START CAMERA"} icon={Camera} size="sm" className="min-h-11 sm:min-h-8" onClick={beginCamera} />
               )}
@@ -129,7 +141,7 @@ export default function PracticeCamera({category,targetLabel,onCorrect}: {catego
                 )}
               </span>
               </div>
-              <ElevatedButton text="STOP" variant="secondary" size="sm" className="min-h-11 sm:min-h-8" icon={CameraOff} onClick={stop} />
+              <ElevatedButton text="STOP" variant="secondary" size="sm" className="min-h-11 sm:min-h-8" icon={CameraOff} onClick={turnOff} />
             </div>
           )}
         </div>
@@ -141,6 +153,7 @@ export default function PracticeCamera({category,targetLabel,onCorrect}: {catego
         {recognitionStatus.phase==='error'&&<button className="shrink-0 underline" onClick={()=>{setRecognitionStatus({phase:'loading',message:'Retrying model…'});setRecognitionRetry(v=>v+1);}}>Retry</button>}
       </div>}
       {lab && <RecognitionLab settings={settings} onChange={changeSettings} />}
+      {diagnostics && <LandmarkDiagnosticsPanel />}
 
     </div>
   );

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { cameraErrorMessage, createCameraSession } from "@/lib/camera-session";
+import { cameraErrorMessage, createCameraSession, forgetCameraGrant, rememberCameraGrant } from "@/lib/camera-session";
 
 type CameraStatus = "idle" | "requesting" | "live" | "error";
 
@@ -53,6 +53,7 @@ export function useCamera() {
         video: { facingMode: "user", width: { ideal: size.width }, height: { ideal: size.height } },
       }));
       if (!stream || attempt !== attemptRef.current) return;
+      rememberCameraGrant();
 
       const video = videoRef.current;
       if (!video) {
@@ -77,6 +78,7 @@ export function useCamera() {
       if (attempt === attemptRef.current) setStatus("live");
     } catch (cause) {
       if (attempt !== attemptRef.current) return;
+      forgetCameraGrant();
       session.stop();
       if (videoRef.current) videoRef.current.srcObject = null;
       setError(cameraErrorMessage(cause));

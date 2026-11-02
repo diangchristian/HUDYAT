@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { createCameraSession, cameraErrorMessage } from "../src/lib/camera-session.ts";
+import { createCameraSession, cameraErrorMessage, cameraGrantRemembered, forgetCameraGrant, rememberCameraGrant } from "../src/lib/camera-session.ts";
 import { PRACTICE_PROMPTS, categorySlug, practicePosition } from "../src/lib/practice.ts";
 
 function mockStream() {
@@ -63,6 +63,30 @@ test("active permission errors reach the UI but cancelled errors do not", async 
   camera.stop();
   deferred.reject(error);
   assert.equal(await pending, null);
+});
+
+test("the camera only auto-starts while the remembered grant is still valid", async () => {
+  const store = new Map();
+  globalThis.localStorage = { getItem: (k) => store.get(k) ?? null, setItem: (k, v) => store.set(k, v), removeItem: (k) => store.delete(k) };
+  const permissions = (query) => Object.defineProperty(globalThis, "navigator", { configurable: true, value: { permissions: { query } } });
+
+  permissions(async () => ({ state: "granted" }));
+  assert.equal(await cameraGrantRemembered(), false, "never granted here, so no surprise prompt");
+
+  rememberCameraGrant();
+  assert.equal(await cameraGrantRemembered(), true);
+
+  permissions(async () => { throw new TypeError("camera is not queryable"); });
+  assert.equal(await cameraGrantRemembered(), true, "unqueryable browsers rely on the flag");
+
+  permissions(async () => ({ state: "prompt" }));
+  assert.equal(await cameraGrantRemembered(), false, "an expired grant must not prompt unasked");
+  permissions(async () => ({ state: "granted" }));
+  assert.equal(await cameraGrantRemembered(), false, "the stale flag was cleared");
+
+  rememberCameraGrant();
+  forgetCameraGrant();
+  assert.equal(await cameraGrantRemembered(), false);
 });
 
 test("camera problems have actionable messages", () => {

@@ -5,6 +5,7 @@ import type {BackgroundProcessor} from './background';
 import {BASELINE,runtimeOptions,type RecognitionSettings} from './experiment';
 import {advanceLock,emptyLock,frameIssue,holdProgress,isSteady,lockResetCause,matchesTarget,motionLimit,createMatchCompletion,type FrameIssue} from './gesture-lock';
 import {takeRuntime} from './preload';
+import {landmarkDiagnostics} from './landmark-diagnostics';
 import {recognitionMetrics,type FrameTiming} from './metrics';
 import {createSlidingWindow} from './sliding-window';
 import {recommendedInput} from './sign-capture.js';
@@ -113,6 +114,7 @@ export function CategoryRecognition({category,targetLabel,video,active,onCorrect
      const processed=backgroundMode!=='off'&&background.current?background.current.process(element,backgroundMode):undefined;
      const captureStarted=performance.now();
      const frame=current.capture(processed?.canvas??element),present=Boolean(frame[126]||frame[127]);
+     landmarkDiagnostics.recordCapture(frame,{category:current.category,target:targetLabel});
      const frameTiming:FrameTiming={at:frameStarted,segmentMs:processed?.segmentMs??0,captureMs:performance.now()-captureStarted};timing=frameTiming;
      completion.observePresence(present,performance.now());
      if(present)recognitionMetrics.handSeen(targetLabel,frameStarted);
