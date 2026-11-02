@@ -119,7 +119,7 @@ export function CategoryRecognition({category,targetLabel,video,active,onCorrect
      completion.observePresence(present,performance.now());
      if(present)recognitionMetrics.handSeen(targetLabel,frameStarted);
      const timed=async<T,>(work:()=>Promise<T>)=>{const t=performance.now();const result=await work();frameTiming.predictMs=performance.now()-t;return result;};
-     const predict=(input:Float32Array[])=>timed(()=>current.predict(input));
+     const predict=async(input:Float32Array[])=>{const result=await timed(()=>current.predict(input));landmarkDiagnostics.recordModelCall(input,result);return result;};
      // Moving signs, and every letter when the Alphabet model can read motion (like Numbers), are recorded sign by sign.
      const signCapture=usesSignCapture(current,settings);
      if(current.category==='alphabet'&&!signCapture){
@@ -153,6 +153,7 @@ export function CategoryRecognition({category,targetLabel,video,active,onCorrect
        // with mirrored hands, so a left-handed sign needs no mirroring.
        const result=current.handRelativeSequence?await predict(cutSign(items,signFps))
         :await timed(()=>current.predictInput(recommendedInput(items,signFps,width,height,'auto').input));
+       if(!current.handRelativeSequence)landmarkDiagnostics.recordModelCall(items.map(it=>it.raw),result);
        const label=result.prediction && (result.score??0)>=.8 && (result.margin??0)>=.15?result.prediction:undefined;
        // Diagnostics for the Recognition lab: why and when this answer came.
        const hands=items.map(it=>Boolean(it.raw[126]||it.raw[127]));

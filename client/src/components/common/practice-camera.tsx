@@ -12,6 +12,7 @@ import ElevatedButton from "@/components/ui/elavated-button";
 import { Card } from "@/components/ui/card";
 import { useCamera } from "@/hooks/use-camera";
 import { useCameraPreference } from "@/lib/camera-preference";
+import { cameraGrantRemembered, forgetCameraGrant } from "@/lib/camera-session";
 
 export default function PracticeCamera({category,targetLabel,onCorrect}: {category?:string;targetLabel?:string;onCorrect?:()=>void}) {
   const { videoRef, status, error, start, stop: stopCamera } = useCamera();
@@ -30,8 +31,6 @@ export default function PracticeCamera({category,targetLabel,onCorrect}: {catego
   const wrongSound=useRef<HTMLAudioElement|null>(null);
   // Only an explicit STOP forgets the choice; leaving the page just releases the stream.
   const stop=()=>{useCameraPreference.getState().decline();stopCamera();};
-  // Resume without a click when the camera was already started on an earlier screen.
-  useEffect(()=>{if(useCameraPreference.getState().wanted)void start(CAMERA_SIZE[settings.cameraResolution]);},[]); // eslint-disable-line react-hooks/exhaustive-deps
   const beginCamera=()=>{
     useCameraPreference.getState().want();
     setFeedback(null);
@@ -44,10 +43,11 @@ export default function PracticeCamera({category,targetLabel,onCorrect}: {catego
     void wrong.play().then(()=>{wrong.pause();wrong.currentTime=0;wrong.muted=false;}).catch(()=>{wrong.muted=false;});
     void start(CAMERA_SIZE[settings.cameraResolution]);
   };
-  // Lessons remount this component on every Try step, so reuse the earlier grant instead of asking for a click again.
+  // Resume without a click if the camera was started earlier this session, or permission is remembered from an earlier visit.
   useEffect(()=>{
     let cancelled=false;
-    void cameraGrantRemembered().then(remembered=>{if(remembered&&!cancelled)void start(CAMERA_SIZE[settings.cameraResolution]);});
+    const resume=useCameraPreference.getState().wanted?Promise.resolve(true):cameraGrantRemembered();
+    void resume.then(remembered=>{if(remembered&&!cancelled)void start(CAMERA_SIZE[settings.cameraResolution]);});
     return ()=>{cancelled=true;};
     // eslint-disable-next-line react-hooks/exhaustive-deps -- only on mount
   },[]);
