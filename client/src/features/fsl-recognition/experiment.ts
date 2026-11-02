@@ -79,11 +79,7 @@ export function saveSettings(settings:RecognitionSettings){
  try{localStorage.setItem(KEY,JSON.stringify(settings));}catch{/* ignore */}
 }
 
-/** `?lab=1` turns the lab on for this tab; `?lab=0` turns it off. */
+/** The lab is on only while the URL has `?lab=1`. */
 export function isLabEnabled(){
- try{
-  const param=new URLSearchParams(location.search).get('lab');
-  if(param!==null)sessionStorage.setItem('hudyat-lab',param);
-  return sessionStorage.getItem('hudyat-lab')==='1';
- }catch{return false;}
+ return new URLSearchParams(location.search).get('lab')==='1';
 }

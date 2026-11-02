@@ -29,6 +29,30 @@ export function createCameraSession() {
   return { start, stop };
 }
 
+const CAMERA_GRANTED_KEY = "hudyat.cameraGranted";
+
+export function rememberCameraGrant() {
+  localStorage.setItem(CAMERA_GRANTED_KEY, "1");
+}
+
+export function forgetCameraGrant() {
+  localStorage.removeItem(CAMERA_GRANTED_KEY);
+}
+
+/** True when the camera can start without a click. The browser keeps the real grant; this never bypasses it. */
+export async function cameraGrantRemembered() {
+  if (localStorage.getItem(CAMERA_GRANTED_KEY) !== "1") return false;
+  try {
+    const { state } = await navigator.permissions.query({ name: "camera" as PermissionName });
+    if (state === "granted") return true;
+    forgetCameraGrant();
+    return false;
+  } catch {
+    // Some browsers can't query the camera; a failed start clears the flag, so this can't re-prompt in a loop.
+    return true;
+  }
+}
+
 export function cameraErrorMessage(error: unknown) {
   const name = typeof error === "object" && error !== null && "name" in error
     ? error.name

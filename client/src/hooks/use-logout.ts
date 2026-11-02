@@ -2,6 +2,7 @@ import { useNavigate } from "react-router";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { logout } from "@/api/auth-api";
+import { forgetCameraGrant } from "@/lib/camera-session";
 
 /*
  * Ends the session and goes to `loginPath` (each role has its own
@@ -14,6 +15,7 @@ export function useLogout(loginPath: string) {
 
   return () => {
     localStorage.removeItem("token");
+    forgetCameraGrant();
     queryClient.clear();
     navigate(loginPath);
 

@@ -13,7 +13,15 @@ import {
   User,
 } from "lucide-react";
 
-import { useNavigate, useParams } from "react-router";
+import { useNavigate, useParams, useSearchParams } from "react-router";
+
+// PROTOTYPE, delete me: ?variant= comparison, dev builds only.
+import EnhancedLearnSession from "./category-learn-prototype/enhanced-learn-session";
+import PrototypeHost from "./category-learn-prototype/prototype-host";
+import PrototypeSwitcher from "./category-learn-prototype/prototype-switcher";
+import { isLayoutVariant } from "./category-learn-prototype/use-prototype-lesson";
+import PlayfulLearnPage from "./category-learn-prototype/variant-playful";
+import SunnyLearnPage from "./category-learn-prototype/variant-sunny";
 
 import type { LessonStep } from "@/api/learning-api";
 import { useCategoryLesson } from "@/hooks/use-category-lesson";
@@ -605,6 +613,9 @@ export default function CategoryLearnPage() {
 
   const navigate = useNavigate();
 
+  const [searchParams] = useSearchParams();
+  const variant = import.meta.env.DEV ? searchParams.get("variant") : null;
+
   const [isFinishingLesson, setIsFinishingLesson] =
     useState(false);
 
@@ -657,6 +668,22 @@ export default function CategoryLearnPage() {
       }),
     ) ?? [];
 
+  // PROTOTYPE, delete me: this layout is full-screen with its own background, so it skips the page shell.
+  if ((variant === "sunny" || variant === "playful") && lesson?.category && prompts.length) {
+    const FullScreenLayout = variant === "sunny" ? SunnyLearnPage : PlayfulLearnPage;
+
+    return (
+      <FullScreenLayout
+        key={lesson.category.id}
+        title={lesson.category.name}
+        prompts={prompts}
+        initialGestureIndex={lesson.progress.lastGestureIndex}
+        initialStep={lesson.progress.lastLessonStep}
+        onFinishLesson={handleFinishLesson}
+      />
+    );
+  }
+
   return (
     <div className="min-h-dvh bg-background font-body text-foreground">
       <SessionHeader
@@ -696,6 +723,29 @@ export default function CategoryLearnPage() {
               />
             )}
           </div>
+        ) : lesson?.category &&
+          prompts.length &&
+          isLayoutVariant(variant) ? (
+          <PrototypeHost
+            key={lesson.category.id}
+            variant={variant}
+            title={lesson.category.name}
+            prompts={prompts}
+            initialGestureIndex={lesson.progress.lastGestureIndex}
+            initialStep={lesson.progress.lastLessonStep}
+            onFinishLesson={handleFinishLesson}
+          />
+        ) : lesson?.category &&
+          prompts.length &&
+          variant === "enhanced" ? (
+          <EnhancedLearnSession
+            key={lesson.category.id}
+            title={lesson.category.name}
+            prompts={prompts}
+            initialGestureIndex={lesson.progress.lastGestureIndex}
+            initialStep={lesson.progress.lastLessonStep}
+            onFinishLesson={handleFinishLesson}
+          />
         ) : lesson?.category &&
           prompts.length ? (
           <LearnSession
@@ -744,6 +794,7 @@ export default function CategoryLearnPage() {
           </Card>
         )}
       </main>
+      {(variant === "enhanced" || variant === "current") && <PrototypeSwitcher current={variant} />}
     </div>
   );
 }
