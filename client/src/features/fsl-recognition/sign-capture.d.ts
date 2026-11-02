@@ -1,0 +1,10 @@
+export type Frame=ArrayLike<number>;
+export type SignItem={raw:Float32Array;norm:Float32Array};
+export type SegmentedSign<T>={items:T[];reason:'hands_gone'|'max_length'};
+export function createSignSegmenter<T>(fps:number):{readonly signing:boolean;push(item:T,present:boolean):SegmentedSign<T>|null};
+export function signWindow(present:boolean[],fps:number):[number,number];
+export function resampleSign(frames:Frame[],n?:number,extra?:number[][]|null):number[][];
+export function mirrorFrames(frames:Frame[]):number[][];
+export function autoHand(raws:Frame[],W:number,H:number):'left'|'right';
+export function recommendedInput(items:SignItem[],fps:number,W:number,H:number,hand?:'right'|'left'|'auto'):{input:number[][];hand:'left'|'right'};
+export function hasHand(frame:Frame):boolean;

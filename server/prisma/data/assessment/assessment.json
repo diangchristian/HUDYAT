@@ -54,5 +54,12 @@
     "description": "Assess the learner's knowledge of common word concepts in Filipino Sign Language.",
     "passing_score": 80,
     "status": "PUBLISHED"
+  },
+  {
+    "category": "Family",
+    "title": "Family Assessment",
+    "description": "Assess the learner's knowledge of family member signs in Filipino Sign Language.",
+    "passing_score": 80,
+    "status": "PUBLISHED"
   }
 ]

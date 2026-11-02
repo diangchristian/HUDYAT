@@ -1,20 +1,38 @@
 {
   "format": "fsl-conv1d-bilstm-v1",
-  "category": "colors",
-  "version": "fd6cbabbd4b1082c",
+  "category": "alphabet",
+  "version": "46e7e387a78ee614",
   "inputShape": [
     32,
     128
   ],
   "classes": [
-    "blue",
-    "dark",
-    "green",
-    "light",
-    "orange",
-    "red",
-    "violet",
-    "yellow"
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "I",
+    "J",
+    "K",
+    "L",
+    "M",
+    "N",
+    "O",
+    "P",
+    "Q",
+    "R",
+    "S",
+    "T",
+    "U",
+    "V",
+    "W",
+    "X",
+    "Y",
+    "Z"
   ],
   "preprocessing": {
     "frames": 32,
@@ -25,15 +43,34 @@
       "left_present",
       "right_present"
     ],
-    "coordinates": "MediaPipe image landmarks: x/width, y/height, wrist-relative z at x scale",
+    "coordinates": "landmarks 1-20: per-frame wrist-relative pixels / pixel palm length; landmark 0: wrist displacement from first valid frame / median pixel palm length",
     "interpolation": "linear coordinates, nearest binary flags, absent coordinates zeroed",
     "seed": 42,
     "validation_fraction": 0.15,
     "test_fraction": 0.15,
     "static_variants": 8,
-    "jitter_std": 0.0075,
-    "static_method": "repeat + independent per-timestep Gaussian coordinate noise",
+    "jitter_std": 0.03,
+    "static_method": "one clean original; training-only repeat + Gaussian noise in palm lengths",
     "grouping": "source path with Roboflow .rf. siblings grouped",
+    "normalization": "hand-relative-sequence-v1",
+    "pose_augmentation": {
+      "split": "train",
+      "rotation_degrees": 15.0,
+      "mirror_probability": 0.5
+    },
+    "evaluation": "one unaugmented sequence per accepted source",
+    "video_augmentation": {
+      "version": 2,
+      "algorithm": "piecewise_linear_timing_with_hand_mirroring",
+      "eligible_inputs": "videos_and_multi_frame_landmarks",
+      "split": "train",
+      "extra_samples": 8,
+      "max_displacement": 0.09,
+      "seed": 42,
+      "max_attempts_per_sample": 10,
+      "mirror_hands": true,
+      "mirror_normalization": "hand-relative-sequence-v1"
+    },
     "extraction": {
       "backend": "MediaPipe HandLandmarker",
       "mediapipe_version": "1.0.1",
@@ -272,21 +309,21 @@
     {
       "shape": [
         64,
-        8
+        26
       ],
       "dtype": "float32",
       "offset": 1943552,
-      "bytes": 2048
+      "bytes": 6656
     },
     {
       "shape": [
-        8
+        26
       ],
       "dtype": "float32",
-      "offset": 1945600,
-      "bytes": 32
+      "offset": 1950208,
+      "bytes": 104
     }
   ],
-  "weightBytes": 1945632,
-  "weightSha256": "5d7bc1c71d2df69ef9bcdb7b419f2cf69f2e457dc0b37704baa4e6b62569ec9b"
+  "weightBytes": 1950312,
+  "weightSha256": "2b09f3134a06667a4e67ec99a97714b89c0141700e76ddd5277324ae8641e59e"
 }

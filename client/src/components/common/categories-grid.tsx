@@ -3,7 +3,7 @@ import { CATEGORIES } from "./categories.constants";
 
 export default function CategoriesGrid() {
   return (
-    <div className="hidden lg:grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8 ">
+    <div className="hidden lg:grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-9 ">
       {CATEGORIES.map((item) => (
         <CategoryCard
           key={item.title}

@@ -11,11 +11,13 @@ export const PRACTICE_PROMPTS: Record<string, PracticePrompt[]> = {
   alphabet: Array.from("ABCDEFGHIJKLMNOPQRSTUVWXYZ", (label) => ({
     label,
   })),
-  numbers: Array.from({ length: 10 }, (_, index) => ({ label: String(index + 1) })),
+  // Prompts use the recognition models' sign names, so a correct sign is accepted.
+  numbers: ["One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten"].map((label) => ({ label })),
   shapes: ["Circle", "Square", "Triangle", "Rectangle", "Star"].map((label) => ({ label })),
   colors: ["Red", "Blue", "Yellow", "Green", "Orange", "Purple"].map((label) => ({ label })),
-  greetings: ["Hello", "Good morning", "Good afternoon", "Thank you", "Goodbye"].map((label) => ({ label })),
+  greetings: ["Good morning", "Good afternoon", "Good evening", "Hello", "How are you", "I'm fine", "Nice to meet you", "Thank you", "You're welcome", "See you tomorrow"].map((label) => ({ label })),
   calendar: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"].map((label) => ({ label })),
+  family: ["Father", "Mother", "Son", "Daughter", "Grandfather", "Grandmother", "Uncle", "Auntie", "Cousin", "Parents"].map((label) => ({ label })),
   "wh-questions": ["Who", "What", "Where", "When", "Why"].map((label) => ({ label })),
   "word-concepts": ["Eat", "Drink", "Read", "Big", "Small"].map((label) => ({ label })),
 };

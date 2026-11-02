@@ -44,8 +44,9 @@ function PracticeSession({ title, prompts }: { title: string; prompts: PracticeP
 
   return (
     <>
-      <div className="mb-8 text-center">
-        <h1 className="inline-flex min-h-8 items-center rounded-full bg-hudyat-gold px-5 py-2 text-xs font-extrabold text-primary-foreground uppercase">
+      <div className="mb-6 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+        <ElevatedButton text="BACK TO CATEGORIES" variant="secondary" size="sm" className="min-h-11 sm:min-h-8" icon={ArrowLeft} onClick={() => navigate("/student/practice")} />
+        <h1 className="inline-flex min-h-8 max-w-full min-w-0 items-center truncate rounded-full bg-hudyat-gold px-5 py-2 text-xs font-extrabold uppercase text-primary-foreground">
           Practicing: {title}
         </h1>
       </div>
@@ -110,10 +111,6 @@ function PracticeSession({ title, prompts }: { title: string; prompts: PracticeP
           </div>
           <p className="text-center text-xs text-muted-foreground">Match the target sign to hear a sound and continue automatically. You can also use Next.</p>
         </div>
-      </div>
-
-      <div className="mt-8">
-        <ElevatedButton text="BACK TO CATEGORIES" variant="secondary" size="sm" className="min-h-11 sm:min-h-8" icon={ArrowLeft} onClick={() => navigate("/student/practice")} />
       </div>
     </>
   );

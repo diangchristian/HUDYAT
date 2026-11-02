@@ -7,6 +7,9 @@ import {useEffect,useState} from 'react';
 import {BASELINE,ENHANCED,type BackgroundMode,type RecognitionSettings} from './experiment';
 import {DEFAULT_GATES,type LockRules} from './gesture-lock';
 import {recognitionMetrics} from './metrics';
+import {signLog} from './sign-log';
+
+const WHY={hands_gone:'hands down',max_length:'3 s limit',early:'early check'} as const;
 
 const ms=(value:number)=>value?Math.round(value)+'ms':'–';
 
@@ -15,6 +18,8 @@ export function RecognitionLab({settings,onChange}:{settings:RecognitionSettings
  const [copied,setCopied]=useState(false);
  const [condition,setCondition]=useState('');
  useEffect(()=>recognitionMetrics.subscribe(()=>setSummary(recognitionMetrics.summary())),[]);
+ const [decisions,setDecisions]=useState(signLog.entries);
+ useEffect(()=>signLog.subscribe(()=>setDecisions(signLog.entries())),[]);
  // Any settings change starts a fresh result set, so one export never mixes configurations.
  const apply=(next:RecognitionSettings)=>{recognitionMetrics.reset();onChange(next);};
  const custom=(patch:Partial<RecognitionSettings>)=>apply({...settings,...patch,profile:'custom'});
@@ -55,6 +60,9 @@ export function RecognitionLab({settings,onChange}:{settings:RecognitionSettings
     <label className="flex items-center justify-between gap-2">Alphabet tracking (VIDEO mode)
      <input type="checkbox" checked={settings.alphabetTracking} onChange={e=>custom({alphabetTracking:e.target.checked})}/>
     </label>
+    <label className="flex items-center justify-between gap-2">Letters like Numbers (sign by sign)
+     <input type="checkbox" checked={settings.alphabetMotion} onChange={e=>custom({alphabetMotion:e.target.checked})}/>
+    </label>
     <label className="flex items-center justify-between gap-2">Hand tracking on
      <select value={settings.delegate} onChange={e=>custom({delegate:e.target.value as RecognitionSettings['delegate']})} className="rounded border border-border bg-background px-1 py-0.5">
       <option value="CPU">CPU</option><option value="GPU">GPU (falls back to CPU)</option>
@@ -81,9 +89,22 @@ export function RecognitionLab({settings,onChange}:{settings:RecognitionSettings
     </label>
     <label className="flex items-center justify-between gap-2">Moving signs
      <select value={settings.dynamicCapture} onChange={e=>custom({dynamicCapture:e.target.value as RecognitionSettings['dynamicCapture']})} className="rounded border border-border bg-background px-1 py-0.5">
-      <option value="fixed">fixed 2s clips</option><option value="sliding">sliding window</option>
+      <option value="sign">sign ends when hands go down</option><option value="fixed">fixed 2s clips</option><option value="sliding">sliding window</option>
      </select>
     </label>
+    {settings.dynamicCapture==='sign'&&<label className="flex items-center justify-between gap-2">Sign ends after no hand for (ms)
+     <input type="number" min={100} max={1500} step={50} value={settings.endAbsentMs} onChange={e=>custom({endAbsentMs:Math.min(1500,Math.max(100,Number(e.target.value)||500))})} className="w-16 rounded border border-border bg-background px-1"/>
+    </label>}
+    {settings.dynamicCapture==='sign'&&<label className="flex items-center justify-between gap-2">Answer a held sign early
+     <input type="checkbox" checked={settings.earlyCheck} onChange={e=>custom({earlyCheck:e.target.checked})}/>
+    </label>}
+    {settings.dynamicCapture==='sign'&&settings.earlyCheck&&<>
+    <label className="flex items-center justify-between gap-2">Early: hands first (ms)
+     <input type="number" min={200} step={100} value={settings.earlyMinHandsMs} onChange={e=>custom({earlyMinHandsMs:Math.max(200,Number(e.target.value)||800)})} className="w-16 rounded border border-border bg-background px-1"/>
+    </label>
+    <label className="flex items-center justify-between gap-2">Early: same answer × checks
+     <input type="number" min={1} max={5} step={1} value={settings.earlyAgree} onChange={e=>custom({earlyAgree:Math.min(5,Math.max(1,Math.round(Number(e.target.value))||2))})} className="w-16 rounded border border-border bg-background px-1"/>
+    </label></>}
     <label className="flex items-center justify-between gap-2">Alphabet poll (ms)
      <input type="number" min={33} step={10} value={settings.alphabetPollMs} onChange={e=>custom({alphabetPollMs:Math.max(33,Number(e.target.value)||200)})} className="w-16 rounded border border-border bg-background px-1"/>
     </label>
@@ -123,6 +144,15 @@ export function RecognitionLab({settings,onChange}:{settings:RecognitionSettings
     <button type="button" onClick={()=>recognitionMetrics.reset()} className="rounded-full border border-border px-3 py-1 font-bold">Reset results</button>
     <button type="button" onClick={copy} className="rounded-full border border-border px-3 py-1 font-bold">{copied?'Copied!':'Copy results (JSON)'}</button>
    </div>
+
+   {decisions.length>0&&<div>
+    <p className="font-bold">Moving-sign answers (newest first) <button type="button" onClick={()=>signLog.clear()} className="ml-2 underline">clear</button></p>
+    <ul className="space-y-0.5">
+     {decisions.map(d=><li key={d.at} className={d.accepted?'':'text-muted-foreground'}>
+      {d.accepted?'✓':'·'} {WHY[d.reason]} after {(d.signMs/1000).toFixed(1)} s · {d.prediction??'–'} {d.score===undefined?'':Math.round(d.score*100)+'%'} (target {d.target}){d.longestGapMs>=150?` · tracking gap ${Math.round(d.longestGapMs)} ms`:''}
+     </li>)}
+    </ul>
+   </div>}
   </section>
  );
 }

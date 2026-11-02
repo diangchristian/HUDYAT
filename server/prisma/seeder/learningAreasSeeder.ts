@@ -19,7 +19,7 @@ async function main() {
       {
         name: "Basic Filipino Sign Language",
         description:
-          "Learn the fundamental Filipino Sign Language signs, including the alphabet, numbers, shapes, colors, greetings, and calendar concepts.",
+          "Learn the fundamental Filipino Sign Language signs, including the alphabet, numbers, shapes, colors, greetings, calendar concepts, and family members.",
         displayOrder: 1,
         isActive: true,
       },
