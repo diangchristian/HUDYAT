@@ -538,5 +538,95 @@
     "gesture": "Help",
     "reference_media_url": null,
     "points": 1
+  },
+  {
+    "category": "Family",
+    "question_number": 1,
+    "question_text": "Select the correct gesture below",
+    "question_type": "VIDEO_GESTURE",
+    "gesture": "Father",
+    "reference_media_url": null,
+    "points": 1
+  },
+  {
+    "category": "Family",
+    "question_number": 2,
+    "question_text": "Select the correct gesture below",
+    "question_type": "VIDEO_GESTURE",
+    "gesture": "Mother",
+    "reference_media_url": null,
+    "points": 1
+  },
+  {
+    "category": "Family",
+    "question_number": 3,
+    "question_text": "Select the correct gesture below",
+    "question_type": "VIDEO_GESTURE",
+    "gesture": "Son",
+    "reference_media_url": null,
+    "points": 1
+  },
+  {
+    "category": "Family",
+    "question_number": 4,
+    "question_text": "Select the correct gesture below",
+    "question_type": "VIDEO_GESTURE",
+    "gesture": "Daughter",
+    "reference_media_url": null,
+    "points": 1
+  },
+  {
+    "category": "Family",
+    "question_number": 5,
+    "question_text": "Select the correct gesture below",
+    "question_type": "VIDEO_GESTURE",
+    "gesture": "Grandfather",
+    "reference_media_url": null,
+    "points": 1
+  },
+  {
+    "category": "Family",
+    "question_number": 6,
+    "question_text": "Select the correct gesture below",
+    "question_type": "VIDEO_GESTURE",
+    "gesture": "Grandmother",
+    "reference_media_url": null,
+    "points": 1
+  },
+  {
+    "category": "Family",
+    "question_number": 7,
+    "question_text": "Select the correct gesture below",
+    "question_type": "VIDEO_GESTURE",
+    "gesture": "Uncle",
+    "reference_media_url": null,
+    "points": 1
+  },
+  {
+    "category": "Family",
+    "question_number": 8,
+    "question_text": "Select the correct gesture below",
+    "question_type": "VIDEO_GESTURE",
+    "gesture": "Auntie",
+    "reference_media_url": null,
+    "points": 1
+  },
+  {
+    "category": "Family",
+    "question_number": 9,
+    "question_text": "Select the correct gesture below",
+    "question_type": "VIDEO_GESTURE",
+    "gesture": "Cousin",
+    "reference_media_url": null,
+    "points": 1
+  },
+  {
+    "category": "Family",
+    "question_number": 10,
+    "question_text": "Select the correct gesture below",
+    "question_type": "VIDEO_GESTURE",
+    "gesture": "Parents",
+    "reference_media_url": null,
+    "points": 1
   }
 ]

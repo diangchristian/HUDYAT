@@ -20,7 +20,7 @@ test('locked answer survives a detection flicker but resets after 500ms with no 
 });
 test('target comparison uses labels, not confidence or the target as prediction',()=>{
  assert.equal(matchesTarget('M','N'),false);assert.equal(matchesTarget('blue','Blue'),true);
- assert.equal(matchesTarget('violet','Purple'),false);
+ assert.equal(matchesTarget('violet','Red'),false);
 });
 test('steadiness ignores absent slots but detects hand changes and movement',()=>{
  const a=new Float32Array(128);a[126]=1;const b=a.slice();b[0]=.01;
@@ -99,4 +99,16 @@ test('frameIssue names why a frame cannot count towards a hold, even before any 
  assert.equal(frameIssue(sample(0,{score:.5}),{...relaxed,minScore:.4}),undefined);
  assert.equal(frameIssue(sample(0,{margin:.05})),'low margin');
  assert.equal(frameIssue(sample(0,{steady:false})),'unsteady');
+});
+test('matchesTarget ignores case, spaces, underscores and apostrophes',()=>{
+ assert.equal(matchesTarget('good_afternoon','Good Afternoon'),true);
+ assert.equal(matchesTarget('how_are_you','How are you'),true);
+ assert.equal(matchesTarget('im_fine',"I'm fine"),true);
+ assert.equal(matchesTarget('youre_welcome',"You're welcome"),true);
+ assert.equal(matchesTarget('good_morning','Good Afternoon'),false);
+});
+test("the Colors model's violet is the lesson's Purple",()=>{
+ assert.equal(matchesTarget('violet','Purple'),true);
+ assert.equal(matchesTarget('purple','Violet'),true);
+ assert.equal(matchesTarget('violet','Blue'),false);
 });

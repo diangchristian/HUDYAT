@@ -1,0 +1,62 @@
+[
+  {
+    "label": "Father",
+    "meaning": "A male parent.",
+    "exampleUsage": "My father cooks breakfast every morning.",
+    "displayOrder": 1
+  },
+  {
+    "label": "Mother",
+    "meaning": "A female parent.",
+    "exampleUsage": "My mother walks me to school.",
+    "displayOrder": 2
+  },
+  {
+    "label": "Son",
+    "meaning": "A male child of a parent.",
+    "exampleUsage": "Their son plays basketball.",
+    "displayOrder": 3
+  },
+  {
+    "label": "Daughter",
+    "meaning": "A female child of a parent.",
+    "exampleUsage": "Their daughter is in Grade 3.",
+    "displayOrder": 4
+  },
+  {
+    "label": "Grandfather",
+    "meaning": "The father of your father or mother.",
+    "exampleUsage": "My grandfather tells us stories.",
+    "displayOrder": 5
+  },
+  {
+    "label": "Grandmother",
+    "meaning": "The mother of your father or mother.",
+    "exampleUsage": "My grandmother lives with us.",
+    "displayOrder": 6
+  },
+  {
+    "label": "Uncle",
+    "meaning": "The brother of your father or mother.",
+    "exampleUsage": "My uncle visits us every Sunday.",
+    "displayOrder": 7
+  },
+  {
+    "label": "Auntie",
+    "meaning": "The sister of your father or mother.",
+    "exampleUsage": "My auntie gave me a gift.",
+    "displayOrder": 8
+  },
+  {
+    "label": "Cousin",
+    "meaning": "The child of your uncle or auntie.",
+    "exampleUsage": "My cousin and I play together.",
+    "displayOrder": 9
+  },
+  {
+    "label": "Parents",
+    "meaning": "Your father and mother together.",
+    "exampleUsage": "My parents come to my school program.",
+    "displayOrder": 10
+  }
+]
