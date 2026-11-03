@@ -29,6 +29,7 @@ import { useSaveLessonCheckpoint } from "@/hooks/use-save-lesson-checkpoint";
 
 import PracticeCamera from "@/components/common/practice-camera";
 import { usePreloadRecognition } from "@/features/fsl-recognition/preload";
+import { signMeaningText, signWhenToUseText } from "@/lib/lesson-text";
 import { categorySlug } from "@/lib/practice";
 import PracticeReference from "@/components/common/practice-reference";
 import SessionHeader from "@/components/common/session-header";
@@ -243,13 +244,9 @@ function LearnSession({
     );
   };
 
-  const meaningText =
-    prompt.meaning ||
-    `Learn what the Filipino Sign Language sign "${prompt.label}" means.`;
+  const meaningText = signMeaningText(prompt.label, prompt.meaning);
 
-  const whenToUseText =
-    prompt.whenToUse ||
-    `Use "${prompt.label}" in a situation where this expression is appropriate.`;
+  const whenToUseText = signWhenToUseText(prompt.label, prompt.whenToUse);
 
   return (
     <>

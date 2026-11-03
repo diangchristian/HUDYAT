@@ -11,23 +11,22 @@ import {
 } from "@/components/staff/staff-card";
 import StaffPageHeader from "@/components/staff/staff-page-header";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
-import { Textarea } from "@/components/ui/textarea";
 import type { AdminLesson } from "@/api/admin-api";
 import { useAdminLessons } from "@/hooks/use-admin-lessons";
 import { useUpdateLesson } from "@/hooks/use-update-lesson";
 import { plural } from "@/lib/format";
 
-function LessonEditor({
+function LessonSettingsForm({
   lesson,
   onCancel,
   onSaved,
@@ -37,159 +36,63 @@ function LessonEditor({
   onSaved: () => void;
 }) {
   const updateLesson = useUpdateLesson();
-  const [description, setDescription] = useState(lesson.description ?? "");
   const [displayOrder, setDisplayOrder] = useState(String(lesson.displayOrder));
   const [isActive, setIsActive] = useState(lesson.isActive);
-  const [signs, setSigns] = useState(
-    lesson.signs.map((sign) => ({
-      ...sign,
-      referenceImageUrl: sign.referenceImageUrl ?? "",
-      referenceVideoUrl: sign.referenceVideoUrl ?? "",
-    })),
-  );
-
-  const updateSign = (
-    id: string,
-    changes: { referenceImageUrl?: string; referenceVideoUrl?: string },
-  ) =>
-    setSigns((current) =>
-      current.map((sign) => (sign.id === id ? { ...sign, ...changes } : sign)),
-    );
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     updateLesson.mutate(
       {
         id: lesson.id,
-        data: {
-          description,
-          displayOrder: Number(displayOrder),
-          isActive,
-          signs: signs.map(({ id, referenceImageUrl, referenceVideoUrl }) => ({
-            id,
-            referenceImageUrl,
-            referenceVideoUrl,
-          })),
-        },
+        data: { displayOrder: Number(displayOrder), isActive },
       },
       { onSuccess: onSaved },
     );
   };
 
   return (
-    <form className="flex min-h-0 flex-1 flex-col" onSubmit={handleSubmit}>
-      <div className="min-h-0 flex-1 space-y-5 overflow-y-auto px-4 pb-4">
-        <div className="space-y-2">
-          <Label htmlFor="lesson-description" className="font-bold">
-            Description
-          </Label>
-          <Textarea
-            id="lesson-description"
-            rows={3}
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="lesson-order" className="font-bold">
-            Order
-          </Label>
-          <Input
-            id="lesson-order"
-            type="number"
-            min={1}
-            value={displayOrder}
-            aria-describedby="lesson-order-help"
-            onChange={(e) => setDisplayOrder(e.target.value)}
-            className="h-10 w-24"
-          />
-          <p id="lesson-order-help" className="text-sm text-muted-foreground">
-            Choosing a taken position swaps the two lessons.
-          </p>
-        </div>
-
-        <label className="flex items-start gap-3 text-sm">
-          <input
-            type="checkbox"
-            checked={isActive}
-            onChange={(e) => setIsActive(e.target.checked)}
-            className="mt-0.5 size-4 accent-primary"
-          />
-          <span>
-            <span className="font-bold">Lesson is active</span>
-            <span className="block text-muted-foreground">
-              Inactive lessons are hidden from learners and teachers. Learner
-              records are kept.
-            </span>
-          </span>
-        </label>
-
-        <fieldset className="space-y-4">
-          <legend className="font-bold">Reference media</legend>
-          <p className="text-sm text-muted-foreground">
-            Enter a link or path for each sign. A sign's media also changes in
-            any other lesson that uses it. New signs are added with a trained
-            recognition model, not here.
-          </p>
-
-          {signs.map((sign) => (
-            <div
-              key={sign.id}
-              className="space-y-3 rounded-xl border border-border p-3"
-            >
-              <p className="font-bold">{sign.label}</p>
-              <div className="space-y-2">
-                <Label htmlFor={`${sign.id}-image`}>Image link or path</Label>
-                <Input
-                  id={`${sign.id}-image`}
-                  value={sign.referenceImageUrl}
-                  onChange={(e) =>
-                    updateSign(sign.id, { referenceImageUrl: e.target.value })
-                  }
-                  className="h-10"
-                />
-              </div>
-              {sign.referenceImageUrl && (
-                <img
-                  src={sign.referenceImageUrl}
-                  alt={`${sign.label} reference`}
-                  loading="lazy"
-                  className="max-h-32 rounded-lg border border-border object-contain"
-                />
-              )}
-              <div className="space-y-2">
-                <Label htmlFor={`${sign.id}-video`}>Video link or path</Label>
-                <Input
-                  id={`${sign.id}-video`}
-                  value={sign.referenceVideoUrl}
-                  onChange={(e) =>
-                    updateSign(sign.id, { referenceVideoUrl: e.target.value })
-                  }
-                  className="h-10"
-                />
-              </div>
-              {sign.referenceVideoUrl && (
-                <video
-                  src={sign.referenceVideoUrl}
-                  controls
-                  preload="none"
-                  aria-label={`${sign.label} reference video`}
-                  className="max-h-40 w-full rounded-lg border border-border"
-                />
-              )}
-            </div>
-          ))}
-        </fieldset>
+    <form className="grid gap-5" onSubmit={handleSubmit}>
+      <div className="space-y-2">
+        <Label htmlFor="lesson-order" className="font-bold">
+          Order
+        </Label>
+        <Input
+          id="lesson-order"
+          type="number"
+          min={1}
+          value={displayOrder}
+          aria-describedby="lesson-order-help"
+          onChange={(e) => setDisplayOrder(e.target.value)}
+          className="h-10 w-24"
+        />
+        <p id="lesson-order-help" className="text-sm text-muted-foreground">
+          Choosing a taken position swaps the two lessons.
+        </p>
       </div>
 
+      <label className="flex items-start gap-3 text-sm">
+        <input
+          type="checkbox"
+          checked={isActive}
+          onChange={(e) => setIsActive(e.target.checked)}
+          className="mt-0.5 size-4 accent-primary"
+        />
+        <span>
+          <span className="font-bold">Lesson is active</span>
+          <span className="block text-muted-foreground">
+            Inactive lessons are hidden from learners and teachers. Learner
+            records are kept.
+          </span>
+        </span>
+      </label>
+
       {updateLesson.error && (
-        <p role="alert" className="px-4 pt-3 text-sm font-bold text-red-600">
+        <p role="alert" className="text-sm font-bold text-red-600">
           {updateLesson.error.message}
         </p>
       )}
 
-      <SheetFooter className="flex-row justify-end border-t border-border">
+      <DialogFooter>
         <Button
           type="button"
           variant="outline"
@@ -206,24 +109,21 @@ function LessonEditor({
         >
           {updateLesson.isPending ? "Saving..." : "Save changes"}
         </Button>
-      </SheetFooter>
+      </DialogFooter>
     </form>
   );
 }
 
 export default function AdminLessonsPage() {
   const { data: areas, isLoading, error, refetch } = useAdminLessons();
-  const [editing, setEditing] = useState<{
-    lesson: AdminLesson;
-    areaName: string;
-  } | null>(null);
+  const [editing, setEditing] = useState<AdminLesson | null>(null);
   const [notice, setNotice] = useState("");
 
   return (
     <div className="space-y-6">
       <StaffPageHeader
         title="Lessons"
-        description="Edit lesson details and reference media. Quizzes stay with teachers."
+        description="Set lesson order and which lessons are active. Teachers edit lesson content."
       />
 
       <QueryState
@@ -266,16 +166,16 @@ export default function AdminLessonsPage() {
                     />
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    {lesson.description} {plural(lesson.signs.length, "sign")}.
+                    {lesson.description} {plural(lesson.signCount, "sign")}.
                   </p>
                 </div>
                 <Button
                   variant="outline"
                   className="rounded-full"
-                  aria-label={`Edit ${lesson.name}`}
-                  onClick={() => setEditing({ lesson, areaName: area.name })}
+                  aria-label={`Change settings for ${lesson.name}`}
+                  onClick={() => setEditing(lesson)}
                 >
-                  Edit
+                  Settings
                 </Button>
               </li>
             ))}
@@ -283,32 +183,34 @@ export default function AdminLessonsPage() {
         </StaffCard>
       ))}
 
-      <Sheet
+      <Dialog
         open={editing !== null}
         onOpenChange={(open) => {
           if (!open) setEditing(null);
         }}
       >
-        <SheetContent className="gap-0 font-staff sm:max-w-md">
-          <SheetHeader>
-            <SheetTitle className="text-xl font-bold">
-              Edit {editing?.lesson.name}
-            </SheetTitle>
-            <SheetDescription>{editing?.areaName}</SheetDescription>
-          </SheetHeader>
-          {/* Mounted only while open, so a cancelled draft doesn't carry over. */}
+        <DialogContent className="font-staff sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-bold">
+              {editing?.name} settings
+            </DialogTitle>
+            <DialogDescription>
+              These apply to every teacher and learner.
+            </DialogDescription>
+          </DialogHeader>
+          {/* Mounted only while open, so a cancelled change doesn't carry over. */}
           {editing && (
-            <LessonEditor
-              lesson={editing.lesson}
+            <LessonSettingsForm
+              lesson={editing}
               onCancel={() => setEditing(null)}
               onSaved={() => {
-                setNotice(`Saved changes to ${editing.lesson.name}.`);
+                setNotice(`Saved settings for ${editing.name}.`);
                 setEditing(null);
               }}
             />
           )}
-        </SheetContent>
-      </Sheet>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

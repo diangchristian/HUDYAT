@@ -67,20 +67,13 @@ export type AdminLearner = {
   dateJoined: string;
 };
 
-export type AdminSign = {
-  id: string;
-  label: string;
-  referenceImageUrl: string | null;
-  referenceVideoUrl: string | null;
-};
-
 export type AdminLesson = {
   id: string;
   name: string;
   description: string | null;
   displayOrder: number;
   isActive: boolean;
-  signs: AdminSign[];
+  signCount: number;
 };
 
 export type AdminArea = {
@@ -89,11 +82,10 @@ export type AdminArea = {
   lessons: AdminLesson[];
 };
 
+/** Lesson content belongs to teachers; admin only controls these settings. */
 export type LessonInput = {
-  description: string;
   displayOrder: number;
   isActive: boolean;
-  signs: Array<Omit<AdminSign, "label">>;
 };
 
 export function getAdminOverview(signal?: AbortSignal) {

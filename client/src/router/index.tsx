@@ -24,6 +24,7 @@ import SettingsPage from "@/pages/student/SettingsPage";
 
 import TeacherDashboardPage from "@/pages/teacher/TeacherDashboardPage";
 import LessonsPage from "@/pages/teacher/LessonsPage";
+import LessonEditorPage from "@/pages/teacher/LessonEditorPage";
 import QuizzesPage from "@/pages/teacher/QuizzesPage";
 import QuizEditorPage from "@/pages/teacher/QuizEditorPage";
 import StudentsPage from "@/pages/teacher/StudentsPage";
@@ -148,6 +149,10 @@ export const router = createBrowserRouter([
           {
             path: "/teacher/lessons",
             element: <LessonsPage />,
+          },
+          {
+            path: "/teacher/lessons/:categoryId",
+            element: <LessonEditorPage />,
           },
           {
             path: "/teacher/quizzes",

@@ -98,6 +98,13 @@ mounted in `src/app.ts` at `/api/<feature>`; `src/index.ts` only starts the serv
   target gesture and come from the category's gestures. Once an assessment has any
   attempts it is "locked": only question text can change — gestures, choices, points,
   type and the passing score are frozen (409 otherwise).
+- **Teachers own lesson content, admins own lesson settings**: teachers edit the
+  description, each sign's `meaning` and `exampleUsage`, and reference media
+  (`services/teacher-lesson.service.ts`); admins only change order and active state
+  (`services/admin-content.service.ts`). `meaning` and media live on `FslGesture`, so
+  edits reach every lesson using that sign; `exampleUsage` belongs to one lesson. The
+  list of signs stays fixed, since a new sign needs a trained model. Empty text shows
+  placeholders from `client/src/lib/lesson-text.ts`.
 - **Question media comes from the gesture, not the question**: `IMAGE_GESTURE`
   ("Pick the sign") shows choice gestures' `referenceImageUrl`s; `VIDEO_GESTURE`
   ("Name the sign") plays the target gesture's `referenceVideoUrl`, so the server

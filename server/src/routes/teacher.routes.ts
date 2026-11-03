@@ -8,11 +8,13 @@ import {
   getCategoryGestures,
   getDashboard,
   getLearnerDetail,
+  getLesson,
   listAssessments,
   listLearners,
   resetLearnerPassword,
   saveAssessment,
   setLearnerStatus,
+  updateLesson,
   updateQuestion,
 } from "../controllers/teacher.controller.js";
 import { authMiddleware } from "../middleware/authMiddleware.js";
@@ -41,6 +43,10 @@ teacherRouter.delete(
   "/categories/:categoryId/assessment/questions/:questionId",
   deleteQuestion,
 );
+
+// Lesson content: which signs a lesson has stays fixed
+teacherRouter.get("/lessons/:categoryId", getLesson);
+teacherRouter.patch("/lessons/:categoryId", updateLesson);
 
 // Learner progress
 teacherRouter.get("/learners", listLearners);

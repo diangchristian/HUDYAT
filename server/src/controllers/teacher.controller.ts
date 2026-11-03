@@ -1,6 +1,7 @@
 import { type Request } from "express";
 import * as accountService from "../services/account.service.js";
 import * as teacherAssessmentService from "../services/teacher-assessment.service.js";
+import * as teacherLessonService from "../services/teacher-lesson.service.js";
 import * as teacherProgressService from "../services/teacher-progress.service.js";
 import { serviceEndpoint } from "../utils/serviceEndpoint.js";
 
@@ -70,6 +71,17 @@ export const getLearnerDetail = serviceEndpoint(
   (req) =>
     teacherProgressService.getLearnerDetail(req.params.learnerId as string),
   "Unable to load this learner.",
+);
+
+export const getLesson = serviceEndpoint(
+  (req) => teacherLessonService.getLesson(categoryId(req)),
+  "Unable to load this lesson.",
+);
+
+export const updateLesson = serviceEndpoint(
+  (req) =>
+    teacherLessonService.updateLesson(req.user!.id, categoryId(req), req.body),
+  "Unable to save this lesson.",
 );
 
 export const createLearner = serviceEndpoint(

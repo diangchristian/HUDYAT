@@ -73,47 +73,30 @@ const listArea = async (areaId: string) => {
   return data.find((area: { id: string }) => area.id === areaId);
 };
 
-test("lessons are listed by learning area, including inactive ones and their signs", async () => {
-  const { area, first, second, sign } = await createArea();
+test("lessons are listed by learning area, including inactive ones, with a sign count but no media", async () => {
+  const { area, first, second } = await createArea();
   await prisma.category.update({ where: { id: second.id }, data: { isActive: false } });
 
   const listed = await listArea(area.id);
 
   assert.deepEqual(
-    listed.lessons.map((lesson: { id: string; isActive: boolean }) => [lesson.id, lesson.isActive]),
-    [[first.id, true], [second.id, false]],
+    listed.lessons.map((lesson: { id: string; isActive: boolean; signCount: number }) => [
+      lesson.id,
+      lesson.isActive,
+      lesson.signCount,
+    ]),
+    [[first.id, true, 1], [second.id, false, 0]],
   );
-  assert.deepEqual(listed.lessons[0].signs, [
-    {
-      id: sign.id,
-      label: sign.label,
-      referenceImageUrl: "/signs/original.png",
-      referenceVideoUrl: "/signs/original.mp4",
-    },
-  ]);
+  assert.equal("signs" in listed.lessons[0], false);
 });
 
-test("an admin edits a lesson's details and sign media, and it's logged", async () => {
-  const { area, first, sign } = await createArea();
+test("an admin changes whether a lesson is active, and it's logged", async () => {
+  const { area, first } = await createArea();
 
-  const saved = await patchLesson(first.id, {
-    description: "Updated",
-    isActive: false,
-    signs: [
-      {
-        id: sign.id,
-        referenceImageUrl: "https://example.com/new.png",
-        referenceVideoUrl: "",
-      },
-    ],
-  });
+  const saved = await patchLesson(first.id, { isActive: false });
   assert.equal(saved.status, 200);
 
-  const lesson = (await listArea(area.id)).lessons[0];
-  assert.equal(lesson.description, "Updated");
-  assert.equal(lesson.isActive, false);
-  assert.equal(lesson.signs[0].referenceImageUrl, "https://example.com/new.png");
-  assert.equal(lesson.signs[0].referenceVideoUrl, null);
+  assert.equal((await listArea(area.id)).lessons[0].isActive, false);
 
   const { data } = await ctx.request("GET", "/api/admin/activity?action=LESSON_EDITED", {
     token: adminToken,
@@ -214,111 +197,30 @@ test("a learner can't open or submit a deactivated lesson, even by direct link",
   );
 });
 
-test("invalid lesson edits are rejected and change nothing", async () => {
-  const { area, first, sign } = await createArea();
-  const otherSign = await createSign("other");
+test("invalid lesson settings are rejected", async () => {
+  const { first } = await createArea();
 
-  const unsafeMedia = {
-    signs: [{ id: sign.id, referenceImageUrl: "javascript:alert(1)", referenceVideoUrl: null }],
-  };
-  assert.equal((await patchLesson(first.id, unsafeMedia)).status, 400);
   assert.equal((await patchLesson(first.id, { displayOrder: 0 })).status, 400);
   assert.equal((await patchLesson(first.id, { displayOrder: 1.5 })).status, 400);
-
-  const notInLesson = {
-    description: "Should not save",
-    signs: [{ id: otherSign.id, referenceImageUrl: "/a.png", referenceVideoUrl: "/a.mp4" }],
-  };
-  assert.equal((await patchLesson(first.id, notInLesson)).status, 404);
-
   assert.equal((await patchLesson("no-such-lesson", { isActive: true })).status, 404);
-
-  const lesson = (await listArea(area.id)).lessons[0];
-  assert.equal(lesson.description, "Original");
-  assert.equal(lesson.signs[0].referenceImageUrl, "/signs/original.png");
 });
 
-test("media a quiz question needs can't be cleared", async () => {
-  const { first, sign } = await createArea();
-  await prisma.assessment.create({
-    data: {
-      categoryId: first.id,
-      createdBy: teacherId,
-      title: "Quiz",
-      passingScore: 70,
-      questions: {
-        create: [
-          {
-            gestureId: sign.id,
-            questionNumber: 1,
-            questionText: "Name the sign",
-            questionType: "VIDEO_GESTURE",
-            choices: { create: { gestureId: sign.id, displayOrder: 1 } },
-          },
-          {
-            gestureId: sign.id,
-            questionNumber: 2,
-            questionText: "Pick the sign",
-            questionType: "IMAGE_GESTURE",
-            choices: { create: { gestureId: sign.id, displayOrder: 1 } },
-          },
-        ],
-      },
-    },
-  });
-
-  const clearing = (changes: object) => ({
-    signs: [
-      {
-        id: sign.id,
-        referenceImageUrl: "/signs/original.png",
-        referenceVideoUrl: "/signs/original.mp4",
-        ...changes,
-      },
-    ],
-  });
-
-  assert.equal((await patchLesson(first.id, clearing({ referenceVideoUrl: "" }))).status, 409);
-  assert.equal((await patchLesson(first.id, clearing({ referenceImageUrl: null }))).status, 409);
-  assert.equal(
-    (await patchLesson(first.id, clearing({ referenceVideoUrl: "/signs/replaced.mp4" }))).status,
-    200,
-  );
-});
-
-test("media that was already missing doesn't block unrelated lesson edits", async () => {
+test("lesson content belongs to teachers, so an admin can't change it", async () => {
   const { area, first, sign } = await createArea();
-  await prisma.fslGesture.update({
-    where: { id: sign.id },
-    data: { referenceImageUrl: null },
-  });
-  await prisma.assessment.create({
-    data: {
-      categoryId: first.id,
-      createdBy: teacherId,
-      title: "Quiz",
-      passingScore: 70,
-      questions: {
-        create: {
-          gestureId: sign.id,
-          questionNumber: 1,
-          questionText: "Pick the sign",
-          questionType: "IMAGE_GESTURE",
-          choices: { create: { gestureId: sign.id, displayOrder: 1 } },
-        },
-      },
+
+  const contentEdits = [
+    { description: "From admin" },
+    {
+      signs: [
+        { id: sign.id, referenceImageUrl: "/admin.png", referenceVideoUrl: "/admin.mp4" },
+      ],
     },
-  });
+  ];
 
-  const saved = await patchLesson(first.id, {
-    description: "Edited anyway",
-    signs: [
-      { id: sign.id, referenceImageUrl: "", referenceVideoUrl: "/signs/original.mp4" },
-    ],
-  });
-
-  assert.equal(saved.status, 200);
-  assert.equal((await listArea(area.id)).lessons[0].description, "Edited anyway");
+  for (const body of contentEdits) {
+    assert.equal((await patchLesson(first.id, body)).status, 400);
+  }
+  assert.equal((await listArea(area.id)).lessons[0].description, "Original");
 });
 
 test("only admins can edit lessons or see the overview", async () => {

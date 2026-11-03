@@ -148,6 +148,28 @@ export type LearnerDetail = {
   };
 };
 
+export type EditableSign = {
+  id: string;
+  label: string;
+  meaning: string | null;
+  exampleUsage: string | null;
+  referenceImageUrl: string | null;
+  referenceVideoUrl: string | null;
+};
+
+export type EditableLesson = {
+  id: string;
+  name: string;
+  description: string | null;
+  areaName: string;
+  signs: EditableSign[];
+};
+
+export type LessonContentInput = {
+  description: string;
+  signs: Array<Omit<EditableSign, "label">>;
+};
+
 const assessmentPath = (categoryId: string) =>
   `/api/teacher/categories/${categoryId}/assessment`;
 
@@ -203,6 +225,21 @@ export function deleteQuestion(categoryId: string, questionId: string) {
 
 export function getLearners(signal?: AbortSignal) {
   return unwrap<LearnerSummary[]>(api.get("/api/teacher/learners", { signal }));
+}
+
+export function getTeacherLesson(categoryId: string, signal?: AbortSignal) {
+  return unwrap<EditableLesson>(
+    api.get(`/api/teacher/lessons/${categoryId}`, { signal }),
+  );
+}
+
+export function updateTeacherLesson(
+  categoryId: string,
+  data: LessonContentInput,
+) {
+  return unwrap<EditableLesson>(
+    api.patch(`/api/teacher/lessons/${categoryId}`, data),
+  );
 }
 
 export function createLearner(data: {
