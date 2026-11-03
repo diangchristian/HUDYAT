@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Lightbulb, Sparkles, X } from "lucide-react";
 import { useNavigate, useParams } from "react-router";
 
+import { FeedbackBanner, FeedbackOverlay, ResultProgress } from "@/components/common/assessment-feedback";
 import VideoQuestion from "@/components/common/video-question";
 import HandSignQuestion from "@/components/common/hand-sign-question";
 import ElevatedButton from "@/components/ui/elavated-button";
@@ -15,6 +16,8 @@ import { useSubmitAssessment } from "@/hooks/use-submit-assessment";
 const TakeAssessmentPage = () => {
   const navigate = useNavigate();
   const { categoryId } = useParams();
+
+  const [results, setResults] = useState<boolean[]>([]);
 
   const correctSound = useRef<HTMLAudioElement | null>(null);
   const wrongSound = useRef<HTMLAudioElement | null>(null);
@@ -208,6 +211,7 @@ const TakeAssessmentPage = () => {
 
         setCorrectChoiceId(checkResult.correctChoiceId);
         setChecked(true);
+        setResults((list) => [...list.slice(0, questionNumber - 1), checkResult.isCorrect]);
 
         const sound = checkResult.isCorrect
           ? correctSound
@@ -276,6 +280,10 @@ const TakeAssessmentPage = () => {
     setCorrectChoiceId(null);
   };
 
+  const lastResult = checked ? results[questionNumber - 1] : undefined;
+  const correctOption = choiceOptions.find((option) => option.id === correctChoiceId);
+  const showFeedback = lastResult !== undefined;
+
   return (
     <div className="flex h-dvh max-h-dvh w-full flex-col overflow-hidden bg-background px-4 py-6 sm:px-6">
       {/* HEADER */}
@@ -312,27 +320,15 @@ const TakeAssessmentPage = () => {
           </span>
         </div>
 
-        <div
-          className="mt-2 h-2 overflow-hidden rounded-full bg-muted"
-          role="progressbar"
-          aria-valuenow={questionNumber}
-          aria-valuemin={1}
-          aria-valuemax={totalQuestions}
-        >
-          <div
-            className="h-full rounded-full bg-hudyat-gold transition-all"
-            style={{
-              width: `${
-                (questionNumber / totalQuestions) * 100
-              }%`,
-            }}
-          />
-        </div>
+        <ResultProgress results={results} current={questionNumber} total={totalQuestions} />
       </div>
 
       {/* QUESTION */}
-      <main className="mx-auto mt-[clamp(1rem,4vh,2rem)] flex w-full min-h-0 max-w-5xl flex-1 flex-col">
-        <div className="flex h-full min-h-0 w-full flex-col overflow-y-auto rounded-3xl border bg-card p-[clamp(0.875rem,3vh,2rem)] shadow-sm">
+      <main className="relative mx-auto mt-[clamp(1rem,4vh,2rem)] flex w-full min-h-0 max-w-5xl flex-1 flex-col">
+        {showFeedback && (
+          <FeedbackOverlay key={questionNumber} isCorrect={lastResult} correctAnswer={correctOption} streak={results.length - 1 - results.lastIndexOf(false)} />
+        )}
+        <div className={`flex h-full min-h-0 w-full flex-col overflow-y-auto rounded-3xl border bg-card p-[clamp(0.875rem,3vh,2rem)] shadow-sm ${showFeedback ? (lastResult ? "border-4 border-green-600" : "border-4 border-[#d95849]") : ""}`}>
           <div className="flex shrink-0 items-center gap-2 text-sm font-bold text-hudyat-gold">
             <Sparkles className="h-4 w-4" />
             <span>
@@ -345,6 +341,9 @@ const TakeAssessmentPage = () => {
           </h2>
 
           {/* HINT */}
+          {showFeedback ? (
+            <FeedbackBanner isCorrect={lastResult} correctAnswer={correctOption} />
+          ) : (
           <div className="mx-auto mt-[clamp(0.5rem,1.5vh,1.5rem)] flex w-full max-w-2xl shrink-0 items-start gap-3 rounded-2xl bg-muted p-[clamp(0.5rem,1.5vh,1rem)]">
             <Lightbulb className="mt-0.5 h-5 w-5 shrink-0 text-hudyat-gold" />
 
@@ -352,9 +351,11 @@ const TakeAssessmentPage = () => {
               Choose the sign that matches the question.
             </p>
           </div>
+          )}
 
           {/* QUESTION MEDIA + ANSWERS */}
-          <div className="mx-auto mt-[clamp(0.75rem,2vh,2rem)] flex w-full min-h-0 max-w-2xl flex-1 flex-col">
+          {/* The arbitrary variants enlarge the shared components' check/X badges and borders without forking them. */}
+          <div className={`mx-auto mt-[clamp(0.75rem,2vh,2rem)] flex w-full min-h-0 max-w-2xl flex-1 flex-col ${showFeedback ? "[&_button]:border-4 [&_button>svg]:size-9!" : ""}`}>
             {isVideoQuestion ? (
               <VideoQuestion
                 videoUrl={
