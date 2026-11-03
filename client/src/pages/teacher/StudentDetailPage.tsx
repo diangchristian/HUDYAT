@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link, useParams } from "react-router";
 import {
   ArrowLeft,
@@ -6,10 +7,14 @@ import {
   Circle,
   FileQuestion,
   Hand,
+  KeyRound,
   PlayCircle,
+  Power,
   XCircle,
 } from "lucide-react";
 
+import { AccountStatusDialog } from "@/components/staff/account-status";
+import ResetStudentPasswordDialog from "@/components/staff/reset-student-password-dialog";
 import QueryState from "@/components/staff/query-state";
 import { ProfileHeaderSkeleton, StatGridSkeleton, TableSkeleton } from "@/components/staff/skeletons";
 import InitialsAvatar from "@/components/staff/initials-avatar";
@@ -22,6 +27,7 @@ import {
 import ProgressBar from "@/components/staff/progress-bar";
 import StatCard from "@/components/staff/stat-card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -34,6 +40,7 @@ import { formatDate } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import type { ProgressCategory } from "@/api/progress-api";
 import { useLearnerDetail } from "@/hooks/use-learner-detail";
+import { useSetLearnerStatus } from "@/hooks/use-set-learner-status";
 
 const STATUS_PRESENTATION: Record<
   ProgressCategory["status"],
@@ -59,6 +66,29 @@ const STATUS_PRESENTATION: Record<
 export default function StudentDetailPage() {
   const { learnerId } = useParams();
   const { data, isLoading, error, refetch } = useLearnerDetail(learnerId);
+  const setStatus = useSetLearnerStatus();
+  const [resetOpen, setResetOpen] = useState(false);
+  const [statusOpen, setStatusOpen] = useState(false);
+  const [notice, setNotice] = useState("");
+
+  const closeStatus = () => {
+    setStatus.reset();
+    setStatusOpen(false);
+  };
+
+  const confirmStatus = () => {
+    if (!data) return;
+    const { id, fullName, isActive } = data.learner;
+    setStatus.mutate(
+      { id, isActive: !isActive },
+      {
+        onSuccess: () => {
+          setNotice(`${isActive ? "Deactivated" : "Reactivated"} ${fullName}.`);
+          closeStatus();
+        },
+      },
+    );
+  };
 
   return (
     <div className="space-y-6">
@@ -93,7 +123,7 @@ export default function StudentDetailPage() {
               avatarKey={data.learner.avatarKey}
               className="size-16 text-2xl"
             />
-            <div className="min-w-0">
+            <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-center gap-2">
                 <h1 className="text-2xl font-bold text-foreground sm:text-3xl">
                   {data.learner.fullName}
@@ -108,7 +138,49 @@ export default function StudentDetailPage() {
                 {formatDate(data.learner.dateJoined)}
               </p>
             </div>
+            <div className="flex shrink-0 flex-wrap gap-2">
+              <Button
+                variant="outline"
+                className="rounded-full"
+                onClick={() => setResetOpen(true)}
+              >
+                <KeyRound aria-hidden="true" />
+                Reset password
+              </Button>
+              <Button
+                variant="outline"
+                className={
+                  data.learner.isActive
+                    ? "rounded-full text-red-700"
+                    : "rounded-full"
+                }
+                onClick={() => setStatusOpen(true)}
+              >
+                <Power aria-hidden="true" />
+                {data.learner.isActive ? "Deactivate" : "Reactivate"}
+              </Button>
+            </div>
           </StaffCard>
+
+          <p role="status" className="text-sm font-bold text-emerald-700 empty:hidden">
+            {notice}
+          </p>
+
+          <ResetStudentPasswordDialog
+            learner={data.learner}
+            open={resetOpen}
+            onOpenChange={setResetOpen}
+            onReset={() =>
+              setNotice(`Reset the password for ${data.learner.fullName}.`)
+            }
+          />
+          <AccountStatusDialog
+            account={statusOpen ? data.learner : null}
+            isPending={setStatus.isPending}
+            error={setStatus.error}
+            onCancel={closeStatus}
+            onConfirm={confirmStatus}
+          />
 
           <section aria-label="Summary" className="grid gap-4 sm:grid-cols-3">
             <StatCard

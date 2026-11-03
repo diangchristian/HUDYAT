@@ -34,7 +34,7 @@
 
   --student-primary: var(--hudyat-gold);
   --teacher-primary: var(--hudyat-blue);
-  --admin-primary: var(--hudyat-blue);
+  --admin-primary: #1E3A5F;
 
   /* Staff (teacher/admin) portal accents */
   --staff-brand: #005EA4;
@@ -151,6 +151,7 @@
   --input: #DDE3E8;
   --ring: var(--staff-nav-active);
 
+  --sidebar-foreground: rgb(25 28 30 / 0.8);
   --sidebar-primary: var(--staff-nav-active);
   --sidebar-primary-foreground: #FFFFFF;
   --sidebar-accent: #E6F1FA;
@@ -158,8 +159,40 @@
   --sidebar-border: #ECEFF1;
   --sidebar-ring: var(--staff-nav-active);
 
+  --staff-logo: var(--staff-brand);
+  --staff-logo-text: var(--staff-brand);
+  --staff-logo-subtitle: var(--muted-foreground);
+
   --shadow-card: 0 4px 6px rgb(0 0 0 / 0.06);
   --shadow-card-hover: 0 8px 16px rgb(0 0 0 / 0.08);
+}
+
+
+/* ========================================
+   ADMIN THEME
+   Layered on .theme-staff. Admin actions
+   affect every account, so the navy theme
+   and dark sidebar make the portal easy to
+   tell apart from the teacher one.
+   ======================================== */
+
+.theme-admin {
+  --staff-brand: var(--admin-primary);
+  --staff-nav-active: var(--admin-primary);
+
+  --accent: #E8EDF4;
+
+  --sidebar: #14283F;
+  --sidebar-foreground: #FFFFFF;
+  --sidebar-primary: var(--hudyat-blue);
+  --sidebar-accent: #21405F;
+  --sidebar-accent-foreground: #FFFFFF;
+  --sidebar-border: #21405F;
+  --sidebar-ring: #7DB9E8;
+
+  --staff-logo: var(--hudyat-blue);
+  --staff-logo-text: #FFFFFF;
+  --staff-logo-subtitle: #B8C7D9;
 }
 
 

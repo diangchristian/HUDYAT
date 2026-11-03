@@ -1,6 +1,7 @@
 import { Router } from "express";
 
 import {
+  createLearner,
   createQuestion,
   deleteQuestion,
   getAssessment,
@@ -9,7 +10,9 @@ import {
   getLearnerDetail,
   listAssessments,
   listLearners,
+  resetLearnerPassword,
   saveAssessment,
+  setLearnerStatus,
   updateQuestion,
 } from "../controllers/teacher.controller.js";
 import { authMiddleware } from "../middleware/authMiddleware.js";
@@ -42,5 +45,10 @@ teacherRouter.delete(
 // Learner progress
 teacherRouter.get("/learners", listLearners);
 teacherRouter.get("/learners/:learnerId", getLearnerDetail);
+
+// Learner accounts
+teacherRouter.post("/learners", createLearner);
+teacherRouter.post("/learners/:learnerId/reset-password", resetLearnerPassword);
+teacherRouter.patch("/learners/:learnerId/status", setLearnerStatus);
 
 export default teacherRouter;

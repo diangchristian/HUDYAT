@@ -36,15 +36,19 @@ teachers author assessments and monitor learner progress.
 - `npm run dev` — `tsx watch src/index.ts` (default port 5001, or `PORT` env var)
 - `npm run build` — `tsc` to `dist/`
 - `npm start` — run built `dist/index.js`
-- `npm test` is a stub that exits 1 — **no real test suite exists on the server either.**
+- `npm test` — `node:test` suites in `tests/*.test.ts` that send real HTTP requests
+  to the Express app (`src/app.ts`). They run against the database in `DATABASE_URL`,
+  so they only create and clean up records named with a `zztest_<file>_` prefix.
+  Only the admin and account workflows are covered so far.
 - No lint script / ESLint config on the server.
 - Seed scripts (run after migrating): `npm run seed:learning-areas`,
-  `seed:categories`, `seed:fsl-gestures`, `seed:test-teacher`, `seed:assessments`
-  (each runs a `prisma/seeder/*.ts` file via `tsx`). `seed:assessments` attributes
-  assessments to the test teacher, so run `seed:test-teacher` first. Test accounts
-  (`testteacher@hudyat.local` / `testlearner@hudyat.local`, password `Test1234!`)
-  come from `testTeacherSeeder.ts` / `testLearnerSeeder.ts`; the learner one has no
-  npm script — run it with `npx tsx prisma/seeder/testLearnerSeeder.ts`.
+  `seed:categories`, `seed:fsl-gestures`, `seed:test-teacher`, `seed:test-admin`,
+  `seed:assessments` (each runs a `prisma/seeder/*.ts` file via `tsx`).
+  `seed:assessments` attributes assessments to the test teacher, so run
+  `seed:test-teacher` first. Test accounts (`testteacher@hudyat.local` /
+  `testlearner@hudyat.local` / `testadmin@hudyat.local`, password `Test1234!`) come
+  from the `test*Seeder.ts` files; the learner one has no npm script — run it with
+  `npx tsx prisma/seeder/testLearnerSeeder.ts`.
 - Prisma CLI is invoked directly (no package.json wrapper scripts): `npx prisma
   migrate dev`, `npx prisma generate`. Config is in `prisma7.config.ts`, schema in
   `prisma/schema.prisma`.
@@ -60,8 +64,8 @@ terminals.
 
 Layered Express app, one feature slice per domain area, mirrored across
 `routes/`, `controllers/`, and (for the more complex features) `services/`:
-auth, learning, categories, assessment, progress, teacher. Each router is mounted in
-`src/index.ts` at `/api/<feature>`.
+auth, learning, categories, assessment, progress, teacher, admin. Each router is
+mounted in `src/app.ts` at `/api/<feature>`; `src/index.ts` only starts the server.
 
 - **Prisma client is generated to a custom path**: `src/generated/prisma` (not the
   default `node_modules/.prisma` location), configured via the custom generator in
@@ -74,12 +78,20 @@ auth, learning, categories, assessment, progress, teacher. Each router is mounte
   `src/utils/generateToken.ts`. Routers opt into protection per-router, not
   globally, with `.use(authMiddleware, requireRole(...))`
   (`src/middleware/requireRole.ts`): learning/assessment/progress are
-  `LEARNER`-only, `/api/teacher/*` is `TEACHER`-only.
+  `LEARNER`-only, `/api/teacher/*` is `TEACHER`-only, `/api/admin/*` is `ADMIN`-only.
+  The middleware also rejects deactivated users on every request, and blocks users
+  with `mustChangePassword` from everything except `/me` and `/change-password`.
 - **Roles share one auth system, with separate login portals**: one `users` table,
-  one JWT, one `GET/PATCH /api/auth/me`. `POST /api/auth/login` only accepts
-  learners and `POST /api/auth/teacher/login` only accepts teachers (both go through
+  one JWT, one `GET/PATCH /api/auth/me`. `POST /api/auth/login`,
+  `/teacher/login` and `/admin/login` each accept only their own role (all go through
   `authenticate()` in `auth.controller.ts`). `PATCH /me` updates `LearnerProfile` or
   `TeacherProfile` depending on role.
+- **Accounts are issued, not self-registered**: there is no public registration.
+  Admins create teachers (temporary password, must be changed at next login) and
+  teachers create learners (teacher-set password, no forced change, no email). Admins
+  and teachers deactivate rather than delete, since deleting cascades to a learner's
+  history. Changes go through `services/account.service.ts`, which writes an
+  `AuditLog` entry in the same transaction (`services/audit.service.ts`).
 - **Assessment correctness has no `isCorrect` flag**: the correct `QuestionChoice`
   is the one whose `gestureId` equals the question's `gestureId`. Teacher authoring
   (`services/teacher-assessment.service.ts`) enforces that the choices include the
@@ -135,6 +147,8 @@ auth, learning, categories, assessment, progress, teacher. Each router is mounte
   Staff typography is Manrope (`font-staff`, self-hosted via
   `@fontsource-variable/manrope`); only the HUDYAT wordmark/"H" badge keep Nunito
   (`font-body`) to match the student brand. Don't add `font-body` to staff UI.
+  Admin shares this system, with `.theme-admin` layered on top (navy plus a dark
+  sidebar) so the portal is easy to tell apart from teacher.
 - When adding shadcn components (`npx shadcn@latest add ...`), check the generated
   imports: the CLI has resolved `cn` to the unrelated npm package `"cn"` instead of
   `@/lib/utils` — fix the imports and don't keep that dependency. Decline overwriting
@@ -147,7 +161,7 @@ auth, learning, categories, assessment, progress, teacher. Each router is mounte
   `import.meta.env.VITE_API_URL`, falling back to same-origin `/api` via the Vite proxy; attaches
   `Authorization: Bearer <token>` from `localStorage`) and unwrap `{ data: T }`
   responses with `unwrap()`. A 401 clears the token and redirects to `/login`, or
-  `/teacher/login` when on a `/teacher/*` page. `VITE_API_URL` isn't documented
+  `/teacher/login` / `/admin/login` on those portals' pages. `VITE_API_URL` isn't documented
   anywhere (no client `.env.example`).
 - Data fetching uses `@tanstack/react-query` via one-hook-per-file wrappers in
   `src/hooks/` (e.g. `use-my-progress.ts`, `use-teacher-assessment.ts`).
@@ -158,7 +172,9 @@ auth, learning, categories, assessment, progress, teacher. Each router is mounte
 - Role areas: student pages under `src/pages/student/` (`/student/*`), teacher pages
   under `src/pages/teacher/` (`/teacher/dashboard`, `lessons`, `quizzes`,
   `quizzes/:categoryId`, `students`, `students/:learnerId`, `settings`; login at
-  `/teacher/login`). The UI says "Lessons"/"Quizzes"/"Students" for what the backend
+  `/teacher/login`), admin pages under `src/pages/admin/` (`/admin/overview`,
+  `teachers`, `learners`, `lessons`, `activity`, `settings`; login at `/admin/login`).
+  The UI says "Lessons"/"Quizzes"/"Students" for what the backend
   calls categories/assessments/learners. Login forms send `identifier` (username or
   email) — the server accepts either.
 - `src/features/*` are mostly **empty scaffold directories** (only

@@ -205,6 +205,28 @@ export function getLearners(signal?: AbortSignal) {
   return unwrap<LearnerSummary[]>(api.get("/api/teacher/learners", { signal }));
 }
 
+export function createLearner(data: {
+  fullName: string;
+  username: string;
+  password: string;
+}) {
+  return unwrap<{ id: string; fullName: string; username: string }>(
+    api.post("/api/teacher/learners", data),
+  );
+}
+
+export function resetLearnerPassword(learnerId: string, password: string) {
+  return unwrap<{ id: string }>(
+    api.post(`/api/teacher/learners/${learnerId}/reset-password`, { password }),
+  );
+}
+
+export function setLearnerStatus(learnerId: string, isActive: boolean) {
+  return unwrap<{ id: string; isActive: boolean }>(
+    api.patch(`/api/teacher/learners/${learnerId}/status`, { isActive }),
+  );
+}
+
 export function getLearnerDetail(learnerId: string, signal?: AbortSignal) {
   return unwrap<LearnerDetail>(
     api.get(`/api/teacher/learners/${learnerId}`, { signal }),

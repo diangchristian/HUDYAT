@@ -1,35 +1,8 @@
-import { type Request, type Response } from "express";
+import { type Request } from "express";
+import * as accountService from "../services/account.service.js";
 import * as teacherAssessmentService from "../services/teacher-assessment.service.js";
 import * as teacherProgressService from "../services/teacher-progress.service.js";
-
-/*
- * Every teacher endpoint has the same shape: run a service call,
- * wrap the result as `{ success, data }`, and translate thrown
- * `statusCode` errors (see the services) into responses.
- */
-const serviceEndpoint =
-  (
-    run: (req: Request) => Promise<unknown>,
-    fallbackMessage: string,
-  ) =>
-  async (req: Request, res: Response) => {
-    try {
-      const data = await run(req);
-      return res.status(200).json({ success: true, data });
-    } catch (error) {
-      const statusCode = (error as { statusCode?: number })?.statusCode;
-
-      if (!statusCode) {
-        console.error(error);
-      }
-
-      return res.status(statusCode ?? 500).json({
-        success: false,
-        message:
-          statusCode && error instanceof Error ? error.message : fallbackMessage,
-      });
-    }
-  };
+import { serviceEndpoint } from "../utils/serviceEndpoint.js";
 
 const categoryId = (req: Request) => req.params.categoryId as string;
 
@@ -97,4 +70,30 @@ export const getLearnerDetail = serviceEndpoint(
   (req) =>
     teacherProgressService.getLearnerDetail(req.params.learnerId as string),
   "Unable to load this learner.",
+);
+
+export const createLearner = serviceEndpoint(
+  (req) => accountService.createLearner(req.user!.id, req.body),
+  "Unable to create this student.",
+);
+
+export const resetLearnerPassword = serviceEndpoint(
+  (req) =>
+    accountService.resetLearnerPassword(
+      req.user!.id,
+      req.params.learnerId as string,
+      req.body,
+    ),
+  "Unable to reset this student's password.",
+);
+
+export const setLearnerStatus = serviceEndpoint(
+  (req) =>
+    accountService.setAccountStatus(
+      req.user!.id,
+      "LEARNER",
+      req.params.learnerId as string,
+      req.body,
+    ),
+  "Unable to update this student.",
 );

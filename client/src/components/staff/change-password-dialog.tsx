@@ -16,9 +16,11 @@ import { useChangePassword } from "@/hooks/use-change-password";
 const MIN_PASSWORD_LENGTH = 8;
 
 function PasswordForm({
+  cancelLabel,
   onCancel,
   onSuccess,
 }: {
+  cancelLabel: string;
   onCancel: () => void;
   onSuccess: () => void;
 }) {
@@ -95,7 +97,7 @@ function PasswordForm({
           onClick={onCancel}
           disabled={changePasswordMutation.isPending}
         >
-          Cancel
+          {cancelLabel}
         </Button>
         <Button
           type="submit"
@@ -113,10 +115,15 @@ export default function ChangePasswordDialog({
   open,
   onOpenChange,
   onChanged,
+  description = `Use at least ${MIN_PASSWORD_LENGTH} characters.`,
+  cancelLabel = "Cancel",
 }: {
   open: boolean;
+  /** Cancelling or dismissing. A successful change only calls `onChanged`. */
   onOpenChange: (open: boolean) => void;
   onChanged: () => void;
+  description?: string;
+  cancelLabel?: string;
 }) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -125,19 +132,15 @@ export default function ChangePasswordDialog({
           <DialogTitle className="text-xl font-bold">
             Change password
           </DialogTitle>
-          <DialogDescription>
-            Use at least {MIN_PASSWORD_LENGTH} characters.
-          </DialogDescription>
+          <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
 
         {/* Mounted only while open, so the fields start empty each time. */}
         {open && (
           <PasswordForm
+            cancelLabel={cancelLabel}
             onCancel={() => onOpenChange(false)}
-            onSuccess={() => {
-              onOpenChange(false);
-              onChanged();
-            }}
+            onSuccess={onChanged}
           />
         )}
       </DialogContent>
