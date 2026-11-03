@@ -70,6 +70,30 @@ test("deactivating an account ends its existing session right away", async () =>
   assert.equal((await ctx.request("GET", "/api/auth/me", { token })).status, 401);
 });
 
+test("a temporary password can't be kept by re-entering it as the new one", async () => {
+  const { token } = await logIn("TEACHER", { mustChangePassword: true });
+
+  const reused = await ctx.request("POST", "/api/auth/change-password", {
+    token,
+    body: { currentPassword: PASSWORD, newPassword: PASSWORD },
+  });
+  assert.equal(reused.status, 400);
+
+  const me = await ctx.request("GET", "/api/auth/me", { token });
+  assert.equal(me.data.mustChangePassword, true);
+});
+
+test("a new password is limited to what bcrypt actually uses", async () => {
+  const { token } = await logIn("LEARNER");
+
+  const { status } = await ctx.request("POST", "/api/auth/change-password", {
+    token,
+    body: { currentPassword: PASSWORD, newPassword: "x".repeat(73) },
+  });
+
+  assert.equal(status, 400);
+});
+
 test("a temporary password only allows changing it until it's changed", async () => {
   const { token, response } = await logIn("TEACHER", {
     mustChangePassword: true,

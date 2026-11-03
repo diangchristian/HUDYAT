@@ -55,7 +55,7 @@ teachers author assessments and monitor learner progress.
 - Required env vars (`server/.env`, see `server/.env.example`): `DATABASE_URL`,
   `PORT`, `JWT_SECRET`, `JWT_EXPIRES_IN`, `NODE_ENV`. Also read in code but **not**
   listed in `.env.example`: `JWT_COOKIE_EXPIRES_IN` (`src/config/env.ts`) and
-  `CLIENT_ORIGIN` (`src/index.ts`, used for CORS).
+  `CLIENT_ORIGIN` (`src/app.ts`, used for CORS).
 
 To develop end-to-end, run the client and server dev servers concurrently in two
 terminals.

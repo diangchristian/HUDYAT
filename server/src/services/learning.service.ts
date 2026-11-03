@@ -165,6 +165,7 @@ export const getCategoryLesson = async (
     prisma.category.findUnique({
       where: {
         id: categoryId,
+        isActive: true,
       },
     }),
 
@@ -208,6 +209,10 @@ export const getCategoryLesson = async (
     }),
   ]);
 
+  if (!category) {
+    throw new Error("Category not found.");
+  }
+
   return {
     category,
 
@@ -246,6 +251,7 @@ export const saveLessonCheckpoint = async (
     await prisma.category.findUnique({
       where: {
         id: categoryId,
+        isActive: true,
       },
 
       include: {

@@ -131,6 +131,87 @@ test("moving a lesson onto a taken position swaps the two lessons", async () => 
     lessons.map((lesson: { id: string; displayOrder: number }) => [lesson.id, lesson.displayOrder]),
     [[second.id, 1], [first.id, 2]],
   );
+
+  // Both lessons moved, so both are logged.
+  const { data } = await ctx.request("GET", "/api/admin/activity?action=LESSON_EDITED", {
+    token: adminToken,
+  });
+  const logged = data.entries.slice(0, 2).map((entry: { target: string }) => entry.target);
+  assert.deepEqual(logged.sort(), ["First", "Second"]);
+});
+
+test("a learner can't open or submit a deactivated lesson, even by direct link", async () => {
+  const { first, sign } = await createArea();
+  const learner = await ctx.createUser("LEARNER");
+  const { data: session } = await ctx.request("POST", LOGIN_PATH.LEARNER, {
+    body: { identifier: learner.username, password: PASSWORD },
+  });
+  const token = session.token as string;
+
+  const assessment = await prisma.assessment.create({
+    data: {
+      categoryId: first.id,
+      createdBy: teacherId,
+      title: "Quiz",
+      passingScore: 70,
+      status: "PUBLISHED",
+      questions: {
+        create: {
+          gestureId: sign.id,
+          questionNumber: 1,
+          questionText: "Pick the sign",
+          questionType: "IMAGE_GESTURE",
+          choices: { create: { gestureId: sign.id, displayOrder: 1 } },
+        },
+      },
+    },
+    include: { questions: { include: { choices: true } } },
+  });
+  const question = assessment.questions[0]!;
+  const selectedChoiceId = question.choices[0]!.id;
+  const answer = { questionId: question.id, selectedChoiceId };
+  await prisma.categoryProgress.create({
+    data: {
+      learnerId: learner.id,
+      categoryId: first.id,
+      status: "COMPLETED",
+      lessonCompletedAt: new Date(),
+    },
+  });
+
+  const lessonPath = `/api/learning/categories/${first.id}`;
+  const quizPath = `/api/assessments/categories/${first.id}`;
+  const attempts = () =>
+    Promise.all([
+      ctx.request("GET", lessonPath, { token }),
+      ctx.request("PATCH", `${lessonPath}/checkpoint`, {
+        token,
+        body: { gestureIndex: 0, lessonStep: "meaning" },
+      }),
+      ctx.request("GET", quizPath, { token }),
+      ctx.request("POST", `${quizPath}/questions/${question.id}/check`, {
+        token,
+        body: { selectedChoiceId },
+      }),
+      ctx.request("POST", `${quizPath}/submit`, {
+        token,
+        body: { answers: [answer] },
+      }),
+    ]);
+
+  // Guards the test itself: these all work while the lesson is active.
+  assert.equal((await ctx.request("GET", lessonPath, { token })).status, 200);
+  assert.equal((await ctx.request("GET", quizPath, { token })).status, 200);
+
+  await patchLesson(first.id, { isActive: false });
+
+  for (const response of await attempts()) {
+    assert.ok(response.status >= 400, `got ${response.status}`);
+  }
+  assert.equal(
+    await prisma.assessmentAttempt.count({ where: { assessmentId: assessment.id } }),
+    0,
+  );
 });
 
 test("invalid lesson edits are rejected and change nothing", async () => {
@@ -263,6 +344,7 @@ test("the overview counts accounts and lessons, and works out quiz pass rates", 
   const passing = await ctx.createUser("LEARNER");
   const failing = await ctx.createUser("LEARNER");
   const unfinished = await ctx.createUser("LEARNER");
+  const nearMiss = await ctx.createUser("LEARNER");
   const completedAt = new Date();
   await prisma.assessment.create({
     data: {
@@ -274,6 +356,8 @@ test("the overview counts accounts and lessons, and works out quiz pass rates", 
         create: [
           { learnerId: passing.id, score: 7, totalPoints: 10, completedAt },
           { learnerId: failing.id, score: 6, totalPoints: 10, completedAt },
+          // 69.7% fails a 70% quiz, even though it rounds up to 70.
+          { learnerId: nearMiss.id, score: 23, totalPoints: 33, completedAt },
           { learnerId: unfinished.id, score: 0, totalPoints: 10 },
         ],
       },
@@ -289,8 +373,8 @@ test("the overview counts accounts and lessons, and works out quiz pass rates", 
   });
 
   const now = await totals();
-  assert.equal(now.learners.total - before.learners.total, 4);
-  assert.equal(now.learners.active - before.learners.active, 3);
+  assert.equal(now.learners.total - before.learners.total, 5);
+  assert.equal(now.learners.active - before.learners.active, 4);
   assert.equal(now.teachers.total - before.teachers.total, 1);
   assert.equal(now.deactivatedAccounts - before.deactivatedAccounts, 1);
   assert.equal(now.lessons.total - before.lessons.total, 2);
@@ -298,8 +382,8 @@ test("the overview counts accounts and lessons, and works out quiz pass rates", 
 
   const rate = now.passRates.find((row: { categoryId: string }) => row.categoryId === first.id);
   assert.equal(rate.lesson, "First");
-  assert.equal(rate.attempts, 2);
-  assert.equal(rate.passRate, 50);
+  assert.equal(rate.attempts, 3);
+  assert.equal(rate.passRate, 33);
 
   assert.ok(Array.isArray(now.recentActivity));
 });

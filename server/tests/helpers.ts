@@ -18,6 +18,10 @@ export function testContext(file: string) {
   let counter = 0;
 
   const cleanup = async () => {
+    // Answers block deleting questions, so attempts have to go first.
+    await prisma.assessmentAttempt.deleteMany({
+      where: { learner: { user: { username: { startsWith: prefix } } } },
+    });
     await prisma.learningArea.deleteMany({
       where: { name: { startsWith: prefix } },
     });
@@ -41,9 +45,14 @@ export function testContext(file: string) {
     },
 
     stop: async () => {
-      await cleanup();
-      await new Promise((resolve) => server.close(resolve));
-      await disconnectDB();
+      // A failed cleanup must still fail the run, not leave it hanging open.
+      try {
+        await cleanup();
+      } finally {
+        server.closeAllConnections();
+        await new Promise((resolve) => server.close(resolve));
+        await disconnectDB();
+      }
     },
 
     request: async (

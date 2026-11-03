@@ -154,6 +154,7 @@ export const updateLesson = async (
           where: { id: holder.id },
           data: { displayOrder: lesson.displayOrder },
         });
+        await recordAudit(tx, actorId, "LESSON_EDITED", "CATEGORY", holder.id, holder.name);
       }
     }
 
@@ -200,10 +201,9 @@ const quizPassRates = async () => {
   return assessments
     .filter(({ assessmentAttempts }) => assessmentAttempts.length > 0)
     .map(({ category, passingScore, assessmentAttempts }) => {
-      const passed = assessmentAttempts.filter(
-        ({ score, totalPoints }) =>
-          Math.round((Number(score) / Number(totalPoints)) * 100) >=
-          Number(passingScore),
+      // Same comparison as grading in assessment.service, so the rate matches what learners saw.
+      const passed = assessmentAttempts.filter(({ score, totalPoints }) =>
+        score.div(totalPoints).mul(100).gte(passingScore),
       ).length;
 
       return {

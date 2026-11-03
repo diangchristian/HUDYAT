@@ -43,6 +43,16 @@ api.interceptors.response.use(
       }
     }
 
+    // An admin reset this password mid-session. Reloading refetches the user,
+    // and the route guard then shows the forced password change.
+    if (
+      axios.isAxiosError(error) &&
+      (error.response?.data as { code?: string } | undefined)?.code ===
+        "PASSWORD_CHANGE_REQUIRED"
+    ) {
+      window.location.reload();
+    }
+
     return Promise.reject(error);
   },
 );

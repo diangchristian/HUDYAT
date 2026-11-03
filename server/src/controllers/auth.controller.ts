@@ -286,6 +286,21 @@ export const changePassword = async (req: Request, res: Response) => {
     });
   }
 
+  // bcrypt ignores everything past 72 bytes.
+  if (newPassword.length > 72) {
+    return res.status(400).json({
+      success: false,
+      message: "New password must be 72 characters or fewer.",
+    });
+  }
+
+  if (newPassword === currentPassword) {
+    return res.status(400).json({
+      success: false,
+      message: "New password must be different from your current one.",
+    });
+  }
+
   const isCurrentPasswordValid = await bcrypt.compare(
     currentPassword,
     req.user.password as string,
