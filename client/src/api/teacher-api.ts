@@ -246,9 +246,6 @@ export function updateTeacherLesson(
 
 export type MediaKind = "image" | "video";
 
-/** Lets the lesson form hold Save until every upload has finished. */
-export const MEDIA_UPLOAD_KEY = ["lesson-media-upload"];
-
 /**
  * Sends a file straight to Cloudinary with a permission signed by our server,
  * and returns where learners will load it from.
@@ -270,19 +267,26 @@ export async function uploadLessonMedia(
   }
   form.append("file", file);
 
-  // Plain axios, not `api`: our login token must never be sent to Cloudinary.
-  const { data } = await axios.post<{ secure_url: string }>(uploadUrl, form, {
-    onUploadProgress: ({ progress }) => onProgress(Math.round((progress ?? 0) * 100)),
-  });
+  try {
+    // Plain axios, not `api`: our login token must never be sent to Cloudinary.
+    const { data } = await axios.post<{ secure_url: string }>(uploadUrl, form, {
+      onUploadProgress: ({ progress }) =>
+        onProgress(Math.round((progress ?? 0) * 100)),
+    });
 
-  return {
-    kind,
-    // Changing the extension makes Cloudinary serve MP4, which plays on every browser.
-    url:
-      kind === "video"
-        ? data.secure_url.replace(/\.[^.]+$/, ".mp4")
-        : data.secure_url,
-  };
+    return {
+      kind,
+      // Changing the extension makes Cloudinary serve MP4, which plays on every browser.
+      url:
+        kind === "video"
+          ? data.secure_url.replace(/\.[^.]+$/, ".mp4")
+          : data.secure_url,
+    };
+  } catch (error) {
+    throw new Error("The upload didn't finish. Check your connection and try again.", {
+      cause: error,
+    });
+  }
 }
 
 export function createLearner(data: {

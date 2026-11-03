@@ -55,7 +55,8 @@ teachers author assessments and monitor learner progress.
 - Required env vars (`server/.env`, see `server/.env.example`): `DATABASE_URL`,
   `PORT`, `JWT_SECRET`, `JWT_EXPIRES_IN`, `NODE_ENV`. Also read in code but **not**
   listed in `.env.example`: `JWT_COOKIE_EXPIRES_IN` (`src/config/env.ts`) and
-  `CLIENT_ORIGIN` (`src/app.ts`, used for CORS).
+  `CLIENT_ORIGIN` (`src/app.ts`, used for CORS). Media uploads and the server tests
+  also need `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY` and `CLOUDINARY_API_SECRET`.
 
 To develop end-to-end, run the client and server dev servers concurrently in two
 terminals.
@@ -167,7 +168,8 @@ mounted in `src/app.ts` at `/api/<feature>`; `src/index.ts` only starts the serv
   this is a recent move off of `src/lib/`; `src/lib/` is now for generic utilities
   only (`utils.ts`, `camera-session.ts`, `practice.ts`). Put new backend-communication
   modules in `src/api/`, not `src/lib/`.
-- All `api/*.ts` modules share the axios instance in `src/api/http.ts` (base URL from
+- All `api/*.ts` modules share the axios instance in `src/api/http.ts`, except the
+  direct Cloudinary upload in `teacher-api.ts`, which must not send our token (base URL from
   `import.meta.env.VITE_API_URL`, falling back to same-origin `/api` via the Vite proxy; attaches
   `Authorization: Bearer <token>` from `localStorage`) and unwrap `{ data: T }`
   responses with `unwrap()`. A 401 clears the token and redirects to `/login`, or

@@ -20,8 +20,9 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { MEDIA_UPLOAD_KEY, type EditableLesson } from "@/api/teacher-api";
+import type { EditableLesson } from "@/api/teacher-api";
 import { useTeacherLesson } from "@/hooks/use-teacher-lesson";
+import { lessonMediaUploadKey } from "@/hooks/use-upload-lesson-media";
 import { useUpdateTeacherLesson } from "@/hooks/use-update-teacher-lesson";
 import { plural } from "@/lib/format";
 import { signMeaningText, signWhenToUseText } from "@/lib/lesson-text";
@@ -95,9 +96,11 @@ function TeachingText({
 
 function SignCard({
   sign,
+  isSaving,
   onChange,
 }: {
   sign: DraftSign;
+  isSaving: boolean;
   onChange: (changes: Partial<DraftSign>) => void;
 }) {
   return (
@@ -151,7 +154,7 @@ function SignCard({
               <video
                 src={sign.referenceVideoUrl}
                 controls
-                preload="none"
+                preload="metadata"
                 aria-label={`${sign.label} reference video`}
                 className="max-h-40 max-w-full rounded-lg border border-border"
               />
@@ -171,6 +174,7 @@ function SignCard({
 
         <MediaDropzone
           signLabel={sign.label}
+          disabled={isSaving}
           onUploaded={(kind, url) =>
             onChange(
               kind === "image"
@@ -190,25 +194,27 @@ function SignCard({
 
 function LessonForm({ lesson }: { lesson: EditableLesson }) {
   const updateLesson = useUpdateTeacherLesson(lesson.id);
-  const isUploading = useIsMutating({ mutationKey: MEDIA_UPLOAD_KEY }) > 0;
+  const isUploading = useIsMutating({ mutationKey: lessonMediaUploadKey }) > 0;
   const [draft, setDraft] = useState(() => toDraft(lesson));
   const [saved, setSaved] = useState(() => JSON.stringify(toDraft(lesson)));
   const [justSaved, setJustSaved] = useState(false);
 
   const isDirty = JSON.stringify(draft) !== saved;
+  // An upload in progress hasn't reached the draft yet, but leaving would lose it.
+  const hasUnsavedWork = isDirty || isUploading;
 
   const blocker = useBlocker(
     ({ currentLocation, nextLocation }) =>
-      isDirty && currentLocation.pathname !== nextLocation.pathname,
+      hasUnsavedWork && currentLocation.pathname !== nextLocation.pathname,
   );
 
   // Covers closing the tab or reloading, which the router can't intercept.
   useEffect(() => {
-    if (!isDirty) return;
+    if (!hasUnsavedWork) return;
     const warn = (event: BeforeUnloadEvent) => event.preventDefault();
     window.addEventListener("beforeunload", warn);
     return () => window.removeEventListener("beforeunload", warn);
-  }, [isDirty]);
+  }, [hasUnsavedWork]);
 
   const needingText = draft.signs.filter(
     (sign) => !sign.meaning.trim() || !sign.exampleUsage.trim(),
@@ -286,6 +292,7 @@ function LessonForm({ lesson }: { lesson: EditableLesson }) {
             <SignCard
               key={sign.id}
               sign={sign}
+              isSaving={updateLesson.isPending}
               onChange={(changes) => updateSign(sign.id, changes)}
             />
           ))
@@ -336,7 +343,8 @@ function LessonForm({ lesson }: { lesson: EditableLesson }) {
           <DialogHeader>
             <DialogTitle>Leave without saving?</DialogTitle>
             <DialogDescription>
-              Your changes to this lesson haven't been saved.
+              Your changes to this lesson haven't been saved, including any
+              upload still in progress.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>

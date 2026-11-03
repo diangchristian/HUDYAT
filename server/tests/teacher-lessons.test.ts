@@ -246,6 +246,8 @@ test("media a quiz question needs can't be cleared", async () => {
     signs: [signInput(video.sign.id, { referenceVideoUrl: "" })],
   });
   assert.equal(clearVideo.status, 409);
+  // A lesson can have many signs, so the message says which one to fix.
+  assert.ok(clearVideo.body.message.includes(video.sign.label));
 
   const image = await createLesson();
   await addQuiz(image.lesson.id, image.sign.id, "IMAGE_GESTURE");

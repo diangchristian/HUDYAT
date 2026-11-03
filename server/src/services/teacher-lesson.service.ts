@@ -61,14 +61,17 @@ type SignMedia = {
  */
 const assertMediaStillCoversQuizzes = async (
   sign: SignMedia,
-  current: SignMedia,
+  current: SignMedia & { label: string },
 ) => {
   if (!sign.referenceVideoUrl && current.referenceVideoUrl) {
     const videoQuestions = await prisma.assessmentQuestion.count({
       where: { gestureId: sign.id, questionType: "VIDEO_GESTURE" },
     });
     if (videoQuestions > 0) {
-      throw httpError(409, "A video quiz question uses this sign, so it needs a video.");
+      throw httpError(
+        409,
+        `A video quiz question uses "${current.label}", so it needs a video. Upload a new one instead of removing it.`,
+      );
     }
   }
 
@@ -77,7 +80,10 @@ const assertMediaStillCoversQuizzes = async (
       where: { gestureId: sign.id, question: { questionType: "IMAGE_GESTURE" } },
     });
     if (imageChoices > 0) {
-      throw httpError(409, "An image quiz question uses this sign, so it needs an image.");
+      throw httpError(
+        409,
+        `An image quiz question uses "${current.label}", so it needs an image. Upload a new one instead of removing it.`,
+      );
     }
   }
 };
