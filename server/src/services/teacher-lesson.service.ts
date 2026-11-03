@@ -1,23 +1,27 @@
 import { z } from "zod";
 
+import { cloudinary } from "../config/cloudinary.js";
 import { prisma } from "../config/db.js";
+import { env } from "../config/env.js";
 import { httpError } from "../utils/httpError.js";
 import { parseInput } from "../utils/parseInput.js";
 import { recordAudit } from "./audit.service.js";
 
 const SAVE_TIMEOUT_MS = 20_000;
 
-// Only web or site-relative links, since these end up in the UI's src attributes.
-const SAFE_MEDIA_URL = /^(https?:\/\/|\/(?!\/))/i;
+const UPLOAD_FOLDER = "fsl-pwa/teacher-uploads";
+
+const UPLOAD_FORMATS = {
+  image: "jpg,jpeg,png,webp",
+  video: "mp4,mov,webm",
+};
+
+type MediaKind = keyof typeof UPLOAD_FORMATS;
 
 const mediaUrl = z
   .string()
   .trim()
-  .max(2048, "Media links must be 2048 characters or fewer.")
-  .refine(
-    (url) => url === "" || SAFE_MEDIA_URL.test(url),
-    "Media links must start with https://, http:// or /.",
-  )
+  .max(2048, "That media link is too long.")
   .transform((url) => url || null)
   .nullable();
 
@@ -78,6 +82,45 @@ const assertMediaStillCoversQuizzes = async (
   }
 };
 
+/*
+ * New media must be a file uploaded to our own Cloudinary account. Links
+ * already on a sign can stay, since older media is hosted elsewhere.
+ */
+const assertUploadedMedia = (
+  url: string | null,
+  kind: MediaKind,
+  currentUrl: string | null,
+) => {
+  const ourUploads = `https://res.cloudinary.com/${env.cloudinary.cloudName}/${kind}/upload/`;
+
+  if (url && url !== currentUrl && !url.startsWith(ourUploads)) {
+    throw httpError(400, `Please upload the ${kind} again.`);
+  }
+};
+
+/** Permission for one browser upload, so the file goes straight to Cloudinary. */
+export const signMediaUpload = async (input: unknown) => {
+  const { kind } = parseInput(
+    z.object({ kind: z.enum(["image", "video"], "Choose an image or a video.") }),
+    input,
+  );
+
+  const params = {
+    timestamp: Math.round(Date.now() / 1000),
+    folder: UPLOAD_FOLDER,
+    allowed_formats: UPLOAD_FORMATS[kind],
+  };
+
+  return {
+    uploadUrl: `https://api.cloudinary.com/v1_1/${env.cloudinary.cloudName}/${kind}/upload`,
+    fields: {
+      ...params,
+      api_key: env.cloudinary.apiKey,
+      signature: cloudinary.utils.api_sign_request(params, env.cloudinary.apiSecret),
+    },
+  };
+};
+
 // Inactive lessons are hidden from teachers too, so they read as not found.
 const findLesson = async (categoryId: string) => {
   const lesson = await prisma.category.findUnique({
@@ -126,6 +169,8 @@ export const updateLesson = async (
     if (!current) {
       throw httpError(404, "That sign isn't part of this lesson.");
     }
+    assertUploadedMedia(sign.referenceImageUrl, "image", current.gesture.referenceImageUrl);
+    assertUploadedMedia(sign.referenceVideoUrl, "video", current.gesture.referenceVideoUrl);
     await assertMediaStillCoversQuizzes(sign, current.gesture);
   }
 

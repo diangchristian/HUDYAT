@@ -104,7 +104,10 @@ mounted in `src/app.ts` at `/api/<feature>`; `src/index.ts` only starts the serv
   (`services/admin-content.service.ts`). `meaning` and media live on `FslGesture`, so
   edits reach every lesson using that sign; `exampleUsage` belongs to one lesson. The
   list of signs stays fixed, since a new sign needs a trained model. Empty text shows
-  placeholders from `client/src/lib/lesson-text.ts`.
+  placeholders from `client/src/lib/lesson-text.ts`. Teachers upload media straight
+  from the browser to Cloudinary with a server-signed request; on save, new media must
+  be from our own Cloudinary account (existing links may stay). `seed:fsl-gestures`
+  only fills empty content, so it doesn't overwrite teacher edits.
 - **Question media comes from the gesture, not the question**: `IMAGE_GESTURE`
   ("Pick the sign") shows choice gestures' `referenceImageUrl`s; `VIDEO_GESTURE`
   ("Name the sign") plays the target gesture's `referenceVideoUrl`, so the server

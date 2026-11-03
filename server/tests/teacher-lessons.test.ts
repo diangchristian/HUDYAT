@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { after, before, test } from "node:test";
 
 import { prisma } from "../src/config/db.js";
@@ -92,6 +93,9 @@ const patchLesson = (id: string, body: unknown, token = teacherToken) =>
 const getLesson = (id: string, token = teacherToken) =>
   ctx.request("GET", lessonPath(id), { token });
 
+const uploaded = (kind: "image" | "video", file: string) =>
+  `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/${kind}/upload/v1/fsl-pwa/${file}`;
+
 const signInput = (id: string, changes: object = {}) => ({
   id,
   meaning: "",
@@ -110,8 +114,8 @@ test("a teacher's lesson edits are live for learners straight away", async () =>
       signInput(sign.id, {
         meaning: "A friendly greeting",
         exampleUsage: "When you meet a classmate",
-        referenceImageUrl: "https://example.com/new.png",
-        referenceVideoUrl: "/signs/new.mp4",
+        referenceImageUrl: uploaded("image", "new.png"),
+        referenceVideoUrl: uploaded("video", "new.mp4"),
       }),
     ],
   });
@@ -128,8 +132,8 @@ test("a teacher's lesson edits are live for learners straight away", async () =>
   const taught = data.categoryGestures[0];
   assert.equal(taught.exampleUsage, "When you meet a classmate");
   assert.equal(taught.gesture.meaning, "A friendly greeting");
-  assert.equal(taught.gesture.referenceImageUrl, "https://example.com/new.png");
-  assert.equal(taught.gesture.referenceVideoUrl, "/signs/new.mp4");
+  assert.equal(taught.gesture.referenceImageUrl, uploaded("image", "new.png"));
+  assert.equal(taught.gesture.referenceVideoUrl, uploaded("video", "new.mp4"));
 });
 
 test("a teacher loads a lesson's editable content, with empty text as null", async () => {
@@ -216,6 +220,9 @@ test("invalid edits are rejected and save nothing", async () => {
   const cases: Array<[object, number]> = [
     [{ signs: [signInput(sign.id, { referenceImageUrl: "javascript:alert(1)" })] }, 400],
     [{ signs: [signInput(sign.id, { referenceVideoUrl: "//evil.example/a.mp4" })] }, 400],
+    [{ signs: [signInput(sign.id, { referenceImageUrl: "https://example.com/a.png" })] }, 400],
+    [{ signs: [signInput(sign.id, { referenceImageUrl: "https://res.cloudinary.com/someone-else/image/upload/a.png" })] }, 400],
+    [{ signs: [signInput(sign.id, { referenceImageUrl: uploaded("video", "a.mp4") })] }, 400],
     [{ signs: [signInput(sign.id, { meaning: "x".repeat(501) })] }, 400],
     [{ description: "x".repeat(501) }, 400],
     [{ description: "Should not save", signs: [signInput(otherSign.id)] }, 404],
@@ -248,7 +255,7 @@ test("media a quiz question needs can't be cleared", async () => {
   assert.equal(clearImage.status, 409);
 
   const replaced = await patchLesson(video.lesson.id, {
-    signs: [signInput(video.sign.id, { referenceVideoUrl: "/signs/replaced.mp4" })],
+    signs: [signInput(video.sign.id, { referenceVideoUrl: uploaded("video", "replaced.mp4") })],
   });
   assert.equal(replaced.status, 200);
 });
@@ -267,6 +274,61 @@ test("media that was already missing doesn't block other edits", async () => {
 
   assert.equal(saved.status, 200);
   assert.equal((await getLesson(lesson.id)).data.signs[0].meaning, "Still editable");
+});
+
+test("media already on a sign can stay when a teacher saves other changes", async () => {
+  const { lesson, sign } = await createLesson();
+
+  const saved = await patchLesson(lesson.id, {
+    signs: [signInput(sign.id, { meaning: "Old links are untouched" })],
+  });
+
+  assert.equal(saved.status, 200);
+});
+
+test("a teacher gets a signed upload that Cloudinary can verify, without the secret", async () => {
+  const { status, data, body } = await ctx.request("POST", "/api/teacher/media/signature", {
+    token: teacherToken,
+    body: { kind: "video" },
+  });
+  assert.equal(status, 200);
+  assert.equal(
+    data.uploadUrl,
+    `https://api.cloudinary.com/v1_1/${process.env.CLOUDINARY_CLOUD_NAME}/video/upload`,
+  );
+  assert.equal(data.fields.allowed_formats, "mp4,mov,webm");
+
+  // Cloudinary's documented scheme: sorted params joined with &, then the secret, then SHA-1.
+  const { allowed_formats, folder, timestamp, signature } = data.fields;
+  const expected = createHash("sha1")
+    .update(
+      `allowed_formats=${allowed_formats}&folder=${folder}&timestamp=${timestamp}${process.env.CLOUDINARY_API_SECRET}`,
+    )
+    .digest("hex");
+  assert.equal(signature, expected);
+
+  assert.equal(JSON.stringify(body).includes(process.env.CLOUDINARY_API_SECRET!), false);
+});
+
+test("uploads only allow images and videos, and only teachers can start one", async () => {
+  const path = "/api/teacher/media/signature";
+
+  const image = await ctx.request("POST", path, {
+    token: teacherToken,
+    body: { kind: "image" },
+  });
+  assert.equal(image.data.fields.allowed_formats, "jpg,jpeg,png,webp");
+
+  const raw = await ctx.request("POST", path, {
+    token: teacherToken,
+    body: { kind: "raw" },
+  });
+  assert.equal(raw.status, 400);
+
+  for (const token of [adminToken, learnerToken]) {
+    const refused = await ctx.request("POST", path, { token, body: { kind: "image" } });
+    assert.equal(refused.status, 403);
+  }
 });
 
 test("a teacher can't see or edit a lesson an admin deactivated", async () => {

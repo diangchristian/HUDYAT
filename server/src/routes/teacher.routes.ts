@@ -14,6 +14,7 @@ import {
   resetLearnerPassword,
   saveAssessment,
   setLearnerStatus,
+  signMediaUpload,
   updateLesson,
   updateQuestion,
 } from "../controllers/teacher.controller.js";
@@ -47,6 +48,7 @@ teacherRouter.delete(
 // Lesson content: which signs a lesson has stays fixed
 teacherRouter.get("/lessons/:categoryId", getLesson);
 teacherRouter.patch("/lessons/:categoryId", updateLesson);
+teacherRouter.post("/media/signature", signMediaUpload);
 
 // Learner progress
 teacherRouter.get("/learners", listLearners);

@@ -84,6 +84,11 @@ export const updateLesson = serviceEndpoint(
   "Unable to save this lesson.",
 );
 
+export const signMediaUpload = serviceEndpoint(
+  (req) => teacherLessonService.signMediaUpload(req.body),
+  "Unable to start this upload.",
+);
+
 export const createLearner = serviceEndpoint(
   (req) => accountService.createLearner(req.user!.id, req.body),
   "Unable to create this student.",

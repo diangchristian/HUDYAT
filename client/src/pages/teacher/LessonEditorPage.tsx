@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link, useBlocker, useParams } from "react-router";
+import { useIsMutating } from "@tanstack/react-query";
 import { ArrowLeft, TriangleAlert } from "lucide-react";
 
+import MediaDropzone from "@/components/staff/media-dropzone";
 import QueryState from "@/components/staff/query-state";
 import { CardGridSkeleton } from "@/components/staff/skeletons";
 import { StaffCard } from "@/components/staff/staff-card";
@@ -16,10 +18,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import type { EditableLesson } from "@/api/teacher-api";
+import { MEDIA_UPLOAD_KEY, type EditableLesson } from "@/api/teacher-api";
 import { useTeacherLesson } from "@/hooks/use-teacher-lesson";
 import { useUpdateTeacherLesson } from "@/hooks/use-update-teacher-lesson";
 import { plural } from "@/lib/format";
@@ -121,57 +122,75 @@ function SignCard({
         />
       </div>
 
-      <div className="grid gap-5 lg:grid-cols-2">
-        <div className="space-y-2">
-          <Label htmlFor={`${sign.id}-image`} className="font-bold">
-            Image link or path
-          </Label>
-          <Input
-            id={`${sign.id}-image`}
-            value={sign.referenceImageUrl}
-            onChange={(e) => onChange({ referenceImageUrl: e.target.value })}
-            className="h-10"
-          />
+      <div className="space-y-3">
+        <h3 className="font-bold">Reference media</h3>
+
+        <div className="flex flex-wrap gap-4">
           {sign.referenceImageUrl && (
-            <img
-              src={sign.referenceImageUrl}
-              alt={`${sign.label} reference`}
-              loading="lazy"
-              className="max-h-40 rounded-lg border border-border object-contain"
-            />
+            <div className="space-y-2">
+              <img
+                src={sign.referenceImageUrl}
+                alt={`${sign.label} reference`}
+                loading="lazy"
+                className="max-h-40 rounded-lg border border-border object-contain"
+              />
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="rounded-full"
+                aria-label={`Remove image for ${sign.label}`}
+                onClick={() => onChange({ referenceImageUrl: "" })}
+              >
+                Remove image
+              </Button>
+            </div>
           )}
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor={`${sign.id}-video`} className="font-bold">
-            Video link or path
-          </Label>
-          <Input
-            id={`${sign.id}-video`}
-            value={sign.referenceVideoUrl}
-            onChange={(e) => onChange({ referenceVideoUrl: e.target.value })}
-            className="h-10"
-          />
           {sign.referenceVideoUrl && (
-            <video
-              src={sign.referenceVideoUrl}
-              controls
-              preload="none"
-              aria-label={`${sign.label} reference video`}
-              className="max-h-40 w-full rounded-lg border border-border"
-            />
+            <div className="min-w-0 space-y-2">
+              <video
+                src={sign.referenceVideoUrl}
+                controls
+                preload="none"
+                aria-label={`${sign.label} reference video`}
+                className="max-h-40 max-w-full rounded-lg border border-border"
+              />
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="rounded-full"
+                aria-label={`Remove video for ${sign.label}`}
+                onClick={() => onChange({ referenceVideoUrl: "" })}
+              >
+                Remove video
+              </Button>
+            </div>
           )}
         </div>
+
+        <MediaDropzone
+          signLabel={sign.label}
+          onUploaded={(kind, url) =>
+            onChange(
+              kind === "image"
+                ? { referenceImageUrl: url }
+                : { referenceVideoUrl: url },
+            )
+          }
+        />
+        <p className="text-sm text-muted-foreground">
+          A new file replaces the current image or video, here and in any other
+          lesson that uses this sign. Learners see it after you save.
+        </p>
       </div>
-      <p className="text-sm text-muted-foreground">
-        Image and video links are also shared with any other lesson that uses
-        this sign.
-      </p>
     </StaffCard>
   );
 }
 
 function LessonForm({ lesson }: { lesson: EditableLesson }) {
   const updateLesson = useUpdateTeacherLesson(lesson.id);
+  const isUploading = useIsMutating({ mutationKey: MEDIA_UPLOAD_KEY }) > 0;
   const [draft, setDraft] = useState(() => toDraft(lesson));
   const [saved, setSaved] = useState(() => JSON.stringify(toDraft(lesson)));
   const [justSaved, setJustSaved] = useState(false);
@@ -297,9 +316,13 @@ function LessonForm({ lesson }: { lesson: EditableLesson }) {
           type="submit"
           size="lg"
           className="rounded-full px-5"
-          disabled={!isDirty || updateLesson.isPending}
+          disabled={!isDirty || updateLesson.isPending || isUploading}
         >
-          {updateLesson.isPending ? "Saving..." : "Save changes"}
+          {updateLesson.isPending
+            ? "Saving..."
+            : isUploading
+              ? "Uploading..."
+              : "Save changes"}
         </Button>
       </div>
 

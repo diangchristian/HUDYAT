@@ -1,3 +1,5 @@
+import axios from "axios";
+
 import { api, unwrap } from "./http";
 import type { MyProgress } from "./progress-api";
 
@@ -240,6 +242,47 @@ export function updateTeacherLesson(
   return unwrap<EditableLesson>(
     api.patch(`/api/teacher/lessons/${categoryId}`, data),
   );
+}
+
+export type MediaKind = "image" | "video";
+
+/** Lets the lesson form hold Save until every upload has finished. */
+export const MEDIA_UPLOAD_KEY = ["lesson-media-upload"];
+
+/**
+ * Sends a file straight to Cloudinary with a permission signed by our server,
+ * and returns where learners will load it from.
+ */
+export async function uploadLessonMedia(
+  file: File,
+  onProgress: (percent: number) => void,
+) {
+  const kind: MediaKind = file.type.startsWith("video/") ? "video" : "image";
+
+  const { uploadUrl, fields } = await unwrap<{
+    uploadUrl: string;
+    fields: Record<string, string | number>;
+  }>(api.post("/api/teacher/media/signature", { kind }));
+
+  const form = new FormData();
+  for (const [name, value] of Object.entries(fields)) {
+    form.append(name, String(value));
+  }
+  form.append("file", file);
+
+  // Plain axios, not `api`: our login token must never be sent to Cloudinary.
+  const { data } = await axios.post<{ secure_url: string }>(uploadUrl, form, {
+    onUploadProgress: ({ progress }) => onProgress(Math.round((progress ?? 0) * 100)),
+  });
+
+  return {
+    kind,
+    // Changing the extension makes Cloudinary serve MP4, which plays on every browser.
+    url:
+      kind === "video"
+        ? data.secure_url.replace(/\.[^.]+$/, ".mp4")
+        : data.secure_url,
+  };
 }
 
 export function createLearner(data: {
