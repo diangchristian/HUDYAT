@@ -155,6 +155,46 @@ test("a teacher loads a lesson's editable content, with empty text as null", asy
   ]);
 });
 
+test("a lesson as large as Alphabet saves when every sign changes", async () => {
+  const signs = [];
+  for (let i = 0; i < 26; i += 1) signs.push(await createSign("big"));
+  const area = await prisma.learningArea.create({
+    data: {
+      name: ctx.unique("area"),
+      categories: {
+        create: {
+          name: "Big lesson",
+          displayOrder: 1,
+          gestures: {
+            create: signs.map((sign, index) => ({
+              gestureId: sign.id,
+              displayOrder: index + 1,
+            })),
+          },
+        },
+      },
+    },
+    include: { categories: true },
+  });
+  const lesson = area.categories[0]!;
+
+  const saved = await patchLesson(lesson.id, {
+    signs: signs.map((sign) =>
+      signInput(sign.id, { meaning: "Filled in", exampleUsage: "In class" }),
+    ),
+  });
+
+  assert.equal(saved.status, 200, saved.body.message);
+  const { data } = await getLesson(lesson.id);
+  assert.equal(data.signs.length, 26);
+  assert.ok(
+    data.signs.every(
+      (sign: { meaning: string; exampleUsage: string }) =>
+        sign.meaning === "Filled in" && sign.exampleUsage === "In class",
+    ),
+  );
+});
+
 test("lesson edits are logged with the teacher as the one who made them", async () => {
   const { lesson } = await createLesson();
   await patchLesson(lesson.id, { description: "Logged" });

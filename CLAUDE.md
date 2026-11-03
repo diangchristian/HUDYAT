@@ -39,7 +39,7 @@ teachers author assessments and monitor learner progress.
 - `npm test` — `node:test` suites in `tests/*.test.ts` that send real HTTP requests
   to the Express app (`src/app.ts`). They run against the database in `DATABASE_URL`,
   so they only create and clean up records named with a `zztest_<file>_` prefix.
-  Only the admin and account workflows are covered so far.
+  Only the admin, account and lesson-editing workflows are covered so far.
 - No lint script / ESLint config on the server.
 - Seed scripts (run after migrating): `npm run seed:learning-areas`,
   `seed:categories`, `seed:fsl-gestures`, `seed:test-teacher`, `seed:test-admin`,
@@ -177,7 +177,7 @@ mounted in `src/app.ts` at `/api/<feature>`; `src/index.ts` only starts the serv
   `RequireGuest` for public pages, and `RequireRole allowedRoles loginPath` for
   role areas, which redirects to each role's home (`ROLE_HOME_PATH`) or login.
 - Role areas: student pages under `src/pages/student/` (`/student/*`), teacher pages
-  under `src/pages/teacher/` (`/teacher/dashboard`, `lessons`, `quizzes`,
+  under `src/pages/teacher/` (`/teacher/dashboard`, `lessons`, `lessons/:categoryId`, `quizzes`,
   `quizzes/:categoryId`, `students`, `students/:learnerId`, `settings`; login at
   `/teacher/login`), admin pages under `src/pages/admin/` (`/admin/overview`,
   `teachers`, `learners`, `lessons`, `activity`, `settings`; login at `/admin/login`).

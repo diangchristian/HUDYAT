@@ -5,6 +5,8 @@ import { httpError } from "../utils/httpError.js";
 import { parseInput } from "../utils/parseInput.js";
 import { recordAudit } from "./audit.service.js";
 
+const SAVE_TIMEOUT_MS = 20_000;
+
 // Only web or site-relative links, since these end up in the UI's src attributes.
 const SAFE_MEDIA_URL = /^(https?:\/\/|\/(?!\/))/i;
 
@@ -154,7 +156,8 @@ export const updateLesson = async (
     }
 
     await recordAudit(tx, actorId, "LESSON_EDITED", "CATEGORY", lesson.id, lesson.name);
-  });
+    // Two statements per sign adds up on large lessons (Alphabet has 26), over a remote database.
+  }, { timeout: SAVE_TIMEOUT_MS });
 
   return getLesson(lesson.id);
 };

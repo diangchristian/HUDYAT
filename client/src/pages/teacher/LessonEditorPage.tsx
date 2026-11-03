@@ -195,8 +195,13 @@ function LessonForm({ lesson }: { lesson: EditableLesson }) {
     (sign) => !sign.meaning.trim() || !sign.exampleUsage.trim(),
   ).length;
 
-  const updateSign = (id: string, changes: Partial<DraftSign>) => {
+  const clearSaveMessages = () => {
     setJustSaved(false);
+    updateLesson.reset();
+  };
+
+  const updateSign = (id: string, changes: Partial<DraftSign>) => {
+    clearSaveMessages();
     setDraft((current) => ({
       ...current,
       signs: current.signs.map((sign) =>
@@ -231,39 +236,42 @@ function LessonForm({ lesson }: { lesson: EditableLesson }) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <StaffCard className="space-y-2 p-5 sm:p-6">
-        <Label htmlFor="lesson-description" className="font-bold">
-          Lesson description
-        </Label>
-        <Textarea
-          id="lesson-description"
-          rows={3}
-          maxLength={MAX_TEXT_LENGTH}
-          value={draft.description}
-          onChange={(e) => {
-            setJustSaved(false);
-            setDraft((current) => ({
-              ...current,
-              description: e.target.value,
-            }));
-          }}
-        />
-      </StaffCard>
-
-      {draft.signs.length === 0 ? (
-        <p className="py-12 text-center text-sm text-muted-foreground">
-          This lesson has no signs yet. Signs are added with a trained
-          recognition model.
-        </p>
-      ) : (
-        draft.signs.map((sign) => (
-          <SignCard
-            key={sign.id}
-            sign={sign}
-            onChange={(changes) => updateSign(sign.id, changes)}
+      {/* Locked while saving: the saved result replaces the draft, which would drop new typing. */}
+      <fieldset disabled={updateLesson.isPending} className="min-w-0 space-y-6">
+        <StaffCard className="space-y-2 p-5 sm:p-6">
+          <Label htmlFor="lesson-description" className="font-bold">
+            Lesson description
+          </Label>
+          <Textarea
+            id="lesson-description"
+            rows={3}
+            maxLength={MAX_TEXT_LENGTH}
+            value={draft.description}
+            onChange={(e) => {
+              clearSaveMessages();
+              setDraft((current) => ({
+                ...current,
+                description: e.target.value,
+              }));
+            }}
           />
-        ))
-      )}
+        </StaffCard>
+
+        {draft.signs.length === 0 ? (
+          <p className="py-12 text-center text-sm text-muted-foreground">
+            This lesson has no signs yet. Signs are added with a trained
+            recognition model.
+          </p>
+        ) : (
+          draft.signs.map((sign) => (
+            <SignCard
+              key={sign.id}
+              sign={sign}
+              onChange={(changes) => updateSign(sign.id, changes)}
+            />
+          ))
+        )}
+      </fieldset>
 
       <div className="sticky bottom-0 z-10 -mx-4 flex flex-wrap items-center justify-between gap-3 border-t border-border bg-white px-4 py-3 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
         <div className="min-w-0 text-sm">
