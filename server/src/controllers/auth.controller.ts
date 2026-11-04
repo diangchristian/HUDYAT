@@ -12,6 +12,7 @@ const toAuthUser = (user: {
   username: string;
   email: string | null;
   role: string;
+  mustChangePassword: boolean;
   learnerProfile?: { fullName: string; avatarKey: string | null } | null;
   teacherProfile?: { fullName: string; contactNumber: string | null } | null;
 }) => ({
@@ -19,6 +20,7 @@ const toAuthUser = (user: {
   username: user.username,
   email: user.email,
   role: user.role,
+  mustChangePassword: user.mustChangePassword,
   fullName:
     user.learnerProfile?.fullName ??
     user.teacherProfile?.fullName ??
@@ -27,12 +29,12 @@ const toAuthUser = (user: {
   contactNumber: user.teacherProfile?.contactNumber ?? null,
 });
 
-type PortalRole = Extract<UserRole, "LEARNER" | "TEACHER">;
-
-const WRONG_PORTAL_MESSAGE: Record<PortalRole, string> = {
+const WRONG_PORTAL_MESSAGE: Record<UserRole, string> = {
   LEARNER:
     "This login is for students. Please use the teacher or admin login.",
-  TEACHER: "This login is for teachers. Please use the student login.",
+  TEACHER:
+    "This login is for teachers. Please use the student or admin login.",
+  ADMIN: "This login is for admins. Please use the student or teacher login.",
 };
 
 /*
@@ -44,7 +46,7 @@ const WRONG_PORTAL_MESSAGE: Record<PortalRole, string> = {
 const authenticate = async (
   req: Request,
   res: Response,
-  expectedRole: PortalRole,
+  expectedRole: UserRole,
 ) => {
   // The login forms label this field "Username", but accept either
   // a username or an email (older clients send it as `email`).
@@ -108,56 +110,14 @@ const authenticate = async (
   });
 };
 
-export const register = async (req: Request, res: Response) => {
-  const { username, email, password } = req.body;
-
-  console.log(username);
-
-  const userExist = await prisma.user.findUnique({
-    where: { email },
-  });
-
-  if (userExist) {
-    return res.status(400).json({
-      message: "User already exists",
-    });
-  }
-
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(password, salt);
-
-  const user = await prisma.user.create({
-    data: {
-      username,
-      email,
-      password: hashedPassword,
-      role: "LEARNER",
-
-      learnerProfile: {
-        create: {
-          fullName: username,
-        },
-      },
-    },
-    include: { learnerProfile: true },
-  });
-
-  const token = generateToken(user.id, res);
-
-  res.status(201).json({
-    status: "success",
-    data: {
-      user: toAuthUser(user),
-      token,
-    },
-  });
-};
-
 export const login = (req: Request, res: Response) =>
   authenticate(req, res, "LEARNER");
 
 export const teacherLogin = (req: Request, res: Response) =>
   authenticate(req, res, "TEACHER");
+
+export const adminLogin = (req: Request, res: Response) =>
+  authenticate(req, res, "ADMIN");
 
 export const me = async (req: Request, res: Response) => {
   if (!req.user) {
@@ -326,6 +286,21 @@ export const changePassword = async (req: Request, res: Response) => {
     });
   }
 
+  // bcrypt ignores everything past 72 bytes.
+  if (newPassword.length > 72) {
+    return res.status(400).json({
+      success: false,
+      message: "New password must be 72 characters or fewer.",
+    });
+  }
+
+  if (newPassword === currentPassword) {
+    return res.status(400).json({
+      success: false,
+      message: "New password must be different from your current one.",
+    });
+  }
+
   const isCurrentPasswordValid = await bcrypt.compare(
     currentPassword,
     req.user.password as string,
@@ -343,7 +318,7 @@ export const changePassword = async (req: Request, res: Response) => {
 
   await prisma.user.update({
     where: { id: req.user.id },
-    data: { password: hashedPassword },
+    data: { password: hashedPassword, mustChangePassword: false },
   });
 
   return res.status(200).json({

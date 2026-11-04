@@ -1,30 +1,65 @@
-export type Release={id:string;name:string;version:string;modelUrl:string;weightsUrl:string;handUrl:string;modelSha256:string;weightsSha256:string;handSha256:string;
- /** Only for models that use where the hands are against the face (hand-face-location-v1, Family). */
- faceUrl?:string;faceSha256?:string};
-const base=import.meta.env.VITE_API_URL || '';
-export const modelAssetUrl=(url:string)=>new URL(url,base || location.origin).href;
+export type Release = {
+  id: string;
+  name: string;
+  version: string;
+  modelUrl: string;
+  weightsUrl: string;
+  handUrl: string;
+  modelSha256: string;
+  weightsSha256: string;
+  handSha256: string;
+  /** Only for models that use where the hands are against the face (hand-face-location-v1, Family). */
+  faceUrl?: string;
+  faceSha256?: string;
+};
+
+const base = import.meta.env.VITE_API_URL || "";
+
+export const modelAssetUrl = (url: string) =>
+  new URL(url, base || location.origin).href;
 /** EXPERIMENT: the alphabet model being A/B tested in the Recognition lab, before it is published. */
-export async function fetchCandidateRelease(category:string,signal:AbortSignal):Promise<Release>{
- const response=await fetch(modelAssetUrl('/api/models/files/models/'+encodeURIComponent(category)+'/candidate.json'),{signal,cache:'no-store'});
- if(response.status===404)throw Error('No candidate model has been published for this category.');
- if(!response.ok)throw Error('Candidate model unavailable.');
- const release=await response.json() as Release;
- if(!release.version||!release.modelUrl)throw Error('Invalid candidate release.');
- return release;
+export async function fetchCandidateRelease(
+  category: string,
+  signal: AbortSignal,
+): Promise<Release> {
+  const response = await fetch(
+    modelAssetUrl(
+      "/api/models/files/models/" +
+        encodeURIComponent(category) +
+        "/candidate.json",
+    ),
+    { signal, cache: "no-store" },
+  );
+  if (response.status === 404)
+    throw Error("No candidate model has been published for this category.");
+  if (!response.ok) throw Error("Candidate model unavailable.");
+  const release = (await response.json()) as Release;
+  if (!release.version || !release.modelUrl)
+    throw Error("Invalid candidate release.");
+  return release;
 }
-export async function fetchModelRelease(category:string,signal:AbortSignal):Promise<Release>{
- const cache=await caches.open('hudyat-model-catalog-v1');
- const url=modelAssetUrl('/api/models/'+encodeURIComponent(category));
- try {
-  const response=await fetch(url,{signal,cache:'no-store'});
-  if(response.status===404){await cache.delete(url);throw new Error('No model has been published for this category yet.');}
-  if(!response.ok)throw Error('Model catalog unavailable.');
-  const payload=await response.clone().json();
-  if(!payload.data?.version || !payload.data?.modelUrl)throw Error('Invalid model release.');
-  await cache.put(url,response);return payload.data;
- }catch(error){
-  if(signal.aborted)throw error;
-  const saved=await cache.match(url);if(saved)return (await saved.json()).data;
-  throw error;
- }
+export async function fetchModelRelease(
+  category: string,
+  signal: AbortSignal,
+): Promise<Release> {
+  const cache = await caches.open("hudyat-model-catalog-v1");
+  const url = modelAssetUrl("/api/models/" + encodeURIComponent(category));
+  try {
+    const response = await fetch(url, { signal, cache: "no-store" });
+    if (response.status === 404) {
+      await cache.delete(url);
+      throw new Error("No model has been published for this category yet.");
+    }
+    if (!response.ok) throw Error("Model catalog unavailable.");
+    const payload = await response.clone().json();
+    if (!payload.data?.version || !payload.data?.modelUrl)
+      throw Error("Invalid model release.");
+    await cache.put(url, response);
+    return payload.data;
+  } catch (error) {
+    if (signal.aborted) throw error;
+    const saved = await cache.match(url);
+    if (saved) return (await saved.json()).data;
+    throw error;
+  }
 }

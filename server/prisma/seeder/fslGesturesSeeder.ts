@@ -52,6 +52,11 @@ async function seedCategoryGestures(
   }
 
   for (const gesture of gestures) {
+    // Teachers edit this content, so re-seeding only fills what's still empty.
+    const existingSign = await prisma.fslGesture.findUnique({
+      where: { label: gesture.label },
+    });
+
     // Find or create the FSL gesture
     const fslGesture = await prisma.fslGesture.upsert({
       where: {
@@ -59,9 +64,11 @@ async function seedCategoryGestures(
       },
 
       update: {
-        meaning: gesture.meaning,
-        referenceImageUrl: gesture.referenceImageUrl,
-        referenceVideoUrl: gesture.referenceVideoUrl,
+        meaning: existingSign?.meaning ?? gesture.meaning,
+        referenceImageUrl:
+          existingSign?.referenceImageUrl ?? gesture.referenceImageUrl,
+        referenceVideoUrl:
+          existingSign?.referenceVideoUrl ?? gesture.referenceVideoUrl,
       },
 
       create: {
@@ -71,6 +78,15 @@ async function seedCategoryGestures(
         isValidated: false,
         referenceImageUrl: gesture.referenceImageUrl,
         referenceVideoUrl: gesture.referenceVideoUrl,
+      },
+    });
+
+    const existingLink = await prisma.categoryGesture.findUnique({
+      where: {
+        categoryId_gestureId: {
+          categoryId: category.id,
+          gestureId: fslGesture.id,
+        },
       },
     });
 
@@ -84,7 +100,7 @@ async function seedCategoryGestures(
       },
 
       update: {
-        exampleUsage: gesture.exampleUsage,
+        exampleUsage: existingLink?.exampleUsage ?? gesture.exampleUsage,
         displayOrder: gesture.displayOrder,
       },
 

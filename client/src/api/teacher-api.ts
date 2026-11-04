@@ -1,3 +1,5 @@
+import axios from "axios";
+
 import { api, unwrap } from "./http";
 import type { MyProgress } from "./progress-api";
 
@@ -39,6 +41,8 @@ export type AssessmentListArea = {
     categoryName: string;
     categoryDescription: string | null;
     categoryUpdatedAt: string;
+    displayOrder: number;
+    isActive: boolean;
     gestureCount: number;
     assessment: {
       id: string;
@@ -148,6 +152,32 @@ export type LearnerDetail = {
   };
 };
 
+export type EditableSign = {
+  id: string;
+  label: string;
+  meaning: string | null;
+  exampleUsage: string | null;
+  referenceImageUrl: string | null;
+  referenceVideoUrl: string | null;
+};
+
+export type EditableLesson = {
+  id: string;
+  name: string;
+  description: string | null;
+  displayOrder: number;
+  isActive: boolean;
+  areaName: string;
+  signs: EditableSign[];
+};
+
+export type LessonContentInput = {
+  description: string;
+  displayOrder?: number;
+  isActive?: boolean;
+  signs: Array<Omit<EditableSign, "label">>;
+};
+
 const assessmentPath = (categoryId: string) =>
   `/api/teacher/categories/${categoryId}/assessment`;
 
@@ -203,6 +233,88 @@ export function deleteQuestion(categoryId: string, questionId: string) {
 
 export function getLearners(signal?: AbortSignal) {
   return unwrap<LearnerSummary[]>(api.get("/api/teacher/learners", { signal }));
+}
+
+export function getTeacherLesson(categoryId: string, signal?: AbortSignal) {
+  return unwrap<EditableLesson>(
+    api.get(`/api/teacher/lessons/${categoryId}`, { signal }),
+  );
+}
+
+export function updateTeacherLesson(
+  categoryId: string,
+  data: LessonContentInput,
+) {
+  return unwrap<EditableLesson>(
+    api.patch(`/api/teacher/lessons/${categoryId}`, data),
+  );
+}
+
+export type MediaKind = "image" | "video";
+
+/**
+ * Sends a file straight to Cloudinary with a permission signed by our server,
+ * and returns where learners will load it from.
+ */
+export async function uploadLessonMedia(
+  file: File,
+  onProgress: (percent: number) => void,
+) {
+  const kind: MediaKind = file.type.startsWith("video/") ? "video" : "image";
+
+  const { uploadUrl, fields } = await unwrap<{
+    uploadUrl: string;
+    fields: Record<string, string | number>;
+  }>(api.post("/api/teacher/media/signature", { kind }));
+
+  const form = new FormData();
+  for (const [name, value] of Object.entries(fields)) {
+    form.append(name, String(value));
+  }
+  form.append("file", file);
+
+  try {
+    // Plain axios, not `api`: our login token must never be sent to Cloudinary.
+    const { data } = await axios.post<{ secure_url: string }>(uploadUrl, form, {
+      onUploadProgress: ({ progress }) =>
+        onProgress(Math.round((progress ?? 0) * 100)),
+    });
+
+    return {
+      kind,
+      // Changing the extension makes Cloudinary serve MP4, which plays on every browser.
+      url:
+        kind === "video"
+          ? data.secure_url.replace(/\.[^.]+$/, ".mp4")
+          : data.secure_url,
+    };
+  } catch (error) {
+    throw new Error("The upload didn't finish. Check your connection and try again.", {
+      cause: error,
+    });
+  }
+}
+
+export function createLearner(data: {
+  fullName: string;
+  username: string;
+  password: string;
+}) {
+  return unwrap<{ id: string; fullName: string; username: string }>(
+    api.post("/api/teacher/learners", data),
+  );
+}
+
+export function resetLearnerPassword(learnerId: string, password: string) {
+  return unwrap<{ id: string }>(
+    api.post(`/api/teacher/learners/${learnerId}/reset-password`, { password }),
+  );
+}
+
+export function setLearnerStatus(learnerId: string, isActive: boolean) {
+  return unwrap<{ id: string; isActive: boolean }>(
+    api.patch(`/api/teacher/learners/${learnerId}/status`, { isActive }),
+  );
 }
 
 export function getLearnerDetail(learnerId: string, signal?: AbortSignal) {

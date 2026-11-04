@@ -3,21 +3,19 @@ import { Navigate, Outlet, useLocation } from "react-router";
 import type { UserRole } from "@/api/auth-api";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import LoadingScreen from "@/components/common/loading-screen";
+import ForcedPasswordChange from "@/components/staff/forced-password-change";
 import StaffLoadingScreen from "@/components/staff/staff-loading-screen";
 import { isStandalonePwa } from "@/lib/pwa";
 
-/*
- * Where a logged-in user of each role belongs. Roles without an
- * entry here (ADMIN) have no dashboard built yet, so they fall back
- * to the public home page "/" until their own area exists.
- */
-const ROLE_HOME_PATH: Partial<Record<UserRole, string>> = {
+/* Where a logged-in user of each role belongs. */
+const ROLE_HOME_PATH: Record<UserRole, string> = {
   LEARNER: "/student/home",
   TEACHER: "/teacher/dashboard",
+  ADMIN: "/admin/overview",
 };
 
 function roleHomePath(role: UserRole) {
-  return ROLE_HOME_PATH[role] ?? "/";
+  return ROLE_HOME_PATH[role];
 }
 
 function useAuthState() {
@@ -37,10 +35,8 @@ function AuthLoading() {
 }
 
 /*
- * For public-only pages ("/", "/login", "/teacher/login"). A
- * logged-in user is sent to their role's home instead of seeing
- * these pages, unless their role's home IS the page they're already
- * on (e.g. ADMIN on "/", since they have nowhere else to go yet).
+ * For public-only pages ("/" and the login screens). A logged-in user
+ * is sent to their role's home instead of seeing these pages.
  */
 export function RequireGuest() {
   const location = useLocation();
@@ -91,6 +87,10 @@ export function RequireRole({
 
   if (!allowedRoles.includes(user.role)) {
     return <Navigate to={roleHomePath(user.role)} replace />;
+  }
+
+  if (user.mustChangePassword) {
+    return <ForcedPasswordChange loginPath={loginPath} />;
   }
 
   return <Outlet />;

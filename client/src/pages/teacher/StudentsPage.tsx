@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
-import { ChevronLeft, ChevronRight, Eye, Search } from "lucide-react";
+import { ChevronLeft, ChevronRight, Eye, Plus, Search } from "lucide-react";
 
+import AddStudentDialog from "@/components/staff/add-student-dialog";
 import QueryState from "@/components/staff/query-state";
 import { TableSkeleton } from "@/components/staff/skeletons";
 import InitialsAvatar from "@/components/staff/initials-avatar";
@@ -34,6 +35,8 @@ export default function StudentsPage() {
   const { data: learners, isLoading, error, refetch } = useLearners();
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
+  const [addOpen, setAddOpen] = useState(false);
+  const [notice, setNotice] = useState("");
 
   const query = search.trim().toLowerCase();
   const filtered = (learners ?? []).filter(
@@ -54,6 +57,28 @@ export default function StudentsPage() {
       <StaffPageHeader
         title="Students"
         description="Track each learner's lesson progress and quiz results."
+        actions={
+          <Button
+            size="lg"
+            className="rounded-full px-4"
+            onClick={() => setAddOpen(true)}
+          >
+            <Plus aria-hidden="true" />
+            Add student
+          </Button>
+        }
+      />
+
+      <p role="status" className="text-sm font-bold text-emerald-700 empty:hidden">
+        {notice}
+      </p>
+
+      <AddStudentDialog
+        open={addOpen}
+        onOpenChange={setAddOpen}
+        onCreated={(name, username) =>
+          setNotice(`Added ${name}. They log in as "${username}".`)
+        }
       />
 
       <QueryState
@@ -97,7 +122,7 @@ export default function StudentsPage() {
             {filtered.length === 0 ? (
               <p className="px-6 py-12 text-center text-sm text-muted-foreground">
                 {learners.length === 0
-                  ? "No students have signed up yet."
+                  ? "No students yet. Add the first student to get started."
                   : "No students match your search."}
               </p>
             ) : (

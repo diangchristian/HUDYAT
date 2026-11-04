@@ -7,6 +7,8 @@ export type AuthUser = {
   username: string;
   email: string | null;
   role: UserRole;
+  /** A temporary password is in use; nothing else works until it's changed. */
+  mustChangePassword: boolean;
   fullName: string;
   avatarKey: string | null;
   contactNumber: string | null;
@@ -23,6 +25,13 @@ export function login(identifier: string, password: string) {
 export function teacherLogin(identifier: string, password: string) {
   return unwrap<{ user: AuthUser; token: string }>(
     api.post("/api/auth/teacher/login", { identifier, password }),
+  );
+}
+
+/** `identifier` is a username or an email. */
+export function adminLogin(identifier: string, password: string) {
+  return unwrap<{ user: AuthUser; token: string }>(
+    api.post("/api/auth/admin/login", { identifier, password }),
   );
 }
 

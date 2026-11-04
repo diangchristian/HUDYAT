@@ -1,43 +1,11 @@
-import modelsRouter from "./routes/models.routes.js";
-import express from "express";
 import dotenv from "dotenv";
-import cors from "cors";
-import cookieParser from "cookie-parser";
 import { connectDB, disconnectDB } from "./config/db.js";
-
-// Routes
-import authRouter from "./routes/auth.routes.js";
-import categoriesRouter from "./routes/categories.routes.js";
-import learningRouter from "./routes/learning.routes.js";
-import assessmentRouter from "./routes/assessment.routes.js";
-import progressRouter from "./routes/progress.routes.js";
-import teacherRouter from "./routes/teacher.routes.js";
+import { app } from "./app.js";
 
 dotenv.config();
 connectDB()
 
-const app = express();
 const PORT = Number(process.env.PORT) || 5001;
-
-app.use(
-  cors({
-    origin: process.env.CLIENT_ORIGIN ?? "http://localhost:5173",
-    credentials: true,
-  }),
-);
-app.use(cookieParser());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-app.use("/api/models", modelsRouter);
-app.use("/api/auth", authRouter);
-app.use("/api/learning", learningRouter);
-app.use("/api/categories", categoriesRouter);
-app.use("/api/assessments", assessmentRouter);
-app.use("/api/progress", progressRouter);
-app.use("/api/teacher", teacherRouter);
-
-
 
 const server = app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);

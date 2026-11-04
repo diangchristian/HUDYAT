@@ -222,7 +222,10 @@ export default function TeacherSettingsPage() {
       <ChangePasswordDialog
         open={passwordOpen}
         onOpenChange={setPasswordOpen}
-        onChanged={() => setPasswordChanged(true)}
+        onChanged={() => {
+          setPasswordOpen(false);
+          setPasswordChanged(true);
+        }}
       />
     </div>
   );

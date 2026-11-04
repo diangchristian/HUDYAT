@@ -25,7 +25,11 @@ type StaffLayoutProps = {
   /** Where to land after logging out (each role has its own login). */
   loginPath: string;
   portalName: string;
+  variant?: "admin";
 };
+
+const NAV_FOCUS =
+  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sidebar-ring";
 
 function StaffNav({
   navItems,
@@ -48,9 +52,10 @@ function StaffNav({
                 className={({ isActive }) =>
                   cn(
                     "flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-bold tracking-wide transition-colors",
+                    NAV_FOCUS,
                     isActive
-                      ? "bg-staff-nav text-white"
-                      : "text-secondary-foreground/80 hover:bg-accent hover:text-accent-foreground",
+                      ? "bg-sidebar-primary text-sidebar-primary-foreground"
+                      : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
                   )
                 }
               >
@@ -65,7 +70,10 @@ function StaffNav({
       <button
         type="button"
         onClick={onLogout}
-        className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-bold tracking-wide text-secondary-foreground/80 transition-colors hover:bg-red-50 hover:text-red-700"
+        className={cn(
+          "flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-bold tracking-wide text-sidebar-foreground transition-colors hover:bg-red-50 hover:text-red-700",
+          NAV_FOCUS,
+        )}
       >
         <LogOut aria-hidden="true" className="size-5" />
         Logout
@@ -83,11 +91,12 @@ export default function StaffLayout({
   navItems,
   loginPath,
   portalName,
+  variant,
 }: StaffLayoutProps) {
   const logout = useLogout(loginPath);
   const [menuOpen, setMenuOpen] = useState(false);
 
-  useStaffTheme();
+  useStaffTheme(variant);
 
   const handleLogout = () => {
     setMenuOpen(false);
@@ -97,24 +106,32 @@ export default function StaffLayout({
   return (
     <div className="min-h-screen bg-white font-staff text-foreground">
       {/* Desktop sidebar */}
-      <aside className="fixed inset-y-0 left-0 hidden w-66 flex-col border-r border-border bg-white px-4 py-5 lg:flex">
+      <aside className="fixed inset-y-0 left-0 hidden w-66 flex-col border-r border-sidebar-border bg-sidebar px-4 py-5 lg:flex">
         <BrandMark subtitle={portalName} className="mb-8 px-2" />
         <StaffNav navItems={navItems} onLogout={handleLogout} />
       </aside>
 
       {/* Mobile top bar */}
-      <header className="sticky top-0 z-30 flex items-center justify-between border-b border-border bg-white/95 px-4 py-3 backdrop-blur lg:hidden">
+      <header className="sticky top-0 z-30 flex items-center justify-between border-b border-sidebar-border bg-sidebar/95 px-4 py-3 backdrop-blur lg:hidden">
         <BrandMark subtitle={portalName} />
 
         <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
           <SheetTrigger
             render={
-              <Button variant="ghost" size="icon-lg" aria-label="Open menu" />
+              <Button
+                variant="ghost"
+                size="icon-lg"
+                aria-label="Open menu"
+                className="text-sidebar-foreground"
+              />
             }
           >
             <Menu aria-hidden="true" />
           </SheetTrigger>
-          <SheetContent side="left" className="w-72 gap-0 p-4 font-staff">
+          <SheetContent
+            side="left"
+            className="w-72 gap-0 bg-sidebar p-4 font-staff text-sidebar-foreground"
+          >
             <SheetTitle className="sr-only">Menu</SheetTitle>
             <BrandMark subtitle={portalName} className="mb-6 px-2 pt-1" />
             <StaffNav

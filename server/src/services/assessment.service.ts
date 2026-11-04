@@ -58,6 +58,7 @@ export const checkAnswer = async (
   const assessment = await prisma.assessment.findUnique({
     where: {
       categoryId,
+      category: { isActive: true },
     },
   });
 
@@ -111,6 +112,7 @@ export const getAssessmentByCategory = async (
     await prisma.assessment.findUnique({
       where: {
         categoryId,
+        category: { isActive: true },
       },
 
       include: {
@@ -261,6 +263,7 @@ export const submitAssessment = async (
         await tx.assessment.findUnique({
           where: {
             categoryId,
+            category: { isActive: true },
           },
 
           include: {

@@ -35,8 +35,8 @@ const CATEGORIES = [
   { area: "Basic Filipino Sign Language", name: "Colors", displayOrder: 5 },
   { area: "Basic Filipino Sign Language", name: "Shapes", displayOrder: 6 },
   { area: "Basic Filipino Sign Language", name: "Calendar", displayOrder: 7 },
-  { area: "Communication", name: "WH Questions", displayOrder: 7 },
-  { area: "Communication", name: "Word Concepts", displayOrder: 8 },
+  { area: "Communication", name: "WH Questions", displayOrder: 8 },
+  { area: "Communication", name: "Word Concepts", displayOrder: 9 },
 ];
 
 async function main() {

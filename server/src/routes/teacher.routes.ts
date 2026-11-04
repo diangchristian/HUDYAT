@@ -1,15 +1,21 @@
 import { Router } from "express";
 
 import {
+  createLearner,
   createQuestion,
   deleteQuestion,
   getAssessment,
   getCategoryGestures,
   getDashboard,
   getLearnerDetail,
+  getLesson,
   listAssessments,
   listLearners,
+  resetLearnerPassword,
   saveAssessment,
+  setLearnerStatus,
+  signMediaUpload,
+  updateLesson,
   updateQuestion,
 } from "../controllers/teacher.controller.js";
 import { authMiddleware } from "../middleware/authMiddleware.js";
@@ -39,8 +45,18 @@ teacherRouter.delete(
   deleteQuestion,
 );
 
+// Lesson content: which signs a lesson has stays fixed
+teacherRouter.get("/lessons/:categoryId", getLesson);
+teacherRouter.patch("/lessons/:categoryId", updateLesson);
+teacherRouter.post("/media/signature", signMediaUpload);
+
 // Learner progress
 teacherRouter.get("/learners", listLearners);
 teacherRouter.get("/learners/:learnerId", getLearnerDetail);
+
+// Learner accounts
+teacherRouter.post("/learners", createLearner);
+teacherRouter.post("/learners/:learnerId/reset-password", resetLearnerPassword);
+teacherRouter.patch("/learners/:learnerId/status", setLearnerStatus);
 
 export default teacherRouter;

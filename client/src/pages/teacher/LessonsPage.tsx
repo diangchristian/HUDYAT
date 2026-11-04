@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Link, useSearchParams } from "react-router";
-import { ArrowRight, Clock, Plus } from "lucide-react";
+import { ArrowRight, Clock, Pencil, Plus } from "lucide-react";
 
 import PrototypeSwitcher from "@/components/prototype/prototype-switcher";
+import { StatusBadge } from "@/components/staff/account-status";
 import QueryState from "@/components/staff/query-state";
 import { CardGridSkeleton } from "@/components/staff/skeletons";
 import CardSignPreview from "./lessons-prototype/CardSignPreview";
@@ -32,7 +33,7 @@ function CurrentLessonCard({ lesson }: { lesson: Lesson }) {
         </div>
     
         <h2 className="mt-4 text-xl font-bold text-foreground">
-          {lesson.categoryName}
+          {lesson.displayOrder}. {lesson.categoryName}
         </h2>
         <Badge
           variant="secondary"
@@ -40,6 +41,11 @@ function CurrentLessonCard({ lesson }: { lesson: Lesson }) {
         >
           {lesson.areaName}
         </Badge>
+        {!lesson.isActive && (
+          <div className="mt-1.5">
+            <StatusBadge isActive={false} inactiveLabel="Hidden from learners" />
+          </div>
+        )}
         {lesson.categoryDescription && (
           <p className="mt-3 line-clamp-2 text-sm text-muted-foreground">
             {lesson.categoryDescription}
@@ -57,12 +63,23 @@ function CurrentLessonCard({ lesson }: { lesson: Lesson }) {
         </div>
     
         <Link
+          to={`/teacher/lessons/${lesson.categoryId}`}
+          aria-label={`Edit ${lesson.categoryName}`}
+          className={cn(
+            buttonVariants({ variant: "outline" }),
+            "mt-4 h-9 rounded-full",
+          )}
+        >
+          <Pencil aria-hidden="true" />
+          Edit lesson
+        </Link>
+        <Link
           to={`/teacher/quizzes/${lesson.categoryId}`}
           className={cn(
             buttonVariants({
               variant: lesson.assessment ? "outline" : "default",
             }),
-            "mt-4 h-9 rounded-full",
+            "mt-2 h-9 rounded-full",
           )}
         >
           {lesson.assessment ? (
@@ -98,7 +115,7 @@ function CurrentLessons({
     <div className="space-y-8">
       <StaffPageHeader
         title="Lessons"
-        description="Browse your FSL curriculum and check which lessons have a quiz."
+        description="Edit what learners read and watch, set the lesson order, and check which lessons have a quiz."
       />
 
       <QueryState

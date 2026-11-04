@@ -12,15 +12,15 @@ export default function BrandMark({
     <div className={cn("flex items-center gap-3", className)}>
       <span
         aria-hidden="true"
-        className="flex size-10 shrink-0 items-center justify-center rounded-full bg-staff-brand font-body text-xl font-black text-white"
+        className="flex size-10 shrink-0 items-center justify-center rounded-full bg-(--staff-logo) font-body text-xl font-black text-white"
       >
         H
       </span>
       <div className="min-w-0">
-        <p className="font-body text-2xl leading-7 font-black tracking-tight text-staff-brand">
+        <p className="font-body text-2xl leading-7 font-black tracking-tight text-(--staff-logo-text)">
           HUDYAT
         </p>
-        <p className="truncate text-xs font-extrabold tracking-wide text-muted-foreground">
+        <p className="truncate text-xs font-extrabold tracking-wide text-(--staff-logo-subtitle)">
           {subtitle}
         </p>
       </div>

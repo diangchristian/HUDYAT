@@ -3,11 +3,13 @@ import { createBrowserRouter, Navigate } from "react-router";
 import StudentPageLayout from "@/layouts/StudentPageLayout";
 import NoSidebarLayout from "@/layouts/NoSidebarLayout";
 import TeacherPageLayout from "@/layouts/TeacherPageLayout";
+import AdminPageLayout from "@/layouts/AdminPageLayout";
 import { RequireGuest, RequireRole } from "./route-guards";
 
 import HomePage from "@/pages/HomePage";
 import LoginPage from "@/pages/auth/LoginPage";
 import TeacherLoginPage from "@/pages/auth/TeacherLoginPage";
+import AdminLoginPage from "@/pages/auth/AdminLoginPage";
 
 import StudentHomePage from "@/pages/student/StudentHomePage";
 import LearnPage from "@/pages/student/LearnPage";
@@ -22,11 +24,18 @@ import SettingsPage from "@/pages/student/SettingsPage";
 
 import TeacherDashboardPage from "@/pages/teacher/TeacherDashboardPage";
 import LessonsPage from "@/pages/teacher/LessonsPage";
+import LessonEditorPage from "@/pages/teacher/LessonEditorPage";
 import QuizzesPage from "@/pages/teacher/QuizzesPage";
 import QuizEditorPage from "@/pages/teacher/QuizEditorPage";
 import StudentsPage from "@/pages/teacher/StudentsPage";
 import StudentDetailPage from "@/pages/teacher/StudentDetailPage";
 import TeacherSettingsPage from "@/pages/teacher/TeacherSettingsPage";
+
+import AdminOverviewPage from "@/pages/admin/AdminOverviewPage";
+import AdminTeachersPage from "@/pages/admin/AdminTeachersPage";
+import AdminLearnersPage from "@/pages/admin/AdminLearnersPage";
+import AdminActivityPage from "@/pages/admin/AdminActivityPage";
+import AdminSettingsPage from "@/pages/admin/AdminSettingsPage";
 
 export const router = createBrowserRouter([
   // =========================
@@ -46,6 +55,10 @@ export const router = createBrowserRouter([
       {
         path: "/teacher/login",
         element: <TeacherLoginPage />,
+      },
+      {
+        path: "/admin/login",
+        element: <AdminLoginPage />,
       },
     ],
   },
@@ -137,6 +150,10 @@ export const router = createBrowserRouter([
             element: <LessonsPage />,
           },
           {
+            path: "/teacher/lessons/:categoryId",
+            element: <LessonEditorPage />,
+          },
+          {
             path: "/teacher/quizzes",
             element: <QuizzesPage />,
           },
@@ -155,6 +172,44 @@ export const router = createBrowserRouter([
           {
             path: "/teacher/settings",
             element: <TeacherSettingsPage />,
+          },
+        ],
+      },
+    ],
+  },
+
+  // =========================
+  // ADMIN ROUTES (ADMIN role only)
+  // =========================
+  {
+    element: <RequireRole allowedRoles={["ADMIN"]} loginPath="/admin/login" />,
+    children: [
+      {
+        element: <AdminPageLayout />,
+        children: [
+          {
+            path: "/admin",
+            element: <Navigate to="/admin/overview" replace />,
+          },
+          {
+            path: "/admin/overview",
+            element: <AdminOverviewPage />,
+          },
+          {
+            path: "/admin/teachers",
+            element: <AdminTeachersPage />,
+          },
+          {
+            path: "/admin/learners",
+            element: <AdminLearnersPage />,
+          },
+          {
+            path: "/admin/activity",
+            element: <AdminActivityPage />,
+          },
+          {
+            path: "/admin/settings",
+            element: <AdminSettingsPage />,
           },
         ],
       },

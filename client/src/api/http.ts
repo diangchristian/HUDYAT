@@ -24,12 +24,16 @@ api.interceptors.response.use(
       const url = error.config?.url ?? "";
       const isLoginRequest =
         url.includes("/api/auth/login") ||
-        url.includes("/api/auth/teacher/login");
+        url.includes("/api/auth/teacher/login") ||
+        url.includes("/api/auth/admin/login");
 
-      // Teachers have their own login screen; send them back to it.
-      const loginPath = window.location.pathname.startsWith("/teacher")
+      // Teachers and admins have their own login screens; send them back there.
+      const { pathname } = window.location;
+      const loginPath = pathname.startsWith("/teacher")
         ? "/teacher/login"
-        : "/login";
+        : pathname.startsWith("/admin")
+          ? "/admin/login"
+          : "/login";
       const alreadyOnLogin = window.location.pathname === loginPath;
 
       localStorage.removeItem("token");
@@ -37,6 +41,16 @@ api.interceptors.response.use(
       if (!isLoginRequest && !alreadyOnLogin) {
         window.location.assign(loginPath);
       }
+    }
+
+    // An admin reset this password mid-session. Reloading refetches the user,
+    // and the route guard then shows the forced password change.
+    if (
+      axios.isAxiosError(error) &&
+      (error.response?.data as { code?: string } | undefined)?.code ===
+        "PASSWORD_CHANGE_REQUIRED"
+    ) {
+      window.location.reload();
     }
 
     return Promise.reject(error);

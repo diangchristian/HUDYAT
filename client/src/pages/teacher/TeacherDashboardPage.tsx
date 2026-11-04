@@ -95,7 +95,7 @@ export default function TeacherDashboardPage() {
   const areas = assessmentsQuery.data;
   // Counted from the active-lesson list (not the server's all-assessment
   // totals) so the stats agree with the table and quick actions.
-  const lessons = areas ? flattenLessons(areas) : [];
+  const lessons = flattenLessons(areas ?? []).filter((lesson) => lesson.isActive);
   const quizzes = quizzesOf(lessons);
   const publishedCount = quizzes.filter(
     (quiz) => quiz.assessment.status === "PUBLISHED",
