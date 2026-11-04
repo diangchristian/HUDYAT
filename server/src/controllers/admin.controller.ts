@@ -1,10 +1,10 @@
 import * as accountService from "../services/account.service.js";
-import * as adminContentService from "../services/admin-content.service.js";
+import { getOverview as loadOverview } from "../services/admin-overview.service.js";
 import * as auditService from "../services/audit.service.js";
 import { serviceEndpoint } from "../utils/serviceEndpoint.js";
 
 export const getOverview = serviceEndpoint(
-  () => adminContentService.getOverview(),
+  () => loadOverview(),
   "Unable to load the overview.",
 );
 

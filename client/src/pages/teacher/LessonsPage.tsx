@@ -33,7 +33,7 @@ function CurrentLessonCard({ lesson }: { lesson: Lesson }) {
         </div>
     
         <h2 className="mt-4 text-xl font-bold text-foreground">
-          {lesson.categoryName}
+          {lesson.displayOrder}. {lesson.categoryName}
         </h2>
         <Badge
           variant="secondary"

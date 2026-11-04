@@ -33,13 +33,11 @@ const lessonText = (name: string) =>
     .transform((text) => text || null)
     .nullable();
 
+const INVALID_ORDER = "Order must be a whole number from 1.";
+
 const lessonInput = z.object({
   description: lessonText("Description").optional(),
-  displayOrder: z
-    .number("Order must be a whole number from 1.")
-    .int("Order must be a whole number from 1.")
-    .min(1, "Order must be a whole number from 1.")
-    .optional(),
+  displayOrder: z.number(INVALID_ORDER).int(INVALID_ORDER).min(1, INVALID_ORDER).optional(),
   isActive: z.boolean("Visibility must be true or false.").optional(),
   signs: z
     .array(

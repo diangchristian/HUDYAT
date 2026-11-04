@@ -61,6 +61,7 @@ export const listAssessments = async () => {
       categoryName: category.name,
       categoryDescription: category.description,
       categoryUpdatedAt: category.updatedAt,
+      displayOrder: category.displayOrder,
       isActive: category.isActive,
       gestureCount: category._count.gestures,
       assessment: category.assessment

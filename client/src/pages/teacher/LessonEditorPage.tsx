@@ -199,10 +199,10 @@ function LessonForm({ lesson }: { lesson: EditableLesson }) {
   const updateLesson = useUpdateTeacherLesson(lesson.id);
   const isUploading = useIsMutating({ mutationKey: lessonMediaUploadKey }) > 0;
   const [draft, setDraft] = useState(() => toDraft(lesson));
-  const [saved, setSaved] = useState(() => JSON.stringify(toDraft(lesson)));
+  const [saved, setSaved] = useState(() => toDraft(lesson));
   const [justSaved, setJustSaved] = useState(false);
 
-  const isDirty = JSON.stringify(draft) !== saved;
+  const isDirty = JSON.stringify(draft) !== JSON.stringify(saved);
   // An upload in progress hasn't reached the draft yet, but leaving would lose it.
   const hasUnsavedWork = isDirty || isUploading;
 
@@ -248,8 +248,11 @@ function LessonForm({ lesson }: { lesson: EditableLesson }) {
     updateLesson.mutate(
       {
         description: draft.description,
-        displayOrder: Number(draft.displayOrder),
-        isActive: draft.isActive,
+        // Only when changed: these affect everyone, so an older copy mustn't undo another teacher's change.
+        ...(draft.displayOrder !== saved.displayOrder && {
+          displayOrder: Number(draft.displayOrder),
+        }),
+        ...(draft.isActive !== saved.isActive && { isActive: draft.isActive }),
         signs: draft.signs.map((sign) => ({
           id: sign.id,
           meaning: sign.meaning,
@@ -262,7 +265,7 @@ function LessonForm({ lesson }: { lesson: EditableLesson }) {
         onSuccess: (updated) => {
           const next = toDraft(updated);
           setDraft(next);
-          setSaved(JSON.stringify(next));
+          setSaved(next);
           setJustSaved(true);
         },
       },
@@ -305,9 +308,10 @@ function LessonForm({ lesson }: { lesson: EditableLesson }) {
               className="h-10 w-24"
             />
             <p id="lesson-order-help" className="text-sm text-muted-foreground">
-              Choosing a taken position swaps the two lessons. This changes
-              which lesson opens next for every teacher's learners. Finished
-              lessons stay finished.
+              This lesson's position in its learning area, shown on the Lessons
+              page. Choosing a taken position swaps the two lessons. This
+              changes which lesson opens next for every teacher's learners.
+              Finished lessons stay finished.
             </p>
           </div>
 
@@ -355,7 +359,9 @@ function LessonForm({ lesson }: { lesson: EditableLesson }) {
             </p>
           ) : justSaved ? (
             <p role="status" className="font-bold text-emerald-700">
-              Saved. Learners see these changes now.
+              {draft.isActive
+                ? "Saved. Learners see these changes now."
+                : "Saved. This lesson is hidden from learners."}
             </p>
           ) : needingText > 0 ? (
             <p className="font-semibold text-amber-900">
@@ -436,7 +442,7 @@ export default function LessonEditorPage() {
         title={data ? `Edit ${data.name}` : "Edit lesson"}
         description={
           data
-            ? `${data.areaName}. Saved changes reach learners right away.`
+            ? `${data.areaName}. Saved changes reach learners right away, unless the lesson is hidden.`
             : undefined
         }
       />

@@ -4,7 +4,7 @@ import { after, before, test } from "node:test";
 import { prisma } from "../src/config/db.js";
 import { LOGIN_PATH, PASSWORD, testContext } from "./helpers.js";
 
-const ctx = testContext("content");
+const ctx = testContext("overview");
 
 let adminToken: string;
 let teacherToken: string;

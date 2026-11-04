@@ -41,6 +41,7 @@ export type AssessmentListArea = {
     categoryName: string;
     categoryDescription: string | null;
     categoryUpdatedAt: string;
+    displayOrder: number;
     isActive: boolean;
     gestureCount: number;
     assessment: {
@@ -172,8 +173,8 @@ export type EditableLesson = {
 
 export type LessonContentInput = {
   description: string;
-  displayOrder: number;
-  isActive: boolean;
+  displayOrder?: number;
+  isActive?: boolean;
   signs: Array<Omit<EditableSign, "label">>;
 };
 

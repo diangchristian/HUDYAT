@@ -372,7 +372,7 @@ test("an invalid lesson order is rejected", async () => {
 
 test("a teacher can hide a lesson, keep working on it, and bring it back", async () => {
   const { lesson } = await createLesson();
-  const isListedAsActive = async () => {
+  const findListedLesson = async () => {
     const { data } = await ctx.request("GET", "/api/teacher/assessments", {
       token: teacherToken,
     });
@@ -384,7 +384,7 @@ test("a teacher can hide a lesson, keep working on it, and bring it back", async
 
   assert.equal((await patchLesson(lesson.id, { isActive: false })).status, 200);
 
-  assert.equal((await isListedAsActive()).isActive, false);
+  assert.equal((await findListedLesson()).isActive, false);
   assert.equal((await getLesson(lesson.id)).data.isActive, false);
   assert.equal((await patchLesson(lesson.id, { description: "Getting ready" })).status, 200);
   assert.equal(
@@ -394,7 +394,7 @@ test("a teacher can hide a lesson, keep working on it, and bring it back", async
 
   assert.equal((await patchLesson(lesson.id, { isActive: true })).status, 200);
 
-  assert.equal((await isListedAsActive()).isActive, true);
+  assert.equal((await findListedLesson()).isActive, true);
   const restored = await ctx.request("GET", `/api/learning/categories/${lesson.id}`, {
     token: learnerToken,
   });
