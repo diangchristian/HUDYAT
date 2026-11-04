@@ -339,8 +339,8 @@ test("moving a lesson onto a taken position swaps the two, and logs both", async
       name: ctx.unique("area"),
       categories: {
         create: [
-          { name: "Swap first", displayOrder: 1 },
-          { name: "Swap second", displayOrder: 2 },
+          { name: "Swap first", displayOrder: 9001 },
+          { name: "Swap second", displayOrder: 9002 },
         ],
       },
     },
@@ -348,10 +348,10 @@ test("moving a lesson onto a taken position swaps the two, and logs both", async
   });
   const [first, second] = area.categories;
 
-  assert.equal((await patchLesson(first!.id, { displayOrder: 2 })).status, 200);
+  assert.equal((await patchLesson(first!.id, { displayOrder: 9002 })).status, 200);
 
-  assert.equal((await getLesson(first!.id)).data.displayOrder, 2);
-  assert.equal((await getLesson(second!.id)).data.displayOrder, 1);
+  assert.equal((await getLesson(first!.id)).data.displayOrder, 9002);
+  assert.equal((await getLesson(second!.id)).data.displayOrder, 9001);
 
   const { data } = await ctx.request(
     "GET",
@@ -360,6 +360,25 @@ test("moving a lesson onto a taken position swaps the two, and logs both", async
   );
   const logged = data.entries.slice(0, 2).map((entry: { target: string }) => entry.target);
   assert.deepEqual(logged.sort(), ["Swap first", "Swap second"]);
+});
+
+test("a lesson can't take a number already used in another learning area", async () => {
+  const createAreaWithLesson = (displayOrder: number) =>
+    prisma.learningArea.create({
+      data: {
+        name: ctx.unique("area"),
+        categories: { create: { name: `Lesson ${displayOrder}`, displayOrder } },
+      },
+      include: { categories: true },
+    });
+  const moving = (await createAreaWithLesson(9101)).categories[0]!;
+  await createAreaWithLesson(9102);
+
+  const refused = await patchLesson(moving.id, { displayOrder: 9102 });
+
+  assert.equal(refused.status, 400);
+  assert.ok(refused.body.message.includes("Lesson 9102"));
+  assert.equal((await getLesson(moving.id)).data.displayOrder, 9101);
 });
 
 test("an invalid lesson order is rejected", async () => {

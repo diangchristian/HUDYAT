@@ -102,7 +102,9 @@ mounted in `src/app.ts` at `/api/<feature>`; `src/index.ts` only starts the serv
 - **Teachers own lessons; admins own accounts and oversight**: teachers edit the
   description, order, visibility (`isActive`), each sign's `meaning` and `exampleUsage`,
   and reference media (`services/teacher-lesson.service.ts`). These apply to all
-  learners, since teachers share them. Hidden lessons stay listed for teachers and are
+  learners, since teachers share them. Lesson numbers run across all learning areas:
+  the database only enforces uniqueness per area, so the service refuses a number used
+  in another area. Hidden lessons stay listed for teachers and are
   blocked for learners, even by direct link. `meaning` and media live on `FslGesture`, so
   edits reach every lesson using that sign; `exampleUsage` belongs to one lesson. The
   list of signs stays fixed, since a new sign needs a trained model. Empty text shows

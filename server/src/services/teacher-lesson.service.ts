@@ -190,9 +190,15 @@ export const updateLesson = async (
 
   await prisma.$transaction(async (tx) => {
     if (displayOrder !== undefined && displayOrder !== lesson.displayOrder) {
-      const holder = await tx.category.findFirst({
-        where: { learningAreaId: lesson.learningAreaId, displayOrder },
-      });
+      // Teachers see one numbered list across all learning areas, so numbers must stay unique.
+      const holder = await tx.category.findFirst({ where: { displayOrder } });
+
+      if (holder && holder.learningAreaId !== lesson.learningAreaId) {
+        throw httpError(
+          400,
+          `Number ${displayOrder} is already used by "${holder.name}" in another learning area.`,
+        );
+      }
 
       if (holder) {
         // The order is unique per area, so step aside before swapping.
