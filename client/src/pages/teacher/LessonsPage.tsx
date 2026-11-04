@@ -3,6 +3,7 @@ import { Link, useSearchParams } from "react-router";
 import { ArrowRight, Clock, Pencil, Plus } from "lucide-react";
 
 import PrototypeSwitcher from "@/components/prototype/prototype-switcher";
+import { StatusBadge } from "@/components/staff/account-status";
 import QueryState from "@/components/staff/query-state";
 import { CardGridSkeleton } from "@/components/staff/skeletons";
 import CardSignPreview from "./lessons-prototype/CardSignPreview";
@@ -40,6 +41,11 @@ function CurrentLessonCard({ lesson }: { lesson: Lesson }) {
         >
           {lesson.areaName}
         </Badge>
+        {!lesson.isActive && (
+          <div className="mt-1.5">
+            <StatusBadge isActive={false} inactiveLabel="Hidden from learners" />
+          </div>
+        )}
         {lesson.categoryDescription && (
           <p className="mt-3 line-clamp-2 text-sm text-muted-foreground">
             {lesson.categoryDescription}
@@ -109,7 +115,7 @@ function CurrentLessons({
     <div className="space-y-8">
       <StaffPageHeader
         title="Lessons"
-        description="Edit what learners read and watch, and check which lessons have a quiz."
+        description="Edit what learners read and watch, set the lesson order, and check which lessons have a quiz."
       />
 
       <QueryState

@@ -5,12 +5,10 @@ import {
   getOverview,
   listActivity,
   listLearners,
-  listLessons,
   listTeachers,
   resetTeacherPassword,
   setLearnerStatus,
   setTeacherStatus,
-  updateLesson,
   updateTeacher,
 } from "../controllers/admin.controller.js";
 import { authMiddleware } from "../middleware/authMiddleware.js";
@@ -30,10 +28,6 @@ adminRouter.patch("/teachers/:teacherId/status", setTeacherStatus);
 // Learner accounts: teachers create them and reset their passwords
 adminRouter.get("/learners", listLearners);
 adminRouter.patch("/learners/:learnerId/status", setLearnerStatus);
-
-// Lessons: quizzes stay with teachers, and new signs come with a model release
-adminRouter.get("/lessons", listLessons);
-adminRouter.patch("/lessons/:lessonId", updateLesson);
 
 adminRouter.get("/overview", getOverview);
 adminRouter.get("/activity", listActivity);

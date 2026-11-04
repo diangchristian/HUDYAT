@@ -18,6 +18,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import type { EditableLesson } from "@/api/teacher-api";
@@ -31,6 +32,8 @@ const MAX_TEXT_LENGTH = 500;
 
 const toDraft = (lesson: EditableLesson) => ({
   description: lesson.description ?? "",
+  displayOrder: String(lesson.displayOrder),
+  isActive: lesson.isActive,
   signs: lesson.signs.map((sign) => ({
     id: sign.id,
     label: sign.label,
@@ -225,6 +228,11 @@ function LessonForm({ lesson }: { lesson: EditableLesson }) {
     updateLesson.reset();
   };
 
+  const updateLessonFields = (changes: Partial<Draft>) => {
+    clearSaveMessages();
+    setDraft((current) => ({ ...current, ...changes }));
+  };
+
   const updateSign = (id: string, changes: Partial<DraftSign>) => {
     clearSaveMessages();
     setDraft((current) => ({
@@ -240,6 +248,8 @@ function LessonForm({ lesson }: { lesson: EditableLesson }) {
     updateLesson.mutate(
       {
         description: draft.description,
+        displayOrder: Number(draft.displayOrder),
+        isActive: draft.isActive,
         signs: draft.signs.map((sign) => ({
           id: sign.id,
           meaning: sign.meaning,
@@ -260,26 +270,64 @@ function LessonForm({ lesson }: { lesson: EditableLesson }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} noValidate className="space-y-6">
       {/* Locked while saving: the saved result replaces the draft, which would drop new typing. */}
       <fieldset disabled={updateLesson.isPending} className="min-w-0 space-y-6">
-        <StaffCard className="space-y-2 p-5 sm:p-6">
-          <Label htmlFor="lesson-description" className="font-bold">
-            Lesson description
-          </Label>
-          <Textarea
-            id="lesson-description"
-            rows={3}
-            maxLength={MAX_TEXT_LENGTH}
-            value={draft.description}
-            onChange={(e) => {
-              clearSaveMessages();
-              setDraft((current) => ({
-                ...current,
-                description: e.target.value,
-              }));
-            }}
-          />
+        <StaffCard className="space-y-5 p-5 sm:p-6">
+          <div className="space-y-2">
+            <Label htmlFor="lesson-description" className="font-bold">
+              Lesson description
+            </Label>
+            <Textarea
+              id="lesson-description"
+              rows={3}
+              maxLength={MAX_TEXT_LENGTH}
+              value={draft.description}
+              onChange={(e) =>
+                updateLessonFields({ description: e.target.value })
+              }
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="lesson-order" className="font-bold">
+              Order
+            </Label>
+            <Input
+              id="lesson-order"
+              type="number"
+              min={1}
+              value={draft.displayOrder}
+              aria-describedby="lesson-order-help"
+              onChange={(e) =>
+                updateLessonFields({ displayOrder: e.target.value })
+              }
+              className="h-10 w-24"
+            />
+            <p id="lesson-order-help" className="text-sm text-muted-foreground">
+              Choosing a taken position swaps the two lessons. This changes
+              which lesson opens next for every teacher's learners. Finished
+              lessons stay finished.
+            </p>
+          </div>
+
+          <label className="flex items-start gap-3 text-sm">
+            <input
+              type="checkbox"
+              checked={draft.isActive}
+              onChange={(e) =>
+                updateLessonFields({ isActive: e.target.checked })
+              }
+              className="mt-0.5 size-4 accent-primary"
+            />
+            <span>
+              <span className="font-bold">Visible to learners</span>
+              <span className="block text-muted-foreground">
+                Hidden lessons stay here for teachers to edit, but disappear for
+                every teacher's learners. Learner records are kept.
+              </span>
+            </span>
+          </label>
         </StaffCard>
 
         {draft.signs.length === 0 ? (

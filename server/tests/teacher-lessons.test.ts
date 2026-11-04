@@ -333,12 +333,146 @@ test("uploads only allow images and videos, and only teachers can start one", as
   }
 });
 
-test("a teacher can't see or edit a lesson an admin deactivated", async () => {
-  const { lesson } = await createLesson();
-  await prisma.category.update({ where: { id: lesson.id }, data: { isActive: false } });
+test("moving a lesson onto a taken position swaps the two, and logs both", async () => {
+  const area = await prisma.learningArea.create({
+    data: {
+      name: ctx.unique("area"),
+      categories: {
+        create: [
+          { name: "Swap first", displayOrder: 1 },
+          { name: "Swap second", displayOrder: 2 },
+        ],
+      },
+    },
+    include: { categories: { orderBy: { displayOrder: "asc" } } },
+  });
+  const [first, second] = area.categories;
 
-  assert.equal((await getLesson(lesson.id)).status, 404);
-  assert.equal((await patchLesson(lesson.id, { description: "No" })).status, 404);
+  assert.equal((await patchLesson(first!.id, { displayOrder: 2 })).status, 200);
+
+  assert.equal((await getLesson(first!.id)).data.displayOrder, 2);
+  assert.equal((await getLesson(second!.id)).data.displayOrder, 1);
+
+  const { data } = await ctx.request(
+    "GET",
+    "/api/admin/activity?action=LESSON_EDITED",
+    { token: adminToken },
+  );
+  const logged = data.entries.slice(0, 2).map((entry: { target: string }) => entry.target);
+  assert.deepEqual(logged.sort(), ["Swap first", "Swap second"]);
+});
+
+test("an invalid lesson order is rejected", async () => {
+  const { lesson } = await createLesson();
+
+  for (const displayOrder of [0, 1.5, "2"]) {
+    assert.equal((await patchLesson(lesson.id, { displayOrder })).status, 400);
+  }
+});
+
+test("a teacher can hide a lesson, keep working on it, and bring it back", async () => {
+  const { lesson } = await createLesson();
+  const isListedAsActive = async () => {
+    const { data } = await ctx.request("GET", "/api/teacher/assessments", {
+      token: teacherToken,
+    });
+    const categories = data.flatMap((area: { categories: object[] }) => area.categories);
+    return categories.find(
+      (category: { categoryId?: string }) => category.categoryId === lesson.id,
+    );
+  };
+
+  assert.equal((await patchLesson(lesson.id, { isActive: false })).status, 200);
+
+  assert.equal((await isListedAsActive()).isActive, false);
+  assert.equal((await getLesson(lesson.id)).data.isActive, false);
+  assert.equal((await patchLesson(lesson.id, { description: "Getting ready" })).status, 200);
+  assert.equal(
+    (await ctx.request("GET", `/api/learning/categories/${lesson.id}`, { token: learnerToken })).status >= 400,
+    true,
+  );
+
+  assert.equal((await patchLesson(lesson.id, { isActive: true })).status, 200);
+
+  assert.equal((await isListedAsActive()).isActive, true);
+  const restored = await ctx.request("GET", `/api/learning/categories/${lesson.id}`, {
+    token: learnerToken,
+  });
+  assert.equal(restored.status, 200);
+  assert.equal(restored.data.category.description, "Getting ready");
+});
+
+test("a learner can't open or submit a hidden lesson, even by direct link", async () => {
+  const { lesson, sign } = await createLesson();
+  const learner = await ctx.createUser("LEARNER");
+  const { data: session } = await ctx.request("POST", LOGIN_PATH.LEARNER, {
+    body: { identifier: learner.username, password: PASSWORD },
+  });
+  const token = session.token as string;
+
+  const assessment = await prisma.assessment.create({
+    data: {
+      categoryId: lesson.id,
+      createdBy: teacherId,
+      title: "Quiz",
+      passingScore: 70,
+      status: "PUBLISHED",
+      questions: {
+        create: {
+          gestureId: sign.id,
+          questionNumber: 1,
+          questionText: "Pick the sign",
+          questionType: "IMAGE_GESTURE",
+          choices: { create: { gestureId: sign.id, displayOrder: 1 } },
+        },
+      },
+    },
+    include: { questions: { include: { choices: true } } },
+  });
+  const question = assessment.questions[0]!;
+  const selectedChoiceId = question.choices[0]!.id;
+  await prisma.categoryProgress.create({
+    data: {
+      learnerId: learner.id,
+      categoryId: lesson.id,
+      status: "COMPLETED",
+      lessonCompletedAt: new Date(),
+    },
+  });
+
+  const learnPath = `/api/learning/categories/${lesson.id}`;
+  const quizPath = `/api/assessments/categories/${lesson.id}`;
+
+  // Guards the test itself: these work while the lesson is visible.
+  assert.equal((await ctx.request("GET", learnPath, { token })).status, 200);
+  assert.equal((await ctx.request("GET", quizPath, { token })).status, 200);
+
+  await patchLesson(lesson.id, { isActive: false });
+
+  const attempts = await Promise.all([
+    ctx.request("GET", learnPath, { token }),
+    ctx.request("PATCH", `${learnPath}/checkpoint`, {
+      token,
+      body: { gestureIndex: 0, lessonStep: "meaning" },
+    }),
+    ctx.request("GET", quizPath, { token }),
+    ctx.request("POST", `${quizPath}/questions/${question.id}/check`, {
+      token,
+      body: { selectedChoiceId },
+    }),
+    ctx.request("POST", `${quizPath}/submit`, {
+      token,
+      body: { answers: [{ questionId: question.id, selectedChoiceId }] },
+    }),
+  ]);
+
+  for (const response of attempts) {
+    assert.ok(response.status >= 400, `got ${response.status}`);
+  }
+  assert.equal(
+    await prisma.assessmentAttempt.count({ where: { assessmentId: assessment.id } }),
+    0,
+  );
 });
 
 test("only teachers can use the lesson editor", async () => {

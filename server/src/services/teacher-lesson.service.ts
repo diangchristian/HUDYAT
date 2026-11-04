@@ -35,6 +35,12 @@ const lessonText = (name: string) =>
 
 const lessonInput = z.object({
   description: lessonText("Description").optional(),
+  displayOrder: z
+    .number("Order must be a whole number from 1.")
+    .int("Order must be a whole number from 1.")
+    .min(1, "Order must be a whole number from 1.")
+    .optional(),
+  isActive: z.boolean("Visibility must be true or false.").optional(),
   signs: z
     .array(
       z.object({
@@ -127,10 +133,9 @@ export const signMediaUpload = async (input: unknown) => {
   };
 };
 
-// Inactive lessons are hidden from teachers too, so they read as not found.
 const findLesson = async (categoryId: string) => {
   const lesson = await prisma.category.findUnique({
-    where: { id: categoryId, isActive: true },
+    where: { id: categoryId },
     include: {
       learningArea: { select: { name: true } },
       gestures: {
@@ -150,6 +155,8 @@ export const getLesson = async (categoryId: string) => {
     id: lesson.id,
     name: lesson.name,
     description: lesson.description,
+    displayOrder: lesson.displayOrder,
+    isActive: lesson.isActive,
     areaName: lesson.learningArea.name,
     signs: lesson.gestures.map(({ gesture, exampleUsage }) => ({
       id: gesture.id,
@@ -167,7 +174,10 @@ export const updateLesson = async (
   categoryId: string,
   input: unknown,
 ) => {
-  const { description, signs = [] } = parseInput(lessonInput, input);
+  const { description, displayOrder, isActive, signs = [] } = parseInput(
+    lessonInput,
+    input,
+  );
   const lesson = await findLesson(categoryId);
 
   for (const sign of signs) {
@@ -181,12 +191,33 @@ export const updateLesson = async (
   }
 
   await prisma.$transaction(async (tx) => {
-    if (description !== undefined) {
-      await tx.category.update({
-        where: { id: lesson.id },
-        data: { description },
+    if (displayOrder !== undefined && displayOrder !== lesson.displayOrder) {
+      const holder = await tx.category.findFirst({
+        where: { learningAreaId: lesson.learningAreaId, displayOrder },
       });
+
+      if (holder) {
+        // The order is unique per area, so step aside before swapping.
+        await tx.category.update({
+          where: { id: lesson.id },
+          data: { displayOrder: -lesson.displayOrder },
+        });
+        await tx.category.update({
+          where: { id: holder.id },
+          data: { displayOrder: lesson.displayOrder },
+        });
+        await recordAudit(tx, actorId, "LESSON_EDITED", "CATEGORY", holder.id, holder.name);
+      }
     }
+
+    await tx.category.update({
+      where: { id: lesson.id },
+      data: {
+        ...(description !== undefined && { description }),
+        ...(displayOrder !== undefined && { displayOrder }),
+        ...(isActive !== undefined && { isActive }),
+      },
+    });
 
     for (const sign of signs) {
       // The meaning and media belong to the sign; the example belongs to this lesson.

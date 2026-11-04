@@ -384,7 +384,7 @@ export default function QuizzesPage() {
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("ALL");
   const [createOpen, setCreateOpen] = useState(false);
 
-  const lessons = flattenLessons(areas ?? []);
+  const lessons = flattenLessons(areas ?? []).filter((lesson) => lesson.isActive);
   const quizzes = quizzesOf(lessons);
   const lessonsMissingQuiz = lessonsWithoutQuiz(lessons);
   const visibleQuizzes = quizzes.filter(

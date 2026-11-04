@@ -28,8 +28,9 @@ const gestureSelect = {
 } as const;
 
 /*
- * Every active category grouped by learning area, with a summary of
- * its assessment (or null when the category has none yet).
+ * Every category grouped by learning area, with a summary of its
+ * assessment (or null when the category has none yet). Includes lessons
+ * hidden from learners, since teachers can still edit and restore them.
  */
 export const listAssessments = async () => {
   const learningAreas = await prisma.learningArea.findMany({
@@ -37,7 +38,6 @@ export const listAssessments = async () => {
     orderBy: { displayOrder: "asc" },
     include: {
       categories: {
-        where: { isActive: true },
         orderBy: { displayOrder: "asc" },
         include: {
           _count: { select: { gestures: true } },
@@ -61,6 +61,7 @@ export const listAssessments = async () => {
       categoryName: category.name,
       categoryDescription: category.description,
       categoryUpdatedAt: category.updatedAt,
+      isActive: category.isActive,
       gestureCount: category._count.gestures,
       assessment: category.assessment
         ? {

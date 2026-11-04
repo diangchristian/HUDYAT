@@ -67,27 +67,6 @@ export type AdminLearner = {
   dateJoined: string;
 };
 
-export type AdminLesson = {
-  id: string;
-  name: string;
-  description: string | null;
-  displayOrder: number;
-  isActive: boolean;
-  signCount: number;
-};
-
-export type AdminArea = {
-  id: string;
-  name: string;
-  lessons: AdminLesson[];
-};
-
-/** Lesson content belongs to teachers; admin only controls these settings. */
-export type LessonInput = {
-  displayOrder: number;
-  isActive: boolean;
-};
-
 export function getAdminOverview(signal?: AbortSignal) {
   return unwrap<AdminOverview>(api.get("/api/admin/overview", { signal }));
 }
@@ -126,14 +105,6 @@ export function setAdminLearnerStatus(id: string, isActive: boolean) {
   return unwrap<{ id: string; isActive: boolean }>(
     api.patch(`/api/admin/learners/${id}/status`, { isActive }),
   );
-}
-
-export function getAdminLessons(signal?: AbortSignal) {
-  return unwrap<AdminArea[]>(api.get("/api/admin/lessons", { signal }));
-}
-
-export function updateLesson(id: string, data: LessonInput) {
-  return unwrap<{ id: string }>(api.patch(`/api/admin/lessons/${id}`, data));
 }
 
 export function getAdminActivity(

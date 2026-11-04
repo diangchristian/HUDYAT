@@ -8,21 +8,6 @@ export const getOverview = serviceEndpoint(
   "Unable to load the overview.",
 );
 
-export const listLessons = serviceEndpoint(
-  () => adminContentService.listLessons(),
-  "Unable to load lessons.",
-);
-
-export const updateLesson = serviceEndpoint(
-  (req) =>
-    adminContentService.updateLesson(
-      req.user!.id,
-      req.params.lessonId as string,
-      req.body,
-    ),
-  "Unable to update this lesson.",
-);
-
 export const listTeachers = serviceEndpoint(
   () => accountService.listTeachers(),
   "Unable to load teachers.",

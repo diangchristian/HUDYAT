@@ -29,7 +29,7 @@ export default function AdminOverviewPage() {
     <div className="space-y-6">
       <StaffPageHeader
         title="Overview"
-        description="Accounts, lessons and recent activity across HUDYAT."
+        description="Accounts and recent activity across HUDYAT."
       />
 
       <QueryState

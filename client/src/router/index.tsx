@@ -34,7 +34,6 @@ import TeacherSettingsPage from "@/pages/teacher/TeacherSettingsPage";
 import AdminOverviewPage from "@/pages/admin/AdminOverviewPage";
 import AdminTeachersPage from "@/pages/admin/AdminTeachersPage";
 import AdminLearnersPage from "@/pages/admin/AdminLearnersPage";
-import AdminLessonsPage from "@/pages/admin/AdminLessonsPage";
 import AdminActivityPage from "@/pages/admin/AdminActivityPage";
 import AdminSettingsPage from "@/pages/admin/AdminSettingsPage";
 
@@ -203,10 +202,6 @@ export const router = createBrowserRouter([
           {
             path: "/admin/learners",
             element: <AdminLearnersPage />,
-          },
-          {
-            path: "/admin/lessons",
-            element: <AdminLessonsPage />,
           },
           {
             path: "/admin/activity",

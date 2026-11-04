@@ -99,10 +99,11 @@ mounted in `src/app.ts` at `/api/<feature>`; `src/index.ts` only starts the serv
   target gesture and come from the category's gestures. Once an assessment has any
   attempts it is "locked": only question text can change — gestures, choices, points,
   type and the passing score are frozen (409 otherwise).
-- **Teachers own lesson content, admins own lesson settings**: teachers edit the
-  description, each sign's `meaning` and `exampleUsage`, and reference media
-  (`services/teacher-lesson.service.ts`); admins only change order and active state
-  (`services/admin-content.service.ts`). `meaning` and media live on `FslGesture`, so
+- **Teachers own lessons; admins own accounts and oversight**: teachers edit the
+  description, order, visibility (`isActive`), each sign's `meaning` and `exampleUsage`,
+  and reference media (`services/teacher-lesson.service.ts`). These apply to all
+  learners, since teachers share them. Hidden lessons stay listed for teachers and are
+  blocked for learners, even by direct link. `meaning` and media live on `FslGesture`, so
   edits reach every lesson using that sign; `exampleUsage` belongs to one lesson. The
   list of signs stays fixed, since a new sign needs a trained model. Empty text shows
   placeholders from `client/src/lib/lesson-text.ts`. Teachers upload media straight
@@ -185,7 +186,7 @@ mounted in `src/app.ts` at `/api/<feature>`; `src/index.ts` only starts the serv
   under `src/pages/teacher/` (`/teacher/dashboard`, `lessons`, `lessons/:categoryId`, `quizzes`,
   `quizzes/:categoryId`, `students`, `students/:learnerId`, `settings`; login at
   `/teacher/login`), admin pages under `src/pages/admin/` (`/admin/overview`,
-  `teachers`, `learners`, `lessons`, `activity`, `settings`; login at `/admin/login`).
+  `teachers`, `learners`, `activity`, `settings`; login at `/admin/login`).
   The UI says "Lessons"/"Quizzes"/"Students" for what the backend
   calls categories/assessments/learners. Login forms send `identifier` (username or
   email) — the server accepts either.
