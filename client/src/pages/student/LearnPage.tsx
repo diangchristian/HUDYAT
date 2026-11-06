@@ -1,4 +1,11 @@
-import { useNavigate } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
+
+import PrototypeSwitcher from "@/components/prototype/prototype-switcher";
+import {
+  LEARN_CARD_VARIANTS,
+  LEARN_CARDS,
+  LearnCardStyles,
+} from "./learn-cards-prototype/learn-card-variants";
 
 import CategoryCard from "@/components/common/category-card";
 import { CATEGORIES } from "@/components/common/categories.constants";
@@ -15,6 +22,10 @@ const STATUS_LABELS = {
 
 export default function LearnPage() {
   const navigate = useNavigate();
+  // PROTOTYPE: ?variant=duo-card|duo-card-spot|duo-card-sky|duo-card-pattern|duo-card-night|duo-card-sea|duo-card-meadow swaps the card design (dev only).
+  const variantKey = useSearchParams()[0].get("variant");
+  const proto =
+    import.meta.env.DEV && variantKey ? LEARN_CARDS[variantKey] : undefined;
 
   const {
     data: learningAreas = [],
@@ -114,6 +125,20 @@ export default function LearnPage() {
      */
     const progress =
       category.progressPercent;
+
+    if (proto) {
+      return (
+        <proto.Card
+          key={category.id}
+          title={category.name}
+          color={presentation?.color ?? "blue"}
+          progress={progress}
+          status={category.learningStatus}
+          statusText={statusText}
+          onClick={() => navigate(`/student/learn/${category.id}`)}
+        />
+      );
+    }
 
     return (
       <CategoryCard
@@ -239,7 +264,7 @@ export default function LearnPage() {
                 {/* CATEGORY CARDS */}
                 {area.categories.length >
                 0 ? (
-                  <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                  <div className={proto?.grid ?? "grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"}>
                     {area.categories.map(
                       renderCategory,
                     )}
@@ -254,6 +279,14 @@ export default function LearnPage() {
             ))}
           </div>
         )}
+
+      {proto && variantKey && (
+        <>
+          <LearnCardStyles />
+          <div className="h-20" />
+          <PrototypeSwitcher variants={LEARN_CARD_VARIANTS} current={variantKey} />
+        </>
+      )}
     </section>
   );
 }
