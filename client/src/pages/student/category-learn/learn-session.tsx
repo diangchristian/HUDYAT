@@ -20,6 +20,7 @@ import { useSaveLessonCheckpoint } from "@/hooks/use-save-lesson-checkpoint";
 import { categorySlug, type PracticePrompt } from "@/lib/practice";
 import { cn } from "@/lib/utils";
 
+import Celebration from "./celebration";
 import StepCard from "./step-cards";
 import "./learn-session.css";
 
@@ -42,8 +43,7 @@ const STEP_META = {
 // The character reads along on text steps and stays still for the video and camera.
 const MOOD: Record<LessonStep, "talk" | "watch"> = { meaning: "talk", context: "talk", how: "watch", try: "watch" };
 
-const CONFETTI = ["#FF4B4B", "#FFC145", "#1CB0F6", "#58CC02", "#CE82FF", "#FF86D0"];
-const CHEER_MS = 1800;
+const CHEER_MS = 2200;
 
 const TABLET = "(min-width: 640px)";
 const subscribeTablet = (onChange: () => void) => {
@@ -72,8 +72,9 @@ export default function LearnSession({ categoryId, title, prompts, initialGestur
 
   const [index, setIndex] = useState(() => Math.min(Math.max(initialGestureIndex, 0), prompts.length - 1));
   const [step, setStep] = useState<LessonStep>(initialStep && STEPS.includes(initialStep) ? initialStep : "meaning");
-  const [cheerUntil, setCheerUntil] = useState(0);
-  const cheering = cheerUntil > 0;
+  // The sign just finished, while its celebration plays; `at` lets back-to-back cheers restart.
+  const [cheer, setCheer] = useState<{ at: number; label: string } | null>(null);
+  const cheering = cheer !== null;
 
   const prompt = prompts[index];
   const stepIndex = STEPS.indexOf(step);
@@ -84,10 +85,9 @@ export default function LearnSession({ categoryId, title, prompts, initialGestur
 
   const goTo = (nextIndex: number, nextStep: LessonStep) => {
     if (nextIndex > index) {
-      // Celebrate a finished sign; the timestamp key lets back-to-back cheers restart.
-      const until = Date.now();
-      setCheerUntil(until);
-      setTimeout(() => setCheerUntil((current) => (current === until ? 0 : current)), CHEER_MS);
+      const at = Date.now();
+      setCheer({ at, label: prompts[index].label });
+      setTimeout(() => setCheer((current) => (current?.at === at ? null : current)), CHEER_MS);
     }
     setIndex(nextIndex);
     setStep(nextStep);
@@ -118,17 +118,7 @@ export default function LearnSession({ categoryId, title, prompts, initialGestur
 
   return (
     <div className="min-h-dvh bg-[#FFF8E7] pb-[calc(9.5rem+env(safe-area-inset-bottom))] font-body sm:pb-[calc(6.5rem+env(safe-area-inset-bottom))]">
-      {cheering && (
-        <div key={cheerUntil} aria-hidden="true" className="pointer-events-none fixed inset-0 z-40 overflow-hidden motion-reduce:hidden">
-          {Array.from({ length: 36 }, (_, i) => (
-            <span
-              key={i}
-              className="ls-confetti absolute top-0 size-3 rounded-sm"
-              style={{ left: `${(i * 37) % 100}%`, background: CONFETTI[i % CONFETTI.length], animationDelay: `${(i % 9) * 60}ms` }}
-            />
-          ))}
-        </div>
-      )}
+      {cheer && <Celebration key={cheer.at} label={cheer.label} durationMs={CHEER_MS} />}
 
       {/* SIGN TRAIL */}
       <section aria-label="Your sign trail" className="relative h-44 overflow-hidden rounded-b-[2rem] border-b-4 border-white shadow-[0_6px_0_#0000000d] sm:h-60">

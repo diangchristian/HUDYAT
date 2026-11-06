@@ -9,7 +9,22 @@
 .ls-mood-watch * { animation-play-state: paused !important }
 
 @keyframes ls-talk { 0%,100% { transform: translateY(0) scale(1,1) } 30% { transform: translateY(-3px) scale(.98,1.03) } 60% { transform: translateY(0) scale(1.02,.98) } }
-@keyframes ls-confetti { from { transform: translateY(-20px) rotate(0); opacity: 1 } to { transform: translateY(105vh) rotate(540deg); opacity: .2 } }
+/* Celebration: pieces shoot up fast (ease-out), hang at the peak, then fall with gravity (ease-in). */
+@keyframes ls-burst {
+  0% { transform: translate(0, 0) rotate(0) scale(.5); opacity: 1; animation-timing-function: cubic-bezier(.15,.75,.35,1) }
+  38% { transform: translate(calc(var(--x) * .65), var(--peak)) rotate(calc(var(--r) * .4)) scale(1); animation-timing-function: cubic-bezier(.55,0,.85,.45) }
+  85% { opacity: 1 }
+  100% { transform: translate(var(--x), 12vh) rotate(var(--r)); opacity: 0 }
+}
+@keyframes ls-flutter { to { transform: rotateX(360deg) } }
+@keyframes ls-badge {
+  0% { transform: scale(.3); opacity: 0 }
+  12% { transform: scale(1.15); opacity: 1 }
+  20%, 82% { transform: scale(1); opacity: 1 }
+  100% { transform: scale(.9) translateY(-12px); opacity: 0 }
+}
+@keyframes ls-rays { to { transform: rotate(360deg) } }
+.ls-rays { background: repeating-conic-gradient(#FFC14555 0 10deg, transparent 10deg 20deg); mask: radial-gradient(circle, #000 30%, transparent 70%) }
 @keyframes ls-pop { 0% { transform: scale(.5); opacity: 0 } 70% { transform: scale(1.08) } 100% { transform: scale(1); opacity: 1 } }
 @keyframes ls-rise { from { transform: translateY(16px); opacity: 0 } to { transform: translateY(0); opacity: 1 } }
 @keyframes ls-pulse { 0%,100% { box-shadow: 0 0 0 0 var(--ring) } 50% { box-shadow: 0 0 0 10px transparent } }
@@ -20,5 +35,8 @@
   .ls-pop { animation: ls-pop .45s cubic-bezier(.34,1.56,.64,1) both }
   .ls-rise { animation: ls-rise .35s ease-out both }
   .ls-pulse { animation: ls-pulse 1.6s ease-out infinite }
-  .ls-confetti { animation: ls-confetti 1.6s ease-in both }
+  .ls-piece { animation: ls-burst var(--d) both }
+  .ls-flutter { animation: ls-flutter .5s linear infinite }
+  .ls-badge { animation: ls-badge var(--d) both }
+  .ls-rays { animation: ls-rays 6s linear infinite }
 }
