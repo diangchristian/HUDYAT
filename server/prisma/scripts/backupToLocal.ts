@@ -25,7 +25,8 @@ execFileSync("pg_dump", [directSource, "-Fc", "--no-owner", "--no-acl", "-f", fi
 console.log("Restoring into local database...");
 execFileSync(
   "pg_restore",
-  ["-d", target, "--clean", "--if-exists", "--no-owner", "--no-acl", file],
+  // --single-transaction: a failed restore rolls back instead of leaving a half-empty copy.
+  ["-d", target, "--single-transaction", "--clean", "--if-exists", "--no-owner", "--no-acl", file],
   { stdio: "inherit" },
 );
 
