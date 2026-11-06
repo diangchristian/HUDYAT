@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type Ref } from "react";
 import { ImageOff } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -8,6 +8,7 @@ type ReferenceMediaProps = {
   imageUrl?: string | null;
   label: string;
   className?: string;
+  videoRef?: Ref<HTMLVideoElement>;
 };
 
 export default function ReferenceMedia({
@@ -15,6 +16,7 @@ export default function ReferenceMedia({
   imageUrl,
   label,
   className,
+  videoRef,
 }: ReferenceMediaProps) {
   const [mediaFailed, setMediaFailed] = useState(false);
   const [trackedSrc, setTrackedSrc] = useState({ videoUrl, imageUrl });
@@ -39,6 +41,7 @@ export default function ReferenceMedia({
       {!mediaFailed && videoUrl ? (
         <video
           key={videoUrl}
+          ref={videoRef}
           controls
           playsInline
           preload="metadata"

@@ -1,0 +1,24 @@
+/*
+ * Category learn page motion. The lesson character's moods reuse the
+ * learn-card classes (lc-*) from components/common/learn-card.
+ * Rule: the character and its world move while the child reads, and freeze
+ * while the sign video plays or the camera is on (mood "watch").
+ */
+.ls-mood-cheer .lc-eyes, .ls-mood-cheer .lc-smile { opacity: 0 }
+.ls-mood-cheer .lc-happy, .ls-mood-cheer .lc-open { opacity: 1 }
+.ls-mood-watch * { animation-play-state: paused !important }
+
+@keyframes ls-talk { 0%,100% { transform: translateY(0) scale(1,1) } 30% { transform: translateY(-3px) scale(.98,1.03) } 60% { transform: translateY(0) scale(1.02,.98) } }
+@keyframes ls-confetti { from { transform: translateY(-20px) rotate(0); opacity: 1 } to { transform: translateY(105vh) rotate(540deg); opacity: .2 } }
+@keyframes ls-pop { 0% { transform: scale(.5); opacity: 0 } 70% { transform: scale(1.08) } 100% { transform: scale(1); opacity: 1 } }
+@keyframes ls-rise { from { transform: translateY(16px); opacity: 0 } to { transform: translateY(0); opacity: 1 } }
+@keyframes ls-pulse { 0%,100% { box-shadow: 0 0 0 0 var(--ring) } 50% { box-shadow: 0 0 0 10px transparent } }
+
+@media (prefers-reduced-motion: no-preference) {
+  .ls-mood-talk .lc-char { animation: ls-talk 1.1s ease-in-out infinite }
+  .ls-mood-cheer .lc-char { animation: lc-hop .7s ease-in-out infinite }
+  .ls-pop { animation: ls-pop .45s cubic-bezier(.34,1.56,.64,1) both }
+  .ls-rise { animation: ls-rise .35s ease-out both }
+  .ls-pulse { animation: ls-pulse 1.6s ease-out infinite }
+  .ls-confetti { animation: ls-confetti 1.6s ease-in both }
+}
