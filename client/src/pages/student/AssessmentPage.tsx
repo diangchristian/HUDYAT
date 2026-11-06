@@ -14,14 +14,11 @@ import type {
   AssessmentListCategory,
   AssessmentListStatus,
 } from "@/api/assessment-api";
-import {
-  CATEGORIES,
-  CATEGORY_THEME,
-} from "@/components/common/categories.constants";
+import { CATEGORIES } from "@/components/common/categories.constants";
+import LessonStage from "@/components/common/learn-card/lesson-stage";
 import StatusBadge, {
   type StatusBadgeTone,
 } from "@/components/common/status-badge";
-import { cn } from "@/lib/utils";
 
 const filters = ["All", "Available", "Completed"] as const;
 
@@ -69,9 +66,6 @@ const AssessmentPage = () => {
       (item) => item.title === category.categoryName,
     );
 
-    const theme = CATEGORY_THEME[presentation?.color ?? "blue"];
-    const ThumbnailIcon = presentation?.icon ?? Sparkles;
-
     const isLocked = !category.isUnlocked;
     const isCompleted = category.status === "completed";
     const hasAttempted = category.attemptCount > 0;
@@ -95,7 +89,7 @@ const AssessmentPage = () => {
     return (
       <article
         key={category.categoryId}
-        className={`relative flex min-h-91.25 w-full flex-col overflow-hidden rounded-2xl border border-[#dbc8ae] bg-white p-4 shadow-[0_2px_3px_rgb(0_0_0/0.06)] sm:w-full ${isLocked ? "opacity-60" : ""}`}
+        className={`group relative flex min-h-91.25 w-full flex-col overflow-hidden rounded-2xl border border-[#dbc8ae] bg-white p-4 shadow-[0_2px_3px_rgb(0_0_0/0.06)] sm:w-full ${isLocked ? "opacity-60" : ""}`}
       >
         <div
           className="absolute inset-x-0 top-0 h-1"
@@ -115,16 +109,12 @@ const AssessmentPage = () => {
           </span>
         </div>
 
-        <div
-          className={cn(
-            "relative flex h-31.5 items-center justify-center overflow-hidden rounded-xl border border-[#dbe1e4]",
-            theme.bg,
-            theme.icon,
-          )}
-        >
-          <div className="absolute inset-3 rounded-lg border-2 border-white/70 bg-white/35" />
-          <ThumbnailIcon className="relative size-14 drop-shadow-sm" />
-        </div>
+        <LessonStage
+          title={category.categoryName}
+          color={presentation?.color ?? "blue"}
+          asleep={isLocked}
+          className="rounded-xl border border-[#dbe1e4]"
+        />
 
         <div className="flex flex-1 flex-col pt-4">
           <h2 className="text-xl font-extrabold">{category.categoryName}</h2>

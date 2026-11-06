@@ -7,9 +7,8 @@
 import type { CategoryColor, CategoryStatus } from "@/components/common/category-card";
 import { cn } from "@/lib/utils";
 
-import { LessonCharacter, PALETTE } from "./characters";
-import { WorldStage } from "./worlds";
-import "./learn-card.css";
+import { PALETTE } from "./characters";
+import LessonStage from "./lesson-stage";
 
 const LOCKED = { main: "#D7D7D7", dark: "#AFAFAF" };
 
@@ -44,11 +43,7 @@ export default function LearnCard({ title, color, progress, status, statusText, 
         locked && "cursor-not-allowed hover:translate-y-0 hover:border-[#E5E5E5] hover:shadow-[0_6px_0_#E5E5E5]",
       )}
     >
-      <div className="relative flex h-44 items-end justify-center overflow-hidden">
-        <WorldStage title={title} p={PALETTE[color]} locked={locked} />
-        <span className="lc-shadow absolute bottom-3 h-3 w-20 rounded-[50%] bg-black/20" />
-        <LessonCharacter title={title} color={color} asleep={locked} className="relative mb-4 size-28" />
-      </div>
+      <LessonStage title={title} color={color} asleep={locked} />
 
       <div className="flex flex-col items-center px-5 pb-5 pt-3">
         <h3 className={cn("text-xl font-extrabold", locked ? "text-[#AFAFAF]" : "text-[#4B4B4B]")}>{title}</h3>
