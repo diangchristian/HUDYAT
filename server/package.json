@@ -16,6 +16,7 @@
     "seed:test-admin": "tsx prisma/seeder/testAdminSeeder.ts",
     "upload:media": "tsx prisma/scripts/uploadGestureMedia.ts",
     "models:register": "tsx prisma/scripts/registerModels.ts",
+    "db:backup-local": "tsx prisma/scripts/backupToLocal.ts",
     "predev": "prisma generate",
     "prebuild": "prisma generate",
     "premodels:register": "prisma generate"

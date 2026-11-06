@@ -49,6 +49,12 @@ teachers author assessments and monitor learner progress.
   `testlearner@hudyat.local` / `testadmin@hudyat.local`, password `Test1234!`) come
   from the `test*Seeder.ts` files; the learner one has no npm script — run it with
   `npx tsx prisma/seeder/testLearnerSeeder.ts`.
+- `npm run db:backup-local` copies the Neon database (`DATABASE_URL`) into a local
+  Postgres (`LOCAL_DATABASE_URL`) as an offline fallback; needs PostgreSQL 17+ tools
+  on PATH and the local database created first (`createdb -U postgres hudyat`). To
+  go offline, point `DATABASE_URL` at the local URL. It's a one-way copy: offline
+  changes don't sync back, and Cloudinary media still needs internet. Dumps land in
+  gitignored `server/backups/`.
 - Prisma CLI is invoked directly (no package.json wrapper scripts): `npx prisma
   migrate dev`, `npx prisma generate`. Config is in `prisma7.config.ts`, schema in
   `prisma/schema.prisma`.
