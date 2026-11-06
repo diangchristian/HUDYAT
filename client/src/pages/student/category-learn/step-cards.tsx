@@ -93,7 +93,7 @@ function ContextCard({ prompt, title, color }: CardProps) {
   );
 }
 
-function HowCard({ prompt }: CardProps) {
+export function HowCard({ prompt }: Pick<CardProps, "prompt">) {
   const video = useRef<HTMLVideoElement>(null);
   const [slow, setSlow] = useState(false);
   const again = () => {

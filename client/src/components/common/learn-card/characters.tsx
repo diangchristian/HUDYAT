@@ -149,7 +149,8 @@ const CHARACTERS: Record<string, Draw> = {
   "WH Questions": (c, z) => (
     <>
       <g className={z ? undefined : "lc-tilt"}>
-        <Body d={`${rr(8, 18, 62, 44, 16)} M20 56 L16 74 L36 58z`} tone={c} />
+        {/* Tail wound the same way as the bubble, so the overlap fills instead of cancelling (nonzero rule). */}
+        <Body d={`${rr(8, 18, 62, 44, 16)} M20 56 L36 58 L16 74z`} tone={c} />
         <Face x={39} y={38} asleep={z} />
       </g>
       <text className="lc-float" x={70} y={16} textAnchor="middle" fontSize={20} fontWeight={900} fill={GOLD.main}>?</text>
