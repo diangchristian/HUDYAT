@@ -1,7 +1,6 @@
 /* eslint-disable react-refresh/only-export-components -- throwaway prototype */
 // PROTOTYPE: three animated student navbars on existing routes, selected by ?variant=nav-*.
 import type { ReactNode } from "react";
-import { Pause, Play } from "lucide-react";
 import PrototypeSwitcher from "@/components/prototype/prototype-switcher";
 import "./navbar-prototype.css";
 
@@ -162,17 +161,9 @@ export function CartoonNavIcon({ name }: { name: string }) {
   );
 }
 
-export default function NavbarPrototypeControls({ current, playing, onToggle }: {
-  current: string;
-  playing: boolean;
-  onToggle: () => void;
-}) {
-  const MotionIcon = playing ? Pause : Play;
+export default function NavbarPrototypeControls({ current }: { current: string }) {
   return (
     <div className="nvp-controls">
-      <button type="button" onClick={onToggle} className="nvp-motion" aria-pressed={!playing}>
-        <MotionIcon size={14} aria-hidden="true" />{playing ? "Pause navbar animations" : "Play navbar animations"}
-      </button>
       <PrototypeSwitcher variants={[...NAVBAR_VARIANTS]} current={current} />
     </div>
   );

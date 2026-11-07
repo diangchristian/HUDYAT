@@ -36,8 +36,8 @@ The desktop sidebar and mobile bottom navbar use the same six original icon char
 | Other | Pastel dotted orbit | Cloud smiles and its dots bounce |
 
 Hover and focus also reveal a matching background pattern on each nav item.
-The icons blink and breathe at rest. A pause/play control stops navbar motion without
-stopping the page's own animations, and reduced-motion preferences disable animation.
+The icons blink and breathe at rest. The user requested removing the pause/play button;
+navbar animations run automatically and reduced-motion preferences disable animation.
 
 ## Scope and verdict
 

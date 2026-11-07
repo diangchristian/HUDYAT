@@ -46,7 +46,6 @@ const SidebarLayout = ({
   const navbarPrototype = import.meta.env.DEV
     ? NAVBAR_VARIANTS.find((variant) => variant.key === searchParams.get("variant"))
     : undefined;
-  const [navPlaying, setNavPlaying] = useState(true);
   const prototypeSearch = navbarPrototype ? `?${searchParams.toString()}` : "";
 
   const handleLogout = () => {
@@ -83,7 +82,6 @@ const SidebarLayout = ({
     <div
       className={`flex flex-col lg:flex-row min-h-screen${navbarPrototype ? " nvp-root" : ""}`}
       data-nav-variant={navbarPrototype?.key}
-      data-nav-motion={navbarPrototype ? (navPlaying ? "playing" : "paused") : undefined}
       data-nav-menu-open={navbarPrototype && showPopover ? "open" : undefined}
     >
       {/* Spacer to preserve main content's layout while the sidebar is fixed */}
@@ -253,11 +251,7 @@ const SidebarLayout = ({
         </ul>
       </nav>
       {import.meta.env.DEV && navbarPrototype && (
-        <NavbarPrototypeControls
-          current={navbarPrototype.key}
-          playing={navPlaying}
-          onToggle={() => setNavPlaying((playing) => !playing)}
-        />
+        <NavbarPrototypeControls current={navbarPrototype.key} />
       )}
     </div>
   );

@@ -5,7 +5,7 @@
 .nvp-root .nvp-links > li { margin: 0; }
 .nvp-root .nvp-links { display: flex; flex-direction: column; gap: .7rem; }
 .nvp-root .nvp-link { position: relative; min-height: 3.8rem; border: 2px solid transparent; border-radius: 1.2rem; color: #695844; font-size: .8rem; font-weight: 900; text-transform: none; box-shadow: none; }
-.nvp-root .nvp-link:focus-visible, .nvp-motion:focus-visible { outline: 3px solid #ac7c22; outline-offset: 3px; }
+.nvp-root .nvp-link:focus-visible { outline: 3px solid #ac7c22; outline-offset: 3px; }
 .nvp-root .nvp-icon { position: relative; display: grid; width: 2.9rem; height: 2.9rem; flex-shrink: 0; place-items: center; border: 0; background: none; padding: 0; }
 .nvp-drawing { display: block; width: 100%; height: 100%; overflow: visible; }
 .nvp-root .nvp-label { min-width: 0; line-height: 1.3; }
@@ -51,8 +51,6 @@
 .nvp-controls { position: fixed; z-index: 50; bottom: 7rem; left: 50%; display: flex; width: max-content; max-width: calc(100vw - 1rem); align-items: center; flex-direction: column; gap: .4rem; transform: translateX(-50%); }
 .nvp-controls > div { position: static; max-width: 100%; transform: none; }
 .nvp-controls > div > span { min-width: 0; max-width: 17rem; }
-.nvp-motion { display: inline-flex; min-height: 2.75rem; align-items: center; gap: .4rem; padding: .35rem .8rem; border: 1px solid #d8cdbb; border-radius: 2rem; background: white; color: #6c5b43; font: 800 .65rem var(--font-body); box-shadow: 0 2px 6px #0000000b; cursor: pointer; }
-.nvp-motion:hover { background: #fff4d6; }
 
 .nvp-eyes, .nvp-roof, .nvp-page, .nvp-hand, .nvp-pencil, .nvp-cup, .nvp-spark, .nvp-dot, .nvp-house, .nvp-book, .nvp-clipboard, .nvp-cloud { transform-box: fill-box; transform-origin: center; }
 .nvp-eyes { transform-origin: center; }
@@ -80,23 +78,19 @@
   .nvp-root .nvp-hand { animation: nvp-breathe 5s ease-in-out infinite; }
   .nvp-root .nvp-spark { animation: nvp-twinkle 3s ease-in-out infinite; }
   .nvp-root .nvp-link { transition: transform .2s ease, background-color .2s, box-shadow .2s; }
-  .nvp-root[data-nav-motion="playing"] .nvp-link:is(:hover, :focus-visible) { transform: translateY(-2px); }
-  .nvp-root[data-nav-motion="playing"] .nvp-link:is(:hover, :focus-visible) .nvp-roof { animation: nvp-roof-pop .7s ease; }
-  .nvp-root[data-nav-motion="playing"] .nvp-link:is(:hover, :focus-visible) .nvp-page { animation: nvp-page-flip .85s ease; }
-  .nvp-root[data-nav-motion="playing"] .nvp-link:is(:hover, :focus-visible) .nvp-hand { animation: nvp-wave 1s ease; }
-  .nvp-root[data-nav-motion="playing"] .nvp-link:is(:hover, :focus-visible) .nvp-pencil { animation: nvp-write .85s ease; }
-  .nvp-root[data-nav-motion="playing"] .nvp-link:is(:hover, :focus-visible) .nvp-cup { animation: nvp-hop .85s ease; }
-  .nvp-root[data-nav-motion="playing"] .nvp-link:is(:hover, :focus-visible) .nvp-dot { animation: nvp-dot-pop .7s ease; }
-  .nvp-root[data-nav-motion="playing"] .nvp-link:is(:hover, :focus-visible) .nvp-dot-two { animation-delay: .08s; }
-  .nvp-root[data-nav-motion="playing"] .nvp-link:is(:hover, :focus-visible) .nvp-dot-three { animation-delay: .16s; }
-  .nvp-root[data-nav-variant="nav-stickers"][data-nav-motion="playing"] .nvp-link:is(:hover, :focus-visible) { transform: translateY(-3px) rotate(-2deg); box-shadow: 0 7px 0 #e8ddc9; }
-  .nvp-root[data-nav-variant="nav-orbit"][data-nav-motion="playing"] .nvp-link:is(:hover, :focus-visible) .nvp-icon { animation: nvp-hop .85s ease; }
+  .nvp-root .nvp-link:is(:hover, :focus-visible) { transform: translateY(-2px); }
+  .nvp-root .nvp-link:is(:hover, :focus-visible) .nvp-roof { animation: nvp-roof-pop .7s ease; }
+  .nvp-root .nvp-link:is(:hover, :focus-visible) .nvp-page { animation: nvp-page-flip .85s ease; }
+  .nvp-root .nvp-link:is(:hover, :focus-visible) .nvp-hand { animation: nvp-wave 1s ease; }
+  .nvp-root .nvp-link:is(:hover, :focus-visible) .nvp-pencil { animation: nvp-write .85s ease; }
+  .nvp-root .nvp-link:is(:hover, :focus-visible) .nvp-cup { animation: nvp-hop .85s ease; }
+  .nvp-root .nvp-link:is(:hover, :focus-visible) .nvp-dot { animation: nvp-dot-pop .7s ease; }
+  .nvp-root .nvp-link:is(:hover, :focus-visible) .nvp-dot-two { animation-delay: .08s; }
+  .nvp-root .nvp-link:is(:hover, :focus-visible) .nvp-dot-three { animation-delay: .16s; }
+  .nvp-root[data-nav-variant="nav-stickers"] .nvp-link:is(:hover, :focus-visible) { transform: translateY(-3px) rotate(-2deg); box-shadow: 0 7px 0 #e8ddc9; }
+  .nvp-root[data-nav-variant="nav-orbit"] .nvp-link:is(:hover, :focus-visible) .nvp-icon { animation: nvp-hop .85s ease; }
 }
 
-.nvp-root[data-nav-motion="paused"] .nvp-link,
-.nvp-root[data-nav-motion="paused"] .nvp-link *,
-.nvp-root[data-nav-motion="paused"] .nvp-link::before,
-.nvp-root[data-nav-motion="paused"] .nvp-link::after { animation-play-state: paused !important; transition: none !important; }
 
 @media (min-width: 1024px) {
   .nvp-controls { bottom: 1.25rem; }
@@ -133,12 +127,12 @@
   .nvp-root .nvp-letters { animation: nvp-breathe 3s ease-in-out infinite; }
   .nvp-root .nvp-ripples { animation: nvp-ripple 4s ease-in-out infinite; }
   .nvp-root .nvp-confetti, .nvp-root .nvp-orbit-dots { animation: nvp-confetti-float 4s ease-in-out infinite; }
-  .nvp-root[data-nav-motion="playing"] .nvp-link:is(:hover, :focus-visible) .nvp-sky-cloud,
-  .nvp-root[data-nav-motion="playing"] .nvp-link:is(:hover, :focus-visible) .nvp-letters { animation-duration: 1.2s; }
-  .nvp-root[data-nav-motion="playing"] .nvp-link:is(:hover, :focus-visible) .nvp-ripples { animation-duration: .85s; }
-  .nvp-root[data-nav-motion="playing"] .nvp-link:is(:hover, :focus-visible) .nvp-confetti,
-  .nvp-root[data-nav-motion="playing"] .nvp-link:is(:hover, :focus-visible) .nvp-orbit-dots { animation-duration: .8s; }
-  .nvp-root[data-nav-motion="playing"] .nvp-link:is(:hover, :focus-visible) .nvp-check { stroke-dasharray: 20; animation: nvp-check-draw .7s ease both; }
-  .nvp-root[data-nav-motion="playing"] .nvp-link[data-nav-name="My Progress"]:is(:hover, :focus-visible),
-  .nvp-root[data-nav-motion="playing"] .nvp-link[data-nav-name="Other"]:is(:hover, :focus-visible) { animation: nvp-paper-drift 3s linear infinite; }
+  .nvp-root .nvp-link:is(:hover, :focus-visible) .nvp-sky-cloud,
+  .nvp-root .nvp-link:is(:hover, :focus-visible) .nvp-letters { animation-duration: 1.2s; }
+  .nvp-root .nvp-link:is(:hover, :focus-visible) .nvp-ripples { animation-duration: .85s; }
+  .nvp-root .nvp-link:is(:hover, :focus-visible) .nvp-confetti,
+  .nvp-root .nvp-link:is(:hover, :focus-visible) .nvp-orbit-dots { animation-duration: .8s; }
+  .nvp-root .nvp-link:is(:hover, :focus-visible) .nvp-check { stroke-dasharray: 20; animation: nvp-check-draw .7s ease both; }
+  .nvp-root .nvp-link[data-nav-name="My Progress"]:is(:hover, :focus-visible),
+  .nvp-root .nvp-link[data-nav-name="Other"]:is(:hover, :focus-visible) { animation: nvp-paper-drift 3s linear infinite; }
 }
