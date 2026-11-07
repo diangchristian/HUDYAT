@@ -10,13 +10,16 @@ a background based on its name, and a lively hover reaction?
 
 ## Primary source
 
-Branch: `feature/navbar-improvement`.
-Code: `client/src/layouts/navbar-prototype/` and its integration in `SidebarLayout.tsx`.
+Archived comparison: `prototype/navbar-cartoon-variants` at `b72f3a6`.
+Prototype code on that snapshot: `client/src/layouts/navbar-prototype/`.
+Production code: `client/src/layouts/student-nav/` and `SidebarLayout.tsx`.
+Implementation branch: `feature/navbar-improvement`.
 Issue: [01-animated-navigation.md](issues/01-animated-navigation.md).
+Implementation: [02-implement-little-buddies.md](issues/02-implement-little-buddies.md).
 
 Run `npm run dev` from `client/`, with the normal API server available. Sign in as a learner
-and open `/student/home?variant=nav-buddies`. The existing floating arrows and left/right keys
-switch between the three directions. Clicking a nav item keeps the chosen variant.
+and open `/student/home`; Little Buddies is now the default navbar in development and production.
+The comparison URLs and directions below describe the archived prototype snapshot.
 
 ## Directions
 
@@ -41,12 +44,12 @@ navbar animations run automatically and reduced-motion preferences disable anima
 
 ## Scope and verdict
 
-This is a development-only comparison on the existing authenticated student routes.
-The ordinary navbar remains the default until a design is selected. The existing Settings,
-logout, active-page indication, student data, and routed page content are retained.
-The Other menu can be opened with its button and closed with Escape in the prototype.
-Staff navigation uses its own layout.
+The user selected Little Buddies for the real project. It now renders on the existing
+authenticated student routes without a variant parameter or comparison switcher.
+Sticker Shelf and Pocket Orbit are removed from the implementation and preserved in the archive.
+Settings, logout, active-page indication, student data, and routed page content are retained.
+The Other menu opens with its button and closes with Escape. Staff navigation uses its own layout.
 
 Artwork and layout foundations reuse the earlier navbar prototype archived on
 `prototype/progress-logo`; the destination backgrounds are the new refinement.
-No packages or persistence added. Awaiting the user's visual selection.
+No packages or persistence added. Little Buddies is the accepted direction.

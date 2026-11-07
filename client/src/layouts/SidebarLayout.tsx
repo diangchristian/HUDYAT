@@ -1,16 +1,13 @@
-import { useState, useRef, type KeyboardEvent, type ReactNode } from "react";
-import { Outlet, NavLink, useNavigate, useSearchParams } from "react-router";
+import { useState, type KeyboardEvent, type ReactNode } from "react";
+import { Outlet, NavLink, useNavigate } from "react-router";
 
 import { useLogout } from "@/hooks/use-logout";
-import NavbarPrototypeControls, {
-  CartoonNavIcon,
-  NAVBAR_VARIANTS,
-} from "./navbar-prototype/navbar-prototype";
+import CartoonNavIcon from "./student-nav/cartoon-nav-icon";
+import "./student-nav/student-nav.css";
 
 export type SidebarNavItem = {
   name: string;
   path: string;
-  image: string;
 };
 
 type SidebarLayoutProps = {
@@ -22,31 +19,16 @@ type SidebarLayoutProps = {
   subtitle: string;
 };
 
-function NavItemIcon({ item, animated }: { item: SidebarNavItem; animated: boolean }) {
-  if (import.meta.env.DEV && animated) return <CartoonNavIcon name={item.name} />;
-  return <img src={item.image} alt={item.name} className="w-full h-full object-contain" />;
-}
-
-/*
- * Sidebar (desktop) / bottom nav (mobile) shell for the student area.
- * (Staff portals use StaffLayout.)
- */
-const SidebarLayout = ({
+export default function SidebarLayout({
   navItems,
   settingsPath,
   loginPath,
   avatar,
   subtitle,
-}: SidebarLayoutProps) => {
+}: SidebarLayoutProps) {
   const navigate = useNavigate();
   const logout = useLogout(loginPath);
   const [showPopover, setShowPopover] = useState(false);
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const [searchParams] = useSearchParams();
-  const navbarPrototype = import.meta.env.DEV
-    ? NAVBAR_VARIANTS.find((variant) => variant.key === searchParams.get("variant"))
-    : undefined;
-  const prototypeSearch = navbarPrototype ? `?${searchParams.toString()}` : "";
 
   const handleLogout = () => {
     setShowPopover(false);
@@ -55,20 +37,7 @@ const SidebarLayout = ({
 
   const handleSettings = () => {
     setShowPopover(false);
-    navigate(`${settingsPath}${prototypeSearch}`);
-  };
-
-  const handleMouseEnter = () => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-    setShowPopover(true);
-  };
-
-  const handleMouseLeave = () => {
-    timeoutRef.current = setTimeout(() => {
-      setShowPopover(false);
-    }, 300); // 300ms delay
+    navigate(settingsPath);
   };
 
   const handleOtherKeyDown = (event: KeyboardEvent<HTMLLIElement>) => {
@@ -78,92 +47,63 @@ const SidebarLayout = ({
     }
   };
 
+  const menuItems = (
+    <>
+      <button type="button" onClick={handleSettings} className="w-full px-4 py-3 text-left text-sm font-semibold text-gray-700 hover:bg-foreground/5">
+        Settings
+      </button>
+      <button type="button" onClick={handleLogout} className="w-full border-t px-4 py-3 text-left text-sm font-semibold text-red-600 hover:bg-red-50">
+        Logout
+      </button>
+    </>
+  );
+
   return (
     <div
-      className={`flex flex-col lg:flex-row min-h-screen${navbarPrototype ? " nvp-root" : ""}`}
-      data-nav-variant={navbarPrototype?.key}
-      data-nav-menu-open={navbarPrototype && showPopover ? "open" : undefined}
+      className="student-nav flex min-h-screen flex-col lg:flex-row"
+      data-nav-menu-open={showPopover ? "open" : undefined}
     >
-      {/* Spacer to preserve main content's layout while the sidebar is fixed */}
-      <div className="nvp-spacer hidden lg:block lg:w-64 shrink-0" aria-hidden="true" />
+      <div className="hidden shrink-0 lg:block lg:w-64" aria-hidden="true" />
 
-      {/* Sidebar - Hidden on mobile */}
-      <aside className="nvp-sidebar hidden lg:flex lg:flex-col lg:fixed lg:inset-y-0 lg:left-0 lg:w-64 border-r-2 bg-white overflow-y-auto">
-        <div className="nvp-brand flex items-center gap-3 border-b px-6 py-6">
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#F5C04A] text-2xl">
-            {avatar}
-          </div>
-
+      <aside className="student-nav-sidebar hidden overflow-y-auto border-r-2 lg:fixed lg:inset-y-0 lg:left-0 lg:flex lg:w-64 lg:flex-col">
+        <div className="student-nav-brand flex items-center gap-3 border-b px-6 py-6">
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#F5C04A] text-2xl">{avatar}</div>
           <div>
-            <h1 className="text-2xl font-bold font-body">Hudyat</h1>
-            <p className="text-xs text-gray-500">
-              {subtitle}
-            </p>
+            <h1 className="font-body text-2xl font-bold">Hudyat</h1>
+            <p className="text-xs text-gray-500">{subtitle}</p>
           </div>
         </div>
 
-        <nav className="nvp-nav px-3 py-6" aria-label="Student navigation">
-          <ul className="nvp-links space-y-1">
-            {navItems.map((item) => {
-              return (
-                <li key={item.path}>
-                  <NavLink
-                    to={`${item.path}${prototypeSearch}`}
-                    data-nav-name={item.name}
-                    end={item.path === "/"}
-                    className={({ isActive }) =>
-                      `nvp-link flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-bold transition-colors font-body uppercase ${
-                        isActive
-                          ? "nvp-active shadow-[var(--shadow-button)] active:shadow-[0_1px_0_#887041] bg-hudyat-gold text-white"
-                          : "text-gray-600 hover:bg-foreground/5"
-                      }`
-                    }
-                  >
-                    <span className="nvp-icon size-8 flex items-center justify-center">
-                        <NavItemIcon item={item} animated={!!navbarPrototype} />
-                    </span>
-                    <span className="nvp-label">{item.name}</span>
-                  </NavLink>
-                </li>
-              );
-            })}
-            
-            {/* Other button with popover */}
-            <li 
-              className="relative"
-              onMouseEnter={navbarPrototype ? undefined : handleMouseEnter}
-              onMouseLeave={navbarPrototype ? undefined : handleMouseLeave}
-              onKeyDown={navbarPrototype ? handleOtherKeyDown : undefined}
-            >
+        <nav className="px-3 py-6" aria-label="Student navigation">
+          <ul className="student-nav-links">
+            {navItems.map((item) => (
+              <li key={item.path}>
+                <NavLink
+                  to={item.path}
+                  data-nav-name={item.name}
+                  end={item.path === "/"}
+                  className={({ isActive }) => `student-nav-link flex items-center gap-3 px-3 py-3 font-body${isActive ? " student-nav-active" : ""}`}
+                >
+                  <span className="student-nav-icon"><CartoonNavIcon name={item.name} /></span>
+                  <span className="student-nav-label">{item.name}</span>
+                </NavLink>
+              </li>
+            ))}
+            <li className="relative" onKeyDown={handleOtherKeyDown}>
               <button
                 type="button"
-                onClick={() => setShowPopover(!showPopover)}
+                onClick={() => setShowPopover((open) => !open)}
                 aria-expanded={showPopover}
                 aria-controls="student-desktop-other-menu"
                 data-nav-name="Other"
-                className={`nvp-link w-full flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-bold transition-colors font-body uppercase text-gray-600 hover:bg-foreground/5${showPopover ? " nvp-active" : ""}`}
+                className={`student-nav-link flex w-full items-center gap-3 px-3 py-3 font-body${showPopover ? " student-nav-active" : ""}`}
               >
-                <span className="nvp-icon size-8 flex items-center justify-center">
-                    {import.meta.env.DEV && navbarPrototype ? <CartoonNavIcon name="Other" /> : <img src="/icons/other.png" alt="Other" className="w-full h-full object-contain" />}
-                </span>
-                <span className="nvp-label">Other</span>
+                <span className="student-nav-icon"><CartoonNavIcon name="Other" /></span>
+                <span className="student-nav-label">Other</span>
               </button>
-
-              {/* Popover Menu */}
               {showPopover && (
-                <div id="student-desktop-other-menu" className="nvp-menu absolute left-20 top-full mt-1 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
-                  <button
-                    onClick={handleSettings}
-                    className="w-full text-left px-4 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-100 transition-colors"
-                  >
-                    Settings
-                  </button>
-                  <button
-                    onClick={handleLogout}
-                    className="w-full text-left px-4 py-3 text-sm font-semibold text-red-600 hover:bg-red-50 transition-colors border-t"
-                  >
-                    Logout
-                  </button>
+                <div id="student-desktop-other-menu" className="student-nav-menu absolute right-0 top-full mt-2">
+                  {menuItems}
                 </div>
               )}
             </li>
@@ -171,90 +111,47 @@ const SidebarLayout = ({
         </nav>
       </aside>
 
-      {/* Main Content */}
-      <main className="nvp-content flex-1 overflow-y-auto pb-20 lg:pb-0 max-w-6xl mx-auto">
-        <div className="p-4 sm:p-6 lg:p-8 ">
-          <Outlet />
-        </div>
+      <main className="student-nav-content mx-auto max-w-6xl flex-1 overflow-y-auto">
+        <div className="p-4 sm:p-6 lg:p-8"><Outlet /></div>
       </main>
 
-      {/* Bottom Navigation - Visible on mobile only */}
-      <nav className="nvp-bottom fixed bottom-0 left-0 right-0 lg:hidden bg-white border-t-2 border-gray-200" aria-label="Student navigation">
-        <ul className="flex justify-around items-center">
-          {navItems.map((item) => {
-            return (
-              <li key={item.path} className="flex-1">
-                <NavLink
-                  to={`${item.path}${prototypeSearch}`}
-                  data-nav-name={item.name}
-                  end={item.path === "/"}
-                  aria-label={item.name}
-                  className={({ isActive }) => `nvp-link flex justify-center items-center py-3${isActive ? " nvp-active" : ""}`}
-                >
-                  {({ isActive }) => (
-                    <>
-                    <span className={`nvp-icon size-10 flex items-center justify-center rounded transition-colors ${
-                      isActive ? "bg-amber-100 p-1 border-2 border-amber-400 rounded-md" : ""
-                    }`}> 
-                        <NavItemIcon item={item} animated={!!navbarPrototype} />
-                    </span>
-                    {navbarPrototype && <span className="nvp-label nvp-mobile-label">{item.name}</span>}
-                    </>
-                  )}
-                </NavLink>
-              </li>
-            );
-          })}
-          
-          {/* Other button with popover */}
-          <li
-            className="flex-1 relative"
-            onMouseEnter={navbarPrototype ? undefined : handleMouseEnter}
-            onMouseLeave={navbarPrototype ? undefined : handleMouseLeave}
-            onKeyDown={navbarPrototype ? handleOtherKeyDown : undefined}
-          >
+      <nav className="student-nav-bottom fixed inset-x-0 bottom-0 border-t-2 lg:hidden" aria-label="Student navigation">
+        <ul className="flex items-center justify-around">
+          {navItems.map((item) => (
+            <li key={item.path} className="flex-1">
+              <NavLink
+                to={item.path}
+                data-nav-name={item.name}
+                end={item.path === "/"}
+                aria-label={item.name}
+                className={({ isActive }) => `student-nav-link${isActive ? " student-nav-active" : ""}`}
+              >
+                <span className="student-nav-icon"><CartoonNavIcon name={item.name} /></span>
+                <span className="student-nav-label student-nav-mobile-label">{item.name}</span>
+              </NavLink>
+            </li>
+          ))}
+          <li className="relative flex-1" onKeyDown={handleOtherKeyDown}>
             <button
               type="button"
-              onClick={() => setShowPopover(!showPopover)}
+              onClick={() => setShowPopover((open) => !open)}
               aria-label="Other"
               aria-expanded={showPopover}
               aria-controls="student-mobile-other-menu"
               data-nav-name="Other"
-              className={`nvp-link w-full flex justify-center items-center py-3${showPopover ? " nvp-active" : ""}`}
+              className={`student-nav-link w-full${showPopover ? " student-nav-active" : ""}`}
             >
-              <span className={`nvp-icon size-10 flex items-center justify-center rounded transition-colors ${
-                showPopover ? "bg-amber-100 p-1 border-2 border-amber-400 rounded-md" : ""
-              }`}> 
-                  {import.meta.env.DEV && navbarPrototype ? <CartoonNavIcon name="Other" /> : <img src="/icons/other.png" alt="Other" className="w-full h-full object-contain" />}
-              </span>
-              {navbarPrototype && <span className="nvp-label nvp-mobile-label">Other</span>}
+              <span className="student-nav-icon"><CartoonNavIcon name="Other" /></span>
+              <span className="student-nav-label student-nav-mobile-label">Other</span>
             </button>
-
-            {/* Popover Menu */}
             {showPopover && (
-              <div id="student-mobile-other-menu" className="nvp-menu absolute right-0 bottom-full mb-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
-                <button
-                  onClick={handleSettings}
-                  className="w-full text-left px-4 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-100 transition-colors"
-                >
-                  Settings
-                </button>
-                <button
-                  onClick={handleLogout}
-                  className="w-full text-left px-4 py-3 text-sm font-semibold text-red-600 hover:bg-red-50 transition-colors border-t"
-                >
-                  Logout
-                </button>
+              <div id="student-mobile-other-menu" className="student-nav-menu absolute bottom-full right-0 mb-2">
+                {menuItems}
               </div>
             )}
           </li>
         </ul>
       </nav>
-      {import.meta.env.DEV && navbarPrototype && (
-        <NavbarPrototypeControls current={navbarPrototype.key} />
-      )}
     </div>
   );
 }
-
-export default SidebarLayout
