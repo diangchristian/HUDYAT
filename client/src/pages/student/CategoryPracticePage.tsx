@@ -58,37 +58,38 @@ function PracticeSession({ title, prompts }: { title: string; prompts: LessonPro
   };
 
   return (
-    <div className="min-h-dvh bg-[#FFF8E7] pb-10 font-body">
+    // Phones: exactly one screen tall, so the reference and camera always fit (no scrolling while signing).
+    <div className="flex min-h-dvh flex-col bg-[#FFF8E7] font-body max-md:h-dvh md:pb-10">
       {/* WORLD HEADER: frozen while the camera is on, the character cheers on each star */}
-      <section className="relative h-36 overflow-hidden rounded-b-[2rem] border-b-4 border-white shadow-[0_6px_0_#0000000d] sm:h-44">
+      <section className="relative h-24 shrink-0 overflow-hidden rounded-b-[2rem] border-b-4 border-white shadow-[0_6px_0_#0000000d] sm:h-36 md:h-44 [@media(max-height:500px)]:h-20">
         <div className="ls-mood-watch absolute inset-0">
           <LessonStage title={title} color={color} className="!h-full [&>span.lc-shadow]:hidden [&>svg]:hidden" />
         </div>
-        <div aria-hidden="true" className={cn("absolute bottom-1 left-1/2 w-20 -translate-x-1/2 sm:w-24", cheering ? "ls-mood-cheer" : "ls-mood-watch")}>
+        <div aria-hidden="true" className={cn("absolute bottom-1 left-1/2 w-16 -translate-x-1/2 sm:w-20 md:w-24 [@media(max-height:500px)]:w-12", cheering ? "ls-mood-cheer" : "ls-mood-watch")}>
           <LessonCharacter title={title} color={color} className="aspect-square h-auto w-full" />
         </div>
         <button
           type="button"
           aria-label="Back to practice"
           onClick={() => navigate("/student/practice")}
-          className="absolute top-3 left-3 z-10 flex size-12 items-center justify-center rounded-2xl border-b-4 border-[#CECECE] bg-white text-[#4B4B4B] focus-visible:ring-4 focus-visible:ring-hudyat-gold focus-visible:outline-none active:translate-y-0.5 active:border-b-2"
+          className="absolute top-2 left-2 z-10 flex size-12 items-center justify-center rounded-2xl border-b-4 border-[#CECECE] bg-white text-[#4B4B4B] focus-visible:ring-4 focus-visible:ring-hudyat-gold focus-visible:outline-none active:translate-y-0.5 active:border-b-2"
         >
           <House aria-hidden="true" className="size-6" />
         </button>
-        <span className="absolute top-3 right-3 z-10 flex items-center gap-1.5 rounded-2xl bg-white/90 px-3 py-2 text-sm font-black text-[#4B4B4B]">
+        <span className="absolute top-2 right-2 z-10 flex items-center gap-1.5 rounded-2xl bg-white/90 px-3 py-2 text-sm font-black text-[#4B4B4B]">
           <Star aria-hidden="true" className="size-4 fill-hudyat-gold text-hudyat-gold" />
           {stars.size}/{prompts.length}
           <span className="sr-only">stars</span>
         </span>
       </section>
 
-      <main className="mx-auto max-w-5xl px-4 pt-4 sm:px-8">
+      <main className="mx-auto flex min-h-0 w-full max-w-5xl flex-1 flex-col px-3 pt-3 pb-[calc(.75rem+env(safe-area-inset-bottom))] sm:px-8 sm:pt-4">
         {finished ? (
-          <div role="status" className="ls-pop mx-auto mt-6 max-w-md rounded-3xl border-4 border-hudyat-gold bg-white p-8 text-center shadow-[0_6px_0_#0000001a]">
+          <div role="status" className="ls-pop mx-auto mt-6 max-h-full max-w-md overflow-y-auto rounded-3xl border-4 border-hudyat-gold bg-white p-5 text-center sm:p-8 shadow-[0_6px_0_#0000001a]">
             <div aria-hidden="true" className="flex justify-center gap-1">
               {[0, 1, 2].map((i) => <Star key={i} className="size-10 fill-hudyat-gold text-hudyat-gold" />)}
             </div>
-            <h1 className="mt-3 text-3xl font-black text-[#3C3C3C]">Great practice!</h1>
+            <h1 className="mt-3 text-2xl font-black text-[#3C3C3C] sm:text-3xl">Great practice!</h1>
             <p className="mt-2 text-lg font-semibold text-[#6B6B6B]">You got {stars.size} of {prompts.length} stars in {title}.</p>
             <div className="mt-6 flex flex-col gap-3">
               <ElevatedButton text="PRACTICE AGAIN" icon={RotateCcw} size="lg" className="min-h-14" onClick={restart} />
@@ -98,7 +99,7 @@ function PracticeSession({ title, prompts }: { title: string; prompts: LessonPro
         ) : (
           <>
             {/* SIGN STRIP: tap any sign; stars show the ones already signed */}
-            <nav aria-label={`${title} signs`} className="-mx-4 overflow-x-auto px-4 pb-2">
+            <nav aria-label={`${title} signs`} className="-mx-3 shrink-0 overflow-x-auto px-3 pb-2 sm:-mx-8 sm:px-8">
               <ol className="flex w-max gap-2">
                 {prompts.map((p, i) => (
                   <li key={p.label}>
@@ -120,28 +121,29 @@ function PracticeSession({ title, prompts }: { title: string; prompts: LessonPro
               </ol>
             </nav>
 
-            <h1 key={prompt.label} className="ls-rise mt-3 text-2xl leading-snug font-bold text-[#3C3C3C] sm:text-3xl">
-              Sign
-              <mark className="mx-1 rounded-lg bg-hudyat-gold/30 px-1.5 font-black text-[#3C3C3C] uppercase">{prompt.label}</mark>!
-            </h1>
-
-            {/* REFERENCE + CAMERA: stacked on phones, side by side on tablets */}
-            <div className="mt-4 grid items-start gap-4 md:grid-cols-2">
-              <HowCard key={prompt.label} prompt={prompt} />
-              <div className="rounded-3xl border-4 border-[#E11D48] bg-white p-2 shadow-[0_6px_0_#0000001a] sm:p-3">
-                <PracticeCamera category={categorySlug(title)} targetLabel={prompt.modelClass} onCorrect={correct} />
-              </div>
+            <div className="mt-1 flex shrink-0 items-center justify-between gap-2 sm:mt-2">
+              <h1 key={prompt.label} className="ls-rise min-w-0 text-xl leading-snug font-bold text-[#3C3C3C] sm:text-2xl md:text-3xl">
+                Sign
+                <mark className="mx-1 rounded-lg bg-hudyat-gold/30 px-1.5 font-black text-[#3C3C3C] uppercase">{prompt.label}</mark>!
+              </h1>
+              <ElevatedButton
+                text="SKIP"
+                icon={ArrowRight}
+                iconPosition="right"
+                variant="secondary"
+                size="sm"
+                className="min-h-11 shrink-0"
+                onClick={() => setIndex((index + 1) % prompts.length)}
+              />
             </div>
 
-            <ElevatedButton
-              text="SKIP TO NEXT SIGN"
-              icon={ArrowRight}
-              iconPosition="right"
-              variant="secondary"
-              size="lg"
-              className="mt-5 min-h-14 w-full"
-              onClick={() => setIndex((index + 1) % prompts.length)}
-            />
+            {/* REFERENCE + CAMERA: stacked on phones, side by side on tablets */}
+            <div className="mt-3 grid min-h-0 flex-1 grid-rows-[minmax(0,2fr)_minmax(0,3fr)] gap-3 sm:mt-4 sm:gap-4 md:flex-none md:grid-cols-2 md:grid-rows-none md:items-start">
+              <HowCard key={prompt.label} prompt={prompt} compactOnPhone />
+              <div className="rounded-3xl border-4 border-[#E11D48] bg-white p-1.5 shadow-[0_6px_0_#0000001a] max-md:min-h-0 sm:p-3">
+                <PracticeCamera category={categorySlug(title)} targetLabel={prompt.modelClass} onCorrect={correct} fillOnPhone />
+              </div>
+            </div>
           </>
         )}
       </main>

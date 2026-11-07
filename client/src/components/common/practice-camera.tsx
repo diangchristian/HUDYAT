@@ -9,12 +9,15 @@ import {isDiagnosticsEnabled} from "@/features/fsl-recognition/landmark-diagnost
 import {LandmarkDiagnosticsPanel} from "@/features/fsl-recognition/landmark-diagnostics-panel";
 import { Camera, CameraOff, LoaderCircle, Check, X } from "lucide-react";
 import ElevatedButton from "@/components/ui/elavated-button";
+import { cn } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
 import { useCamera } from "@/hooks/use-camera";
 import { useCameraPreference } from "@/lib/camera-preference";
 import { cameraGrantRemembered, forgetCameraGrant } from "@/lib/camera-session";
 
-export default function PracticeCamera({category,targetLabel,onCorrect}: {category?:string;targetLabel?:string;onCorrect?:()=>void}) {
+// fillOnPhone: below tablet width, fill the parent's height instead of a fixed 16:9 frame (practice page).
+// quietWrong: no red chip or sound for wrong readings (recognition flags wrong while the hand is still moving); onWrong still fires so the page can show its own gentle hint (sign test).
+export default function PracticeCamera({category,targetLabel,onCorrect,onWrong,fillOnPhone=false,quietWrong=false}: {category?:string;targetLabel?:string;onCorrect?:()=>void;onWrong?:()=>void;fillOnPhone?:boolean;quietWrong?:boolean}) {
   const { videoRef, status, error, start, stop: stopCamera } = useCamera();
   const isLive = status === "live";
   const [recognitionStatus,setRecognitionStatus]=useState<RecognitionStatus>({phase:'loading',message:'Preparing category model…'});
@@ -54,6 +57,8 @@ export default function PracticeCamera({category,targetLabel,onCorrect}: {catego
   // An explicit Stop/Cancel means "camera off": don't turn it back on until they press Start again.
   const turnOff=()=>{forgetCameraGrant();stop();};
   const incorrect=()=>{
+    onWrong?.();
+    if(quietWrong)return;
     clearTimeout(feedbackTimer.current);
     setFeedback({kind:'wrong',target:targetLabel});
     feedbackTimer.current=setTimeout(()=>setFeedback(null),1800);
@@ -73,9 +78,9 @@ export default function PracticeCamera({category,targetLabel,onCorrect}: {catego
   };
 
   return (
-    <div>
-      <Card className="relative overflow-hidden border-hudyat-gold/30 bg-accent/20 p-2 sm:p-3">
-        <div className="relative aspect-video min-h-60 w-full overflow-hidden rounded-lg bg-muted sm:min-h-56">
+    <div className={cn(fillOnPhone&&"max-md:flex max-md:h-full max-md:flex-col")}>
+      <Card className={cn("relative overflow-hidden border-hudyat-gold/30 bg-accent/20 p-2 sm:p-3",fillOnPhone&&"max-md:min-h-0 max-md:flex-1")}>
+        <div className={cn("relative aspect-video min-h-60 w-full overflow-hidden rounded-lg bg-muted sm:min-h-56",fillOnPhone&&"max-md:aspect-auto max-md:h-full max-md:min-h-0")}>
           <video
             ref={videoRef}
             autoPlay

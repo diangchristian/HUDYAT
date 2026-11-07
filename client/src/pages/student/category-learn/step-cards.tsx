@@ -20,8 +20,10 @@ import { categorySlug } from "@/lib/practice";
 import { cn } from "@/lib/utils";
 
 import type { LessonPrompt } from "./learn-session";
+import { WhenToUsePrototype, type WhenVariant } from "./when-to-use-prototype";
 
-type CardProps = { prompt: LessonPrompt; title: string; color: CategoryColor; onCorrect: () => void };
+// PROTOTYPE, delete me: whenVariant swaps the When to Use card.
+type CardProps = { prompt: LessonPrompt; title: string; color: CategoryColor; onCorrect: () => void; whenVariant?: WhenVariant };
 
 // Tapping a word lights it up, like pointing a finger while reading.
 function ReadingText({ text, label }: { text: string; label: string }) {
@@ -74,7 +76,8 @@ function MeaningCard({ prompt }: CardProps) {
   );
 }
 
-function ContextCard({ prompt, title, color }: CardProps) {
+function ContextCard({ prompt, title, color, whenVariant }: CardProps) {
+  if (whenVariant) return <WhenToUsePrototype key={prompt.label} variant={whenVariant} prompt={prompt} title={title} color={color} />;
   return (
     <div
       className="rounded-3xl border-4 border-[#0284C7] bg-[#E0F2FE] p-4 shadow-[0_6px_0_#0000001a] sm:p-5"
@@ -93,7 +96,8 @@ function ContextCard({ prompt, title, color }: CardProps) {
   );
 }
 
-export function HowCard({ prompt }: Pick<CardProps, "prompt">) {
+// compactOnPhone: below tablet width, fill the parent's height (video shrinks to fit, buttons stay), so a camera fits under it (practice page).
+export function HowCard({ prompt, compactOnPhone = false }: Pick<CardProps, "prompt"> & { compactOnPhone?: boolean }) {
   const video = useRef<HTMLVideoElement>(null);
   const [slow, setSlow] = useState(false);
   const again = () => {
@@ -105,22 +109,27 @@ export function HowCard({ prompt }: Pick<CardProps, "prompt">) {
     setSlow(!slow);
     if (video.current) video.current.playbackRate = slow ? 1 : 0.5;
   };
-  const control =
-    "flex min-h-14 flex-1 items-center justify-center gap-2 rounded-2xl border-b-4 text-lg font-black active:translate-y-0.5 active:border-b-2";
+  const control = cn(
+    "flex min-h-14 flex-1 items-center justify-center gap-2 rounded-2xl border-b-4 text-lg font-black active:translate-y-0.5 active:border-b-2",
+    compactOnPhone && "max-md:min-h-11 max-md:text-base",
+  );
   return (
-    <div className="rounded-[2rem] border-4 border-[#059669] bg-[#064E3B] p-2.5 pb-3 shadow-[0_6px_0_#0000001a]">
-      <div className="overflow-hidden rounded-3xl bg-black">
+    <div className={cn("rounded-[2rem] border-4 border-[#059669] bg-[#064E3B] p-2.5 pb-3 shadow-[0_6px_0_#0000001a]", compactOnPhone && "max-md:flex max-md:h-full max-md:flex-col max-md:rounded-3xl max-md:p-1.5 max-md:pb-2")}>
+      <div className={cn("overflow-hidden rounded-3xl bg-black", compactOnPhone && "max-md:min-h-0 max-md:flex-1")}>
         <ReferenceMedia
           key={prompt.label}
           videoRef={video}
           videoUrl={prompt.referenceVideoUrl}
           imageUrl={prompt.referenceImageUrl}
           label={prompt.label}
-          className="max-h-[calc(100dvh-30rem)] min-h-48"
+          className={cn(
+            "max-h-[calc(100dvh-30rem)] min-h-48",
+            compactOnPhone && "max-md:aspect-auto max-md:h-full max-md:max-h-none max-md:min-h-0",
+          )}
         />
       </div>
       {prompt.referenceVideoUrl && (
-        <div className="mt-3 flex gap-2 px-1">
+        <div className={cn("mt-3 flex shrink-0 gap-2 px-1", compactOnPhone && "max-md:mt-2")}>
           <button type="button" onClick={again} className={cn(control, "border-[#CECECE] bg-white text-[#064E3B]")}>
             <RotateCcw aria-hidden="true" className="size-6" /> Again
           </button>

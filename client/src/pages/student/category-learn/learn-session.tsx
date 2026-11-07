@@ -8,7 +8,7 @@
  */
 import { useState, useSyncExternalStore, type CSSProperties } from "react";
 import { ArrowLeft, ArrowRight, Camera, Check, Hand, House, Lightbulb, MessageCircle, Star } from "lucide-react";
-import { useNavigate } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 
 import type { LessonStep } from "@/api/learning-api";
 import { CATEGORIES } from "@/components/common/categories.constants";
@@ -22,6 +22,9 @@ import { cn } from "@/lib/utils";
 
 import Celebration from "./celebration";
 import StepCard from "./step-cards";
+// PROTOTYPE, delete me: ?variant=when-* compares When to Use designs (dev only).
+import PrototypeSwitcher from "@/components/prototype/prototype-switcher";
+import { isWhenVariant, videoFrameUrl, WHEN_VARIANTS } from "./when-to-use-prototype";
 import "./learn-session.css";
 
 export type LessonPrompt = PracticePrompt & {
@@ -76,7 +79,14 @@ export default function LearnSession({ categoryId, title, prompts, initialGestur
   const [cheer, setCheer] = useState<{ at: number; label: string } | null>(null);
   const cheering = cheer !== null;
 
-  const prompt = prompts[index];
+  // PROTOTYPE, delete me: variant + still-frame fallback for signs that only have a video.
+  const protoKey = useSearchParams()[0].get("variant");
+  const whenVariant = import.meta.env.DEV && isWhenVariant(protoKey) ? protoKey : undefined;
+  const rawPrompt = prompts[index];
+  const prompt =
+    whenVariant && rawPrompt && !rawPrompt.referenceImageUrl
+      ? { ...rawPrompt, referenceImageUrl: videoFrameUrl(rawPrompt.referenceVideoUrl) }
+      : rawPrompt;
   const stepIndex = STEPS.indexOf(step);
   const isLast = index === prompts.length - 1;
   const following = STEPS[stepIndex + 1];
@@ -203,7 +213,7 @@ export default function LearnSession({ categoryId, title, prompts, initialGestur
         </div>
 
         <div key={`${index}-${step}`} className="ls-rise mt-4">
-          <StepCard step={step} prompt={prompt} title={title} color={color} onCorrect={next} />
+          <StepCard step={step} prompt={prompt} title={title} color={color} onCorrect={next} whenVariant={whenVariant} />
         </div>
       </main>
 
@@ -264,6 +274,12 @@ export default function LearnSession({ categoryId, title, prompts, initialGestur
           </div>
         </div>
       </nav>
+
+      {whenVariant && (
+        <div className="[&>div]:!bottom-[calc(10rem+env(safe-area-inset-bottom))] sm:[&>div]:!bottom-28">
+          <PrototypeSwitcher variants={WHEN_VARIANTS} current={whenVariant} />
+        </div>
+      )}
     </div>
   );
 }

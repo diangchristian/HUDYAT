@@ -1,13 +1,18 @@
 import { useState } from "react";
 import {
   ArrowRight,
+  Hand,
   Check,
   Lock,
   type LucideIcon,
   RotateCcw,
   Sparkles,
 } from "lucide-react";
-import { useNavigate } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
+
+// PROTOTYPE, delete me: ?variant=tests-* compares two-test assessment cards (dev only).
+import PrototypeSwitcher from "@/components/prototype/prototype-switcher";
+import { AssessmentCardsPrototype, buildLessons, CalmCard, CARD_VARIANTS, isCardVariant, LiteRowsCard, RowsCard } from "./assessment-cards-prototype";
 
 import { useAssessmentList } from "@/hooks/use-assessment-list";
 import type {
@@ -47,10 +52,33 @@ const AssessmentPage = () => {
     useState<(typeof filters)[number]>("All");
 
   const { data, isLoading, error } = useAssessmentList();
+  const protoVariant = useSearchParams()[0].get("variant");
 
   const categories = (data?.learningAreas ?? []).flatMap(
     (area) => area.categories,
   );
+
+  // page-* keep this page and only swap the cards (below); the other card variants replace the page.
+  const keepCurrentCards = import.meta.env.DEV && protoVariant === "page-plus";
+  const rowsCards = import.meta.env.DEV && (protoVariant === "page-rows" || protoVariant === "page-rows-lite" || protoVariant === "page-calm" || keepCurrentCards) ? new Map(buildLessons(categories).map((l) => [l.c.categoryId, l])) : null;
+  if (import.meta.env.DEV && protoVariant && isCardVariant(protoVariant) && !rowsCards) {
+    return (
+      <>
+        {isLoading || error ? (
+          <p className="mt-12 text-center text-sm text-muted-foreground" role="status">
+            {isLoading ? "Loading assessments..." : "We couldn't load your assessments right now."}
+          </p>
+        ) : (
+          <AssessmentCardsPrototype variant={protoVariant} categories={categories} />
+        )}
+        {/* Lifted above the student bottom nav on phones/tablets. */}
+        <div className="h-24" />
+        <div className="[&>div]:!bottom-24 lg:[&>div]:!bottom-5">
+          <PrototypeSwitcher variants={CARD_VARIANTS} current={protoVariant} />
+        </div>
+      </>
+    );
+  }
 
   const visibleCategories = categories.filter((category) => {
     if (activeFilter === "Completed") return category.status === "completed";
@@ -129,7 +157,7 @@ const AssessmentPage = () => {
             type="button"
             disabled={isLocked}
             onClick={() => navigate(`/student/assessment/${category.categoryId}`)}
-            className={`mt-auto inline-flex h-11 items-center justify-center gap-2 rounded-lg border-b-4 px-3 text-sm font-extrabold transition-transform active:translate-y-1 active:border-b-0 disabled:cursor-not-allowed disabled:active:translate-y-0 disabled:active:border-b-4 ${
+            className={`mt-4 inline-flex h-11 items-center justify-center gap-2 rounded-lg border-b-4 px-3 text-sm font-extrabold transition-transform active:translate-y-1 active:border-b-0 disabled:cursor-not-allowed disabled:active:translate-y-0 disabled:active:border-b-4 ${
               isLocked
                 ? "border-[#94a3b8] bg-[#cbd5e1] text-[#475569]"
                 : isCompleted
@@ -140,6 +168,36 @@ const AssessmentPage = () => {
             {ctaLabel}
             <CtaIcon className="size-4" />
           </button>
+
+          {/* PROTOTYPE, delete me: the Sign test, same button style, under the quiz button. */}
+          {keepCurrentCards && (() => {
+            const sign = rowsCards?.get(category.categoryId)?.tests.find((t) => t.kind === "sign");
+            if (!sign) return null;
+            const off = !sign.path;
+            const label =
+              sign.state === "soon" ? "Sign Test · Coming Soon"
+              : sign.state === "locked" ? "Sign Test · Locked"
+              : sign.state === "passed" ? "Sign Test Passed"
+              : sign.state === "tried" ? `Sign Test · Best ${sign.best}/${sign.total}`
+              : "Start Sign Test";
+            return (
+              <button
+                type="button"
+                disabled={off}
+                onClick={() => sign.path && navigate(sign.path)}
+                className={`mt-2 inline-flex h-11 items-center justify-center gap-2 rounded-lg border-b-4 px-3 text-sm font-extrabold transition-transform active:translate-y-1 active:border-b-0 disabled:cursor-not-allowed disabled:active:translate-y-0 disabled:active:border-b-4 ${
+                  off
+                    ? "border-[#94a3b8] bg-[#cbd5e1] text-[#475569]"
+                    : sign.state === "passed"
+                      ? "border-[#19732b] bg-[#3da44b] text-white"
+                      : "border-[#9f1239] bg-[#E11D48] text-white"
+                }`}
+              >
+                {label}
+                {sign.state === "passed" ? <RotateCcw className="size-4" /> : <Hand className="size-4" />}
+              </button>
+            );
+          })()}
         </div>
       </article>
     );
@@ -194,8 +252,21 @@ const AssessmentPage = () => {
 
       {!isLoading && !error && visibleCategories.length > 0 && (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
-          {visibleCategories.map(renderCard)}
+          {rowsCards && !keepCurrentCards
+            ? visibleCategories.map((category) => {
+                const ProtoCard = protoVariant === "page-calm" ? CalmCard : protoVariant === "page-rows-lite" ? LiteRowsCard : RowsCard;
+                return <ProtoCard key={category.categoryId} lesson={rowsCards.get(category.categoryId)!} />;
+              })
+            : visibleCategories.map(renderCard)}
         </div>
+      )}
+      {rowsCards && protoVariant && (
+        <>
+          <div className="h-24" />
+          <div className="[&>div]:!bottom-24 lg:[&>div]:!bottom-5">
+            <PrototypeSwitcher variants={CARD_VARIANTS} current={protoVariant} />
+          </div>
+        </>
       )}
     </div>
   );
