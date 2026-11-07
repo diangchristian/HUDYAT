@@ -1,31 +1,13 @@
-import { useNavigate, useSearchParams } from "react-router";
+import { useNavigate } from "react-router";
 
-import PrototypeSwitcher from "@/components/prototype/prototype-switcher";
-import {
-  LEARN_CARD_VARIANTS,
-  LEARN_CARDS,
-  LearnCardStyles,
-} from "./learn-cards-prototype/learn-card-variants";
-
-import CategoryCard from "@/components/common/category-card";
+import LearnCard from "@/components/common/learn-card/learn-card";
 import { CATEGORIES } from "@/components/common/categories.constants";
 
 import type { LearningArea } from "@/api/learning-api";
 import { useLearningAreas } from "@/hooks/use-learning-areas";
 
-
-const STATUS_LABELS = {
-  completed: "Completed",
-  current: "Continue",
-  locked: "Locked",
-} as const;
-
 export default function LearnPage() {
   const navigate = useNavigate();
-  // PROTOTYPE: ?variant=duo-card|duo-card-spot|duo-card-sky|duo-card-pattern|duo-card-night|duo-card-sea|duo-card-meadow swaps the card design (dev only).
-  const variantKey = useSearchParams()[0].get("variant");
-  const proto =
-    import.meta.env.DEV && variantKey ? LEARN_CARDS[variantKey] : undefined;
 
   const {
     data: learningAreas = [],
@@ -56,7 +38,7 @@ export default function LearnPage() {
     /*
      * Match the database category with
      * the existing frontend presentation data
-     * so we can get its icon and color.
+     * so we can get its color.
      */
     const presentation =
       CATEGORIES.find(
@@ -126,51 +108,15 @@ export default function LearnPage() {
     const progress =
       category.progressPercent;
 
-    if (proto) {
-      return (
-        <proto.Card
-          key={category.id}
-          title={category.name}
-          color={presentation?.color ?? "blue"}
-          progress={progress}
-          status={category.learningStatus}
-          statusText={statusText}
-          onClick={() => navigate(`/student/learn/${category.id}`)}
-        />
-      );
-    }
-
     return (
-      <CategoryCard
+      <LearnCard
         key={category.id}
         title={category.name}
-        icon={presentation?.icon}
-        color={
-          presentation?.color ??
-          "blue"
-        }
-        variant="progress"
+        color={presentation?.color ?? "blue"}
         progress={progress}
-        status={
-          category.learningStatus
-        }
-        statusLabel={
-          STATUS_LABELS[
-            category.learningStatus
-          ]
-        }
-        desc={statusText}
-        disabled={isLocked}
-        className="min-h-44 justify-center border-2"
-        onClick={() => {
-          if (isLocked) {
-            return;
-          }
-
-          navigate(
-            `/student/learn/${category.id}`,
-          );
-        }}
+        status={category.learningStatus}
+        statusText={statusText}
+        onClick={() => navigate(`/student/learn/${category.id}`)}
       />
     );
   };
@@ -264,7 +210,7 @@ export default function LearnPage() {
                 {/* CATEGORY CARDS */}
                 {area.categories.length >
                 0 ? (
-                  <div className={proto?.grid ?? "grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"}>
+                  <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                     {area.categories.map(
                       renderCategory,
                     )}
@@ -280,13 +226,6 @@ export default function LearnPage() {
           </div>
         )}
 
-      {proto && variantKey && (
-        <>
-          <LearnCardStyles />
-          <div className="h-20" />
-          <PrototypeSwitcher variants={LEARN_CARD_VARIANTS} current={variantKey} />
-        </>
-      )}
     </section>
   );
 }

@@ -1,4 +1,9 @@
-import { useNavigate } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
+
+// PROTOTYPE, delete me: ?variant=home-* compares home page designs (dev only).
+import PrototypeSwitcher from "@/components/prototype/prototype-switcher";
+import { HOME_VARIANTS, HomePrototype, isHomeVariant } from "./home-prototype";
+import { ALIVE_VARIANTS, AliveHome, isAliveVariant } from "./home-alive-prototype";
 import { ArrowRight, ClipboardCheck, Sparkles } from "lucide-react";
 
 import { Banner } from "@/components/common/banner";
@@ -135,6 +140,21 @@ const StudentHomePage = () => {
     useLearningAreas();
 
   const { data: progress } = useMyProgress();
+
+  const variant = useSearchParams()[0].get("variant");
+  if (import.meta.env.DEV && variant && (isHomeVariant(variant) || isAliveVariant(variant))) {
+    const data = { variant, name: user?.fullName ?? "", avatarKey: user?.avatarKey ?? null, areas: learningAreas, progress };
+    return (
+      <>
+        {isAliveVariant(variant) ? <AliveHome {...data} /> : <HomePrototype {...data} />}
+        {/* Lifted above the student bottom nav on phones/tablets. */}
+        <div className="h-24" />
+        <div className="[&>div]:!bottom-24 lg:[&>div]:!bottom-5">
+          <PrototypeSwitcher variants={[...ALIVE_VARIANTS, ...HOME_VARIANTS]} current={variant} />
+        </div>
+      </>
+    );
+  }
 
   const currentCategory = learningAreas
     .flatMap((area) => area.categories)
