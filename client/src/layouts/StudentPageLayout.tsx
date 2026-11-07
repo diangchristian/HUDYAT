@@ -3,11 +3,11 @@ import { useCurrentUser } from "@/hooks/use-current-user";
 import { getAvatarEmoji } from "@/components/common/avatars.constants";
 
 const navItems: SidebarNavItem[] = [
-  { name: "Home", path: "/student/home", image: "/icons/home.png" },
-  { name: "Learn", path: "/student/learn", image: "/icons/learn.png" },
-  { name: "Practice", path: "/student/practice", image: "/icons/practice.png" },
-  { name: "Assessment", path: "/student/assessment", image: "/icons/assessment.png" },
-  { name: "My Progress", path: "/student/progress", image: "/icons/progress.png" },
+  { name: "Home", path: "/student/home" },
+  { name: "Learn", path: "/student/learn" },
+  { name: "Practice", path: "/student/practice" },
+  { name: "Assessment", path: "/student/assessment" },
+  { name: "My Progress", path: "/student/progress" },
 ];
 
 const StudentPageLayout = () => {
