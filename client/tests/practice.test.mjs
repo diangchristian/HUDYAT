@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { createCameraSession, cameraErrorMessage, cameraGrantRemembered, forgetCameraGrant, rememberCameraGrant } from "../src/lib/camera-session.ts";
-import { PRACTICE_PROMPTS, categorySlug, practicePosition } from "../src/lib/practice.ts";
+import { categorySlug, nextUnstarred } from "../src/lib/practice.ts";
 
 function mockStream() {
   const tracks = [{ stops: 0, stop() { this.stops += 1; } }, { stops: 0, stop() { this.stops += 1; } }];
@@ -97,33 +97,18 @@ test("camera problems have actionable messages", () => {
   assert.match(cameraErrorMessage(new Error("unknown")), /couldn't start/);
 });
 
-test("every category has a working slug and unique starter prompts", () => {
-  const titles = ["Alphabet", "Numbers", "Shapes", "Colors", "Greetings", "Calendar", "WH Questions", "Word Concepts"];
-  for (const title of titles) {
-    const prompts = PRACTICE_PROMPTS[categorySlug(title)];
-    assert.ok(prompts.length > 0);
-    assert.equal(new Set(prompts.map((prompt) => prompt.label)).size, prompts.length);
-  }
-  assert.equal(PRACTICE_PROMPTS.alphabet[0].label, "A");
-  assert.equal(PRACTICE_PROMPTS.alphabet.at(-1).label, "Z");
-  assert.equal(PRACTICE_PROMPTS["not-a-category"], undefined);
+test("category titles become the practice URL slugs", () => {
+  assert.equal(categorySlug("WH Questions"), "wh-questions");
+  assert.equal(categorySlug("  Word Concepts "), "word-concepts");
 });
 
-test("starter prompts no longer include the removed hand-position instruction", () => {
-  assert.equal(
-    PRACTICE_PROMPTS.alphabet.find((prompt) => prompt.label === "A")?.instruction,
-    undefined,
-  );
-  assert.ok(
-    !Object.values(PRACTICE_PROMPTS).flat().some((prompt) =>
-      prompt.instruction?.includes("Form a fist with your thumb resting against the side of your index finger.")),
-  );
+test("after a correct sign, practice moves to the next sign without a star, wrapping around", () => {
+  assert.equal(nextUnstarred(new Set([0]), 0, 4), 1);
+  assert.equal(nextUnstarred(new Set([0, 1, 3]), 3, 4), 2);
+  assert.equal(nextUnstarred(new Set([2]), 2, 3), 0);
 });
 
-test("progress reflects prompt position without overflowing", () => {
-  assert.equal(practicePosition(0, 5), 20);
-  assert.equal(practicePosition(4, 5), 100);
-  assert.equal(practicePosition(99, 5), 100);
-  assert.equal(practicePosition(-5, 5), 0);
-  assert.equal(practicePosition(0, 0), 0);
+test("practice is finished once every sign has a star", () => {
+  assert.equal(nextUnstarred(new Set([0, 1, 2]), 1, 3), null);
+  assert.equal(nextUnstarred(new Set(), 0, 0), null);
 });

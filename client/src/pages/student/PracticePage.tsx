@@ -1,4 +1,5 @@
-import CategoryCard from "@/components/common/category-card";
+import LessonStage from "@/components/common/learn-card/lesson-stage";
+import { PALETTE } from "@/components/common/learn-card/characters";
 import { CATEGORIES } from "@/components/common/categories.constants";
 import { useNavigate } from "react-router";
 import { categorySlug } from "@/lib/practice";
@@ -29,13 +30,28 @@ export default function PracticePage() {
 
       <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
         {CATEGORIES.map((category) => (
-          <CategoryCard
+          <button
             key={category.title}
-            {...category}
-            desc={DESCRIPTIONS[category.title]}
-            className="min-h-40 justify-center border-3"
+            type="button"
             onClick={() => navigate(`/student/practice/${categorySlug(category.title)}`)}
-          />
+            style={{ "--edge": PALETTE[category.color].main } as React.CSSProperties}
+            className="group flex w-full flex-col overflow-hidden rounded-3xl border-2 border-[#E5E5E5] bg-white text-center shadow-[0_6px_0_#E5E5E5] transition-all duration-300 hover:-translate-y-1.5 hover:border-[var(--edge)] hover:shadow-[0_10px_0_var(--edge)] active:translate-y-0.5 active:shadow-[0_2px_0_var(--edge)] active:duration-75 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-hudyat-gold"
+          >
+            <LessonStage title={category.title} color={category.color} />
+            <div className="flex flex-1 flex-col items-center px-5 pb-5 pt-3">
+              <h2 className="text-xl font-extrabold text-[#4B4B4B]">{category.title}</h2>
+              {DESCRIPTIONS[category.title] && (
+                <p className="text-sm font-bold text-[#AFAFAF]">{DESCRIPTIONS[category.title]}</p>
+              )}
+              <span className="min-h-5 flex-1" />
+              <span
+                className="w-full rounded-2xl py-3 text-sm font-extrabold uppercase tracking-widest text-white shadow-[0_4px_0_var(--btn)] transition-all duration-100 group-active:translate-y-1 group-active:shadow-none"
+                style={{ background: PALETTE[category.color].main, "--btn": PALETTE[category.color].dark } as React.CSSProperties}
+              >
+                Practice
+              </span>
+            </div>
+          </button>
         ))}
       </div>
     </section>

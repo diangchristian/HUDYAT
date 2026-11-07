@@ -26,8 +26,6 @@ export type CategoryCardProps = {
   iconContent?: ReactNode;
   color: CategoryColor;
   desc?: string;
-  progress?: number;
-  variant?: "default" | "progress";
   className?: string;
   status?: CategoryStatus;
   statusLabel?: string;
@@ -41,8 +39,6 @@ export default function CategoryCard({
   iconContent,
   color, 
   desc,
-  progress,
-  variant = "default",
   className,
   status,
   statusLabel,
@@ -50,8 +46,6 @@ export default function CategoryCard({
   onClick,
 }: CategoryCardProps) {
   const style = CATEGORY_THEME[color];
-  const isProgressCard = variant === "progress";
-  const safeProgress = Math.min(100, Math.max(0, progress ?? 0));
   const resolvedStatusLabel = statusLabel ??
     (status === "completed" ? "Completed" : status === "current" ? "Continue" : status === "locked" ? "Locked" : undefined);
 
@@ -69,16 +63,14 @@ export default function CategoryCard({
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
         "disabled:cursor-not-allowed disabled:opacity-60 disabled:shadow-none disabled:hover:translate-y-0 disabled:hover:shadow-none",
         style.border,
-        isProgressCard
-          ? "min-h-40 rounded-3xl px-6 py-5"
-          : "rounded-2xl px-3 py-4",
+        "rounded-2xl px-3 py-4",
         className,
       )}
     >
       <div
         className={cn(
           "mb-3 flex items-center justify-center rounded-full transition-transform duration-300 group-hover:scale-110",
-          isProgressCard ? "size-14" : "size-12",
+          "size-12",
           style.bg,
           disabled && "opacity-60",
         )}
@@ -87,7 +79,7 @@ export default function CategoryCard({
           (Icon && (
             <Icon
               aria-hidden="true"
-              className={cn(isProgressCard ? "size-7" : "size-6", style.icon, disabled && "opacity-70")}
+              className={cn("size-6", style.icon, disabled && "opacity-70")}
             />
           ))}
       </div>
@@ -95,7 +87,7 @@ export default function CategoryCard({
       <h3
         className={cn(
           "text-center font-semibold text-gray-800",
-          isProgressCard ? "text-sm" : "text-xs",
+          "text-xs",
           disabled && "text-gray-500",
         )}
       >
@@ -115,31 +107,6 @@ export default function CategoryCard({
         <p className={cn("mt-2 text-center text-[10px] leading-tight", disabled ? "text-slate-500" : "text-gray-500")}>
           {desc}
         </p>
-      )}
-
-      {isProgressCard && progress !== undefined && (
-        <div className="mt-auto w-full pt-4">
-          <div className="mb-2 flex items-center justify-between text-xs">
-            <span className={cn("text-gray-500", disabled && "text-slate-500")}>Progress</span>
-            <span className={cn("text-lg font-bold", disabled ? "text-slate-500" : style.progressText)}>
-              {safeProgress}%
-            </span>
-          </div>
-
-          <div
-            className={cn("h-2 overflow-hidden rounded-full", disabled ? "bg-slate-200" : "bg-gray-200")}
-            role="progressbar"
-            aria-label={`${title} progress`}
-            aria-valuemin={0}
-            aria-valuemax={100}
-            aria-valuenow={safeProgress}
-          >
-            <div
-              className={cn("h-full rounded-full", disabled ? "bg-slate-400" : style.progress)}
-              style={{ width: `${safeProgress}%` }}
-            />
-          </div>
-        </div>
       )}
     </button>
   );

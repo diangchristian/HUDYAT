@@ -342,6 +342,27 @@
   html {
     @apply font-sans;
   }
+
+  /* Thin scrollbars in the theme's primary colour (gold for students, blue for staff/admin). */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary) transparent;
+  }
+
+  /* Safari ignores scrollbar-color, so style the WebKit scrollbar there instead. */
+  @supports not (scrollbar-color: auto) {
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--primary);
+      border-radius: 9999px;
+    }
+  }
 }
 
 

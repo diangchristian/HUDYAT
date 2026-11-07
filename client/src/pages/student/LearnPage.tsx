@@ -1,17 +1,10 @@
 import { useNavigate } from "react-router";
 
-import CategoryCard from "@/components/common/category-card";
+import LearnCard from "@/components/common/learn-card/learn-card";
 import { CATEGORIES } from "@/components/common/categories.constants";
 
 import type { LearningArea } from "@/api/learning-api";
 import { useLearningAreas } from "@/hooks/use-learning-areas";
-
-
-const STATUS_LABELS = {
-  completed: "Completed",
-  current: "Continue",
-  locked: "Locked",
-} as const;
 
 export default function LearnPage() {
   const navigate = useNavigate();
@@ -45,7 +38,7 @@ export default function LearnPage() {
     /*
      * Match the database category with
      * the existing frontend presentation data
-     * so we can get its icon and color.
+     * so we can get its color.
      */
     const presentation =
       CATEGORIES.find(
@@ -116,36 +109,14 @@ export default function LearnPage() {
       category.progressPercent;
 
     return (
-      <CategoryCard
+      <LearnCard
         key={category.id}
         title={category.name}
-        icon={presentation?.icon}
-        color={
-          presentation?.color ??
-          "blue"
-        }
-        variant="progress"
+        color={presentation?.color ?? "blue"}
         progress={progress}
-        status={
-          category.learningStatus
-        }
-        statusLabel={
-          STATUS_LABELS[
-            category.learningStatus
-          ]
-        }
-        desc={statusText}
-        disabled={isLocked}
-        className="min-h-44 justify-center border-2"
-        onClick={() => {
-          if (isLocked) {
-            return;
-          }
-
-          navigate(
-            `/student/learn/${category.id}`,
-          );
-        }}
+        status={category.learningStatus}
+        statusText={statusText}
+        onClick={() => navigate(`/student/learn/${category.id}`)}
       />
     );
   };
@@ -254,6 +225,7 @@ export default function LearnPage() {
             ))}
           </div>
         )}
+
     </section>
   );
 }
