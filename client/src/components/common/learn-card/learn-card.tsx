@@ -4,6 +4,8 @@
  * Hover → card lifts onto a lesson-coloured edge and tilts, the character
  * hops, the world speeds up. Locked → character sleeps in a night-time world.
  */
+import { Star } from "lucide-react";
+
 import type { CategoryColor, CategoryStatus } from "@/components/common/category-card";
 import { cn } from "@/lib/utils";
 
@@ -22,9 +24,30 @@ type LearnCardProps = {
   status: CategoryStatus;
   statusText: string;
   onClick: () => void;
+  /** Quiz cards: 0–3 stars in place of the progress bar. */
+  stars?: number;
+  /** Overrides the lesson button text (quiz cards say START QUIZ / PLAY AGAIN). */
+  actionText?: string;
 };
 
-export default function LearnCard({ title, color, progress, status, statusText, onClick }: LearnCardProps) {
+export function LessonProgressBar({ title, percent, fill, className }: { title: string; percent: number; fill: string; className?: string }) {
+  return (
+    <div
+      className={cn("h-4 w-full overflow-hidden rounded-full bg-[#E5E5E5]", className)}
+      role="progressbar"
+      aria-label={`${title} progress`}
+      aria-valuemin={0}
+      aria-valuemax={100}
+      aria-valuenow={percent}
+    >
+      <div className="relative h-full rounded-full transition-[width] duration-700" style={{ width: `${percent}%`, background: fill }}>
+        <span className="absolute inset-x-2 top-1 h-1 rounded-full bg-white/40" />
+      </div>
+    </div>
+  );
+}
+
+export default function LearnCard({ title, color, progress, status, statusText, onClick, stars, actionText }: LearnCardProps) {
   const locked = status === "locked";
   const p = locked ? LOCKED : PALETTE[color];
   const percent = Math.min(100, Math.max(0, progress));
@@ -48,18 +71,20 @@ export default function LearnCard({ title, color, progress, status, statusText, 
       <div className="flex flex-col items-center px-5 pb-5 pt-3">
         <h3 className={cn("text-xl font-extrabold", locked ? "text-[#AFAFAF]" : "text-[#4B4B4B]")}>{title}</h3>
         <p className="text-sm font-bold text-[#AFAFAF]">{statusText}</p>
-        <div
-          className="mt-4 h-4 w-full overflow-hidden rounded-full bg-[#E5E5E5]"
-          role="progressbar"
-          aria-label={`${title} progress`}
-          aria-valuemin={0}
-          aria-valuemax={100}
-          aria-valuenow={percent}
-        >
-          <div className="relative h-full rounded-full transition-[width] duration-700" style={{ width: `${percent}%`, background: p.main }}>
-            <span className="absolute inset-x-2 top-1 h-1 rounded-full bg-white/40" />
+        {stars !== undefined ? (
+          <div className="mt-3 flex items-end justify-center gap-1.5" role="img" aria-label={`${stars} of 3 stars`}>
+            {[0, 1, 2].map((i) => (
+              <Star
+                key={i}
+                aria-hidden="true"
+                className={cn(i === 1 ? "size-9" : "size-7", i < stars ? "fill-hudyat-gold text-hudyat-gold" : "fill-[#F2F2F2] text-[#E0E0E0]")}
+                strokeWidth={i < stars ? 1.5 : 2}
+              />
+            ))}
           </div>
-        </div>
+        ) : (
+          <LessonProgressBar title={title} percent={percent} fill={p.main} className="mt-4" />
+        )}
         <span
           className={cn(
             "relative mt-5 w-full overflow-hidden rounded-2xl py-3 text-sm font-extrabold uppercase tracking-widest text-white shadow-[0_4px_0_var(--btn)] transition-all duration-100",
@@ -69,7 +94,7 @@ export default function LearnCard({ title, color, progress, status, statusText, 
           style={{ background: p.main }}
         >
           {!locked && <span className="lc-shine absolute inset-y-0 -left-1/3 w-1/3 -skew-x-12 bg-white/40" />}
-          <span className="relative">{actionLabel(status, progress)}</span>
+          <span className="relative">{actionText ?? actionLabel(status, progress)}</span>
         </span>
       </div>
     </button>
