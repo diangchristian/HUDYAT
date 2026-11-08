@@ -12,7 +12,7 @@ import { useNavigate, useSearchParams } from "react-router";
 
 // PROTOTYPE, delete me: ?variant=tests-* compares two-test assessment cards (dev only).
 import PrototypeSwitcher from "@/components/prototype/prototype-switcher";
-import { AssessmentCardsPrototype, buildLessons, CalmCard, CARD_VARIANTS, isCardVariant, LiteRowsCard, RowsCard } from "./assessment-cards-prototype";
+import { AssessmentCardsPrototype, buildLessons, CalmPage, CARD_VARIANTS, isCardVariant, LiteRowsCard, RowsCard } from "./assessment-cards-prototype";
 
 import { useAssessmentList } from "@/hooks/use-assessment-list";
 import type {
@@ -20,7 +20,9 @@ import type {
   AssessmentListStatus,
 } from "@/api/assessment-api";
 import { CATEGORIES } from "@/components/common/categories.constants";
+import LearnCard from "@/components/common/learn-card/learn-card";
 import LessonStage from "@/components/common/learn-card/lesson-stage";
+import { starsEarned } from "@/lib/quiz-stars";
 import StatusBadge, {
   type StatusBadgeTone,
 } from "@/components/common/status-badge";
@@ -60,7 +62,7 @@ const AssessmentPage = () => {
 
   // page-* keep this page and only swap the cards (below); the other card variants replace the page.
   const keepCurrentCards = import.meta.env.DEV && protoVariant === "page-plus";
-  const rowsCards = import.meta.env.DEV && (protoVariant === "page-rows" || protoVariant === "page-rows-lite" || protoVariant === "page-calm" || keepCurrentCards) ? new Map(buildLessons(categories).map((l) => [l.c.categoryId, l])) : null;
+  const rowsCards = import.meta.env.DEV && (protoVariant === "page-rows" || protoVariant === "page-rows-lite" || keepCurrentCards) ? new Map(buildLessons(categories).map((l) => [l.c.categoryId, l])) : null;
   if (import.meta.env.DEV && protoVariant && isCardVariant(protoVariant) && !rowsCards) {
     return (
       <>
@@ -79,6 +81,23 @@ const AssessmentPage = () => {
       </>
     );
   }
+
+  // page-calm replaces the whole page (Learn-style header, grouped by area, no filter), not just the cards.
+  if (import.meta.env.DEV && protoVariant === "page-calm") {
+    return (
+      <>
+        <CalmPage areas={data?.learningAreas ?? []} loading={isLoading} failed={!!error} />
+        <div className="h-24" />
+        <div className="[&>div]:!bottom-24 lg:[&>div]:!bottom-5">
+          <PrototypeSwitcher variants={CARD_VARIANTS} current={protoVariant} />
+        </div>
+      </>
+    );
+  }
+
+  // The real page: a twin of the Learn page (same header, same cards, grouped the same way).
+  // The layout below it is only kept for the remaining ?variant= card prototypes.
+  if (!rowsCards) return <QuizzesPage areas={data?.learningAreas ?? []} loading={isLoading} error={error} />;
 
   const visibleCategories = categories.filter((category) => {
     if (activeFilter === "Completed") return category.status === "completed";
@@ -254,7 +273,7 @@ const AssessmentPage = () => {
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
           {rowsCards && !keepCurrentCards
             ? visibleCategories.map((category) => {
-                const ProtoCard = protoVariant === "page-calm" ? CalmCard : protoVariant === "page-rows-lite" ? LiteRowsCard : RowsCard;
+                const ProtoCard = protoVariant === "page-rows-lite" ? LiteRowsCard : RowsCard;
                 return <ProtoCard key={category.categoryId} lesson={rowsCards.get(category.categoryId)!} />;
               })
             : visibleCategories.map(renderCard)}
@@ -273,3 +292,93 @@ const AssessmentPage = () => {
 };
 
 export default AssessmentPage;
+
+/*
+ * The quiz page, built from the Learn page's own parts so it feels like the same app:
+ * the same centred header, lessons grouped by learning area, and the same LearnCard
+ * (lesson world, hover lift, lesson-coloured button) with stars in place of the progress bar.
+ */
+type QuizArea = { id: string; name: string; categories: AssessmentListCategory[] };
+
+function quizCard(category: AssessmentListCategory) {
+  const attempt = category.latestAttempt;
+  const score = attempt ? Math.round(Number(attempt.score)) : 0;
+  const total = attempt ? Math.round(Number(attempt.totalPoints)) : category.totalQuestions;
+
+  if (!category.isUnlocked) {
+    return { status: "locked" as const, statusText: `Finish the ${category.categoryName} lesson first`, actionText: "Locked", stars: 0 };
+  }
+  if (category.status === "completed") {
+    return { status: "completed" as const, statusText: `Score ${score} / ${total}`, actionText: "Play again", stars: starsEarned(score, total) };
+  }
+  if (attempt) {
+    return { status: "current" as const, statusText: `Last try ${score} / ${total}`, actionText: "Try again", stars: starsEarned(score, total) };
+  }
+  return { status: "current" as const, statusText: `${category.totalQuestions} questions`, actionText: "Start quiz", stars: 0 };
+}
+
+function QuizzesPage({ areas, loading, error }: { areas: QuizArea[]; loading: boolean; error: unknown }) {
+  const navigate = useNavigate();
+
+  return (
+    <section className="w-full font-body" aria-labelledby="quiz-heading">
+      <header className="text-center">
+        <span className="inline-flex h-8 items-center justify-center rounded-full bg-hudyat-gold px-10 text-xs font-extrabold text-primary-foreground">
+          Quizzes
+        </span>
+        <h1 id="quiz-heading" className="mt-4 text-2xl font-bold text-foreground sm:text-3xl">
+          Show what you've learned!
+        </h1>
+        <p className="mt-2 text-sm text-muted-foreground">Finish a lesson, then earn its stars here.</p>
+      </header>
+
+      {loading && (
+        <p className="mt-12 text-center text-sm text-muted-foreground" role="status">
+          Loading your quizzes...
+        </p>
+      )}
+
+      {!loading && Boolean(error) && (
+        <p className="mt-12 text-center text-sm font-bold text-destructive" role="alert">
+          We couldn't load your quizzes right now.
+        </p>
+      )}
+
+      {!loading && !error && areas.length === 0 && (
+        <p className="mt-12 text-center text-sm text-muted-foreground" role="status">
+          No quizzes are available yet.
+        </p>
+      )}
+
+      {!loading && !error && areas.length > 0 && (
+        <div className="mt-10">
+          {areas.map((area) => (
+            <section key={area.id} aria-labelledby={`quiz-area-${area.id}`} className="mb-12 last:mb-0">
+              <h2 id={`quiz-area-${area.id}`} className="mb-4 text-lg font-bold text-foreground sm:text-xl">
+                {area.name}
+              </h2>
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {area.categories.map((category) => {
+                  const card = quizCard(category);
+                  return (
+                    <LearnCard
+                      key={category.categoryId}
+                      title={category.categoryName}
+                      color={CATEGORIES.find((item) => item.title === category.categoryName)?.color ?? "blue"}
+                      progress={0}
+                      status={card.status}
+                      statusText={card.statusText}
+                      stars={card.stars}
+                      actionText={card.actionText}
+                      onClick={() => navigate(`/student/assessment/${category.categoryId}`)}
+                    />
+                  );
+                })}
+              </div>
+            </section>
+          ))}
+        </div>
+      )}
+    </section>
+  );
+}

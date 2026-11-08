@@ -6,8 +6,8 @@
  * Phone (<640px): 5 trail stops, bottom bar on 2 rows. Tablet: 7 stops, 1 row.
  * Every move saves the lesson checkpoint, as before.
  */
-import { useState, useSyncExternalStore, type CSSProperties } from "react";
-import { ArrowLeft, ArrowRight, Camera, Check, Hand, House, Lightbulb, MessageCircle, Star } from "lucide-react";
+import { useEffect, useRef, useState, useSyncExternalStore, type CSSProperties } from "react";
+import { ArrowLeft, ArrowRight, Camera, Check, ChevronLeft, ChevronRight, Hand, House, Lightbulb, MessageCircle } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router";
 
 import type { LessonStep } from "@/api/learning-api";
@@ -20,7 +20,7 @@ import { useSaveLessonCheckpoint } from "@/hooks/use-save-lesson-checkpoint";
 import { categorySlug, type PracticePrompt } from "@/lib/practice";
 import { cn } from "@/lib/utils";
 
-import Celebration from "./celebration";
+import Celebration, { CHEER_MS, type CheerKind } from "./celebration";
 import StepCard from "./step-cards";
 // PROTOTYPE, delete me: ?variant=when-* compares When to Use designs (dev only).
 import PrototypeSwitcher from "@/components/prototype/prototype-switcher";
@@ -45,8 +45,6 @@ const STEP_META = {
 
 // The character reads along on text steps and stays still for the video and camera.
 const MOOD: Record<LessonStep, "talk" | "watch"> = { meaning: "talk", context: "talk", how: "watch", try: "watch" };
-
-const CHEER_MS = 2200;
 
 const TABLET = "(min-width: 640px)";
 const subscribeTablet = (onChange: () => void) => {
@@ -75,9 +73,18 @@ export default function LearnSession({ categoryId, title, prompts, initialGestur
 
   const [index, setIndex] = useState(() => Math.min(Math.max(initialGestureIndex, 0), prompts.length - 1));
   const [step, setStep] = useState<LessonStep>(initialStep && STEPS.includes(initialStep) ? initialStep : "meaning");
-  // The sign just finished, while its celebration plays; `at` lets back-to-back cheers restart.
-  const [cheer, setCheer] = useState<{ at: number; label: string } | null>(null);
-  const cheering = cheer !== null;
+  // The celebration playing now; `at` lets back-to-back cheers restart.
+  const [cheer, setCheer] = useState<{ at: number; kind: CheerKind; label: string; count: number } | null>(null);
+  // A skip gets a gentle note, not a cheer, so the character doesn't hop for it.
+  const cheering = cheer !== null && cheer.kind !== "skip";
+  // Signs actually signed this visit; every 5th gets the big celebration.
+  const [learned, setLearned] = useState(0);
+  // Signs skipped this visit, drawn as "come back to this" stops on the trail.
+  const [skipped, setSkipped] = useState<ReadonlySet<number>>(new Set());
+  const finishing = useRef(false);
+  // Cancelled on leaving, so tapping Home during the finale doesn't still redirect to the quiz.
+  const finaleTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  useEffect(() => () => clearTimeout(finaleTimer.current), []);
 
   // PROTOTYPE, delete me: variant + still-frame fallback for signs that only have a video.
   const protoKey = useSearchParams()[0].get("variant");
@@ -93,22 +100,47 @@ export default function LearnSession({ categoryId, title, prompts, initialGestur
   const color = CATEGORIES.find((item) => item.title === title)?.color ?? "blue";
   const meta = STEP_META[step];
 
+  const celebrate = (kind: CheerKind, label: string, count: number) => {
+    const at = Date.now();
+    setCheer({ at, kind, label, count });
+    setTimeout(() => setCheer((current) => (current?.at === at ? null : current)), CHEER_MS[kind]);
+  };
+
   const goTo = (nextIndex: number, nextStep: LessonStep) => {
-    if (nextIndex > index) {
-      const at = Date.now();
-      setCheer({ at, label: prompts[index].label });
-      setTimeout(() => setCheer((current) => (current?.at === at ? null : current)), CHEER_MS);
-    }
+    if (finishing.current) return; // the finale is playing; the lesson is already over
     setIndex(nextIndex);
     setStep(nextStep);
     // The lesson continues if saving fails; checkpoint.isError shows the banner below.
     checkpoint.mutate({ gestureIndex: nextIndex, lessonStep: nextStep });
   };
 
-  const next = () => {
-    if (following) goTo(index, following);
-    else if (isLast) onFinishLesson();
-    else goTo(index + 1, "meaning");
+  // signed: the camera recognised the sign. Leaving Try any other way is a skip, which is never praised.
+  const next = (signed = false) => {
+    if (finishing.current) return;
+    if (following) return goTo(index, following);
+    const label = prompts[index].label;
+    setSkipped((prev) => {
+      const nextSet = new Set(prev);
+      if (signed) nextSet.delete(index);
+      else nextSet.add(index);
+      return nextSet;
+    });
+    if (!signed) {
+      if (isLast) return onFinishLesson();
+      celebrate("skip", label, learned);
+      return goTo(index + 1, "meaning");
+    }
+    const count = learned + 1;
+    setLearned(count);
+    if (isLast) {
+      // Let the finale play before the lesson hands over to the quiz.
+      finishing.current = true;
+      celebrate("finale", title, count);
+      finaleTimer.current = setTimeout(onFinishLesson, CHEER_MS.finale);
+      return;
+    }
+    celebrate(count % 5 === 0 ? "milestone" : "sign", label, count);
+    goTo(index + 1, "meaning");
   };
 
   const back = () => {
@@ -121,18 +153,22 @@ export default function LearnSession({ categoryId, title, prompts, initialGestur
   const size = tablet ? 7 : 5;
   const start = Math.max(0, Math.min(index - Math.floor(size / 2), prompts.length - size));
   const shown = prompts.slice(start, start + size);
-  const x = (i: number) => (shown.length === 1 ? 50 : 10 + ((i - start) / (shown.length - 1)) * 80);
+  // 12–88% leaves room at the edges for the "more signs" hints.
+  const x = (i: number) => (shown.length === 1 ? 50 : 12 + ((i - start) / (shown.length - 1)) * 76);
   const StepIcon = meta.icon;
+  // Video and camera steps need the height more than the trail does.
+  const compact = step === "how" || step === "try";
 
   if (!prompt) return null;
 
   return (
     <div className="min-h-dvh bg-[#FFF8E7] pb-[calc(9.5rem+env(safe-area-inset-bottom))] font-body sm:pb-[calc(6.5rem+env(safe-area-inset-bottom))]">
-      {cheer && <Celebration key={cheer.at} label={cheer.label} durationMs={CHEER_MS} />}
+      {cheer && <Celebration key={cheer.at} kind={cheer.kind} label={cheer.label} count={cheer.count} durationMs={CHEER_MS[cheer.kind]} />}
 
       {/* SIGN TRAIL */}
-      <section aria-label="Your sign trail" className="relative h-44 overflow-hidden rounded-b-[2rem] border-b-4 border-white shadow-[0_6px_0_#0000000d] sm:h-60">
-        <div className={cn("absolute inset-0", `ls-mood-${MOOD[step]}`)}>
+      <section aria-label="Your sign trail" className={cn("relative overflow-hidden rounded-b-[2rem] border-b-4 border-white shadow-[0_6px_0_#0000000d] transition-[height] duration-300 motion-reduce:transition-none", compact ? "h-32 sm:h-40" : "h-44 sm:h-60")}>
+        {/* The world is backdrop: faded so its decorations (even letters, on Alphabet) don't compete with the stops. */}
+        <div className={cn("absolute inset-0 opacity-55", `ls-mood-${MOOD[step]}`)}>
           <LessonStage title={title} color={color} className="!h-full [&>span.lc-shadow]:hidden [&>svg]:hidden" />
         </div>
         <svg aria-hidden="true" viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 size-full">
@@ -146,25 +182,57 @@ export default function LearnSession({ categoryId, title, prompts, initialGestur
             vectorEffect="non-scaling-stroke"
           />
         </svg>
-        {shown.map((p, o) => {
+        {/* Only signs reached so far get a stop; the dotted path ahead stays empty until the walker gets there. */}
+        {shown.slice(0, index - start + 1).map((p, o) => {
           const i = start + o;
+          // Every stop keeps its letter, so the trail reads as "the letters I've done".
+          const state = i === index ? "now" : skipped.has(i) ? "skipped" : "done";
           return (
             <span
               key={p.label}
               role="img"
-              aria-label={`${p.label}${i < index ? ", done" : i === index ? ", now" : ""}`}
+              aria-label={`${p.label}, ${state}`}
               className={cn(
-                "absolute flex size-10 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-4 border-white text-sm font-black shadow-[0_4px_0_#0000002a] sm:size-12",
-                i < index ? "bg-hudyat-gold text-white" : i === index ? "ls-pulse scale-125 bg-white text-[#4B4B4B]" : "bg-white/70 text-[#AFAFAF]",
+                "absolute flex size-10 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-4 border-white text-sm font-black shadow-[0_4px_0_#0000002a] sm:size-12 sm:text-base",
+                {
+                  done: "bg-hudyat-gold text-white",
+                  skipped: "border-dashed border-hudyat-gold bg-white text-[#B87800]",
+                  now: "ls-pulse scale-125 bg-white text-[#4B4B4B]",
+                }[state],
               )}
               style={{ left: `${x(i)}%`, top: `${stopY(i)}%`, "--ring": "#ffffffaa" } as CSSProperties}
             >
-              {i < index ? <Star className="size-4 fill-white sm:size-5" /> : p.label.length <= 2 ? p.label : i + 1}
+              {p.label.length <= 2 ? p.label : i + 1}
+              {state === "done" && (
+                <span aria-hidden="true" className="absolute -top-1.5 -right-1.5 flex size-5 items-center justify-center rounded-full border-2 border-white bg-emerald-500">
+                  <Check className="size-3 text-white" strokeWidth={4} />
+                </span>
+              )}
             </span>
           );
         })}
+        {/* More signs off either end of the window: a soft fade and a chevron with the count. */}
+        {start > 0 && (
+          <div aria-hidden="true" className="pointer-events-none absolute inset-y-0 left-0 flex w-10 items-center bg-linear-to-r from-[#FFF8E7] to-transparent pl-0.5">
+            <span className="flex flex-col items-center rounded-full bg-white/90 px-0.5 py-1 text-[11px] leading-none font-black text-[#6B6B6B] shadow-sm">
+              <ChevronLeft className="size-4" strokeWidth={3} />
+              {start}
+            </span>
+          </div>
+        )}
+        {/* Signs still to come (their stops aren't drawn). */}
+        {index < prompts.length - 1 && (
+          <div aria-hidden="true" className="pointer-events-none absolute inset-y-0 right-0 flex w-10 items-center justify-end bg-linear-to-l from-[#FFF8E7] to-transparent pr-0.5">
+            <span className="flex flex-col items-center rounded-full bg-white/90 px-0.5 py-1 text-[11px] leading-none font-black text-[#6B6B6B] shadow-sm">
+              <ChevronRight className="size-4" strokeWidth={3} />
+              {prompts.length - 1 - index}
+            </span>
+          </div>
+        )}
+        {/* The walker stands above its stop, so it has no room on the short trail. */}
         <div
           aria-hidden="true"
+          hidden={compact && !cheering}
           className={cn(
             "absolute z-10 w-16 -translate-x-1/2 transition-[left,top] duration-700 ease-[cubic-bezier(.34,1.56,.64,1)] motion-reduce:transition-none sm:w-24",
             `ls-mood-${cheering ? "cheer" : MOOD[step]}`,
@@ -213,7 +281,7 @@ export default function LearnSession({ categoryId, title, prompts, initialGestur
         </div>
 
         <div key={`${index}-${step}`} className="ls-rise mt-4">
-          <StepCard step={step} prompt={prompt} title={title} color={color} onCorrect={next} whenVariant={whenVariant} />
+          <StepCard step={step} prompt={prompt} title={title} color={color} onCorrect={() => next(true)} whenVariant={whenVariant} />
         </div>
       </main>
 
@@ -263,13 +331,15 @@ export default function LearnSession({ categoryId, title, prompts, initialGestur
             >
               <ArrowLeft aria-hidden="true" className="size-7" />
             </button>
+            {/* Signing it right moves on by itself, so on Try this button only ever skips. */}
             <ElevatedButton
-              text={following ? "NEXT" : isLast ? "FINISH" : "NEXT SIGN"}
+              text={following ? "NEXT" : isLast ? "SKIP & FINISH" : "SKIP"}
+              variant={following ? "primary" : "secondary"}
               icon={following || !isLast ? ArrowRight : Check}
               iconPosition="right"
               size="lg"
               className="min-h-14 flex-1 text-xl! font-black! sm:flex-none sm:px-8"
-              onClick={next}
+              onClick={() => next()}
             />
           </div>
         </div>

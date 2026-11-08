@@ -32,15 +32,16 @@ const HandSignQuestion = ({
         {(answers ?? []).map((answer) => {
           const isSelected = selectedAnswer === answer.label;
           const isCorrect = answer.label === correctAnswer;
+          // Chunky tiles like the lesson cards: thick border, solid bottom shadow, gold when picked.
           const answerStyle = checked
             ? isCorrect
-              ? "border-[#54b848] bg-[#f1ffed]"
+              ? "border-[#54b848] bg-[#f1ffed] shadow-[0_5px_0_#3d9d35]"
               : isSelected
-                ? "border-[#ed6a5a] bg-[#fff3f1]"
-                : "border-[#e1e1e1] opacity-60"
+                ? "border-[#ed6a5a] bg-[#fff3f1] shadow-[0_5px_0_#d95849]"
+                : "border-[#e1e1e1] bg-white opacity-60"
             : isSelected
-              ? "border-[#5fc3fd] bg-[#f5fff1]"
-              : "border-[#e1e1e1] hover:border-[#ffc145]";
+              ? "border-hudyat-gold bg-[#FFF8E7] shadow-[0_5px_0_#C98A00]"
+              : "border-[#e1e1e1] bg-white shadow-[0_5px_0_#e1e1e1] hover:border-[#ffc145] active:translate-y-0.5 active:shadow-[0_2px_0_#e1e1e1]";
 
           const showImage =
             answer.imageUrl && !failedChoices.has(answer.label);
@@ -53,9 +54,9 @@ const HandSignQuestion = ({
               aria-pressed={isSelected}
               onClick={() => !checked && onSelect?.(answer.label)}
               disabled={checked}
-              className={`relative flex h-full max-h-56 min-h-0 w-full items-center justify-center overflow-hidden rounded-2xl border-2 transition-all sm:max-h-72 ${showImage ? "p-1.5 sm:p-2" : "p-4"} ${checked && !isSelected && isCorrect ? "animate-bounce" : ""} ${answerStyle}`}
+              className={`relative flex h-full max-h-56 min-h-0 w-full items-center justify-center overflow-hidden rounded-3xl border-4 transition-all focus-visible:ring-4 focus-visible:ring-hudyat-gold focus-visible:outline-none sm:max-h-72 ${showImage ? "p-1.5 sm:p-2" : "p-4"} ${checked && !isSelected && isCorrect ? "animate-bounce" : ""} ${answerStyle}`}
             >
-              <span className="absolute left-2 top-2 z-10 flex size-8 items-center justify-center rounded-md border-2 border-[#e0e0e0] bg-white/90 text-xs font-bold text-[#999] backdrop-blur-sm sm:size-9 sm:text-sm">
+              <span className="absolute left-2 top-2 z-10 flex size-8 items-center justify-center rounded-lg border-2 border-[#e0e0e0] bg-white/90 text-sm font-black text-[#6B6B6B] backdrop-blur-sm sm:size-9">
                 {answer.label}
               </span>
               {showImage ? (

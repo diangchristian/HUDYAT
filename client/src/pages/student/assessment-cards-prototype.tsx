@@ -9,7 +9,8 @@
  *   tests-split · the card's bottom splits into two big tappable halves
  *   page-rows-lite · page-rows with small calming changes (still worlds, quiet locked cards, fewer words)
  *   page-plus   · the CURRENT cards unchanged, plus a Sign test button under the existing one
- *   page-calm   · current page, calmer cards: still worlds, locked = picture only, ONE next-step button,
+ *   page-calm   · whole page beside the Learn page (centred header, grouped by area, no filter); calm cards:
+ *                 still worlds, lift on hover, ONE next-step button with a verb, locked says what to finish,
  *                 passed tests as ✓ chips, stars-only badge, star bar for the Sign test best
  *   page-rows   · the CURRENT assessments page (header, filters, grid) with only its cards swapped for test-rows
  * Quiz data is real. Sign test results are STAND-INS (nothing saves them yet): spread over the
@@ -21,6 +22,7 @@ import { useNavigate } from "react-router";
 
 import type { AssessmentListCategory } from "@/api/assessment-api";
 import { CATEGORIES } from "@/components/common/categories.constants";
+import { PALETTE } from "@/components/common/learn-card/characters";
 import LessonStage from "@/components/common/learn-card/lesson-stage";
 import { categorySlug } from "@/lib/practice";
 import { cn } from "@/lib/utils";
@@ -30,7 +32,7 @@ import { MODEL_LESSONS } from "./sign-test-prototype";
 export const CARD_VARIANTS = [
   { key: "page-rows-lite", name: "Current page · test rows, lighter" },
   { key: "page-plus", name: "Current cards + Sign test button" },
-  { key: "page-calm", name: "Current page · calm cards" },
+  { key: "page-calm", name: "Calm page · Learn-style header, calm cards" },
   { key: "page-rows", name: "Current page · test-rows cards" },
   { key: "tests-rows", name: "Assessment card · test rows" },
   { key: "tests-split", name: "Assessment card · split halves" },
@@ -283,7 +285,15 @@ export function CalmCard({ lesson }: { lesson: Lesson }) {
   const soon = lesson.tests.some((t) => t.state === "soon");
 
   return (
-    <article className={cn("group flex flex-col overflow-hidden rounded-3xl border-2 bg-white shadow-[0_5px_0_#E5E5E5]", done ? "border-[#B7F07A]" : "border-[#E5E5E5]")}>
+    <article
+      // Same hover as the Learn cards: lifts onto a lesson-coloured edge. Locked cards stay put.
+      style={{ "--edge": PALETTE[color].main } as React.CSSProperties}
+      className={cn(
+        "group flex flex-col overflow-hidden rounded-3xl border-2 bg-white shadow-[0_5px_0_#E5E5E5] transition-all duration-300 ease-[cubic-bezier(.34,1.56,.64,1)] motion-reduce:transition-none",
+        done ? "border-[#B7F07A]" : "border-[#E5E5E5]",
+        !locked && "hover:-translate-y-1.5 hover:border-(--edge) hover:shadow-[0_10px_0_var(--edge)] focus-within:border-(--edge)",
+      )}
+    >
       {/* World stays still; it only moves while the card is hovered or focused. */}
       <div className="calm-still relative">
         <LessonStage title={lesson.c.categoryName} color={color} asleep={locked} className="h-28" />
@@ -301,7 +311,12 @@ export function CalmCard({ lesson }: { lesson: Lesson }) {
       <div className="flex flex-1 flex-col gap-3 p-4">
         <h2 className={cn("text-xl font-black", locked ? "text-[#AFAFAF]" : "text-[#3C3C3C]")}>{lesson.c.categoryName}</h2>
 
-        {/* Locked: picture + name only. Everything else: one big next step. */}
+        {/* Locked: picture, name, and the one thing to do about it. Everything else: one big next step. */}
+        {locked && (
+          <p className="flex items-center gap-2 text-base font-bold text-[#8A8A8A]">
+            <Lock aria-hidden="true" className="size-4 shrink-0" /> Finish the {lesson.c.categoryName} lesson first
+          </p>
+        )}
         {!locked && next && (() => {
           const meta = TEST_META[next.kind];
           const Icon = meta.icon;
@@ -318,7 +333,8 @@ export function CalmCard({ lesson }: { lesson: Lesson }) {
                 className="mt-auto flex min-h-14 items-center justify-center gap-2 rounded-2xl border-b-4 text-lg font-black active:translate-y-0.5 active:border-b-2"
                 style={{ background: meta.color, color: meta.ink, borderColor: "#0003" }}
               >
-                <Icon aria-hidden="true" className="size-6" /> {meta.label}
+                {/* A verb, so the button says what happens: "Start quiz", "Try quiz again". */}
+                <Icon aria-hidden="true" className="size-6" /> {next.state === "tried" ? `Try ${meta.label.toLowerCase()} again` : `Start ${meta.label.toLowerCase()}`}
               </button>
             </>
           );
@@ -433,5 +449,42 @@ export function LiteRowsCard({ lesson }: { lesson: Lesson }) {
         )}
       </div>
     </article>
+  );
+}
+
+/* ── page-calm · the whole page, not just the cards ──
+ * Built to sit beside the Learn page: its centred header, lessons grouped by learning area, no
+ * All/Available/Completed filter (locked cards already sleep, finished ones show their stars). */
+type CalmArea = { id: string; name: string; categories: AssessmentListCategory[] };
+
+export function CalmPage({ areas, loading, failed }: { areas: CalmArea[]; loading: boolean; failed: boolean }) {
+  // Built once over every lesson so the stand-in Sign test results stay the same as on the other variants.
+  const lessons = new Map(buildLessons(areas.flatMap((a) => a.categories)).map((l) => [l.c.categoryId, l]));
+  return (
+    <section className="mx-auto w-full max-w-5xl font-body" aria-labelledby="quiz-heading">
+      <header className="text-center">
+        <span className="inline-flex h-8 items-center justify-center rounded-full bg-hudyat-gold px-10 text-xs font-extrabold text-primary-foreground">Quizzes</span>
+        <h1 id="quiz-heading" className="mt-4 text-2xl font-bold text-foreground sm:text-3xl">Show what you've learned!</h1>
+        <p className="mt-2 text-sm text-muted-foreground">Finish a lesson to unlock its tests.</p>
+      </header>
+      <p className="mx-auto mt-4 w-fit rounded-xl bg-fuchsia-50 px-3 py-2 text-xs font-bold text-fuchsia-700">PROTOTYPE: Sign test scores here are stand-ins; nothing saves them yet.</p>
+
+      {loading || failed ? (
+        <p className="mt-12 text-center text-sm text-muted-foreground" role="status">
+          {loading ? "Loading your quizzes..." : "We couldn't load your quizzes right now."}
+        </p>
+      ) : (
+        <div className="mt-10">
+          {areas.map((area) => (
+            <section key={area.id} aria-labelledby={`quiz-area-${area.id}`} className="mb-12 last:mb-0">
+              <h2 id={`quiz-area-${area.id}`} className="mb-4 text-lg font-bold text-foreground sm:text-xl">{area.name}</h2>
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {area.categories.map((c) => <CalmCard key={c.categoryId} lesson={lessons.get(c.categoryId)!} />)}
+              </div>
+            </section>
+          ))}
+        </div>
+      )}
+    </section>
   );
 }

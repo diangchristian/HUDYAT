@@ -27,7 +27,7 @@ export type RecognitionStatus={phase:'loading'|'ready'|'running'|'error';message
 export type HoldFeedback={progress:number;hint?:string};
 
 type HintCause=FrameIssue|'small hand';
-const HINTS:Partial<Record<HintCause,string>>={'no hand':'Keep your hand in view','unsteady':'Hold still','low score':'Make the handshape clearer','low margin':'Make the handshape clearer','small hand':'Move your hand closer'};
+const HINTS:Partial<Record<HintCause,string>>={'no hand':'Show your hand','unsteady':'Hold still','low score':'Make it clearer','low margin':'Make it clearer','small hand':'Come closer'};
 /** Wrist-to-middle-knuckle length (frame coordinates) of the first present hand; small = far from the camera. */
 function handSize(frame:Float32Array){
  for(let h=0;h<2;h++)if(frame[126+h]){const o=h*63;return Math.hypot(frame[o+27]-frame[o],frame[o+28]-frame[o+1]);}
@@ -130,13 +130,13 @@ export function CategoryRecognition({category,targetLabel,video,active,onCorrect
       const resetCause=lockResetCause(before,lock,lockInput,settings.lock);if(resetCause)recognitionMetrics.lockReset(resetCause);
       feedback(holdProgress(lock,settings.lock,lockInput.now),issueFor(frame,present,frameIssue(lockInput,settings.lock)),lockInput.now);
       previous=frame;previousProcessingMs=performance.now()-frameStarted;
-      notifyStatus({phase:'running',message:present?'Recognition running · hold your sign steady':'Recognition running · no hand detected',version:current.version});
+      notifyStatus({phase:'running',message:present?'Recognition running · Hold it steady':'Recognition running · Show your hand',version:current.version});
       if(lock.locked){completion.accept(lock.locked);lock=emptyLock();}
      }else{
-      const signing=current.category==='alphabet'?'Recognition running · show the letter and hold it, or lower your hand when done':'Recognition running · checking gesture';
+      const signing=current.category==='alphabet'?'Recognition running · Hold the letter':'Recognition running · Checking…';
       // Family's model also reads where the hands are against the face, so the face must be in the picture.
       const noFace=current.faceFound(frame)===false;
-      notifyStatus({phase:'running',message:!present?'Recognition running · no hand detected':noFace?'Recognition running · keep your face in the picture':signing,version:current.version});
+      notifyStatus({phase:'running',message:!present?'Recognition running · Show your hand':noFace?'Recognition running · Show your face too':signing,version:current.version});
       if(signCapture){
       // The sign ends when no hand has been seen for 0.5 s (or after 3 s); then it is cut and squeezed like training.
       const now=performance.now();rate.push(now);const fps=rate.fps();
