@@ -1,10 +1,20 @@
+/* eslint-disable react-refresh/only-export-components -- CHEER_MS is shared with the lesson session */
 /*
- * Shown for a moment after each finished sign: two party poppers fire confetti from the
- * bottom corners (up, then fluttering down with gravity) and a badge names the sign just
- * learned, a visual "well done" that needs no sound. With reduced motion only the badge shows.
+ * Shown for a moment after each sign, sized to what happened, so 26 letters don't get 26 identical bursts:
+ *  - sign:      a small pop of confetti and "You learned K!"
+ *  - milestone: every 5th sign signed, the full confetti burst and "5 signs learned!"
+ *  - finale:    the lesson's last sign, the full burst and "You finished Alphabet!"
+ *  - skip:      no confetti, just a gentle "We'll practise K later", since nothing was signed
+ * Confetti fires from the bottom corners (up, then fluttering down). With reduced motion only the badge shows.
  */
 import type { CSSProperties } from "react";
 import { Star } from "lucide-react";
+
+export type CheerKind = "sign" | "milestone" | "finale" | "skip";
+
+export const CHEER_MS: Record<CheerKind, number> = { sign: 1400, milestone: 2200, finale: 2800, skip: 1400 };
+
+const PIECE_COUNT: Record<CheerKind, number> = { sign: 20, milestone: 70, finale: 70, skip: 0 };
 
 const COLORS = ["#FF4B4B", "#FFC145", "#1CB0F6", "#58CC02", "#CE82FF", "#FF86D0", "#FF9600"];
 const SHAPES = ["h-3.5 w-2 rounded-[2px]", "size-2.5 rounded-full", "h-5 w-1 rounded-full", "size-3 rounded-[3px]"];
@@ -26,11 +36,22 @@ const PIECES = Array.from({ length: 70 }, (_, i) => {
   };
 });
 
-export default function Celebration({ label, durationMs }: { label: string; durationMs: number }) {
+type Props = { kind?: CheerKind; label: string; count?: number; durationMs: number };
+
+function message({ kind, label, count }: Required<Props>) {
+  if (kind === "milestone") return `${count} signs learned!`;
+  if (kind === "finale") return `You finished ${label}!`;
+  if (kind === "skip") return <>We'll practise <span className="uppercase">{label}</span> later</>;
+  return <>You learned <span className="uppercase">{label}</span>!</>;
+}
+
+export default function Celebration({ kind = "sign", label, count = 0, durationMs }: Props) {
+  const skip = kind === "skip";
+  const big = kind === "milestone" || kind === "finale";
   return (
     <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-40 overflow-hidden">
       <div className="motion-reduce:hidden">
-        {PIECES.map((piece, i) => (
+        {PIECES.slice(0, PIECE_COUNT[kind]).map((piece, i) => (
           <span key={i} className="ls-piece absolute bottom-0" style={{ ...piece.style, [piece.side > 0 ? "left" : "right"]: "4%" }}>
             <span className={`ls-flutter block ${piece.shape}`} style={{ background: piece.color }} />
           </span>
@@ -39,12 +60,16 @@ export default function Celebration({ label, durationMs }: { label: string; dura
 
       <div className="absolute inset-x-0 top-[28%] flex justify-center px-4">
         <div className="ls-badge relative" style={{ "--d": `${durationMs}ms` } as CSSProperties}>
-          <span className="ls-rays absolute top-1/2 left-1/2 size-72 -translate-x-1/2 -translate-y-1/2 rounded-full" />
-          <p className="relative flex items-center gap-2 rounded-3xl border-4 border-white bg-hudyat-gold px-5 py-3 text-xl font-black text-[#3C3C3C] shadow-[0_6px_0_#B87800] sm:text-2xl">
-            <Star className="size-7 shrink-0 fill-white text-white" />
-            <span>
-              You learned <span className="uppercase">{label}</span>!
-            </span>
+          {big && <span className="ls-rays absolute top-1/2 left-1/2 size-72 -translate-x-1/2 -translate-y-1/2 rounded-full" />}
+          <p
+            className={
+              skip
+                ? "relative rounded-3xl border-4 border-white bg-[#F2F2F2] px-5 py-3 text-lg font-extrabold text-[#4B4B4B] shadow-[0_6px_0_#CECECE] sm:text-xl"
+                : `relative flex items-center gap-2 rounded-3xl border-4 border-white bg-hudyat-gold px-5 py-3 font-black text-[#3C3C3C] shadow-[0_6px_0_#B87800] ${big ? "text-2xl sm:text-3xl" : "text-xl sm:text-2xl"}`
+            }
+          >
+            {!skip && <Star className={`shrink-0 fill-white text-white ${big ? "size-8" : "size-7"}`} />}
+            <span>{message({ kind, label, count, durationMs })}</span>
           </p>
         </div>
       </div>

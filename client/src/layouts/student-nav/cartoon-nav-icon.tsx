@@ -41,15 +41,18 @@ const DRAWINGS: Record<string, ReactNode> = {
     </g>
   ),
   Practice: (
-    <g className="student-nav-hand">
+    <g>
+      <g transform="translate(8 0)"><g className="student-nav-hand">
       <path d="M17 37 V18 a4 4 0 0 1 8 0 v13 V10 a4 4 0 0 1 8 0 v20 V12 a4 4 0 0 1 8 0 v20 V20 a4 4 0 0 1 8 0 v25 q0 16-17 16 Q18 61 12 49 L5 38 q-3-7 3-8 q4-1 9 7z" fill="#d99568" />
       <path d="M15 35 V16 a4 4 0 0 1 8 0 v13 V8 a4 4 0 0 1 8 0 v20 V10 a4 4 0 0 1 8 0 v20 V18 a4 4 0 0 1 8 0 v25 q0 15-16 15 Q17 58 10 47 L3 36 q-3-6 3-7 q4-1 9 6z" fill="#ffcd9d" />
       <g transform="translate(30 39) scale(.85)"><Face /></g>
-      <path className="student-nav-wave-lines" d="M53 14 q6 7 5 14 M57 8 q8 9 7 18" fill="none" stroke="#d6ad64" strokeWidth="2.5" strokeLinecap="round" />
+      </g></g>
+      {/* One line each side, so the hand reads as centred. */}
+      <path className="student-nav-wave-lines" d="M60 16 q5 6 4 13 M8 16 q-5 6 -4 13" fill="none" stroke="#d6ad64" strokeWidth="2.5" strokeLinecap="round" />
     </g>
   ),
   Assessment: (
-    <g className="student-nav-clipboard">
+    <g transform="translate(5 0)"><g className="student-nav-clipboard">
       <rect x="11" y="13" width="40" height="47" rx="8" fill="#9a85bc" />
       <rect x="8" y="10" width="40" height="47" rx="8" fill="#cdbce6" />
       <rect x="15" y="18" width="26" height="31" rx="4" fill="#fffaf3" />
@@ -60,7 +63,7 @@ const DRAWINGS: Record<string, ReactNode> = {
         <rect x="48" y="20" width="8" height="27" rx="3" fill="#f5bc55" /><path d="M48 46 h8 l-4 9z" fill="#d6aa7c" /><path d="M50 51 h4 l-2 4z" fill="#66574d" />
         <rect x="48" y="18" width="8" height="6" rx="2" fill="#edb0a3" />
       </g>
-    </g>
+    </g></g>
   ),
   "My Progress": (
     <g>
@@ -110,7 +113,7 @@ const BACKGROUNDS: Record<string, ReactNode> = {
       <g className="student-nav-ripples" fill="none" stroke="#f4bd83" strokeWidth="2">
         <circle cx="34" cy="34" r="28" /><circle cx="34" cy="34" r="20" />
       </g>
-      <path d="M53 53 l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="#edab52" />
+      <path d="M58 50 l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="#edab52" />
     </>
   ),
   Assessment: (

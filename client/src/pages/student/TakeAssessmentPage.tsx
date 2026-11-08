@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Lightbulb, Sparkles, X } from "lucide-react";
+import { ArrowRight, Check, Sparkles, X } from "lucide-react";
 import { useNavigate, useParams, useSearchParams } from "react-router";
 
 // PROTOTYPE, delete me: ?variant=sign-* shows the Sign test prototype (dev only).
@@ -52,6 +52,18 @@ const TakeAssessmentPage = () => {
 
   const [result, setResult] =
     useState<AssessmentResult | null>(null);
+
+  // Try again from the summary: a fresh attempt on the same quiz, without reloading the page.
+  const restartQuiz = () => {
+    setResult(null);
+    setResults([]);
+    setAnswers([]);
+    setQuestionNumber(1);
+    setSelectedChoiceId(null);
+    setChecked(false);
+    setCorrectChoiceId(null);
+    setSubmitError(null);
+  };
 
   const isChecking = checkAnswerMutation.isPending;
   const isSubmitting = submitAssessmentMutation.isPending;
@@ -123,9 +135,13 @@ const TakeAssessmentPage = () => {
       <QuizSummary
         score={Number(result.score)}
         totalItems={Number(result.totalPoints)}
-        onContinue={() => {
-          navigate("/student/learn");
-        }}
+        passed={result.passed}
+        passingPercent={Number(result.passingScore)}
+        lessonName={assessment.category.name}
+        // The Learn page shows the newly unlocked lesson as the current one.
+        onNextLesson={() => navigate("/student/learn")}
+        onReviewLesson={() => navigate(`/student/learn/${categoryId}`)}
+        onRetry={restartQuiz}
       />
     );
   }
@@ -288,78 +304,62 @@ const TakeAssessmentPage = () => {
   const correctOption = choiceOptions.find((option) => option.id === correctChoiceId);
   const showFeedback = lastResult !== undefined;
 
+  // Same look as the lesson: cream page, chunky Close button and counter, one card, the action in a fixed bottom bar.
+  const actionText = isChecking
+    ? "CHECKING..."
+    : isSubmitting
+      ? "SUBMITTING..."
+      : !checked
+        ? "CHECK"
+        : questionNumber === totalQuestions
+          ? "FINISH"
+          : "NEXT";
+
   return (
-    <div className="flex h-dvh max-h-dvh w-full flex-col overflow-hidden bg-background px-4 py-6 sm:px-6">
+    <div className="flex h-dvh max-h-dvh w-full flex-col overflow-hidden bg-[#FFF8E7] font-body">
       {/* HEADER */}
-      <div className="mx-auto flex w-full max-w-5xl shrink-0 items-center justify-between">
-        <div>
-          <p className="text-sm font-semibold text-muted-foreground">
-            Assessment
-          </p>
-
-          <h1 className="text-xl font-bold text-foreground sm:text-2xl">
-            {assessment.category.name}
-          </h1>
-        </div>
-
+      <div className="mx-auto flex w-full max-w-3xl shrink-0 items-center gap-3 px-4 pt-4 sm:px-8 sm:pt-6">
         <button
           type="button"
           aria-label="Close assessment"
           onClick={() => navigate("/student/learn")}
-          className="rounded-full p-2 text-muted-foreground transition hover:bg-muted hover:text-foreground"
+          className="flex size-12 shrink-0 items-center justify-center rounded-2xl border-b-4 border-[#CECECE] bg-white text-[#4B4B4B] focus-visible:ring-4 focus-visible:ring-hudyat-gold focus-visible:outline-none active:translate-y-0.5 active:border-b-2"
         >
-          <X className="h-6 w-6" />
+          <X aria-hidden="true" className="size-6" strokeWidth={3} />
         </button>
-      </div>
 
-      {/* PROGRESS */}
-      <div className="mx-auto mt-6 w-full max-w-5xl shrink-0">
-        <div className="flex items-center justify-between text-sm">
-          <span className="font-semibold text-foreground">
-            Question {questionNumber}
-          </span>
-
-          <span className="text-muted-foreground">
-            {totalQuestions} questions
-          </span>
+        <div className="min-w-0 flex-1">
+          <ResultProgress results={results} current={questionNumber} total={totalQuestions} />
         </div>
 
-        <ResultProgress results={results} current={questionNumber} total={totalQuestions} />
+        <span className="shrink-0 rounded-2xl bg-white px-3 py-2 text-sm font-black text-[#4B4B4B]">
+          {questionNumber}/{totalQuestions}
+        </span>
       </div>
 
       {/* QUESTION */}
-      <main className="relative mx-auto mt-[clamp(1rem,4vh,2rem)] flex w-full min-h-0 max-w-5xl flex-1 flex-col">
+      <main className="relative mx-auto mt-4 flex w-full min-h-0 max-w-3xl flex-1 flex-col px-4 pb-4 sm:mt-6 sm:px-8">
         {showFeedback && (
           <FeedbackOverlay key={questionNumber} isCorrect={lastResult} correctAnswer={correctOption} streak={results.length - 1 - results.lastIndexOf(false)} />
         )}
-        <div className={`flex h-full min-h-0 w-full flex-col overflow-y-auto rounded-3xl border bg-card p-[clamp(0.875rem,3vh,2rem)] shadow-sm ${showFeedback ? (lastResult ? "border-4 border-green-600" : "border-4 border-[#d95849]") : ""}`}>
-          <div className="flex shrink-0 items-center gap-2 text-sm font-bold text-hudyat-gold">
-            <Sparkles className="h-4 w-4" />
-            <span>
-              Question {currentQuestion.questionNumber}
+        <div className={`flex h-full min-h-0 w-full flex-col overflow-y-auto rounded-3xl border-4 bg-white p-[clamp(0.875rem,3vh,1.75rem)] shadow-[0_6px_0_#0000001a] ${showFeedback ? (lastResult ? "border-green-600" : "border-[#d95849]") : "border-[#F3E3B5]"}`}>
+          {/* Small label + big question, as on the lesson steps. */}
+          <p className="flex shrink-0 items-center gap-2 text-sm font-extrabold tracking-wider text-[#6B6B6B] uppercase">
+            <span aria-hidden="true" className="flex size-8 items-center justify-center rounded-xl bg-violet-500 text-white">
+              <Sparkles className="size-4.5" />
             </span>
-          </div>
+            {assessment.category.name} quiz · Question {currentQuestion.questionNumber}
+          </p>
 
-          <h2 className="mt-[clamp(0.5rem,1.5vh,1.5rem)] shrink-0 text-center text-xl font-bold text-foreground sm:text-2xl">
+          <h1 className="mt-2 shrink-0 text-2xl leading-snug font-bold text-[#3C3C3C] sm:text-3xl">
             {currentQuestion.questionText}
-          </h2>
+          </h1>
 
-          {/* HINT */}
-          {showFeedback ? (
-            <FeedbackBanner isCorrect={lastResult} correctAnswer={correctOption} />
-          ) : (
-          <div className="mx-auto mt-[clamp(0.5rem,1.5vh,1.5rem)] flex w-full max-w-2xl shrink-0 items-start gap-3 rounded-2xl bg-muted p-[clamp(0.5rem,1.5vh,1rem)]">
-            <Lightbulb className="mt-0.5 h-5 w-5 shrink-0 text-hudyat-gold" />
-
-            <p className="text-sm text-muted-foreground">
-              Choose the sign that matches the question.
-            </p>
-          </div>
-          )}
+          {showFeedback && <FeedbackBanner isCorrect={lastResult} correctAnswer={correctOption} />}
 
           {/* QUESTION MEDIA + ANSWERS */}
-          {/* The arbitrary variants enlarge the shared components' check/X badges and borders without forking them. */}
-          <div className={`mx-auto mt-[clamp(0.75rem,2vh,2rem)] flex w-full min-h-0 max-w-2xl flex-1 flex-col ${showFeedback ? "[&_button]:border-4 [&_button>svg]:size-9!" : ""}`}>
+          {/* The arbitrary variant enlarges the shared components' check/X badges after checking, without forking them. */}
+          <div className={`mx-auto mt-[clamp(0.75rem,2vh,1.5rem)] flex w-full min-h-0 max-w-2xl flex-1 flex-col ${showFeedback ? "[&_button>svg]:size-9!" : ""}`}>
             {isVideoQuestion ? (
               <VideoQuestion
                 videoUrl={
@@ -391,31 +391,26 @@ const TakeAssessmentPage = () => {
               />
             )}
           </div>
-
-          {/* ACTION */}
-          <div className="mt-[clamp(0.75rem,2vh,2rem)] flex shrink-0 justify-center">
-            <ElevatedButton
-              text={
-                isChecking
-                  ? "CHECKING..."
-                  : isSubmitting
-                    ? "SUBMITTING..."
-                    : !checked
-                      ? "CHECK ANSWER"
-                      : questionNumber === totalQuestions
-                        ? "FINISH ASSESSMENT"
-                        : "NEXT"
-              }
-              disabled={
-                !selectedChoiceId || isChecking || isSubmitting
-              }
-              icon={Sparkles}
-              iconPosition="right"
-              onClick={handleCheckOrNext}
-            />
-          </div>
         </div>
       </main>
+
+      {/* BOTTOM BAR: same place and button as the lesson, so the next action is always under the thumb. */}
+      <nav
+        aria-label="Quiz actions"
+        className="shrink-0 rounded-t-3xl border-t-4 border-hudyat-gold/30 bg-white/95 px-4 pt-3 pb-[calc(.75rem+env(safe-area-inset-bottom))]"
+      >
+        <div className="mx-auto flex max-w-md justify-center">
+          <ElevatedButton
+            text={actionText}
+            disabled={!selectedChoiceId || isChecking || isSubmitting}
+            icon={checked && questionNumber === totalQuestions ? Check : ArrowRight}
+            iconPosition="right"
+            size="lg"
+            className="min-h-14 w-full text-xl! font-black!"
+            onClick={handleCheckOrNext}
+          />
+        </div>
+      </nav>
     </div>
   );
 };

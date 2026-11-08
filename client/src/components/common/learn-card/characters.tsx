@@ -77,6 +77,16 @@ function Face({ x, y, s = 1, asleep }: { x: number; y: number; s?: number; aslee
   );
 }
 
+// Drawn around (0,0). Shared with the Family world.
+export const HEART_D = "M0 -3 c-3 -4.5 -10 -1.5 -6.5 4 L0 7 l6.5 -6 c3.5 -5.5 -3.5 -8.5 -6.5 -4z";
+
+// The outer <g> places it, leaving the path free to take the float animation's transform.
+const Heart = ({ x, y, s, delay }: { x: number; y: number; s: number; delay?: string }) => (
+  <g transform={`translate(${x} ${y}) scale(${s})`}>
+    <path className="lc-float" d={HEART_D} fill="#FF4B4B" style={{ animationDelay: delay }} />
+  </g>
+);
+
 type Draw = (c: Tone, asleep: boolean) => React.ReactNode;
 
 const tone = (color: CategoryColor): Tone => ({ main: PALETTE[color].main, dark: PALETTE[color].dark });
@@ -127,7 +137,7 @@ const CHARACTERS: Record<string, Draw> = {
         <Face x={40} y={25} s={0.5} asleep={z} />
       </g>
       <g className="lc-idle" style={{ animationDelay: "-.8s" }}>
-        <Body d="M22 38 a16 16 0 1 1 0.01 0z M22 38" tone={c} />
+        <Body d="M6 54 a16 16 0 1 0 32 0 a16 16 0 1 0 -32 0z" tone={c} />
         <Face x={22} y={54} s={0.65} asleep={z} />
       </g>
       <g className="lc-idle" style={{ animationDelay: "-1.4s" }}>
@@ -198,28 +208,38 @@ const CHARACTERS: Record<string, Draw> = {
       </g>
     </>
   ),
-  // Dad (left), mom (right) and the kid in the middle holding both their hands.
+  // Dad and mom holding their kid's hands, built like Greetings: round heads resting on rounded bodies.
+  // One shared motion group, so the held hands never drift apart.
   Family: (c, z) => (
     <>
-      <g className="lc-idle" style={{ animationDelay: "-.3s" }}>
-        <Body d={rr(4, 46, 24, 30, 10)} tone={SKY} />
-        <Body d="M16 21 a11 11 0 1 1 -0.01 0z" tone={SKIN} />
-        <Body d="M5 31 a11 11 0 0 1 22 0 q-5 -4 -11 -3 q-6 -1 -11 3z" tone={HAIR} />
-        <Face x={16} y={35} s={0.55} asleep={z} />
-      </g>
-      <g className="lc-idle" style={{ animationDelay: "-.9s" }}>
-        <Body d={rr(51, 24, 26, 28, 12)} tone={HAIR} />
-        <Body d={rr(52, 46, 24, 30, 10)} tone={PINK} />
-        <Body d="M64 21 a11 11 0 1 1 -0.01 0z" tone={SKIN} />
-        <Body d="M53 31 a11 11 0 0 1 22 0 q-8 -6 -14 -1 q-4 -2 -8 1z" tone={HAIR} />
-        <Face x={64} y={35} s={0.55} asleep={z} />
-      </g>
-      <path d="M26 56 q4 8 8 9 M54 56 q-4 8 -8 9" fill="none" stroke={SKIN.main} strokeWidth={3.5} strokeLinecap="round" />
-      <g className="lc-idle" style={{ animationDelay: "-1.5s" }}>
-        <Body d={rr(31, 58, 18, 18, 7)} tone={c} />
-        <Body d="M40 39 a9 9 0 1 1 -0.01 0z" tone={SKIN} />
-        <Body d="M31 47 a9 9 0 0 1 18 0 q-4 -4 -9 -2 q-5 -2 -9 2z M40 40 q2 -5 5 -4 q-3 1 -3 5z" tone={HAIR} />
-        <Face x={40} y={50} s={0.45} asleep={z} />
+      {!z && (
+        <>
+          <Heart x={40} y={25} s={1.15} />
+          <Heart x={29} y={9} s={0.7} delay="-.7s" />
+          <Heart x={52} y={10} s={0.85} delay="-1.3s" />
+        </>
+      )}
+      <g className="lc-idle">
+        <Body d={rr(6, 42, 22, 34, 10)} tone={GOLD} />
+        <Body d="M17 18 a12 12 0 1 1 -0.01 0z" tone={SKIN} />
+        <Body d="M5 28 a12 12 0 0 1 24 0 q-5 -5 -12 -3 q-7 -2 -12 3z" tone={HAIR} />
+        <Face x={17} y={32} s={0.6} asleep={z} />
+
+        <Body d={rr(51, 26, 24, 30, 11)} tone={HAIR} />
+        <Body d={rr(52, 46, 22, 30, 10)} tone={PINK} />
+        <Body d="M63 22 a12 12 0 1 1 -0.01 0z" tone={SKIN} />
+        <Body d="M51 32 a12 12 0 0 1 24 0 q-8 -6 -14 -1 q-5 -2 -10 1z" tone={HAIR} />
+        <Face x={63} y={36} s={0.6} asleep={z} />
+
+        <Body d={rr(31, 60, 18, 16, 7)} tone={c} />
+        <Body d="M40 40 a10 10 0 1 1 -0.01 0z" tone={SKIN} />
+        <Body d="M30 48 a10 10 0 0 1 20 0 q-4 -4 -10 -2 q-6 -2 -10 2z M40 41 q2 -5 5 -4 q-3 1 -3 5z" tone={HAIR} />
+        <Face x={40} y={52} s={0.5} asleep={z} />
+
+        <path d="M26 53 Q29 62 33 68" fill="none" stroke={GOLD.main} strokeWidth={5} strokeLinecap="round" />
+        <path d="M54 57 Q51 63 47 68" fill="none" stroke={PINK.main} strokeWidth={5} strokeLinecap="round" />
+        <circle cx={34} cy={68} r={3.5} fill={SKIN.main} />
+        <circle cx={46} cy={68} r={3.5} fill={SKIN.main} />
       </g>
     </>
   ),

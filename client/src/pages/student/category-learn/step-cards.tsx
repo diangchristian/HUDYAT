@@ -96,8 +96,8 @@ function ContextCard({ prompt, title, color, whenVariant }: CardProps) {
   );
 }
 
-// compactOnPhone: below tablet width, fill the parent's height (video shrinks to fit, buttons stay), so a camera fits under it (practice page).
-export function HowCard({ prompt, compactOnPhone = false }: Pick<CardProps, "prompt"> & { compactOnPhone?: boolean }) {
+// fill: fill the parent's height (video shrinks to fit, buttons stay), so it can sit beside or under a camera at the same height (practice page).
+export function HowCard({ prompt, fill = false }: Pick<CardProps, "prompt"> & { fill?: boolean }) {
   const video = useRef<HTMLVideoElement>(null);
   const [slow, setSlow] = useState(false);
   const again = () => {
@@ -111,11 +111,11 @@ export function HowCard({ prompt, compactOnPhone = false }: Pick<CardProps, "pro
   };
   const control = cn(
     "flex min-h-14 flex-1 items-center justify-center gap-2 rounded-2xl border-b-4 text-lg font-black active:translate-y-0.5 active:border-b-2",
-    compactOnPhone && "max-md:min-h-11 max-md:text-base",
+    fill && "max-md:min-h-11 max-md:text-base",
   );
   return (
-    <div className={cn("rounded-[2rem] border-4 border-[#059669] bg-[#064E3B] p-2.5 pb-3 shadow-[0_6px_0_#0000001a]", compactOnPhone && "max-md:flex max-md:h-full max-md:flex-col max-md:rounded-3xl max-md:p-1.5 max-md:pb-2")}>
-      <div className={cn("overflow-hidden rounded-3xl bg-black", compactOnPhone && "max-md:min-h-0 max-md:flex-1")}>
+    <div className={cn("rounded-[2rem] border-4 border-[#059669] bg-[#064E3B] p-2.5 pb-3 shadow-[0_6px_0_#0000001a]", fill && "flex h-full flex-col max-md:rounded-3xl max-md:p-1.5 max-md:pb-2")}>
+      <div className={cn("overflow-hidden rounded-3xl bg-black", fill && "min-h-0 flex-1")}>
         <ReferenceMedia
           key={prompt.label}
           videoRef={video}
@@ -123,13 +123,15 @@ export function HowCard({ prompt, compactOnPhone = false }: Pick<CardProps, "pro
           imageUrl={prompt.referenceImageUrl}
           label={prompt.label}
           className={cn(
-            "max-h-[calc(100dvh-30rem)] min-h-48",
-            compactOnPhone && "max-md:aspect-auto max-md:h-full max-md:max-h-none max-md:min-h-0",
+            "max-h-[calc(100dvh-27rem)] min-h-48",
+            fill && "aspect-auto h-full max-h-none min-h-0",
+            // The TV frame is dark; without this, tall photos get light grey bars beside them.
+            (prompt.referenceVideoUrl || prompt.referenceImageUrl) && "bg-transparent",
           )}
         />
       </div>
       {prompt.referenceVideoUrl && (
-        <div className={cn("mt-3 flex shrink-0 gap-2 px-1", compactOnPhone && "max-md:mt-2")}>
+        <div className={cn("mt-3 flex shrink-0 gap-2 px-1", fill && "max-md:mt-2")}>
           <button type="button" onClick={again} className={cn(control, "border-[#CECECE] bg-white text-[#064E3B]")}>
             <RotateCcw aria-hidden="true" className="size-6" /> Again
           </button>
@@ -151,12 +153,13 @@ function TryCard({ prompt, title, onCorrect }: CardProps) {
   return (
     <div className="relative rounded-3xl border-4 border-[#E11D48] bg-white p-2 shadow-[0_6px_0_#0000001a] sm:p-3">
       {prompt.referenceImageUrl && (
-        <figure className="absolute -top-5 right-3 z-10 w-20 -rotate-6 rounded-xl bg-white p-1 pb-1.5 text-center shadow-[0_4px_10px_#0000002a] sm:w-24">
+        // Bottom corner: the top-right corner holds the camera's STOP button.
+        <figure className="absolute -bottom-5 right-3 z-10 w-20 -rotate-6 rounded-xl bg-white p-1 pb-1.5 text-center shadow-[0_4px_10px_#0000002a] sm:w-24">
           <ReferenceMedia imageUrl={prompt.referenceImageUrl} label={prompt.label} className="aspect-square rounded-lg" />
           <figcaption className="mt-0.5 text-xs font-black text-[#E11D48] uppercase">Copy this</figcaption>
         </figure>
       )}
-      <PracticeCamera category={categorySlug(title)} targetLabel={prompt.modelClass} onCorrect={onCorrect} />
+      <PracticeCamera category={categorySlug(title)} targetLabel={prompt.modelClass} onCorrect={onCorrect} bare />
     </div>
   );
 }

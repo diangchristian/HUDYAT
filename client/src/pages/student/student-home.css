@@ -1,0 +1,27 @@
+/* Student home motion. Everything that moves stops under reduced motion. */
+.home-spark { opacity: 0; }
+.home-wave { transform-origin: 70% 90%; }
+
+/* Mode tiles react like their sidebar items do (the figures and keyframes are student-nav's). */
+.home-tile .student-nav-scene { opacity: 1; }
+.home-tile:is(:hover, :focus-visible, :active) .student-nav-eyes { opacity: 0; }
+.home-tile:is(:hover, :focus-visible, :active) .student-nav-happy { opacity: 1; }
+
+@keyframes home-enter { from { opacity: 0; transform: translateY(16px) scale(.96); } to { opacity: 1; transform: none; } }
+@keyframes home-hop { 0%, 100% { transform: translateY(0) scale(1, 1); } 25% { transform: scale(1.15, .85); } 55% { transform: translateY(-34px) scale(.92, 1.08); } 85% { transform: scale(1.08, .92); } }
+@keyframes home-spark { 0% { opacity: 1; transform: rotate(var(--a)) translateY(0) scale(.4); } 100% { opacity: 0; transform: rotate(var(--a)) translateY(-120px) scale(1.2); } }
+@keyframes home-nudge { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(6px); } }
+@keyframes home-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+@keyframes home-wave { 0%, 55%, 100% { transform: rotate(0); } 10%, 30% { transform: rotate(-16deg); } 20%, 40% { transform: rotate(14deg); } }
+
+@media (prefers-reduced-motion: no-preference) {
+  .home-enter { animation: home-enter .42s cubic-bezier(.3, 1.4, .5, 1) both; }
+  .home-hop { animation: home-hop .6s ease-in-out; }
+  .home-spark { animation: home-spark .7s ease-out both; }
+  .home-nudge { animation: home-nudge 1.1s ease-in-out infinite; }
+  .home-float { animation: home-float 2.2s ease-in-out infinite; }
+  .home-wave { animation: home-wave 3s ease-in-out infinite; }
+  .home-tile:is(:hover, :focus-visible, :active) .student-nav-page { animation: student-nav-page-flip .85s ease; }
+  .home-tile:is(:hover, :focus-visible, :active) .student-nav-hand { animation: student-nav-wave 1s ease; }
+  .home-tile:is(:hover, :focus-visible, :active) .student-nav-pencil { animation: student-nav-write .85s ease; }
+}

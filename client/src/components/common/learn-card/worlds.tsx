@@ -6,7 +6,7 @@
  */
 import { cn } from "@/lib/utils";
 
-import type { PALETTE } from "./characters";
+import { HEART_D, type PALETTE } from "./characters";
 
 type Pal = (typeof PALETTE)[keyof typeof PALETTE];
 
@@ -123,26 +123,48 @@ function Greetings({ locked }: { locked: boolean }) {
   );
 }
 
-/* Family · a cosy house with a smoking chimney and a tree */
+/* Family · a cosy house with a smoking chimney, a tree and hearts in the air */
+const FAMILY_HEARTS: [left: string, top: string, size: number, color: string][] = [
+  ["30%", "14%", 16, "#FF4B4B"],
+  ["43%", "5%", 20, "#FF86D0"],
+  ["58%", "8%", 26, "#FF4B4B"],
+  ["71%", "26%", 16, "#FF86D0"],
+  ["84%", "9%", 20, "#FF4B4B"],
+];
+
 function Family() {
   return (
     <>
       <span className="absolute inset-0" style={{ background: "linear-gradient(#BDE7FF, #EAF8FF)" }} />
-      <Cloud className="left-20 top-3" delay={-6} />
+      <Cloud className="left-24 top-3" delay={-6} />
       <Ground back="#9BE15D" front="#6CC644" />
-      <span className="absolute bottom-6 left-3 h-14 w-16 rounded-md bg-[#FFE2B8] shadow-[inset_-4px_0_0_#0001]" />
-      <span className="absolute bottom-20 left-1 h-0 w-0 border-x-[36px] border-b-[26px] border-x-transparent border-b-[#FF4B4B]" />
-      <span className="absolute bottom-6 left-8 h-7 w-5 rounded-t-md bg-[#C98A4B]" />
-      <span className="absolute bottom-[60px] left-5 size-4 rounded-sm bg-[#8ED8FF]" />
-      <span className="absolute bottom-[104px] left-14 h-4 w-3 bg-[#9C5B38]" />
-      {[0, 1, 2].map((i) => (
-        <span key={i} className="lc-smoke absolute bottom-[120px] left-14 size-3 rounded-full bg-white" style={{ animationDelay: `${i * 0.7}s` }} />
-      ))}
+      {/* One drawing, so the roof, walls and chimney can't slip apart at any card size. */}
+      <svg viewBox="0 0 100 124" className="absolute bottom-4 left-2 h-[62%] max-h-48 w-auto overflow-visible">
+        {[0, 1, 2].map((i) => (
+          <circle key={i} className="lc-smoke" cx={72} cy={10} r={5} fill="#fff" style={{ animationDelay: `${i * 0.7}s`, transformBox: "fill-box", transformOrigin: "center" }} />
+        ))}
+        <rect x={66} y={18} width={12} height={32} fill="#9C5B38" />
+        <rect x={63} y={14} width={18} height={6} rx={2} fill="#7A4528" />
+        <rect x={16} y={58} width={68} height={58} fill="#FFE2B8" />
+        <rect x={76} y={58} width={8} height={58} fill="#F2CB97" />
+        <path d="M50 16 L94 60 H6z" fill="#C93636" stroke="#C93636" strokeWidth={6} strokeLinejoin="round" transform="translate(0 4)" />
+        <path d="M50 16 L94 60 H6z" fill="#FF4B4B" stroke="#FF4B4B" strokeWidth={6} strokeLinejoin="round" />
+        <path d={HEART_D} fill="#fff" transform="translate(50 43) scale(1.25)" />
+        <rect x={23} y={78} width={14} height={14} rx={3} fill="#8ED8FF" stroke="#fff" strokeWidth={2.5} />
+        <rect x={63} y={78} width={14} height={14} rx={3} fill="#8ED8FF" stroke="#fff" strokeWidth={2.5} />
+        <path d="M41 116 V93 a9 9 0 0 1 18 0 V116z" fill="#C98A4B" />
+        <circle cx={54.5} cy={104} r={2} fill="#FFC145" />
+        <rect x={36} y={116} width={28} height={5} rx={2} fill="#B98F5F" />
+      </svg>
       <span className="lc-sway absolute bottom-6 right-4 flex flex-col items-center">
         <span className="size-14 rounded-full bg-[#58CC02] shadow-[inset_-5px_-5px_0_#0002]" />
         <span className="h-6 w-2.5 bg-[#9C5B38]" />
       </span>
-      <span className="lc-heart absolute right-24 top-6 text-xl text-[#FF4B4B]">♥</span>
+      {FAMILY_HEARTS.map(([left, top, size, color], i) => (
+        <svg key={left} viewBox="-8 -8 16 16" className="lc-heart absolute" style={{ left, top, width: size, height: size, animationDelay: `${i * -0.35}s` }}>
+          <path d={HEART_D} fill={color} />
+        </svg>
+      ))}
     </>
   );
 }

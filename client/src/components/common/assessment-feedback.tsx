@@ -110,9 +110,9 @@ export function FeedbackBanner({ isCorrect, correctAnswer }: { isCorrect: boolea
 /** Each question gets a segment that shows how it went. */
 export function ResultProgress({ results, current, total }: { results: boolean[]; current: number; total: number }) {
   return (
-    <div role="progressbar" aria-valuenow={current} aria-valuemin={1} aria-valuemax={total} className="mt-2 flex h-3 gap-1">
+    <div role="progressbar" aria-valuenow={current} aria-valuemin={1} aria-valuemax={total} className="flex h-4 gap-1">
       {Array.from({ length: total }, (_, i) => (
-        <span key={i} className={`flex-1 rounded-full ${results[i] === true ? "bg-green-600" : results[i] === false ? "bg-[#d95849]" : i === current - 1 ? "bg-hudyat-gold" : "bg-muted"}`} />
+        <span key={i} className={`flex-1 rounded-full ${results[i] === true ? "bg-green-600" : results[i] === false ? "bg-[#d95849]" : i === current - 1 ? "bg-hudyat-gold" : "bg-[#E5E5E5]"}`} />
       ))}
     </div>
   );
