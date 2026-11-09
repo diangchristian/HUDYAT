@@ -60,7 +60,7 @@ export function RecognitionLab({settings,onChange}:{settings:RecognitionSettings
     <label className="flex items-center justify-between gap-2">Alphabet tracking (VIDEO mode)
      <input type="checkbox" checked={settings.alphabetTracking} onChange={e=>custom({alphabetTracking:e.target.checked})}/>
     </label>
-    <label className="flex items-center justify-between gap-2">Letters like Numbers (sign by sign)
+    <label className="flex items-center justify-between gap-2">Legacy letters: sign by sign
      <input type="checkbox" checked={settings.alphabetMotion} onChange={e=>custom({alphabetMotion:e.target.checked})}/>
     </label>
     <label className="flex items-center justify-between gap-2">Hand tracking on
@@ -95,7 +95,7 @@ export function RecognitionLab({settings,onChange}:{settings:RecognitionSettings
     {settings.dynamicCapture==='sign'&&<label className="flex items-center justify-between gap-2">Sign ends after no hand for (ms)
      <input type="number" min={100} max={1500} step={50} value={settings.endAbsentMs} onChange={e=>custom({endAbsentMs:Math.min(1500,Math.max(100,Number(e.target.value)||500))})} className="w-16 rounded border border-border bg-background px-1"/>
     </label>}
-    {settings.dynamicCapture==='sign'&&<label className="flex items-center justify-between gap-2">Answer a held sign early
+    {settings.dynamicCapture==='sign'&&<label className="flex items-center justify-between gap-2">Other releases: answer a held sign early
      <input type="checkbox" checked={settings.earlyCheck} onChange={e=>custom({earlyCheck:e.target.checked})}/>
     </label>}
     {settings.dynamicCapture==='sign'&&settings.earlyCheck&&<>
@@ -138,6 +138,7 @@ export function RecognitionLab({settings,onChange}:{settings:RecognitionSettings
    </dl>
 
    <p className="text-muted-foreground">model {summary.model??'–'} · tracking on {summary.delegate??'–'} · {summary.preloaded?'preloaded':'not preloaded'} · waited for model {summary.modelWaitMs===undefined?'–':ms(summary.modelWaitMs)||'0ms'}</p>
+   {summary.model==='7665532badb74b9f'&&<p className="text-muted-foreground">This recorder Alphabet always waits for a complete sign. Legacy hold, early-answer and capture settings do not apply.</p>}
    {Object.keys(summary.lockResets).length>0&&<p className="text-muted-foreground">lock resets: {Object.entries(summary.lockResets).map(([cause,n])=>cause+' ×'+n).join(' · ')}</p>}
 
    <div className="flex gap-2">

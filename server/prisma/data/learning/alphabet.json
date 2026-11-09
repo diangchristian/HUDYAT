@@ -180,5 +180,17 @@
     "exampleUsage": "Z is the last letter of the alphabet.",
     "displayOrder": 26,
     "referenceImageUrl": "https://res.cloudinary.com/ducnmdeii/image/upload/v1789227942/fsl-pwa/alphabet/z.jpg"
+  },
+  {
+    "label": "Ñ",
+    "meaning": "The letter Ñ in the Filipino Sign Language alphabet.",
+    "exampleUsage": "",
+    "displayOrder": 27
+  },
+  {
+    "label": "Ng",
+    "meaning": "Ng in the Filipino Sign Language alphabet.",
+    "exampleUsage": "",
+    "displayOrder": 28
   }
 ]

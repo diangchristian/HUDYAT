@@ -45,7 +45,7 @@ export type RecognitionSettings={
  holdFeedback:boolean;
  /** Alphabet model: the published release, or the retrained candidate (candidate.json). */
  alphabetModel:'published'|'candidate';
- /** Record every letter sign by sign, like Numbers (sign-mode.ts), when the Alphabet model was trained on clips. */
+ /** Legacy Alphabet capture switch. The selected recorder release always captures complete signs. */
  alphabetMotion:boolean;
 };
 

@@ -1,0 +1,15 @@
+{
+  "id": "colors",
+  "name": "Colors",
+  "available": true,
+  "version": "b87e44bcae7c53f9",
+  "modelUrl": "./models/colors/b87e44bcae7c53f9/model.json",
+  "weightsUrl": "./models/colors/b87e44bcae7c53f9/weights.bin",
+  "modelSha256": "a3de8ff43025a535981ff3ed3afbb93e4d69fe91591e86551c6342cac5c7de2d",
+  "weightsSha256": "b87e44bcae7c53f96afe88da5c7175ccec8da556c2bc992014dadcd022d4c271",
+  "bytes": 1948557,
+  "handUrl": "./shared/fbc2a30080c3c557093b5ddfc334698132eb341044ccee322ccf8bcf3607cde1.task",
+  "handSha256": "fbc2a30080c3c557093b5ddfc334698132eb341044ccee322ccf8bcf3607cde1",
+  "handBytes": 7819105,
+  "classes": 6
+}

@@ -60,7 +60,13 @@ export function isSteady(previous:Float32Array|undefined,current:Float32Array,ma
 }
 // Names that mean the same sign: the Colors model calls Purple "violet".
 const SAME_SIGN:Record<string,string>={violet:'purple'};
-const signKey=(name:string)=>{const key=name.toLocaleLowerCase().replace(/[\s_'’-]/g,'');return SAME_SIGN[key]??key;};
+const signKey=(name:string)=>{
+ const label=name.normalize('NFC').toLowerCase();
+ // Recorder class IDs retain their exported order; compare them with lesson labels here.
+ const letter=/^letter_([a-z]|enye|ng)$/.exec(label);
+ const key=(letter ? (letter[1]==='enye'?'ñ':letter[1]!) : label).replace(/[\s_'’-]/g,'');
+ return SAME_SIGN[key]??key;
+};
 export function matchesTarget(predicted:string,target:string){return signKey(predicted)===signKey(target);}
 
 /** A prompt can complete once, regardless of how many matching frames arrive. */
