@@ -26,12 +26,13 @@ const escapeRegExp = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&
 
 /*
  * Splits lesson text into tappable words for the reading cards, keeping the
- * sign's name together (even when it's several words) so it can be highlighted.
+ * sign's name together (even when it's several words) so it can be highlighted. Only whole words
+ * match: the sign "A" must not split "Apple".
  */
 export const readingParts = (text: string, label: string): ReadingPart[] => {
   const isLabel = (chunk: string) => chunk.toLowerCase() === label.toLowerCase();
   return text
-    .split(new RegExp(`(${escapeRegExp(label)})`, "i"))
+    .split(new RegExp(`(?<![\\p{L}\\p{N}])(${escapeRegExp(label)})(?![\\p{L}\\p{N}])`, "iu"))
     .flatMap((chunk) => (isLabel(chunk) ? [chunk] : chunk.split(/(\s+)/)))
     .filter(Boolean)
     .map((chunk) => ({

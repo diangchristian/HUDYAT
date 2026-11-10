@@ -32,3 +32,7 @@ test('a pasted picture must be emoji, matching the server rule',()=>{
  for (const ok of ['🌅', '☀️', '🧑‍🤝‍🧑', '1️⃣', '#️⃣', '🇵🇭', '👋🏽', '🍎🍎🍎']) assert.ok(isEmoji(ok), ok);
  for (const bad of ['hello', '123', '', '🌅 morning', '#', '🍎12', '⭐#']) assert.ok(!isEmoji(bad), bad);
 });
+test('the sign name is only matched as a whole word, so "A" does not split "Apple"',()=>{
+ assert.deepEqual(words(readingParts('A is for Apple and Ant.', 'A')), ['sign:A', 'word:is', 'word:for', 'word:Apple', 'word:and', 'word:Ant.']);
+ assert.deepEqual(words(readingParts('Say "a"!', 'A')), ['word:Say', 'word:"', 'sign:a', 'word:"!']);
+});
