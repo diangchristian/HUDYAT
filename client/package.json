@@ -12,9 +12,11 @@
     "models:assets": "node tools/copy-vision.mjs",
     "predev": "npm run models:assets",
     "prebuild": "npm run models:assets",
-    "test": "node --experimental-strip-types --test tests/gesture-lock.test.mjs tests/sliding-window.test.mjs tests/normalize.test.mjs tests/candidate-model.test.mjs tests/recognition.test.mjs tests/sign-capture.test.mjs tests/early-check.test.mjs tests/sign-log.test.mjs tests/timed-segmenter.test.mjs tests/sign-mode.test.mjs tests/landmark-diagnostics.test.mjs tests/lesson-text.test.mjs tests/practice.test.mjs",
+    "test": "vitest run",
     "test:models": "node tests/category-model.test.mjs",
-    "dev:https": "vite --mode https"
+    "dev:https": "vite --mode https",
+    "test:watch": "vitest",
+    "test:pwa": "vitest run --mode pwa"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
@@ -56,6 +58,7 @@
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.67.0",
     "vite": "^8.2.2",
-    "vite-plugin-pwa": "^1.3.0"
+    "vite-plugin-pwa": "^1.3.0",
+    "vitest": "^5.1.0"
   }
 }

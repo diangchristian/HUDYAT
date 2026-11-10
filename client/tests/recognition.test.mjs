@@ -1,5 +1,4 @@
-import assert from "node:assert/strict";
-import { test } from "node:test";
+import { test, expect } from "vitest";
 import fs from "node:fs/promises";
 import * as tf from "@tensorflow/tfjs";
 import { normalize, predictPrepared, predictPose, predictClip, validateMetadata, validateModel } from "../src/features/fsl-recognition/prediction.ts";
@@ -18,37 +17,37 @@ test("HUDYAT's copied release matches real Keras examples and releases temporary
   const runtime = {model, meta};
   try {
     validateModel(model, meta);
-    assert.equal(meta.source_sha256, ALPHABET_RELEASE.sourceHash);
-    assert.deepEqual(meta.classes, ALPHABET_RELEASE.classes);
-    assert.deepEqual(meta.classes, fixture.classes);
+    expect(meta.source_sha256).toBe(ALPHABET_RELEASE.sourceHash);
+    expect(meta.classes).toStrictEqual(ALPHABET_RELEASE.classes);
+    expect(meta.classes).toStrictEqual(fixture.classes);
     let maxError = 0;
     for(const sample of fixture.cases) {
       const points = sample.raw.map(([x,y,z]) => ({x,y,z}));
-      assert.deepEqual(normalize(points,meta), sample.prepared);
+      expect(normalize(points,meta)).toStrictEqual(sample.prepared);
       const scores = await predictPrepared(runtime, normalize(points,meta));
       scores.forEach((score,i) => {maxError = Math.max(maxError, Math.abs(score.score - sample.scores[i]));});
-      assert.equal((await predictPose(runtime,points))[0].label, sample.expected_top_label);
+      expect((await predictPose(runtime,points))[0].label).toBe(sample.expected_top_label);
     }
-    assert.ok(maxError <= 1e-4, `Keras score difference: ${maxError}`);
+    expect(maxError <= 1e-4, `Keras score difference: ${maxError}`).toBeTruthy();
     const before = tf.memory().numTensors;
     for(let i=0;i<20;i++) await predictPrepared(runtime,fixture.cases[0].prepared);
-    assert.equal(tf.memory().numTensors,before);
-    await assert.rejects(predictPrepared(runtime,Array(30).fill(fixture.cases[0].prepared)),/Expected input shape/);
-    await assert.rejects(predictPrepared(runtime,Array.from({length:21},()=>[NaN,0,0])),/non-finite/);
-    await assert.rejects(predictClip(runtime,[],[]),/No trained 30-frame/);
-    assert.throws(()=>validateMetadata({...meta,classes:["A","A"]}),/label order/);
-    assert.throws(()=>validateMetadata({...meta,std:[0,1,1]}),/normalization/);
-    assert.throws(()=>validateModel(model,{...meta,classes:["A","B"]}),/label list/);
+    expect(tf.memory().numTensors).toBe(before);
+    await expect(predictPrepared(runtime,Array(30).fill(fixture.cases[0].prepared))).rejects.toThrow(/Expected input shape/);
+    await expect(predictPrepared(runtime,Array.from({length:21},()=>[NaN,0,0]))).rejects.toThrow(/non-finite/);
+    await expect(predictClip(runtime,[],[])).rejects.toThrow(/No trained 30-frame/);
+    expect(()=>validateMetadata({...meta,classes:["A","A"]})).toThrow(/label order/);
+    expect(()=>validateMetadata({...meta,std:[0,1,1]})).toThrow(/normalization/);
+    expect(()=>validateModel(model,{...meta,classes:["A","B"]})).toThrow(/label list/);
     console.log(JSON.stringify({cases:fixture.cases.length,maxError,tensorGrowth:tf.memory().numTensors-before}));
   } finally {model.dispose();}
 });
 
 test("untrained categories cannot select the alphabet release and dynamic signs are not marked correct", () => {
-  assert.equal(modelForCategory("alphabet"), ALPHABET_RELEASE);
-  for(const category of ["numbers","family","wh-questions","wh_words","../alphabet",undefined]) assert.equal(modelForCategory(category),undefined);
-  assert.match(describePrediction([{label:"J",score:.99}],"J"),/cannot check the movement/);
-  assert.match(describePrediction([{label:"A",score:.99}],"Z"),/cannot check the movement/);
-  assert.match(describePrediction([{label:"A",score:.4}],"A"),/Not certain/);
-  assert.match(describePrediction([{label:"A",score:.9}],"A"),/Possible match/);
-  assert.match(describePrediction([{label:"B",score:.9}],"A"),/Possible B/);
+  expect(modelForCategory("alphabet")).toBe(ALPHABET_RELEASE);
+  for(const category of ["numbers","family","wh-questions","wh_words","../alphabet",undefined]) expect(modelForCategory(category)).toBe(undefined);
+  expect(describePrediction([{label:"J",score:.99}],"J")).toMatch(/cannot check the movement/);
+  expect(describePrediction([{label:"A",score:.99}],"Z")).toMatch(/cannot check the movement/);
+  expect(describePrediction([{label:"A",score:.4}],"A")).toMatch(/Not certain/);
+  expect(describePrediction([{label:"A",score:.9}],"A")).toMatch(/Possible match/);
+  expect(describePrediction([{label:"B",score:.9}],"A")).toMatch(/Possible B/);
 });

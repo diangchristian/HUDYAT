@@ -1,12 +1,14 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
+import { beforeEach, afterEach, test, expect } from "vitest";
 import {useCameraPreference} from '../src/lib/camera-preference.ts';
+
+beforeEach(() => useCameraPreference.getState().decline());
+afterEach(() => useCameraPreference.getState().decline());
 test('camera is not wanted until the learner starts it',()=>{
- assert.equal(useCameraPreference.getState().wanted,false);
+ expect(useCameraPreference.getState().wanted).toBe(false);
 });
 test('starting remembers the choice and an explicit stop forgets it',()=>{
  useCameraPreference.getState().want();
- assert.equal(useCameraPreference.getState().wanted,true);
+ expect(useCameraPreference.getState().wanted).toBe(true);
  useCameraPreference.getState().decline();
- assert.equal(useCameraPreference.getState().wanted,false);
+ expect(useCameraPreference.getState().wanted).toBe(false);
 });

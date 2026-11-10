@@ -1,5 +1,4 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
+import { test, expect } from "vitest";
 import {existsSync,readFileSync} from 'node:fs';
 import {locationFeatures,normalizeFrame,normalizeFrameLocation,normalizeSequence} from '../src/features/fsl-recognition/normalize.ts';
 
@@ -9,7 +8,7 @@ const frameFrom=(points,width,height)=>{
  points.forEach(([x,y,z],i)=>f.set([x/width,y/height,z/width],63+i*3));
  f[127]=1;return f;
 };
-const close=(actual,expected)=>expected.forEach((v,i)=>assert.ok(Math.abs(actual[i]-v)<1e-5,`index ${i}: ${actual[i]} vs ${v}`));
+const close=(actual,expected)=>expected.forEach((v,i)=>expect(Math.abs(actual[i]-v)<1e-5, `index ${i}: ${actual[i]} vs ${v}`).toBeTruthy());
 
 test('expresses each hand relative to its wrist in palm lengths',()=>{
  // wrist (50,50), knuckle (50,40): palm 10px. Tip (60,50,z 5px) -> (1, 0, 0.5)
@@ -18,7 +17,7 @@ test('expresses each hand relative to its wrist in palm lengths',()=>{
  close(out.slice(63+8*3,63+9*3),[1,0,.5]);
  close(out.slice(63+9*3,63+10*3),[0,-1,0]);
  close(out.slice(63,66),[0,0,0]);
- assert.equal(out[127],1);assert.equal(out[126],0);
+ expect(out[127]).toBe(1);expect(out[126]).toBe(0);
 });
 test('the same hand gives the same features wherever it is and whatever the camera shape',()=>{
  const hand=Array.from({length:21},(_,i)=>[30+i*2,40+i,i*.5]);
@@ -27,10 +26,11 @@ test('the same hand gives the same features wherever it is and whatever the came
  close(Array.from(moved),Array.from(a));
 });
 test('absent hands and a frame without hands stay zero',()=>{
- assert.deepEqual(Array.from(normalizeFrame(new Float32Array(128),640,480)),new Array(128).fill(0));
+ expect(Array.from(normalizeFrame(new Float32Array(128),640,480))).toStrictEqual(new Array(128).fill(0));
 });
 const fixture=new URL('./fixtures-normalize.json',import.meta.url);
-test('matches the training pipeline (fixture exported by fsl-alphabet-model)',{skip:!existsSync(fixture)&&'no fixture yet'},()=>{
+test('matches the training pipeline (fixture exported by fsl-alphabet-model)',({skip})=>{
+ if(!existsSync(fixture)) skip('no fixture yet');
  const {cases}=JSON.parse(readFileSync(fixture,'utf8'));
  for(const c of cases)close(Array.from(normalizeFrame(Float32Array.from(c.raw),c.width,c.height)),c.expected);
 });
@@ -52,7 +52,7 @@ test('the wrist is its movement since the first frame, in median palm lengths',(
 const sequenceFixture=new URL('./fixtures-normalize-sequence.json',import.meta.url);
 test('matches hand-relative-sequence-v1 models (camera parity cases exported with the model)',()=>{
  const {preprocessing,cases}=JSON.parse(readFileSync(sequenceFixture,'utf8'));
- assert.equal(preprocessing.normalization,'hand-relative-sequence-v1');
+ expect(preprocessing.normalization).toBe('hand-relative-sequence-v1');
  for(const c of cases){
   const out=normalizeSequence(c.frames.map(f=>Float32Array.from(f)),c.width,c.height);
   out.forEach((frame,t)=>close(Array.from(frame),c.expected[t]));
@@ -73,7 +73,7 @@ test('hand-face-location-v1: the hand against the face, in forehead-to-chin leng
  const father=locationFeatures(at(700,180),face,1280,720),mother=locationFeatures(at(700,420),face,1280,720);
  close(father,[0,0,0,0,0,0,.3,-.6,.3,-.6,.3,-.6,1]);       // Right wrist, thumb tip, index tip: 60 px right, 120 px up
  close(mother.slice(6,8),[.3,.6]);                         // the same hand at the chin: below the nose
- assert.ok(father[7]<0&&mother[7]>0);
+ expect(father[7]<0&&mother[7]>0).toBeTruthy();
 });
 test('hand-face-location-v1: no face, or no hand, gives zeros; the face flag says whether a face was found',()=>{
  const points=Array.from({length:21},()=>[700,300,0]);points[9]=[700,260,0];
@@ -87,7 +87,7 @@ test('hand-face-location-v1: the model frame is normalizeFrame then 13 location 
  const face=faceFrom([640,300],[640,200],[640,400],1280,720);
  const points=Array.from({length:21},()=>[700,180,0]);points[9]=[700,140,0];
  const frame=frameFrom(points,1280,720),out=normalizeFrameLocation(frame,face,1280,720);
- assert.equal(out.length,141);
+ expect(out.length).toBe(141);
  close(out.slice(0,128),normalizeFrame(frame,1280,720));
  close(out.slice(134,141),[.3,-.6,.3,-.6,.3,-.6,1]);
  const flat=frameFrom(Array.from({length:21},()=>[700,180,0]),1280,720);   // palm length 0: dropped like training
