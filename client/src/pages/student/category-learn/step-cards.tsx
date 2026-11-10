@@ -40,8 +40,10 @@ function ReadingText({ text, label, pictures = {} }: { text: string; label: stri
             onClick={() => setLit((prev) => new Set(prev).add(i))}
             className={cn(
               "cursor-pointer rounded-md px-0.5 transition-colors duration-200",
+              // A pictured word is a chip, the same as in the teacher's preview (lesson-pictures.tsx).
+              picture && "my-1 inline-flex flex-col items-center rounded-xl border-2 border-hudyat-gold/40 bg-[#FFF8E7] px-1.5 pt-1 pb-0.5 align-bottom leading-snug font-black",
+              // After the chip, so the sign name's gold and the tap highlight still show on it.
               part.kind === "sign" ? "bg-hudyat-gold/35 font-black uppercase" : lit.has(i) && "bg-[#FFE58A]",
-              picture && "inline-flex flex-col items-center align-bottom leading-snug",
             )}
           >
             {picture && <LessonPicture picture={picture} className="size-11 sm:size-12" />}
