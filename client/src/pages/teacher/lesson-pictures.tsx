@@ -16,11 +16,6 @@ import { useUploadLessonMedia } from "@/hooks/use-upload-lesson-media";
 import { isEmoji, pictureKey, readingParts, signMeaningText, signWhenToUseText, usedPictures, type Pictures } from "@/lib/lesson-text";
 import { cn } from "@/lib/utils";
 
-// Small words rarely need a picture: they get no + (still tappable), so the + marks the key words.
-const SMALL_WORDS = new Set(
-  "a an the and or but so if as in on at to of for from with by into is are was were be been am do does did will can i me my you your he him his she her it its we us our they them their this that these those there here when what who how where why not".split(" "),
-);
-
 // shortcut: a hand-written word list; move to emoji keyword data (e.g. emojibase) if teachers want more.
 const SUGGEST: Record<string, string> = {
   morning: "🌅 ☀️", afternoon: "🌤️ ☀️", evening: "🌙 🌆", night: "🌙 🌃", day: "☀️ 📅", today: "📅", tomorrow: "📅 ➡️", yesterday: "📅 ⬅️",
@@ -266,7 +261,7 @@ export default function LessonPictures({
     <div className="mt-3 space-y-2 rounded-xl border border-dashed border-border bg-white/70 p-2.5">
       <p className="flex items-center gap-1.5 text-xs font-bold text-muted-foreground">
         <Eye aria-hidden="true" className="size-4" />
-        Learners see · tap a key word to add a picture
+        Learners see · tap a word to add a picture
       </p>
       <div className={cn("flex flex-col gap-3 rounded-2xl border-4 p-3 sm:flex-row sm:items-center", FRAME[field].card)}>
         {onMainPictureChange && (
@@ -310,8 +305,8 @@ export default function LessonPictures({
                     {picture ? (
                       <LessonPicture picture={picture} className="size-10" />
                     ) : (
-                      !SMALL_WORDS.has(key) && (
-                        // A faint + marks a key word; it gets strong on hover or keyboard focus.
+                      (
+                        // A faint + on every word; it gets strong on hover or keyboard focus.
                         <span aria-hidden="true" className="flex size-6 items-center justify-center rounded-full border-2 border-dashed border-[#D9C9A3] text-[#B87800] opacity-50 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
                           <Plus className="size-3.5" strokeWidth={3} />
                         </span>
