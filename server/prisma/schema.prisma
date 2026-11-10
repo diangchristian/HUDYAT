@@ -97,6 +97,10 @@ model FslGesture {
   modelClass          String               @unique
   referenceImageUrl   String?
   referenceVideoUrl   String?
+  /// Picture shown beside the meaning: an emoji, or an uploaded image URL.
+  mainPicture         String?
+  /// Pictures above words of the meaning, by word key (see client lesson-text.ts).
+  meaningPictures     Json                 @default("{}")
   isValidated         Boolean              @default(false)
   createdAt           DateTime             @default(now())
   updatedAt           DateTime             @updatedAt
@@ -113,6 +117,8 @@ model CategoryGesture {
   categoryId   String
   gestureId    String
   exampleUsage String?
+  /// Pictures above words of the example, by word key; this lesson only.
+  exampleUsagePictures Json @default("{}")
   displayOrder Int        @default(0)
   createdAt    DateTime   @default(now())
   category     Category   @relation(fields: [categoryId], references: [id], onDelete: Cascade)

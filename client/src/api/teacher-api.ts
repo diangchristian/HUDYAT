@@ -159,6 +159,11 @@ export type EditableSign = {
   exampleUsage: string | null;
   referenceImageUrl: string | null;
   referenceVideoUrl: string | null;
+  /** An emoji or an uploaded image link (see lesson-text.ts). */
+  mainPicture: string | null;
+  /** Pictures above words, by pictureKey(word). */
+  meaningPictures: Record<string, string>;
+  exampleUsagePictures: Record<string, string>;
 };
 
 export type EditableLesson = {
