@@ -1,58 +1,74 @@
-import { Hand, Star } from "lucide-react";
+import { Star } from "lucide-react";
 import { useNavigate } from "react-router";
 
 import type { AssessmentListCategory } from "@/api/assessment-api";
 import { CATEGORIES } from "@/components/common/categories.constants";
 import LearnCard from "@/components/common/learn-card/learn-card";
+import LessonPicture from "@/components/common/lesson-picture";
 import { useAssessmentList } from "@/hooks/use-assessment-list";
+import { quizCardStep, type QuizCardStep } from "@/lib/quiz-card";
 import { starsEarned } from "@/lib/quiz-stars";
+import { cn } from "@/lib/utils";
 
 /*
- * The quiz page, built from the Learn page's own parts so it feels like the same app:
- * the same centred header, lessons grouped by learning area, and the same LearnCard
- * (lesson world, hover lift, lesson-coloured button) with stars in place of the progress bar.
- * Once a quiz is passed, lessons the camera can check offer the optional Sign test under the card.
+ * The quiz page, built from the Learn page's own parts so it feels like the same app: the same
+ * centred header, lessons grouped by learning area, and the LearnCard look (lesson world, hover lift,
+ * lesson-coloured button). Each card has ONE button, always the next step (quiz → Sign test → play
+ * again), so young readers never have to choose between two. The quiz's stars show the score, and a
+ * ✋ badge lights up once the optional Sign test is passed (only in lessons the camera can check).
  */
 type QuizArea = { id: string; name: string; categories: AssessmentListCategory[] };
 
-function quizCard(category: AssessmentListCategory) {
-  const attempt = category.latestAttempt;
-  const score = attempt ? Math.round(Number(attempt.score)) : 0;
-  const total = attempt ? Math.round(Number(attempt.totalPoints)) : category.totalQuestions;
+const BUTTON_TEXT: Record<QuizCardStep, string> = { locked: "Locked", quiz: "Quiz", sign: "Sign test", again: "Play again" };
 
-  if (!category.isUnlocked) {
-    return { status: "locked" as const, statusText: `Finish the ${category.categoryName} lesson first`, actionText: "Locked", stars: 0 };
-  }
-  if (category.status === "completed") {
-    return { status: "completed" as const, statusText: `Score ${score} / ${total}`, actionText: "Play again", stars: starsEarned(score, total) };
-  }
-  if (attempt) {
-    return { status: "current" as const, statusText: `Last try ${score} / ${total}`, actionText: "Try again", stars: starsEarned(score, total) };
-  }
-  return { status: "current" as const, statusText: `${category.totalQuestions} questions`, actionText: "Start quiz", stars: 0 };
-}
-
-// The camera step's colour and hand, as in the lesson's Try step, so children know it means signing.
-function SignTestButton({ category }: { category: AssessmentListCategory }) {
+function QuizCard({ category }: { category: AssessmentListCategory }) {
   const navigate = useNavigate();
-  const { available, best } = category.signTest;
-  if (!available) return null;
-  const text = best?.passed ? "Sign test · passed" : best ? `Sign test · best ${best.score}/${best.total}` : "Try the sign test";
+  const step = quizCardStep(category);
+  const attempt = category.latestAttempt;
+  const stars = attempt ? starsEarned(Math.round(Number(attempt.score)), Math.round(Number(attempt.totalPoints))) : 0;
+  const signPassed = Boolean(category.signTest.best?.passed);
+
   return (
-    <button
-      type="button"
-      onClick={() => navigate(`/student/assessment/${category.categoryId}/sign-test`)}
-      className="flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl border-b-4 border-[#9F1239] bg-[#E11D48] px-3 text-sm font-extrabold tracking-widest text-white uppercase focus-visible:ring-4 focus-visible:ring-hudyat-gold focus-visible:outline-none active:translate-y-0.5 active:border-b-2"
+    <LearnCard
+      title={category.categoryName}
+      color={CATEGORIES.find((item) => item.title === category.categoryName)?.color ?? "blue"}
+      progress={0}
+      status={step === "locked" ? "locked" : "current"}
+      statusText={step === "locked" ? "Finish the lesson first" : ""}
+      actionText={BUTTON_TEXT[step]}
+      onClick={() => navigate(`/student/assessment/${category.categoryId}${step === "sign" ? "/sign-test" : ""}`)}
     >
-      {best?.passed ? <Star aria-hidden="true" className="size-5 fill-white" /> : <Hand aria-hidden="true" className="size-5" />}
-      {text}
-    </button>
+      {step !== "locked" && (
+        <div className="mt-3 flex items-center justify-center gap-3">
+          <div className="flex items-end justify-center gap-1" role="img" aria-label={`${stars} of 3 stars`}>
+            {[0, 1, 2].map((i) => (
+              <Star
+                key={i}
+                aria-hidden="true"
+                className={cn(i === 1 ? "size-9" : "size-7", i < stars ? "fill-hudyat-gold text-hudyat-gold" : "fill-[#F2F2F2] text-[#E0E0E0]")}
+                strokeWidth={i < stars ? 1.5 : 2}
+              />
+            ))}
+          </div>
+          {category.signTest.hasModel && (
+            <>
+              <span aria-hidden="true" className="h-8 w-0.5 rounded-full bg-[#E5E5E5]" />
+              <span
+                role="img"
+                aria-label={signPassed ? "Sign test passed" : "Sign test not passed yet"}
+                className={cn("flex size-11 items-center justify-center rounded-full border-4", signPassed ? "border-hudyat-gold bg-[#FFF4D6]" : "border-[#E5E5E5] bg-[#F7F7F7] opacity-50 grayscale")}
+              >
+                <LessonPicture picture="✋" className="size-6" />
+              </span>
+            </>
+          )}
+        </div>
+      )}
+    </LearnCard>
   );
 }
 
 function QuizzesPage({ areas, loading, error }: { areas: QuizArea[]; loading: boolean; error: unknown }) {
-  const navigate = useNavigate();
-
   return (
     <section className="w-full font-body" aria-labelledby="quiz-heading">
       <header className="text-center">
@@ -91,24 +107,9 @@ function QuizzesPage({ areas, loading, error }: { areas: QuizArea[]; loading: bo
                 {area.name}
               </h2>
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {area.categories.map((category) => {
-                  const card = quizCard(category);
-                  return (
-                    <div key={category.categoryId} className="flex flex-col gap-3">
-                      <LearnCard
-                        title={category.categoryName}
-                        color={CATEGORIES.find((item) => item.title === category.categoryName)?.color ?? "blue"}
-                        progress={0}
-                        status={card.status}
-                        statusText={card.statusText}
-                        stars={card.stars}
-                        actionText={card.actionText}
-                        onClick={() => navigate(`/student/assessment/${category.categoryId}`)}
-                      />
-                      <SignTestButton category={category} />
-                    </div>
-                  );
-                })}
+                {area.categories.map((category) => (
+                  <QuizCard key={category.categoryId} category={category} />
+                ))}
               </div>
             </section>
           ))}

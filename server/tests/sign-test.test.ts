@@ -88,6 +88,7 @@ test("after passing the quiz a learner takes the sign test; the best go is kept 
   await takeSignTest(lesson.id, [signs[1]!.id, signs[2]!.id]);
 
   assert.deepEqual(await signTestOnList(lesson.id), {
+    hasModel: true,
     available: true,
     best: { score: 3, total: 3, passed: true },
   });
@@ -113,12 +114,13 @@ test("teachers see which signs were missed on the best go", async () => {
 test("the sign test opens only after the quiz is passed, and only where the camera has a model", async () => {
   const notPassed = await createLesson("Colors");
   assert.equal((await takeSignTest(notPassed.lesson.id, [])).status, 409);
-  assert.deepEqual(await signTestOnList(notPassed.lesson.id), { available: false, best: null });
+  // The card still shows the Sign test step ahead, so it needs to know the camera can check this lesson.
+  assert.deepEqual(await signTestOnList(notPassed.lesson.id), { hasModel: true, available: false, best: null });
 
   const noModel = await createLesson("Calendar");
   await passQuiz(noModel.assessmentId);
   assert.equal((await takeSignTest(noModel.lesson.id, [])).status, 409);
-  assert.deepEqual(await signTestOnList(noModel.lesson.id), { available: false, best: null });
+  assert.deepEqual(await signTestOnList(noModel.lesson.id), { hasModel: false, available: false, best: null });
 
   // A quiz taken back out of publishing hides its Sign test too.
   const unpublished = await createLesson("Colors");

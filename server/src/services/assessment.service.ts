@@ -713,6 +713,8 @@ export const getAssessmentsForLearner = async (
               status,
               // Optional camera practice, offered once the quiz is passed (sign-test.service.ts).
               signTest: {
+                // Whether the lesson has a Sign test at all (the card shows the step ahead of time).
+                hasModel: hasCameraModel(category.name),
                 available: hasPassed && hasCameraModel(category.name),
                 best: bestSignTest
                   ? {

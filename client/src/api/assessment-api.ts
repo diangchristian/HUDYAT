@@ -84,6 +84,8 @@ export type AssessmentListCategory = {
   status: AssessmentListStatus;
   /** Optional camera test, offered once the quiz is passed in lessons the camera can check. */
   signTest: {
+    /** The camera can check this lesson, so its card shows a Sign test step (even before the quiz). */
+    hasModel: boolean;
     available: boolean;
     best: { score: number; total: number; passed: boolean } | null;
   };
