@@ -150,6 +150,16 @@ export type LearnerDetail = {
     correctAttempts: number;
     accuracy: number;
   };
+  /** Each lesson's best Sign test go (optional camera test after the quiz). */
+  signTests: Array<{
+    categoryId: string;
+    score: number;
+    total: number;
+    passed: boolean;
+    missedSigns: string[];
+    attempts: number;
+    completedAt: string;
+  }>;
 };
 
 export type EditableSign = {

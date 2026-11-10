@@ -37,6 +37,7 @@ model LearnerProfile {
   categoryProgress   CategoryProgress[]
   user               User                @relation(fields: [userId], references: [id], onDelete: Cascade)
   practiceSessions   PracticeSession[]
+  signTestAttempts   SignTestAttempt[]
 
   @@map("learner_profiles")
 }
@@ -71,19 +72,20 @@ model LearningArea {
 }
 
 model Category {
-  modelRelease Json?
-  id             String             @id @default(uuid())
-  learningAreaId String
-  name           String
-  description    String?
-  displayOrder   Int                @default(0)
-  isActive       Boolean            @default(true)
-  createdAt      DateTime           @default(now())
-  updatedAt      DateTime           @updatedAt
-  assessment     Assessment?
-  learningArea   LearningArea       @relation(fields: [learningAreaId], references: [id], onDelete: Cascade)
-  gestures       CategoryGesture[]
-  progress       CategoryProgress[]
+  modelRelease     Json?
+  id               String             @id @default(uuid())
+  learningAreaId   String
+  name             String
+  description      String?
+  displayOrder     Int                @default(0)
+  isActive         Boolean            @default(true)
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  assessment       Assessment?
+  learningArea     LearningArea       @relation(fields: [learningAreaId], references: [id], onDelete: Cascade)
+  gestures         CategoryGesture[]
+  progress         CategoryProgress[]
+  signTestAttempts SignTestAttempt[]
 
   @@unique([learningAreaId, name])
   @@unique([learningAreaId, displayOrder])
@@ -113,16 +115,16 @@ model FslGesture {
 }
 
 model CategoryGesture {
-  id           String     @id @default(uuid())
-  categoryId   String
-  gestureId    String
-  exampleUsage String?
+  id                   String     @id @default(uuid())
+  categoryId           String
+  gestureId            String
+  exampleUsage         String?
   /// Pictures above words of the example, by word key; this lesson only.
-  exampleUsagePictures Json @default("{}")
-  displayOrder Int        @default(0)
-  createdAt    DateTime   @default(now())
-  category     Category   @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  gesture      FslGesture @relation(fields: [gestureId], references: [id], onDelete: Cascade)
+  exampleUsagePictures Json       @default("{}")
+  displayOrder         Int        @default(0)
+  createdAt            DateTime   @default(now())
+  category             Category   @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  gesture              FslGesture @relation(fields: [gestureId], references: [id], onDelete: Cascade)
 
   @@unique([categoryId, gestureId])
   @@unique([categoryId, displayOrder])
@@ -235,19 +237,19 @@ model PracticeSession {
 }
 
 model CategoryProgress {
-  id               String                 @id @default(uuid())
-  learnerId        String
-  categoryId       String
-  status           CategoryProgressStatus @default(NOT_STARTED)
-  startedAt        DateTime?
-  completedAt      DateTime?
-  createdAt        DateTime               @default(now())
-  updatedAt        DateTime               @updatedAt
-  lastGestureIndex Int                    @default(0)
-  lastLessonStep   String?
+  id                String                 @id @default(uuid())
+  learnerId         String
+  categoryId        String
+  status            CategoryProgressStatus @default(NOT_STARTED)
+  startedAt         DateTime?
+  completedAt       DateTime?
+  createdAt         DateTime               @default(now())
+  updatedAt         DateTime               @updatedAt
+  lastGestureIndex  Int                    @default(0)
+  lastLessonStep    String?
   lessonCompletedAt DateTime?
-  category         Category               @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  learner          LearnerProfile         @relation(fields: [learnerId], references: [userId], onDelete: Cascade)
+  category          Category               @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  learner           LearnerProfile         @relation(fields: [learnerId], references: [userId], onDelete: Cascade)
 
   @@unique([learnerId, categoryId])
   @@map("category_progress")
@@ -307,4 +309,22 @@ enum CategoryProgressStatus {
   NOT_STARTED
   IN_PROGRESS
   COMPLETED
+}
+
+/// One go at a lesson's Sign test: the learner signs every sign of the lesson with the camera.
+/// Optional practice on top of the quiz; it never locks or unlocks lessons.
+model SignTestAttempt {
+  id               String         @id @default(uuid())
+  learnerId        String
+  categoryId       String
+  score            Int
+  total            Int
+  /// Ids of the signs the learner missed (timed out or skipped).
+  missedGestureIds Json           @default("[]")
+  completedAt      DateTime       @default(now())
+  learner          LearnerProfile @relation(fields: [learnerId], references: [userId], onDelete: Cascade)
+  category         Category       @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@index([learnerId, categoryId])
+  @@map("sign_test_attempts")
 }

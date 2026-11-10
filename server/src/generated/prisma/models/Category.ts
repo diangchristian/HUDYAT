@@ -248,6 +248,7 @@ export type CategoryWhereInput = {
   learningArea?: Prisma.XOR<Prisma.LearningAreaScalarRelationFilter, Prisma.LearningAreaWhereInput>
   gestures?: Prisma.CategoryGestureListRelationFilter
   progress?: Prisma.CategoryProgressListRelationFilter
+  signTestAttempts?: Prisma.SignTestAttemptListRelationFilter
 }
 
 export type CategoryOrderByWithRelationInput = {
@@ -264,6 +265,7 @@ export type CategoryOrderByWithRelationInput = {
   learningArea?: Prisma.LearningAreaOrderByWithRelationInput
   gestures?: Prisma.CategoryGestureOrderByRelationAggregateInput
   progress?: Prisma.CategoryProgressOrderByRelationAggregateInput
+  signTestAttempts?: Prisma.SignTestAttemptOrderByRelationAggregateInput
 }
 
 export type CategoryWhereUniqueInput = Prisma.AtLeast<{
@@ -285,6 +287,7 @@ export type CategoryWhereUniqueInput = Prisma.AtLeast<{
   learningArea?: Prisma.XOR<Prisma.LearningAreaScalarRelationFilter, Prisma.LearningAreaWhereInput>
   gestures?: Prisma.CategoryGestureListRelationFilter
   progress?: Prisma.CategoryProgressListRelationFilter
+  signTestAttempts?: Prisma.SignTestAttemptListRelationFilter
 }, "id" | "learningAreaId_name" | "learningAreaId_displayOrder">
 
 export type CategoryOrderByWithAggregationInput = {
@@ -332,6 +335,7 @@ export type CategoryCreateInput = {
   learningArea: Prisma.LearningAreaCreateNestedOneWithoutCategoriesInput
   gestures?: Prisma.CategoryGestureCreateNestedManyWithoutCategoryInput
   progress?: Prisma.CategoryProgressCreateNestedManyWithoutCategoryInput
+  signTestAttempts?: Prisma.SignTestAttemptCreateNestedManyWithoutCategoryInput
 }
 
 export type CategoryUncheckedCreateInput = {
@@ -347,6 +351,7 @@ export type CategoryUncheckedCreateInput = {
   assessment?: Prisma.AssessmentUncheckedCreateNestedOneWithoutCategoryInput
   gestures?: Prisma.CategoryGestureUncheckedCreateNestedManyWithoutCategoryInput
   progress?: Prisma.CategoryProgressUncheckedCreateNestedManyWithoutCategoryInput
+  signTestAttempts?: Prisma.SignTestAttemptUncheckedCreateNestedManyWithoutCategoryInput
 }
 
 export type CategoryUpdateInput = {
@@ -362,6 +367,7 @@ export type CategoryUpdateInput = {
   learningArea?: Prisma.LearningAreaUpdateOneRequiredWithoutCategoriesNestedInput
   gestures?: Prisma.CategoryGestureUpdateManyWithoutCategoryNestedInput
   progress?: Prisma.CategoryProgressUpdateManyWithoutCategoryNestedInput
+  signTestAttempts?: Prisma.SignTestAttemptUpdateManyWithoutCategoryNestedInput
 }
 
 export type CategoryUncheckedUpdateInput = {
@@ -377,6 +383,7 @@ export type CategoryUncheckedUpdateInput = {
   assessment?: Prisma.AssessmentUncheckedUpdateOneWithoutCategoryNestedInput
   gestures?: Prisma.CategoryGestureUncheckedUpdateManyWithoutCategoryNestedInput
   progress?: Prisma.CategoryProgressUncheckedUpdateManyWithoutCategoryNestedInput
+  signTestAttempts?: Prisma.SignTestAttemptUncheckedUpdateManyWithoutCategoryNestedInput
 }
 
 export type CategoryCreateManyInput = {
@@ -565,6 +572,20 @@ export type CategoryUpdateOneRequiredWithoutProgressNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.CategoryUpdateToOneWithWhereWithoutProgressInput, Prisma.CategoryUpdateWithoutProgressInput>, Prisma.CategoryUncheckedUpdateWithoutProgressInput>
 }
 
+export type CategoryCreateNestedOneWithoutSignTestAttemptsInput = {
+  create?: Prisma.XOR<Prisma.CategoryCreateWithoutSignTestAttemptsInput, Prisma.CategoryUncheckedCreateWithoutSignTestAttemptsInput>
+  connectOrCreate?: Prisma.CategoryCreateOrConnectWithoutSignTestAttemptsInput
+  connect?: Prisma.CategoryWhereUniqueInput
+}
+
+export type CategoryUpdateOneRequiredWithoutSignTestAttemptsNestedInput = {
+  create?: Prisma.XOR<Prisma.CategoryCreateWithoutSignTestAttemptsInput, Prisma.CategoryUncheckedCreateWithoutSignTestAttemptsInput>
+  connectOrCreate?: Prisma.CategoryCreateOrConnectWithoutSignTestAttemptsInput
+  upsert?: Prisma.CategoryUpsertWithoutSignTestAttemptsInput
+  connect?: Prisma.CategoryWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CategoryUpdateToOneWithWhereWithoutSignTestAttemptsInput, Prisma.CategoryUpdateWithoutSignTestAttemptsInput>, Prisma.CategoryUncheckedUpdateWithoutSignTestAttemptsInput>
+}
+
 export type CategoryCreateWithoutLearningAreaInput = {
   modelRelease?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   id?: string
@@ -577,6 +598,7 @@ export type CategoryCreateWithoutLearningAreaInput = {
   assessment?: Prisma.AssessmentCreateNestedOneWithoutCategoryInput
   gestures?: Prisma.CategoryGestureCreateNestedManyWithoutCategoryInput
   progress?: Prisma.CategoryProgressCreateNestedManyWithoutCategoryInput
+  signTestAttempts?: Prisma.SignTestAttemptCreateNestedManyWithoutCategoryInput
 }
 
 export type CategoryUncheckedCreateWithoutLearningAreaInput = {
@@ -591,6 +613,7 @@ export type CategoryUncheckedCreateWithoutLearningAreaInput = {
   assessment?: Prisma.AssessmentUncheckedCreateNestedOneWithoutCategoryInput
   gestures?: Prisma.CategoryGestureUncheckedCreateNestedManyWithoutCategoryInput
   progress?: Prisma.CategoryProgressUncheckedCreateNestedManyWithoutCategoryInput
+  signTestAttempts?: Prisma.SignTestAttemptUncheckedCreateNestedManyWithoutCategoryInput
 }
 
 export type CategoryCreateOrConnectWithoutLearningAreaInput = {
@@ -646,6 +669,7 @@ export type CategoryCreateWithoutGesturesInput = {
   assessment?: Prisma.AssessmentCreateNestedOneWithoutCategoryInput
   learningArea: Prisma.LearningAreaCreateNestedOneWithoutCategoriesInput
   progress?: Prisma.CategoryProgressCreateNestedManyWithoutCategoryInput
+  signTestAttempts?: Prisma.SignTestAttemptCreateNestedManyWithoutCategoryInput
 }
 
 export type CategoryUncheckedCreateWithoutGesturesInput = {
@@ -660,6 +684,7 @@ export type CategoryUncheckedCreateWithoutGesturesInput = {
   updatedAt?: Date | string
   assessment?: Prisma.AssessmentUncheckedCreateNestedOneWithoutCategoryInput
   progress?: Prisma.CategoryProgressUncheckedCreateNestedManyWithoutCategoryInput
+  signTestAttempts?: Prisma.SignTestAttemptUncheckedCreateNestedManyWithoutCategoryInput
 }
 
 export type CategoryCreateOrConnectWithoutGesturesInput = {
@@ -690,6 +715,7 @@ export type CategoryUpdateWithoutGesturesInput = {
   assessment?: Prisma.AssessmentUpdateOneWithoutCategoryNestedInput
   learningArea?: Prisma.LearningAreaUpdateOneRequiredWithoutCategoriesNestedInput
   progress?: Prisma.CategoryProgressUpdateManyWithoutCategoryNestedInput
+  signTestAttempts?: Prisma.SignTestAttemptUpdateManyWithoutCategoryNestedInput
 }
 
 export type CategoryUncheckedUpdateWithoutGesturesInput = {
@@ -704,6 +730,7 @@ export type CategoryUncheckedUpdateWithoutGesturesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assessment?: Prisma.AssessmentUncheckedUpdateOneWithoutCategoryNestedInput
   progress?: Prisma.CategoryProgressUncheckedUpdateManyWithoutCategoryNestedInput
+  signTestAttempts?: Prisma.SignTestAttemptUncheckedUpdateManyWithoutCategoryNestedInput
 }
 
 export type CategoryCreateWithoutAssessmentInput = {
@@ -718,6 +745,7 @@ export type CategoryCreateWithoutAssessmentInput = {
   learningArea: Prisma.LearningAreaCreateNestedOneWithoutCategoriesInput
   gestures?: Prisma.CategoryGestureCreateNestedManyWithoutCategoryInput
   progress?: Prisma.CategoryProgressCreateNestedManyWithoutCategoryInput
+  signTestAttempts?: Prisma.SignTestAttemptCreateNestedManyWithoutCategoryInput
 }
 
 export type CategoryUncheckedCreateWithoutAssessmentInput = {
@@ -732,6 +760,7 @@ export type CategoryUncheckedCreateWithoutAssessmentInput = {
   updatedAt?: Date | string
   gestures?: Prisma.CategoryGestureUncheckedCreateNestedManyWithoutCategoryInput
   progress?: Prisma.CategoryProgressUncheckedCreateNestedManyWithoutCategoryInput
+  signTestAttempts?: Prisma.SignTestAttemptUncheckedCreateNestedManyWithoutCategoryInput
 }
 
 export type CategoryCreateOrConnectWithoutAssessmentInput = {
@@ -762,6 +791,7 @@ export type CategoryUpdateWithoutAssessmentInput = {
   learningArea?: Prisma.LearningAreaUpdateOneRequiredWithoutCategoriesNestedInput
   gestures?: Prisma.CategoryGestureUpdateManyWithoutCategoryNestedInput
   progress?: Prisma.CategoryProgressUpdateManyWithoutCategoryNestedInput
+  signTestAttempts?: Prisma.SignTestAttemptUpdateManyWithoutCategoryNestedInput
 }
 
 export type CategoryUncheckedUpdateWithoutAssessmentInput = {
@@ -776,6 +806,7 @@ export type CategoryUncheckedUpdateWithoutAssessmentInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   gestures?: Prisma.CategoryGestureUncheckedUpdateManyWithoutCategoryNestedInput
   progress?: Prisma.CategoryProgressUncheckedUpdateManyWithoutCategoryNestedInput
+  signTestAttempts?: Prisma.SignTestAttemptUncheckedUpdateManyWithoutCategoryNestedInput
 }
 
 export type CategoryCreateWithoutProgressInput = {
@@ -790,6 +821,7 @@ export type CategoryCreateWithoutProgressInput = {
   assessment?: Prisma.AssessmentCreateNestedOneWithoutCategoryInput
   learningArea: Prisma.LearningAreaCreateNestedOneWithoutCategoriesInput
   gestures?: Prisma.CategoryGestureCreateNestedManyWithoutCategoryInput
+  signTestAttempts?: Prisma.SignTestAttemptCreateNestedManyWithoutCategoryInput
 }
 
 export type CategoryUncheckedCreateWithoutProgressInput = {
@@ -804,6 +836,7 @@ export type CategoryUncheckedCreateWithoutProgressInput = {
   updatedAt?: Date | string
   assessment?: Prisma.AssessmentUncheckedCreateNestedOneWithoutCategoryInput
   gestures?: Prisma.CategoryGestureUncheckedCreateNestedManyWithoutCategoryInput
+  signTestAttempts?: Prisma.SignTestAttemptUncheckedCreateNestedManyWithoutCategoryInput
 }
 
 export type CategoryCreateOrConnectWithoutProgressInput = {
@@ -834,6 +867,7 @@ export type CategoryUpdateWithoutProgressInput = {
   assessment?: Prisma.AssessmentUpdateOneWithoutCategoryNestedInput
   learningArea?: Prisma.LearningAreaUpdateOneRequiredWithoutCategoriesNestedInput
   gestures?: Prisma.CategoryGestureUpdateManyWithoutCategoryNestedInput
+  signTestAttempts?: Prisma.SignTestAttemptUpdateManyWithoutCategoryNestedInput
 }
 
 export type CategoryUncheckedUpdateWithoutProgressInput = {
@@ -848,6 +882,83 @@ export type CategoryUncheckedUpdateWithoutProgressInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assessment?: Prisma.AssessmentUncheckedUpdateOneWithoutCategoryNestedInput
   gestures?: Prisma.CategoryGestureUncheckedUpdateManyWithoutCategoryNestedInput
+  signTestAttempts?: Prisma.SignTestAttemptUncheckedUpdateManyWithoutCategoryNestedInput
+}
+
+export type CategoryCreateWithoutSignTestAttemptsInput = {
+  modelRelease?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  id?: string
+  name: string
+  description?: string | null
+  displayOrder?: number
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  assessment?: Prisma.AssessmentCreateNestedOneWithoutCategoryInput
+  learningArea: Prisma.LearningAreaCreateNestedOneWithoutCategoriesInput
+  gestures?: Prisma.CategoryGestureCreateNestedManyWithoutCategoryInput
+  progress?: Prisma.CategoryProgressCreateNestedManyWithoutCategoryInput
+}
+
+export type CategoryUncheckedCreateWithoutSignTestAttemptsInput = {
+  modelRelease?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  id?: string
+  learningAreaId: string
+  name: string
+  description?: string | null
+  displayOrder?: number
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  assessment?: Prisma.AssessmentUncheckedCreateNestedOneWithoutCategoryInput
+  gestures?: Prisma.CategoryGestureUncheckedCreateNestedManyWithoutCategoryInput
+  progress?: Prisma.CategoryProgressUncheckedCreateNestedManyWithoutCategoryInput
+}
+
+export type CategoryCreateOrConnectWithoutSignTestAttemptsInput = {
+  where: Prisma.CategoryWhereUniqueInput
+  create: Prisma.XOR<Prisma.CategoryCreateWithoutSignTestAttemptsInput, Prisma.CategoryUncheckedCreateWithoutSignTestAttemptsInput>
+}
+
+export type CategoryUpsertWithoutSignTestAttemptsInput = {
+  update: Prisma.XOR<Prisma.CategoryUpdateWithoutSignTestAttemptsInput, Prisma.CategoryUncheckedUpdateWithoutSignTestAttemptsInput>
+  create: Prisma.XOR<Prisma.CategoryCreateWithoutSignTestAttemptsInput, Prisma.CategoryUncheckedCreateWithoutSignTestAttemptsInput>
+  where?: Prisma.CategoryWhereInput
+}
+
+export type CategoryUpdateToOneWithWhereWithoutSignTestAttemptsInput = {
+  where?: Prisma.CategoryWhereInput
+  data: Prisma.XOR<Prisma.CategoryUpdateWithoutSignTestAttemptsInput, Prisma.CategoryUncheckedUpdateWithoutSignTestAttemptsInput>
+}
+
+export type CategoryUpdateWithoutSignTestAttemptsInput = {
+  modelRelease?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  assessment?: Prisma.AssessmentUpdateOneWithoutCategoryNestedInput
+  learningArea?: Prisma.LearningAreaUpdateOneRequiredWithoutCategoriesNestedInput
+  gestures?: Prisma.CategoryGestureUpdateManyWithoutCategoryNestedInput
+  progress?: Prisma.CategoryProgressUpdateManyWithoutCategoryNestedInput
+}
+
+export type CategoryUncheckedUpdateWithoutSignTestAttemptsInput = {
+  modelRelease?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  learningAreaId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  assessment?: Prisma.AssessmentUncheckedUpdateOneWithoutCategoryNestedInput
+  gestures?: Prisma.CategoryGestureUncheckedUpdateManyWithoutCategoryNestedInput
+  progress?: Prisma.CategoryProgressUncheckedUpdateManyWithoutCategoryNestedInput
 }
 
 export type CategoryCreateManyLearningAreaInput = {
@@ -873,6 +984,7 @@ export type CategoryUpdateWithoutLearningAreaInput = {
   assessment?: Prisma.AssessmentUpdateOneWithoutCategoryNestedInput
   gestures?: Prisma.CategoryGestureUpdateManyWithoutCategoryNestedInput
   progress?: Prisma.CategoryProgressUpdateManyWithoutCategoryNestedInput
+  signTestAttempts?: Prisma.SignTestAttemptUpdateManyWithoutCategoryNestedInput
 }
 
 export type CategoryUncheckedUpdateWithoutLearningAreaInput = {
@@ -887,6 +999,7 @@ export type CategoryUncheckedUpdateWithoutLearningAreaInput = {
   assessment?: Prisma.AssessmentUncheckedUpdateOneWithoutCategoryNestedInput
   gestures?: Prisma.CategoryGestureUncheckedUpdateManyWithoutCategoryNestedInput
   progress?: Prisma.CategoryProgressUncheckedUpdateManyWithoutCategoryNestedInput
+  signTestAttempts?: Prisma.SignTestAttemptUncheckedUpdateManyWithoutCategoryNestedInput
 }
 
 export type CategoryUncheckedUpdateManyWithoutLearningAreaInput = {
@@ -908,11 +1021,13 @@ export type CategoryUncheckedUpdateManyWithoutLearningAreaInput = {
 export type CategoryCountOutputType = {
   gestures: number
   progress: number
+  signTestAttempts: number
 }
 
 export type CategoryCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   gestures?: boolean | CategoryCountOutputTypeCountGesturesArgs
   progress?: boolean | CategoryCountOutputTypeCountProgressArgs
+  signTestAttempts?: boolean | CategoryCountOutputTypeCountSignTestAttemptsArgs
 }
 
 /**
@@ -939,6 +1054,13 @@ export type CategoryCountOutputTypeCountProgressArgs<ExtArgs extends runtime.Typ
   where?: Prisma.CategoryProgressWhereInput
 }
 
+/**
+ * CategoryCountOutputType without action
+ */
+export type CategoryCountOutputTypeCountSignTestAttemptsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SignTestAttemptWhereInput
+}
+
 
 export type CategorySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   modelRelease?: boolean
@@ -954,6 +1076,7 @@ export type CategorySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   learningArea?: boolean | Prisma.LearningAreaDefaultArgs<ExtArgs>
   gestures?: boolean | Prisma.Category$gesturesArgs<ExtArgs>
   progress?: boolean | Prisma.Category$progressArgs<ExtArgs>
+  signTestAttempts?: boolean | Prisma.Category$signTestAttemptsArgs<ExtArgs>
   _count?: boolean | Prisma.CategoryCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["category"]>
 
@@ -1001,6 +1124,7 @@ export type CategoryInclude<ExtArgs extends runtime.Types.Extensions.InternalArg
   learningArea?: boolean | Prisma.LearningAreaDefaultArgs<ExtArgs>
   gestures?: boolean | Prisma.Category$gesturesArgs<ExtArgs>
   progress?: boolean | Prisma.Category$progressArgs<ExtArgs>
+  signTestAttempts?: boolean | Prisma.Category$signTestAttemptsArgs<ExtArgs>
   _count?: boolean | Prisma.CategoryCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type CategoryIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1017,6 +1141,7 @@ export type $CategoryPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     learningArea: Prisma.$LearningAreaPayload<ExtArgs>
     gestures: Prisma.$CategoryGesturePayload<ExtArgs>[]
     progress: Prisma.$CategoryProgressPayload<ExtArgs>[]
+    signTestAttempts: Prisma.$SignTestAttemptPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     modelRelease: runtime.JsonValue | null
@@ -1426,6 +1551,7 @@ export interface Prisma__CategoryClient<T, Null = never, ExtArgs extends runtime
   learningArea<T extends Prisma.LearningAreaDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LearningAreaDefaultArgs<ExtArgs>>): Prisma.Prisma__LearningAreaClient<runtime.Types.Result.GetResult<Prisma.$LearningAreaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   gestures<T extends Prisma.Category$gesturesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Category$gesturesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CategoryGesturePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   progress<T extends Prisma.Category$progressArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Category$progressArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CategoryProgressPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  signTestAttempts<T extends Prisma.Category$signTestAttemptsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Category$signTestAttemptsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SignTestAttemptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1929,6 +2055,30 @@ export type Category$progressArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.CategoryProgressScalarFieldEnum | Prisma.CategoryProgressScalarFieldEnum[]
+}
+
+/**
+ * Category.signTestAttempts
+ */
+export type Category$signTestAttemptsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SignTestAttempt
+   */
+  select?: Prisma.SignTestAttemptSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SignTestAttempt
+   */
+  omit?: Prisma.SignTestAttemptOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SignTestAttemptInclude<ExtArgs> | null
+  where?: Prisma.SignTestAttemptWhereInput
+  orderBy?: Prisma.SignTestAttemptOrderByWithRelationInput | Prisma.SignTestAttemptOrderByWithRelationInput[]
+  cursor?: Prisma.SignTestAttemptWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SignTestAttemptScalarFieldEnum | Prisma.SignTestAttemptScalarFieldEnum[]
 }
 
 /**

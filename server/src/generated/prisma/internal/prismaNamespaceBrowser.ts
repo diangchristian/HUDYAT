@@ -66,7 +66,8 @@ export const ModelName = {
   PracticeSession: 'PracticeSession',
   CategoryProgress: 'CategoryProgress',
   SystemSetting: 'SystemSetting',
-  AuditLog: 'AuditLog'
+  AuditLog: 'AuditLog',
+  SignTestAttempt: 'SignTestAttempt'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -310,6 +311,19 @@ export const AuditLogScalarFieldEnum = {
 } as const
 
 export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
+
+
+export const SignTestAttemptScalarFieldEnum = {
+  id: 'id',
+  learnerId: 'learnerId',
+  categoryId: 'categoryId',
+  score: 'score',
+  total: 'total',
+  missedGestureIds: 'missedGestureIds',
+  completedAt: 'completedAt'
+} as const
+
+export type SignTestAttemptScalarFieldEnum = (typeof SignTestAttemptScalarFieldEnum)[keyof typeof SignTestAttemptScalarFieldEnum]
 
 
 export const SortOrder = {

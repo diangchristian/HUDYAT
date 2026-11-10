@@ -82,7 +82,14 @@ export type AssessmentListCategory = {
     completedAt: string;
   } | null;
   status: AssessmentListStatus;
+  /** Optional camera test, offered once the quiz is passed in lessons the camera can check. */
+  signTest: {
+    available: boolean;
+    best: { score: number; total: number; passed: boolean } | null;
+  };
 };
+
+export type SignTestResult = { score: number; total: number; passed: boolean };
 
 export type AssessmentListResponse = {
   learningAreas: Array<{
@@ -123,6 +130,15 @@ export function submitAssessment(
   return unwrap<AssessmentResult>(
     api.post(`/api/assessments/categories/${categoryId}/submit`, {
       answers,
+    }),
+  );
+}
+
+/** The camera runs in the browser, so we send which signs were missed; the server scores the go. */
+export function submitSignTest(categoryId: string, missedGestureIds: string[]) {
+  return unwrap<SignTestResult>(
+    api.post(`/api/assessments/categories/${categoryId}/sign-test`, {
+      missedGestureIds,
     }),
   );
 }

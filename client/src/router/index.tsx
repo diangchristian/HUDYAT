@@ -20,6 +20,7 @@ import MyProgressPage from "@/pages/student/MyProgressPage";
 import AssessmentPage from "@/pages/student/AssessmentPage";
 import AssessmentResultPage from "@/pages/student/AssessmentResultPage";
 import TakeAssessmentPage from "@/pages/student/TakeAssessmentPage";
+import SignTestPage from "@/pages/student/SignTestPage";
 import SettingsPage from "@/pages/student/SettingsPage";
 
 import TeacherDashboardPage from "@/pages/teacher/TeacherDashboardPage";
@@ -112,6 +113,10 @@ export const router = createBrowserRouter([
           {
             path: "/student/assessment/:categoryId",
             element: <TakeAssessmentPage />,
+          },
+          {
+            path: "/student/assessment/:categoryId/sign-test",
+            element: <SignTestPage />,
           },
           {
             path: "/student/learn/:categoryId",

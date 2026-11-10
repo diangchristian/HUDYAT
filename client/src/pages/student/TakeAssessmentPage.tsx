@@ -1,10 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { ArrowRight, Check, Sparkles, X } from "lucide-react";
-import { useNavigate, useParams, useSearchParams } from "react-router";
-
-// PROTOTYPE, delete me: ?variant=sign-* shows the Sign test prototype (dev only).
-import PrototypeSwitcher from "@/components/prototype/prototype-switcher";
-import { isSignTestVariant, SIGN_TEST_VARIANTS, SignTestPrototype } from "./sign-test-prototype";
+import { useNavigate, useParams } from "react-router";
 
 import { FeedbackBanner, FeedbackOverlay, ResultProgress } from "@/components/common/assessment-feedback";
 import VideoQuestion from "@/components/common/video-question";
@@ -415,19 +411,4 @@ const TakeAssessmentPage = () => {
   );
 };
 
-// PROTOTYPE, delete me: wrapper so the quiz's own hooks stay unconditional.
-function TakeAssessmentOrSignTest() {
-  const { categoryId } = useParams();
-  const variant = useSearchParams()[0].get("variant");
-  if (import.meta.env.DEV && variant && isSignTestVariant(variant)) {
-    return (
-      <>
-        <SignTestPrototype variant={variant} categoryId={categoryId} />
-        <PrototypeSwitcher variants={SIGN_TEST_VARIANTS} current={variant} />
-      </>
-    );
-  }
-  return <TakeAssessmentPage />;
-}
-
-export default TakeAssessmentOrSignTest;
+export default TakeAssessmentPage;
