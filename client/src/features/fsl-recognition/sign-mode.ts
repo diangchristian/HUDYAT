@@ -1,16 +1,23 @@
 /*
- * Which prompts are recorded sign by sign (the hands going down ends the sign) instead of the Alphabet
- * hold-still lock. When the Alphabet model was trained on clips (hand-relative-sequence-v1), every letter
- * works like Numbers: a letter held still is answered early (early-check.ts), and J and Z, drawn in the air,
- * are answered when the hands go down. With an Alphabet model trained on still photos, every letter keeps
- * the hold-still lock.
+ * Capture policy is separate from normalization: recorded v1 releases also need full gestures.
+ * Older releases retain their legacy settings; the selected recorder Alphabet always uses complete capture.
  */
 import {hasHand,signWindow} from './sign-capture.js';
 import type {RecognitionSettings} from './experiment.ts';
 
-type Model={category:string;handRelative:boolean;handRelativeSequence:boolean;faceLocation?:boolean};
+type Model={category:string;version?:string;handRelative:boolean;handRelativeSequence:boolean;faceLocation?:boolean};
+
+/** Capture is a release capability, not a consequence of landmark normalization.
+ * This recorder-trained v1 model needs a complete clip, including J/Z, with no early pose acceptance.
+ * Its immutable model metadata and weights retain their original preprocessing contract.
+ */
+export function usesCompleteSignCapture(model:Pick<Model,'category'|'version'>){
+ return (model.category==='alphabet'&&model.version==='7665532badb74b9f') ||
+  Boolean(model.version&&({shapes:'c857755d0a3b6e5b',calendar:'8f1bc49d95cbbcc4',word_concepts:'856effe4d20522e9',wh_questions:'545f7bcbe18ccf63'} as Record<string,string>)[model.category]===model.version);
+}
 
 export function usesSignCapture(model:Model,settings:Pick<RecognitionSettings,'alphabetMotion'|'dynamicCapture'>){
+ if(usesCompleteSignCapture(model))return true;
  if(model.category==='alphabet')return settings.alphabetMotion&&model.handRelativeSequence;
  return settings.dynamicCapture==='sign'&&(model.handRelative||model.handRelativeSequence||Boolean(model.faceLocation));
 }

@@ -1,0 +1,15 @@
+{
+  "id": "word_concepts",
+  "name": "Word Concepts",
+  "available": true,
+  "version": "856effe4d20522e9",
+  "modelUrl": "./models/word_concepts/856effe4d20522e9/model.json",
+  "weightsUrl": "./models/word_concepts/856effe4d20522e9/weights.bin",
+  "modelSha256": "a64d8d037918a416da446d7caccab8ccf2148d2f77386230229b9df4b5e17448",
+  "weightsSha256": "856effe4d20522e99b33514381181ea3c622add1756bdeaf4e121043cb8e7390",
+  "bytes": 1949663,
+  "handUrl": "./shared/fbc2a30080c3c557093b5ddfc334698132eb341044ccee322ccf8bcf3607cde1.task",
+  "handSha256": "fbc2a30080c3c557093b5ddfc334698132eb341044ccee322ccf8bcf3607cde1",
+  "handBytes": 7819105,
+  "classes": 10
+}

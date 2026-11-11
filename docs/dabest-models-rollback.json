@@ -1,0 +1,32 @@
+{
+  "alphabet": {
+    "id": "alphabet",
+    "name": "Alphabet",
+    "available": true,
+    "version": "46e7e387a78ee614",
+    "modelUrl": "./models/alphabet/46e7e387a78ee614/model.json",
+    "weightsUrl": "./models/alphabet/46e7e387a78ee614/weights.bin",
+    "modelSha256": "afb66b6ec68a023d51818181a2ea6556acbc50032570bb8499e101ea702fe1bf",
+    "weightsSha256": "2b09f3134a06667a4e67ec99a97714b89c0141700e76ddd5277324ae8641e59e",
+    "bytes": 1956795,
+    "handUrl": "./shared/fbc2a30080c3c557093b5ddfc334698132eb341044ccee322ccf8bcf3607cde1.task",
+    "handSha256": "fbc2a30080c3c557093b5ddfc334698132eb341044ccee322ccf8bcf3607cde1",
+    "handBytes": 7819105,
+    "classes": 26
+  },
+  "colors": {
+    "id": "colors",
+    "name": "Colors",
+    "available": true,
+    "version": "d6027ed729fe3b61",
+    "modelUrl": "./models/colors/d6027ed729fe3b61/model.json",
+    "weightsUrl": "./models/colors/d6027ed729fe3b61/weights.bin",
+    "modelSha256": "af8dcc942501865fa0566d8d201a14d75f237fc52c266082fe48e0d97951bcd2",
+    "weightsSha256": "d6027ed729fe3b61c85e8ae4c2cb77d6f9fe4796d26408e25282e497f35c95b7",
+    "bytes": 1948557,
+    "handUrl": "./shared/fbc2a30080c3c557093b5ddfc334698132eb341044ccee322ccf8bcf3607cde1.task",
+    "handSha256": "fbc2a30080c3c557093b5ddfc334698132eb341044ccee322ccf8bcf3607cde1",
+    "handBytes": 7819105,
+    "classes": 6
+  }
+}

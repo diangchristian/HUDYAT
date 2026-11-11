@@ -1,0 +1,38 @@
+{
+  "category": "colors",
+  "model_run_id": "final-colors-20261109-014711",
+  "source_model_dir": "C:\\Users\\jacob\\Documents\\HUDYAT - TRAINER\\work\\models\\colors",
+  "source_file_sha256": {
+    "model.keras": "b10be7fee611bf8302b12af7e6735a6449805a1c016a7d9b8aa3afa0f479258f",
+    "config.json": "48a8974a06eb54594c47270fdbc3ff946e9ed012c60c0a5b9db082c2b98dfbff",
+    "preprocess.json": "037bf3e75ec8a1baad5d9efc11c15722a2fc68168ecb47fbd16071ad308d7bd4",
+    "labels.json": "073aff8750e55bde8c5f7af966a8434e0050af79e214d4a3ae44177b9c014138",
+    "train_files.csv": "3b93fa52b4d2f0846716671196dfffadadcabe0491ee67d4cb3e5e948a00fb62"
+  },
+  "parity_input_sha256": {
+    "landmarks/colors/blue/S1/blue_S1_02.npy": "12c228e661eb15db531670f379d4093c0056a310654b7694435bb4a179c3d97d",
+    "landmarks/colors/blue/S1/blue_S1_03.npy": "9840572905ede5071836e665a0c7b765d83c89104cebb9fff2b8ed62dffd8c7f",
+    "landmarks/colors/blue/S1/blue_S1_09.npy": "727b1ab51551e65b3ccc336a1e8233658efb80c676aff8f8de628f9226275fa1",
+    "landmarks/colors/blue/S1/blue_S1_14.npy": "f218a14472fb1f79f3c7787a8a473ba7418b10dd5c1cddcb8e48665ec1520e25",
+    "landmarks/colors/blue/S3/blue_S3_04.npy": "d0b7b68a0307575372d53dfc0ee75254eb62a8d5e49d0bfc01e51221471cb7f2",
+    "landmarks/colors/blue/S3/blue_S3_07.npy": "3abea6c1d05725398ac9de493edc801463048717d6fd17efeec0d2e42dd58701",
+    "landmarks/colors/blue/S3/blue_S3_14.npy": "8c04070c50932ab6ebd88b87a460cb5d2655e8bc8bfbcbed6ab50f5cc1ac476b",
+    "landmarks/colors/green/S1/green_S1_02.npy": "219b2421aed715fd58be51095b3e150cbd43816c2b0d23cc1615dd5c61f10c91"
+  },
+  "related_loso_results": "work/experiments/loso/colors/20261109-013715-v1/results.json",
+  "evaluation_note": "97.4074% is the mean of three separate LOSO fold models; it is not a measured accuracy of this final deployment model.",
+  "limitation": "This existing final model used mirror augmentation at share 0.8; sign-specific linguistic validation is unverified.",
+  "export_check": {
+    "category": "colors",
+    "date": "2026-11-09T10:56:39",
+    "export_name": "colors-dabest-recorder-v1",
+    "version": "b87e44bcae7c53f9",
+    "n_samples": 8,
+    "real_clips": true,
+    "max_abs_diff": 1.1920928955078125e-07,
+    "same_top1": 1.0,
+    "ok": true,
+    "model_run_id": "final-colors-20261109-014711",
+    "method": "numpy forward pass of the app's network from model.json + weights.bin, on the app's frame layout, vs the Keras model on the trainer's"
+  }
+}

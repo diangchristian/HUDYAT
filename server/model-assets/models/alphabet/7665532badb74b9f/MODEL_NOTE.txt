@@ -1,0 +1,5 @@
+Selected model: Trainer model, v1, trained 2026-11-08 14:08:33.
+This is the saved 28-class final Alphabet model, not the model from the 93.78% LOSO result.
+Its training dataset contained 1283 originals; see provenance.json for limitations.
+Use the model's exported 0.1-second trim / 8-frame minimum preprocessing.
+Parity checks establish conversion consistency, not recognition accuracy.

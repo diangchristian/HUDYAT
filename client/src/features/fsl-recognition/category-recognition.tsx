@@ -12,7 +12,8 @@ import {recommendedInput} from './sign-capture.js';
 import {createTimedSegmenter} from './timed-segmenter';
 import {createEarlyCheck} from './early-check';
 import {longestGap,signLog,type SignDecision} from './sign-log';
-import {cutSign,usesSignCapture} from './sign-mode';
+import {cutSign,usesCompleteSignCapture,usesSignCapture} from './sign-mode';
+import {createRecordedSignCapture} from './recorded-sign';
 
 type CapturedFrame={raw:Float32Array;norm:Float32Array;at:number};
 /** Frames per second the camera loop is actually running at, from the last 25 frames. */
@@ -98,6 +99,7 @@ export function CategoryRecognition({category,targetLabel,video,active,onCorrect
   let segmenter=newSegmenter(),signStart=0;
   const newEarly=()=>createEarlyCheck<CapturedFrame>(undefined,settings.earlyMinHandsMs);
   let early=newEarly(),agreed=0;
+  let recorded=createRecordedSignCapture();
   recognitionMetrics.prompt(targetLabel,performance.now());
   const completion=createMatchCompletion(targetLabel,
    ()=>{recognitionMetrics.correct(targetLabel,performance.now());notifyCorrect();},
@@ -106,7 +108,7 @@ export function CategoryRecognition({category,targetLabel,video,active,onCorrect
    const current=runtime.current,element=video.current;
    let ownsInference=false,timing:FrameTiming|undefined;
    try{
-    if(document.hidden){lock=emptyLock();previous=undefined;frames=[];start=0;segmenter=newSegmenter();early=newEarly();agreed=0;}
+    if(document.hidden){lock=emptyLock();previous=undefined;frames=[];start=0;segmenter=newSegmenter();early=newEarly();agreed=0;recorded=createRecordedSignCapture();}
     else if(!cancelled&&current&&element&&element.readyState>=2&&!inFlight.current&&element.currentTime!==lastTime){
      lastTime=element.currentTime;inFlight.current=true;ownsInference=true;
      if(!current.classes.some(label=>matchesTarget(label,targetLabel))){notifyStatus({phase:'error',message:'This sign is not in the downloaded model.',version:current.version});return;}
@@ -122,7 +124,26 @@ export function CategoryRecognition({category,targetLabel,video,active,onCorrect
      const predict=async(input:Float32Array[])=>{const result=await timed(()=>current.predict(input));landmarkDiagnostics.recordModelCall(input,result);return result;};
      // Moving signs, and every letter when the Alphabet model can read motion (like Numbers), are recorded sign by sign.
      const signCapture=usesSignCapture(current,settings);
-     if(current.category==='alphabet'&&!signCapture){
+     if(usesCompleteSignCapture(current)){
+      const now=performance.now(),size=current.frameSize(frame);
+      const decision=recorded.push({raw:frame,norm:current.normalize(frame),at:now},size.width,size.height);
+      // Hold progress/steadiness hints do not describe a recorded moving sign.
+      notifyHold(null);
+      notifyStatus({phase:'running',message:'Recognition running · '+recorded.message(present),version:current.version});
+      if(decision?.kind==='ready'){
+       const result=await timed(()=>current.predictInput(decision.input));
+       if(cancelled)return;
+       landmarkDiagnostics.recordModelCall(decision.items.map(item=>item.raw),result);
+       const label=result.prediction&&(result.score??0)>=.8&&(result.margin??0)>=.15?result.prediction:undefined;
+       const hands=decision.items.map(item=>Boolean(item.raw[126]||item.raw[127]));
+       const first=decision.items.find(item=>item.raw[126]||item.raw[127])!;
+       signLog.add({at:now,reason:'hands_gone',target:targetLabel,signMs:now-first.at,
+        longestGapMs:longestGap(decision.items,hands),prediction:result.prediction,score:result.score,
+        margin:result.margin,accepted:Boolean(label&&matchesTarget(label,targetLabel))});
+       if(label)completion.accept(label);
+       if(!completion.completed())notifyStatus({phase:'running',message:'Recognition running · Try again with a complete sign',version:current.version});
+      }
+     }else if(current.category==='alphabet'&&!signCapture){
       const result=present?await predict([frame]):undefined;
       if(cancelled)return;
       const lockInput={now:performance.now(),present,label:result?.prediction,score:result?.score,margin:result?.margin,steady:isSteady(previous,frame,motionLimit(settings.lock)),maxGapMs:Math.max(600,previousProcessingMs+(performance.now()-frameStarted)+350)};
@@ -133,7 +154,7 @@ export function CategoryRecognition({category,targetLabel,video,active,onCorrect
       notifyStatus({phase:'running',message:present?'Recognition running · Hold it steady':'Recognition running · Show your hand',version:current.version});
       if(lock.locked){completion.accept(lock.locked);lock=emptyLock();}
      }else{
-      const signing=current.category==='alphabet'?'Recognition running · Hold the letter':'Recognition running · Checking…';
+      const signing=current.category==='alphabet'?'Recognition running · Perform the full sign, then lower your hand':'Recognition running · Checking…';
       // Family's model also reads where the hands are against the face, so the face must be in the picture.
       const noFace=current.faceFound(frame)===false;
       notifyStatus({phase:'running',message:!present?'Recognition running · Show your hand':noFace?'Recognition running · Show your face too':signing,version:current.version});
@@ -205,7 +226,7 @@ export function CategoryRecognition({category,targetLabel,video,active,onCorrect
       }
      }
     }
-   }catch(error){if(!cancelled){lock=emptyLock();frames=[];start=0;sliding=newWindow();segmenter=newSegmenter();early=newEarly();agreed=0;notifyStatus({phase:'error',message:error instanceof Error?error.message:'Recognition failed.'});}}
+   }catch(error){if(!cancelled){lock=emptyLock();frames=[];start=0;sliding=newWindow();segmenter=newSegmenter();early=newEarly();agreed=0;recorded=createRecordedSignCapture();notifyStatus({phase:'error',message:error instanceof Error?error.message:'Recognition failed.'});}}
    finally{if(timing&&!cancelled)recognitionMetrics.frame(timing);if(ownsInference)inFlight.current=false;if(!cancelled&&!completion.completed())timer=setTimeout(run,category==='alphabet'&&!(current&&usesSignCapture(current,settings))?settings.alphabetPollMs:40);}
   };
   void run();return()=>{cancelled=true;clearTimeout(timer);notifyHold(null);};

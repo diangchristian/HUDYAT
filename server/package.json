@@ -19,7 +19,9 @@
     "db:backup-local": "tsx prisma/scripts/backupToLocal.ts",
     "predev": "prisma generate",
     "prebuild": "prisma generate",
-    "premodels:register": "prisma generate"
+    "premodels:register": "prisma generate",
+    "models:alphabet-signs": "tsx prisma/scripts/ensureAlphabetExtensions.ts",
+    "test:alphabet-signs": "tsx --test tests/alphabet-extensions.test.ts"
   },
   "keywords": [],
   "author": "",

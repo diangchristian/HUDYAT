@@ -27,6 +27,7 @@ export function createTimedSegmenter<T>({endAbsentS=END_ABSENT_S,maxWindowS=MAX_
  };
  return {
   get signing(){return active!==null;},
+  get needsRest(){return waitingForRest;},
   /** now: the frame's time in ms. Returns the sign when it has ended, else null. */
   push(item:T,present:boolean,now:number):TimedSign<T>|null{
    const entry={item,at:now,present};

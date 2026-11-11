@@ -3,13 +3,14 @@ import express from "express";
 import path from "node:path";
 import { readFile } from "node:fs/promises";
 import { prisma } from "../config/db.js";
-import { FILE_MODEL_CATEGORIES } from "../config/file-models.js";
+import { FILE_MODEL_CATEGORIES, fileModelId } from "../config/file-models.js";
 const router=Router();
 // These categories use the release in model-assets/catalog.json (the HUDYAT Trainer models), not the one in the database.
 async function fileRelease(name:string){
- if(!FILE_MODEL_CATEGORIES.includes(name.toLowerCase()))return null;
+ const id=fileModelId(name);
+ if(!FILE_MODEL_CATEGORIES.includes(id))return null;
  const catalog=JSON.parse(await readFile(path.resolve('model-assets/catalog.json'),'utf8'));
- const entry=catalog.categories.find((e:{id:string;available:boolean})=>e.id===name.toLowerCase()&&e.available);
+ const entry=catalog.categories.find((e:{id:string;available:boolean})=>e.id===id&&e.available);
  if(!entry)return null;
  const release={...entry,name};
  for(const field of ['modelUrl','weightsUrl','handUrl','faceUrl'])if(entry[field])release[field]='/api/models/files/'+entry[field].replace(/^\.\//,'');

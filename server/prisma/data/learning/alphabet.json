@@ -98,87 +98,99 @@
     "referenceImageUrl": "https://res.cloudinary.com/ducnmdeii/image/upload/v1789227929/fsl-pwa/alphabet/n.jpg"
   },
   {
+    "label": "Ñ",
+    "meaning": "The letter Ñ in the Filipino Sign Language alphabet.",
+    "exampleUsage": "",
+    "displayOrder": 15
+  },
+  {
+    "label": "Ng",
+    "meaning": "Ng in the Filipino Sign Language alphabet.",
+    "exampleUsage": "",
+    "displayOrder": 16
+  },
+  {
     "label": "O",
     "meaning": "The letter O in the Filipino Sign Language alphabet.",
     "exampleUsage": "O is the first letter in the word 'orange'.",
-    "displayOrder": 15,
+    "displayOrder": 17,
     "referenceImageUrl": "https://res.cloudinary.com/ducnmdeii/image/upload/v1789227930/fsl-pwa/alphabet/o.jpg"
   },
   {
     "label": "P",
     "meaning": "The letter P in the Filipino Sign Language alphabet.",
     "exampleUsage": "P is the first letter in the word 'pencil'.",
-    "displayOrder": 16,
+    "displayOrder": 18,
     "referenceImageUrl": "https://res.cloudinary.com/ducnmdeii/image/upload/v1789227931/fsl-pwa/alphabet/p.jpg"
   },
   {
     "label": "Q",
     "meaning": "The letter Q in the Filipino Sign Language alphabet.",
     "exampleUsage": "Q is the first letter in the word 'queen'.",
-    "displayOrder": 17,
+    "displayOrder": 19,
     "referenceImageUrl": "https://res.cloudinary.com/ducnmdeii/image/upload/v1789227932/fsl-pwa/alphabet/q.jpg"
   },
   {
     "label": "R",
     "meaning": "The letter R in the Filipino Sign Language alphabet.",
     "exampleUsage": "R is the first letter in the word 'rabbit'.",
-    "displayOrder": 18,
+    "displayOrder": 20,
     "referenceImageUrl": "https://res.cloudinary.com/ducnmdeii/image/upload/v1789227933/fsl-pwa/alphabet/r.jpg"
   },
   {
     "label": "S",
     "meaning": "The letter S in the Filipino Sign Language alphabet.",
     "exampleUsage": "S is the first letter in the word 'school'.",
-    "displayOrder": 19,
+    "displayOrder": 21,
     "referenceImageUrl": "https://res.cloudinary.com/ducnmdeii/image/upload/v1789227934/fsl-pwa/alphabet/s.jpg"
   },
   {
     "label": "T",
     "meaning": "The letter T in the Filipino Sign Language alphabet.",
     "exampleUsage": "T is the first letter in the word 'teacher'.",
-    "displayOrder": 20,
+    "displayOrder": 22,
     "referenceImageUrl": "https://res.cloudinary.com/ducnmdeii/image/upload/v1789227935/fsl-pwa/alphabet/t.jpg"
   },
   {
     "label": "U",
     "meaning": "The letter U in the Filipino Sign Language alphabet.",
     "exampleUsage": "U is the first letter in the word 'umbrella'.",
-    "displayOrder": 21,
+    "displayOrder": 23,
     "referenceImageUrl": "https://res.cloudinary.com/ducnmdeii/image/upload/v1789227936/fsl-pwa/alphabet/u.jpg"
   },
   {
     "label": "V",
     "meaning": "The letter V in the Filipino Sign Language alphabet.",
     "exampleUsage": "V is the first letter in the word 'van'.",
-    "displayOrder": 22,
+    "displayOrder": 24,
     "referenceImageUrl": "https://res.cloudinary.com/ducnmdeii/image/upload/v1789227937/fsl-pwa/alphabet/v.jpg"
   },
   {
     "label": "W",
     "meaning": "The letter W in the Filipino Sign Language alphabet.",
     "exampleUsage": "W is the first letter in the word 'water'.",
-    "displayOrder": 23,
+    "displayOrder": 25,
     "referenceImageUrl": "https://res.cloudinary.com/ducnmdeii/image/upload/v1789227938/fsl-pwa/alphabet/w.jpg"
   },
   {
     "label": "X",
     "meaning": "The letter X in the Filipino Sign Language alphabet.",
     "exampleUsage": "X is the first letter in the word 'xylophone'.",
-    "displayOrder": 24,
+    "displayOrder": 26,
     "referenceImageUrl": "https://res.cloudinary.com/ducnmdeii/image/upload/v1789227939/fsl-pwa/alphabet/x.jpg"
   },
   {
     "label": "Y",
     "meaning": "The letter Y in the Filipino Sign Language alphabet.",
     "exampleUsage": "Y is the first letter in the word 'yellow'.",
-    "displayOrder": 25,
+    "displayOrder": 27,
     "referenceImageUrl": "https://res.cloudinary.com/ducnmdeii/image/upload/v1789227941/fsl-pwa/alphabet/y.jpg"
   },
   {
     "label": "Z",
     "meaning": "The letter Z in the Filipino Sign Language alphabet.",
     "exampleUsage": "Z is the last letter of the alphabet.",
-    "displayOrder": 26,
+    "displayOrder": 28,
     "referenceImageUrl": "https://res.cloudinary.com/ducnmdeii/image/upload/v1789227942/fsl-pwa/alphabet/z.jpg"
   }
 ]

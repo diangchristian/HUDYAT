@@ -1,0 +1,13 @@
+{
+  "category": "calendar",
+  "date": "2026-11-12T00:13:28",
+  "export_name": "calendar-dabest-raw-v1",
+  "version": "8f1bc49d95cbbcc4",
+  "n_samples": 8,
+  "real_clips": true,
+  "max_abs_diff": 2.384185791015625e-07,
+  "same_top1": 1.0,
+  "ok": true,
+  "model_run_id": "final-calendar-20261111-164442",
+  "method": "numpy forward pass of the app's network from model.json + weights.bin, on the app's frame layout, vs the Keras model on the trainer's"
+}

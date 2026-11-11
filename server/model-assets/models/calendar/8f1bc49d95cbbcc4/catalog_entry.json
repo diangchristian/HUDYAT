@@ -1,0 +1,15 @@
+{
+  "id": "calendar",
+  "name": "Calendar",
+  "available": true,
+  "version": "8f1bc49d95cbbcc4",
+  "modelUrl": "./models/calendar/8f1bc49d95cbbcc4/model.json",
+  "weightsUrl": "./models/calendar/8f1bc49d95cbbcc4/weights.bin",
+  "modelSha256": "f87294e31b100c696cf31208cf99349959756c9efb3d210d0041197d8a960f6b",
+  "weightsSha256": "8f1bc49d95cbbcc4cb6094bdb49d93c773764ed181c3abd0a4b9935b2bb5ef38",
+  "bytes": 1952903,
+  "handUrl": "./shared/fbc2a30080c3c557093b5ddfc334698132eb341044ccee322ccf8bcf3607cde1.task",
+  "handSha256": "fbc2a30080c3c557093b5ddfc334698132eb341044ccee322ccf8bcf3607cde1",
+  "handBytes": 7819105,
+  "classes": 22
+}

@@ -1,0 +1,13 @@
+{
+  "category": "wh_questions",
+  "date": "2026-11-12T00:51:58",
+  "export_name": "wh-questions-dabest-recorder-v1",
+  "version": "545f7bcbe18ccf63",
+  "n_samples": 8,
+  "real_clips": false,
+  "max_abs_diff": 1.1920928955078125e-07,
+  "same_top1": 1.0,
+  "ok": true,
+  "model_run_id": "final-wh_questions-20261105-091232",
+  "method": "numpy forward pass of the app's network from model.json + weights.bin, on the app's frame layout, vs the Keras model on the trainer's"
+}
