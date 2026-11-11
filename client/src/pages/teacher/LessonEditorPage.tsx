@@ -42,8 +42,10 @@ import { useTeacherLesson } from "@/hooks/use-teacher-lesson";
 import { lessonMediaUploadKey } from "@/hooks/use-upload-lesson-media";
 import { useUpdateTeacherLesson } from "@/hooks/use-update-teacher-lesson";
 import { plural } from "@/lib/format";
-import { signMeaningText, signWhenToUseText } from "@/lib/lesson-text";
+import { signMeaningText, signWhenToUseText, usedPictures } from "@/lib/lesson-text";
 import { cn } from "@/lib/utils";
+
+import LessonPictures from "./lesson-pictures";
 
 const MAX_TEXT_LENGTH = 500;
 
@@ -58,6 +60,9 @@ const toDraft = (lesson: EditableLesson) => ({
     exampleUsage: sign.exampleUsage ?? "",
     referenceImageUrl: sign.referenceImageUrl ?? "",
     referenceVideoUrl: sign.referenceVideoUrl ?? "",
+    mainPicture: sign.mainPicture ?? "",
+    meaningPictures: sign.meaningPictures,
+    exampleUsagePictures: sign.exampleUsagePictures,
   })),
 });
 
@@ -79,6 +84,7 @@ function TextField({
   value,
   learnerText,
   onChange,
+  children,
 }: {
   id: string;
   label: string;
@@ -87,6 +93,7 @@ function TextField({
   value: string;
   learnerText: string;
   onChange: (value: string) => void;
+  children: React.ReactNode;
 }) {
   const isEmpty = !value.trim();
 
@@ -139,6 +146,7 @@ function TextField({
           {value.length}/{MAX_TEXT_LENGTH}
         </span>
       </div>
+      {children}
     </div>
   );
 }
@@ -224,12 +232,14 @@ function SignCard({
   total,
   isSaving,
   onChange,
+  lessonPictures,
 }: {
   sign: DraftSign;
   position: number;
   total: number;
   isSaving: boolean;
   onChange: (changes: Partial<DraftSign>) => void;
+  lessonPictures: string[];
 }) {
   return (
     <StaffCard className="space-y-5 p-5 sm:p-6">
@@ -266,7 +276,19 @@ function SignCard({
             value={sign.meaning}
             learnerText={signMeaningText(sign.label, sign.meaning)}
             onChange={(meaning) => onChange({ meaning })}
-          />
+          >
+            <LessonPictures
+              field="meaning"
+              text={sign.meaning}
+              label={sign.label}
+              pictures={sign.meaningPictures}
+              onChange={(meaningPictures) => onChange({ meaningPictures })}
+              otherPictures={sign.exampleUsagePictures}
+              recent={lessonPictures}
+              mainPicture={sign.mainPicture}
+              onMainPictureChange={(mainPicture) => onChange({ mainPicture })}
+            />
+          </TextField>
           <TextField
             id={`${sign.id}-usage`}
             label="When to use"
@@ -275,7 +297,17 @@ function SignCard({
             value={sign.exampleUsage}
             learnerText={signWhenToUseText(sign.label, sign.exampleUsage)}
             onChange={(exampleUsage) => onChange({ exampleUsage })}
-          />
+          >
+            <LessonPictures
+              field="usage"
+              text={sign.exampleUsage}
+              label={sign.label}
+              pictures={sign.exampleUsagePictures}
+              onChange={(exampleUsagePictures) => onChange({ exampleUsagePictures })}
+              otherPictures={sign.meaningPictures}
+              recent={lessonPictures}
+            />
+          </TextField>
         </div>
       </div>
     </StaffCard>
@@ -308,6 +340,16 @@ function LessonForm({ lesson }: { lesson: EditableLesson }) {
   }, [hasUnsavedWork]);
 
   const readyCount = draft.signs.filter(isReady).length;
+  // Offered for reuse in every picture picker: "mom" or "morning" come up across signs.
+  const lessonPictures = [
+    ...new Set(
+      draft.signs.flatMap((sign) => [
+        sign.mainPicture,
+        ...Object.values(sign.meaningPictures),
+        ...Object.values(sign.exampleUsagePictures),
+      ]),
+    ),
+  ].filter(Boolean);
   const needingContent = draft.signs.length - readyCount;
 
   const clearSaveMessages = () => {
@@ -346,6 +388,9 @@ function LessonForm({ lesson }: { lesson: EditableLesson }) {
           exampleUsage: sign.exampleUsage,
           referenceImageUrl: sign.referenceImageUrl,
           referenceVideoUrl: sign.referenceVideoUrl,
+          mainPicture: sign.mainPicture || null,
+          meaningPictures: usedPictures(sign.meaning, sign.label, sign.meaningPictures),
+          exampleUsagePictures: usedPictures(sign.exampleUsage, sign.label, sign.exampleUsagePictures),
         })),
       },
       {
@@ -440,6 +485,7 @@ function LessonForm({ lesson }: { lesson: EditableLesson }) {
               total={draft.signs.length}
               isSaving={updateLesson.isPending}
               onChange={(changes) => updateSign(sign.id, changes)}
+              lessonPictures={lessonPictures}
             />
           ))
         )}

@@ -6,7 +6,7 @@
  * Signs and media come from the lesson data, which is read-only here.
  */
 import { useState } from "react";
-import { ChevronLeft, ChevronRight, House, LayoutGrid, RotateCcw, Star } from "lucide-react";
+import { ArrowLeft, ArrowRight, House, LayoutGrid, RotateCcw, Star } from "lucide-react";
 import { useNavigate, useParams } from "react-router";
 
 import { CATEGORIES } from "@/components/common/categories.constants";
@@ -27,8 +27,9 @@ import "./category-learn/learn-session.css";
 
 const CHEER_MS = 1500;
 
+// An arrow plus a word, like the lesson's NEXT button: clearer to young readers than a lone ‹ ›.
 const switchButton =
-  "flex size-12 shrink-0 items-center justify-center rounded-2xl border-b-4 border-[#CECECE] bg-white text-[#4B4B4B] focus-visible:ring-4 focus-visible:ring-hudyat-gold focus-visible:outline-none active:translate-y-0.5 active:border-b-2 sm:size-14";
+  "flex h-12 shrink-0 items-center justify-center gap-1 rounded-2xl border-b-4 border-[#CECECE] bg-white px-2.5 text-sm font-black text-[#4B4B4B] uppercase focus-visible:ring-4 focus-visible:ring-hudyat-gold focus-visible:outline-none active:translate-y-0.5 active:border-b-2 sm:h-14 sm:gap-1.5 sm:px-4 sm:text-base";
 
 function PracticeSession({ title, prompts }: { title: string; prompts: LessonPrompt[] }) {
   const navigate = useNavigate();
@@ -109,16 +110,17 @@ function PracticeSession({ title, prompts }: { title: string; prompts: LessonPro
           </div>
         ) : (
           <>
-            {/* SIGN SWITCHER: the sign's name is the heading, with big ◀ ▶ either side. Dots show progress
+            {/* SIGN SWITCHER: the sign's name is the heading, with ← BACK and NEXT → either side. Dots show progress
                 (gold star = signed); "All signs" opens a grid for jumping straight to one. */}
             <div className="flex shrink-0 items-center gap-2 sm:gap-3">
               <button
                 type="button"
-                aria-label="Previous sign"
+                aria-label="Back to the previous sign"
                 onClick={() => go(index - 1)}
                 className={switchButton}
               >
-                <ChevronLeft aria-hidden="true" className="size-7" strokeWidth={3} />
+                <ArrowLeft aria-hidden="true" className="size-6" strokeWidth={3} />
+                Back
               </button>
               <div className="min-w-0 flex-1 text-center">
                 <h1 key={prompt.label} className="ls-rise text-xl leading-snug font-bold text-balance text-[#3C3C3C] sm:text-2xl md:text-3xl">
@@ -142,7 +144,8 @@ function PracticeSession({ title, prompts }: { title: string; prompts: LessonPro
                 onClick={() => go(index + 1)}
                 className={switchButton}
               >
-                <ChevronRight aria-hidden="true" className="size-7" strokeWidth={3} />
+                Next
+                <ArrowRight aria-hidden="true" className="size-6" strokeWidth={3} />
               </button>
             </div>
 

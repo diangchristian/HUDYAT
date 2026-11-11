@@ -39,6 +39,7 @@ import {
 import { formatDate } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import type { ProgressCategory } from "@/api/progress-api";
+import type { LearnerDetail } from "@/api/teacher-api";
 import { useLearnerDetail } from "@/hooks/use-learner-detail";
 import { useSetLearnerStatus } from "@/hooks/use-set-learner-status";
 
@@ -63,9 +64,27 @@ const STATUS_PRESENTATION: Record<
   },
 };
 
+// The best Sign test go, and what to practise: the signs missed on it.
+function SignTestCell({ result }: { result?: LearnerDetail["signTests"][number] }) {
+  if (!result) return "—";
+  return (
+    <div className="max-w-56">
+      <p className="font-semibold">
+        Best {result.score}/{result.total}
+        {result.passed && " · passed"}
+      </p>
+      <p className="text-xs whitespace-normal text-muted-foreground">
+        {result.missedSigns.length ? `Missed: ${result.missedSigns.join(", ")}` : "No signs missed"}
+        {` · ${result.attempts} ${result.attempts === 1 ? "try" : "tries"}`}
+      </p>
+    </div>
+  );
+}
+
 export default function StudentDetailPage() {
   const { learnerId } = useParams();
   const { data, isLoading, error, refetch } = useLearnerDetail(learnerId);
+  const signTestsByLesson = new Map(data?.signTests.map((result) => [result.categoryId, result]));
   const setStatus = useSetLearnerStatus();
   const [resetOpen, setResetOpen] = useState(false);
   const [statusOpen, setStatusOpen] = useState(false);
@@ -226,6 +245,9 @@ export default function StudentDetailPage() {
                   <TableHead className="hidden sm:table-cell">
                     Latest quiz
                   </TableHead>
+                  <TableHead className="hidden md:table-cell">
+                    Sign test
+                  </TableHead>
                   <TableHead className="pr-6 text-right">Status</TableHead>
                 </TableRow>
               </TableHeader>
@@ -266,6 +288,9 @@ export default function StudentDetailPage() {
                           {category.latestAssessment
                             ? `${category.latestAssessment.percentage}%`
                             : "—"}
+                        </TableCell>
+                        <TableCell className="hidden md:table-cell">
+                          <SignTestCell result={signTestsByLesson.get(category.id)} />
                         </TableCell>
                         <TableCell className="pr-6 text-right">
                           <Badge

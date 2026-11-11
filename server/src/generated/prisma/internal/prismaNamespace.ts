@@ -412,7 +412,8 @@ export const ModelName = {
   PracticeSession: 'PracticeSession',
   CategoryProgress: 'CategoryProgress',
   SystemSetting: 'SystemSetting',
-  AuditLog: 'AuditLog'
+  AuditLog: 'AuditLog',
+  SignTestAttempt: 'SignTestAttempt'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -428,7 +429,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "learnerProfile" | "teacherProfile" | "learningArea" | "category" | "fslGesture" | "categoryGesture" | "assessment" | "assessmentQuestion" | "questionChoice" | "assessmentAttempt" | "assessmentAnswer" | "practiceSession" | "categoryProgress" | "systemSetting" | "auditLog"
+    modelProps: "user" | "learnerProfile" | "teacherProfile" | "learningArea" | "category" | "fslGesture" | "categoryGesture" | "assessment" | "assessmentQuestion" | "questionChoice" | "assessmentAttempt" | "assessmentAnswer" | "practiceSession" | "categoryProgress" | "systemSetting" | "auditLog" | "signTestAttempt"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1616,6 +1617,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    SignTestAttempt: {
+      payload: Prisma.$SignTestAttemptPayload<ExtArgs>
+      fields: Prisma.SignTestAttemptFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SignTestAttemptFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SignTestAttemptPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SignTestAttemptFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SignTestAttemptPayload>
+        }
+        findFirst: {
+          args: Prisma.SignTestAttemptFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SignTestAttemptPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SignTestAttemptFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SignTestAttemptPayload>
+        }
+        findMany: {
+          args: Prisma.SignTestAttemptFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SignTestAttemptPayload>[]
+        }
+        create: {
+          args: Prisma.SignTestAttemptCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SignTestAttemptPayload>
+        }
+        createMany: {
+          args: Prisma.SignTestAttemptCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SignTestAttemptCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SignTestAttemptPayload>[]
+        }
+        delete: {
+          args: Prisma.SignTestAttemptDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SignTestAttemptPayload>
+        }
+        update: {
+          args: Prisma.SignTestAttemptUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SignTestAttemptPayload>
+        }
+        deleteMany: {
+          args: Prisma.SignTestAttemptDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SignTestAttemptUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SignTestAttemptUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SignTestAttemptPayload>[]
+        }
+        upsert: {
+          args: Prisma.SignTestAttemptUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SignTestAttemptPayload>
+        }
+        aggregate: {
+          args: Prisma.SignTestAttemptAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSignTestAttempt>
+        }
+        groupBy: {
+          args: Prisma.SignTestAttemptGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SignTestAttemptGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SignTestAttemptCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SignTestAttemptCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1731,6 +1806,8 @@ export const FslGestureScalarFieldEnum = {
   modelClass: 'modelClass',
   referenceImageUrl: 'referenceImageUrl',
   referenceVideoUrl: 'referenceVideoUrl',
+  mainPicture: 'mainPicture',
+  meaningPictures: 'meaningPictures',
   isValidated: 'isValidated',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -1744,6 +1821,7 @@ export const CategoryGestureScalarFieldEnum = {
   categoryId: 'categoryId',
   gestureId: 'gestureId',
   exampleUsage: 'exampleUsage',
+  exampleUsagePictures: 'exampleUsagePictures',
   displayOrder: 'displayOrder',
   createdAt: 'createdAt'
 } as const
@@ -1879,6 +1957,19 @@ export const AuditLogScalarFieldEnum = {
 export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
 
 
+export const SignTestAttemptScalarFieldEnum = {
+  id: 'id',
+  learnerId: 'learnerId',
+  categoryId: 'categoryId',
+  score: 'score',
+  total: 'total',
+  missedGestureIds: 'missedGestureIds',
+  completedAt: 'completedAt'
+} as const
+
+export type SignTestAttemptScalarFieldEnum = (typeof SignTestAttemptScalarFieldEnum)[keyof typeof SignTestAttemptScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -1893,6 +1984,13 @@ export const NullableJsonNullValueInput = {
 } as const
 
 export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
 export const QueryMode = {
@@ -2239,6 +2337,7 @@ export type GlobalOmitConfig = {
   categoryProgress?: Prisma.CategoryProgressOmit
   systemSetting?: Prisma.SystemSettingOmit
   auditLog?: Prisma.AuditLogOmit
+  signTestAttempt?: Prisma.SignTestAttemptOmit
 }
 
 /* Types for Logging */

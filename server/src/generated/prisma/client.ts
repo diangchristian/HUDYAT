@@ -121,3 +121,9 @@ export type SystemSetting = Prisma.SystemSettingModel
  * 
  */
 export type AuditLog = Prisma.AuditLogModel
+/**
+ * Model SignTestAttempt
+ * One go at a lesson's Sign test: the learner signs every sign of the lesson with the camera.
+ * Optional practice on top of the quiz; it never locks or unlocks lessons.
+ */
+export type SignTestAttempt = Prisma.SignTestAttemptModel

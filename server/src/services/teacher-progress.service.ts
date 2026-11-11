@@ -1,6 +1,8 @@
 import { prisma } from "../config/db.js";
 import { httpError } from "../utils/httpError.js";
+import { signTestPasses } from "../utils/passing.js";
 import { getMyProgress } from "./progress.service.js";
+import { bestSignTests } from "./sign-test.service.js";
 
 const toPercentage = (score: number, totalPoints: number) =>
   totalPoints > 0 ? Math.round((score / totalPoints) * 100) : 0;
@@ -194,7 +196,7 @@ export const getLearnerDetail = async (learnerId: string) => {
     throw httpError(404, "Learner not found.");
   }
 
-  const [progress, attempts, practiceTotals] = await Promise.all([
+  const [progress, attempts, practiceTotals, signTests] = await Promise.all([
     getMyProgress(learnerId),
     prisma.assessmentAttempt.findMany({
       where: { learnerId, completedAt: { not: null } },
@@ -206,7 +208,19 @@ export const getLearnerDetail = async (learnerId: string) => {
       where: { learnerId },
       _count: { _all: true },
     }),
+    bestSignTests(learnerId),
   ]);
+
+  // The best go's missed signs, by name, so a teacher knows what to practise.
+  const missedIds = [...signTests.values()].flatMap((best) => best.missedGestureIds as string[]);
+  const signLabels = new Map(
+    (
+      await prisma.fslGesture.findMany({
+        where: { id: { in: missedIds } },
+        select: { id: true, label: true },
+      })
+    ).map((sign) => [sign.id, sign.label]),
+  );
 
   const correctPractice =
     practiceTotals.find((row) => row.isCorrect)?._count._all ?? 0;
@@ -232,5 +246,14 @@ export const getLearnerDetail = async (learnerId: string) => {
       correctAttempts: correctPractice,
       accuracy: toPercentage(correctPractice, totalPractice),
     },
+    signTests: [...signTests.values()].map((best) => ({
+      categoryId: best.categoryId,
+      score: best.score,
+      total: best.total,
+      passed: signTestPasses(best.score, best.total),
+      missedSigns: (best.missedGestureIds as string[]).map((id) => signLabels.get(id) ?? "?"),
+      attempts: best.attempts,
+      completedAt: best.completedAt,
+    })),
   };
 };

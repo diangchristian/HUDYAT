@@ -136,6 +136,37 @@ test("a teacher's lesson edits are live for learners straight away", async () =>
   assert.equal(taught.gesture.referenceVideoUrl, uploaded("video", "new.mp4"));
 });
 
+test("pictures a teacher adds reach learners, and saves without them keep them", async () => {
+  const { lesson, sign } = await createLesson();
+  const pictures = {
+    mainPicture: "🌅",
+    meaningPictures: { morning: "☀️", greeting: uploaded("image", "wave.png") },
+    exampleUsagePictures: { "good morning": "🧑‍🤝‍🧑" },
+  };
+
+  const saved = await patchLesson(lesson.id, { signs: [signInput(sign.id, pictures)] });
+  assert.equal(saved.status, 200);
+  assert.deepEqual(
+    {
+      mainPicture: saved.data.signs[0].mainPicture,
+      meaningPictures: saved.data.signs[0].meaningPictures,
+      exampleUsagePictures: saved.data.signs[0].exampleUsagePictures,
+    },
+    pictures,
+  );
+
+  // An older editor that doesn't send pictures mustn't wipe them.
+  assert.equal((await patchLesson(lesson.id, { signs: [signInput(sign.id)] })).status, 200);
+
+  const { data } = await ctx.request("GET", `/api/learning/categories/${lesson.id}`, {
+    token: learnerToken,
+  });
+  const taught = data.categoryGestures[0];
+  assert.equal(taught.gesture.mainPicture, "🌅");
+  assert.deepEqual(taught.gesture.meaningPictures, pictures.meaningPictures);
+  assert.deepEqual(taught.exampleUsagePictures, pictures.exampleUsagePictures);
+});
+
 test("a teacher loads a lesson's editable content, with empty text as null", async () => {
   const { lesson, sign } = await createLesson();
   await patchLesson(lesson.id, {
@@ -155,6 +186,9 @@ test("a teacher loads a lesson's editable content, with empty text as null", asy
       exampleUsage: null,
       referenceImageUrl: "/signs/original.png",
       referenceVideoUrl: "/signs/original.mp4",
+      mainPicture: null,
+      meaningPictures: {},
+      exampleUsagePictures: {},
     },
   ]);
 });
@@ -224,6 +258,14 @@ test("invalid edits are rejected and save nothing", async () => {
     [{ signs: [signInput(sign.id, { referenceImageUrl: "https://res.cloudinary.com/someone-else/image/upload/a.png" })] }, 400],
     [{ signs: [signInput(sign.id, { referenceImageUrl: uploaded("video", "a.mp4") })] }, 400],
     [{ signs: [signInput(sign.id, { meaning: "x".repeat(501) })] }, 400],
+    [{ signs: [signInput(sign.id, { mainPicture: "hello" })] }, 400],
+    [{ signs: [signInput(sign.id, { mainPicture: "123" })] }, 400],
+    [{ signs: [signInput(sign.id, { meaningPictures: { hi: "https://example.com/a.png" } })] }, 400],
+    [{ signs: [signInput(sign.id, { exampleUsagePictures: { hi: uploaded("video", "a.mp4") } })] }, 400],
+    [{ signs: [signInput(sign.id, { meaningPictures: { "<b>": "👋" } })] }, 400],
+    [{ signs: [signInput(sign.id, { mainPicture: "🍎12" })] }, 400],
+    // The same word in both texts: each picture is still checked.
+    [{ signs: [signInput(sign.id, { meaningPictures: { hi: "https://example.com/a.png" }, exampleUsagePictures: { hi: "👋" } })] }, 400],
     [{ description: "x".repeat(501) }, 400],
     [{ description: "Should not save", signs: [signInput(otherSign.id)] }, 404],
   ];

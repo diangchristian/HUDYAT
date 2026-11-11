@@ -31,6 +31,7 @@ export type FslGestureMinAggregateOutputType = {
   modelClass: string | null
   referenceImageUrl: string | null
   referenceVideoUrl: string | null
+  mainPicture: string | null
   isValidated: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -43,6 +44,7 @@ export type FslGestureMaxAggregateOutputType = {
   modelClass: string | null
   referenceImageUrl: string | null
   referenceVideoUrl: string | null
+  mainPicture: string | null
   isValidated: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -55,6 +57,8 @@ export type FslGestureCountAggregateOutputType = {
   modelClass: number
   referenceImageUrl: number
   referenceVideoUrl: number
+  mainPicture: number
+  meaningPictures: number
   isValidated: number
   createdAt: number
   updatedAt: number
@@ -69,6 +73,7 @@ export type FslGestureMinAggregateInputType = {
   modelClass?: true
   referenceImageUrl?: true
   referenceVideoUrl?: true
+  mainPicture?: true
   isValidated?: true
   createdAt?: true
   updatedAt?: true
@@ -81,6 +86,7 @@ export type FslGestureMaxAggregateInputType = {
   modelClass?: true
   referenceImageUrl?: true
   referenceVideoUrl?: true
+  mainPicture?: true
   isValidated?: true
   createdAt?: true
   updatedAt?: true
@@ -93,6 +99,8 @@ export type FslGestureCountAggregateInputType = {
   modelClass?: true
   referenceImageUrl?: true
   referenceVideoUrl?: true
+  mainPicture?: true
+  meaningPictures?: true
   isValidated?: true
   createdAt?: true
   updatedAt?: true
@@ -178,6 +186,8 @@ export type FslGestureGroupByOutputType = {
   modelClass: string
   referenceImageUrl: string | null
   referenceVideoUrl: string | null
+  mainPicture: string | null
+  meaningPictures: runtime.JsonValue
   isValidated: boolean
   createdAt: Date
   updatedAt: Date
@@ -211,6 +221,8 @@ export type FslGestureWhereInput = {
   modelClass?: Prisma.StringFilter<"FslGesture"> | string
   referenceImageUrl?: Prisma.StringNullableFilter<"FslGesture"> | string | null
   referenceVideoUrl?: Prisma.StringNullableFilter<"FslGesture"> | string | null
+  mainPicture?: Prisma.StringNullableFilter<"FslGesture"> | string | null
+  meaningPictures?: Prisma.JsonFilter<"FslGesture">
   isValidated?: Prisma.BoolFilter<"FslGesture"> | boolean
   createdAt?: Prisma.DateTimeFilter<"FslGesture"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"FslGesture"> | Date | string
@@ -227,6 +239,8 @@ export type FslGestureOrderByWithRelationInput = {
   modelClass?: Prisma.SortOrder
   referenceImageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   referenceVideoUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  mainPicture?: Prisma.SortOrderInput | Prisma.SortOrder
+  meaningPictures?: Prisma.SortOrder
   isValidated?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -246,6 +260,8 @@ export type FslGestureWhereUniqueInput = Prisma.AtLeast<{
   meaning?: Prisma.StringNullableFilter<"FslGesture"> | string | null
   referenceImageUrl?: Prisma.StringNullableFilter<"FslGesture"> | string | null
   referenceVideoUrl?: Prisma.StringNullableFilter<"FslGesture"> | string | null
+  mainPicture?: Prisma.StringNullableFilter<"FslGesture"> | string | null
+  meaningPictures?: Prisma.JsonFilter<"FslGesture">
   isValidated?: Prisma.BoolFilter<"FslGesture"> | boolean
   createdAt?: Prisma.DateTimeFilter<"FslGesture"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"FslGesture"> | Date | string
@@ -262,6 +278,8 @@ export type FslGestureOrderByWithAggregationInput = {
   modelClass?: Prisma.SortOrder
   referenceImageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   referenceVideoUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  mainPicture?: Prisma.SortOrderInput | Prisma.SortOrder
+  meaningPictures?: Prisma.SortOrder
   isValidated?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -280,6 +298,8 @@ export type FslGestureScalarWhereWithAggregatesInput = {
   modelClass?: Prisma.StringWithAggregatesFilter<"FslGesture"> | string
   referenceImageUrl?: Prisma.StringNullableWithAggregatesFilter<"FslGesture"> | string | null
   referenceVideoUrl?: Prisma.StringNullableWithAggregatesFilter<"FslGesture"> | string | null
+  mainPicture?: Prisma.StringNullableWithAggregatesFilter<"FslGesture"> | string | null
+  meaningPictures?: Prisma.JsonWithAggregatesFilter<"FslGesture">
   isValidated?: Prisma.BoolWithAggregatesFilter<"FslGesture"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"FslGesture"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"FslGesture"> | Date | string
@@ -292,6 +312,8 @@ export type FslGestureCreateInput = {
   modelClass: string
   referenceImageUrl?: string | null
   referenceVideoUrl?: string | null
+  mainPicture?: string | null
+  meaningPictures?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isValidated?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -308,6 +330,8 @@ export type FslGestureUncheckedCreateInput = {
   modelClass: string
   referenceImageUrl?: string | null
   referenceVideoUrl?: string | null
+  mainPicture?: string | null
+  meaningPictures?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isValidated?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -324,6 +348,8 @@ export type FslGestureUpdateInput = {
   modelClass?: Prisma.StringFieldUpdateOperationsInput | string
   referenceImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referenceVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mainPicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  meaningPictures?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isValidated?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -340,6 +366,8 @@ export type FslGestureUncheckedUpdateInput = {
   modelClass?: Prisma.StringFieldUpdateOperationsInput | string
   referenceImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referenceVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mainPicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  meaningPictures?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isValidated?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -356,6 +384,8 @@ export type FslGestureCreateManyInput = {
   modelClass: string
   referenceImageUrl?: string | null
   referenceVideoUrl?: string | null
+  mainPicture?: string | null
+  meaningPictures?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isValidated?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -368,6 +398,8 @@ export type FslGestureUpdateManyMutationInput = {
   modelClass?: Prisma.StringFieldUpdateOperationsInput | string
   referenceImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referenceVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mainPicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  meaningPictures?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isValidated?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -380,6 +412,8 @@ export type FslGestureUncheckedUpdateManyInput = {
   modelClass?: Prisma.StringFieldUpdateOperationsInput | string
   referenceImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referenceVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mainPicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  meaningPictures?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isValidated?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -392,6 +426,8 @@ export type FslGestureCountOrderByAggregateInput = {
   modelClass?: Prisma.SortOrder
   referenceImageUrl?: Prisma.SortOrder
   referenceVideoUrl?: Prisma.SortOrder
+  mainPicture?: Prisma.SortOrder
+  meaningPictures?: Prisma.SortOrder
   isValidated?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -404,6 +440,7 @@ export type FslGestureMaxOrderByAggregateInput = {
   modelClass?: Prisma.SortOrder
   referenceImageUrl?: Prisma.SortOrder
   referenceVideoUrl?: Prisma.SortOrder
+  mainPicture?: Prisma.SortOrder
   isValidated?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -416,6 +453,7 @@ export type FslGestureMinOrderByAggregateInput = {
   modelClass?: Prisma.SortOrder
   referenceImageUrl?: Prisma.SortOrder
   referenceVideoUrl?: Prisma.SortOrder
+  mainPicture?: Prisma.SortOrder
   isValidated?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -489,6 +527,8 @@ export type FslGestureCreateWithoutCategoryGesturesInput = {
   modelClass: string
   referenceImageUrl?: string | null
   referenceVideoUrl?: string | null
+  mainPicture?: string | null
+  meaningPictures?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isValidated?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -504,6 +544,8 @@ export type FslGestureUncheckedCreateWithoutCategoryGesturesInput = {
   modelClass: string
   referenceImageUrl?: string | null
   referenceVideoUrl?: string | null
+  mainPicture?: string | null
+  meaningPictures?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isValidated?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -535,6 +577,8 @@ export type FslGestureUpdateWithoutCategoryGesturesInput = {
   modelClass?: Prisma.StringFieldUpdateOperationsInput | string
   referenceImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referenceVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mainPicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  meaningPictures?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isValidated?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -550,6 +594,8 @@ export type FslGestureUncheckedUpdateWithoutCategoryGesturesInput = {
   modelClass?: Prisma.StringFieldUpdateOperationsInput | string
   referenceImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referenceVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mainPicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  meaningPictures?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isValidated?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -565,6 +611,8 @@ export type FslGestureCreateWithoutAssessmentQuestionsInput = {
   modelClass: string
   referenceImageUrl?: string | null
   referenceVideoUrl?: string | null
+  mainPicture?: string | null
+  meaningPictures?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isValidated?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -580,6 +628,8 @@ export type FslGestureUncheckedCreateWithoutAssessmentQuestionsInput = {
   modelClass: string
   referenceImageUrl?: string | null
   referenceVideoUrl?: string | null
+  mainPicture?: string | null
+  meaningPictures?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isValidated?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -611,6 +661,8 @@ export type FslGestureUpdateWithoutAssessmentQuestionsInput = {
   modelClass?: Prisma.StringFieldUpdateOperationsInput | string
   referenceImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referenceVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mainPicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  meaningPictures?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isValidated?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -626,6 +678,8 @@ export type FslGestureUncheckedUpdateWithoutAssessmentQuestionsInput = {
   modelClass?: Prisma.StringFieldUpdateOperationsInput | string
   referenceImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referenceVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mainPicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  meaningPictures?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isValidated?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -641,6 +695,8 @@ export type FslGestureCreateWithoutQuestionChoicesInput = {
   modelClass: string
   referenceImageUrl?: string | null
   referenceVideoUrl?: string | null
+  mainPicture?: string | null
+  meaningPictures?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isValidated?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -656,6 +712,8 @@ export type FslGestureUncheckedCreateWithoutQuestionChoicesInput = {
   modelClass: string
   referenceImageUrl?: string | null
   referenceVideoUrl?: string | null
+  mainPicture?: string | null
+  meaningPictures?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isValidated?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -687,6 +745,8 @@ export type FslGestureUpdateWithoutQuestionChoicesInput = {
   modelClass?: Prisma.StringFieldUpdateOperationsInput | string
   referenceImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referenceVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mainPicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  meaningPictures?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isValidated?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -702,6 +762,8 @@ export type FslGestureUncheckedUpdateWithoutQuestionChoicesInput = {
   modelClass?: Prisma.StringFieldUpdateOperationsInput | string
   referenceImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referenceVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mainPicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  meaningPictures?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isValidated?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -717,6 +779,8 @@ export type FslGestureCreateWithoutPracticeSessionsInput = {
   modelClass: string
   referenceImageUrl?: string | null
   referenceVideoUrl?: string | null
+  mainPicture?: string | null
+  meaningPictures?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isValidated?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -732,6 +796,8 @@ export type FslGestureUncheckedCreateWithoutPracticeSessionsInput = {
   modelClass: string
   referenceImageUrl?: string | null
   referenceVideoUrl?: string | null
+  mainPicture?: string | null
+  meaningPictures?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isValidated?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -763,6 +829,8 @@ export type FslGestureUpdateWithoutPracticeSessionsInput = {
   modelClass?: Prisma.StringFieldUpdateOperationsInput | string
   referenceImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referenceVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mainPicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  meaningPictures?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isValidated?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -778,6 +846,8 @@ export type FslGestureUncheckedUpdateWithoutPracticeSessionsInput = {
   modelClass?: Prisma.StringFieldUpdateOperationsInput | string
   referenceImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referenceVideoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mainPicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  meaningPictures?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isValidated?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -851,6 +921,8 @@ export type FslGestureSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   modelClass?: boolean
   referenceImageUrl?: boolean
   referenceVideoUrl?: boolean
+  mainPicture?: boolean
+  meaningPictures?: boolean
   isValidated?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -868,6 +940,8 @@ export type FslGestureSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   modelClass?: boolean
   referenceImageUrl?: boolean
   referenceVideoUrl?: boolean
+  mainPicture?: boolean
+  meaningPictures?: boolean
   isValidated?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -880,6 +954,8 @@ export type FslGestureSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   modelClass?: boolean
   referenceImageUrl?: boolean
   referenceVideoUrl?: boolean
+  mainPicture?: boolean
+  meaningPictures?: boolean
   isValidated?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -892,12 +968,14 @@ export type FslGestureSelectScalar = {
   modelClass?: boolean
   referenceImageUrl?: boolean
   referenceVideoUrl?: boolean
+  mainPicture?: boolean
+  meaningPictures?: boolean
   isValidated?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type FslGestureOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "label" | "meaning" | "modelClass" | "referenceImageUrl" | "referenceVideoUrl" | "isValidated" | "createdAt" | "updatedAt", ExtArgs["result"]["fslGesture"]>
+export type FslGestureOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "label" | "meaning" | "modelClass" | "referenceImageUrl" | "referenceVideoUrl" | "mainPicture" | "meaningPictures" | "isValidated" | "createdAt" | "updatedAt", ExtArgs["result"]["fslGesture"]>
 export type FslGestureInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   assessmentQuestions?: boolean | Prisma.FslGesture$assessmentQuestionsArgs<ExtArgs>
   categoryGestures?: boolean | Prisma.FslGesture$categoryGesturesArgs<ExtArgs>
@@ -923,6 +1001,14 @@ export type $FslGesturePayload<ExtArgs extends runtime.Types.Extensions.Internal
     modelClass: string
     referenceImageUrl: string | null
     referenceVideoUrl: string | null
+    /**
+     * Picture shown beside the meaning: an emoji, or an uploaded image URL.
+     */
+    mainPicture: string | null
+    /**
+     * Pictures above words of the meaning, by word key (see client lesson-text.ts).
+     */
+    meaningPictures: runtime.JsonValue
     isValidated: boolean
     createdAt: Date
     updatedAt: Date
@@ -1359,6 +1445,8 @@ export interface FslGestureFieldRefs {
   readonly modelClass: Prisma.FieldRef<"FslGesture", 'String'>
   readonly referenceImageUrl: Prisma.FieldRef<"FslGesture", 'String'>
   readonly referenceVideoUrl: Prisma.FieldRef<"FslGesture", 'String'>
+  readonly mainPicture: Prisma.FieldRef<"FslGesture", 'String'>
+  readonly meaningPictures: Prisma.FieldRef<"FslGesture", 'Json'>
   readonly isValidated: Prisma.FieldRef<"FslGesture", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"FslGesture", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"FslGesture", 'DateTime'>

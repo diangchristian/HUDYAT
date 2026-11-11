@@ -15,7 +15,8 @@ import type { CategoryColor } from "@/components/common/categories.constants";
 import { LessonCharacter } from "@/components/common/learn-card/characters";
 import PracticeCamera from "@/components/common/practice-camera";
 import ReferenceMedia from "@/components/common/reference-media";
-import { readingParts, signMeaningText, signWhenToUseText } from "@/lib/lesson-text";
+import LessonPicture from "@/components/common/lesson-picture";
+import { pictureKey, readingParts, signMeaningText, signWhenToUseText, type Pictures } from "@/lib/lesson-text";
 import { categorySlug } from "@/lib/practice";
 import { cn } from "@/lib/utils";
 
@@ -25,49 +26,63 @@ import { WhenToUsePrototype, type WhenVariant } from "./when-to-use-prototype";
 // PROTOTYPE, delete me: whenVariant swaps the When to Use card.
 type CardProps = { prompt: LessonPrompt; title: string; color: CategoryColor; onCorrect: () => void; whenVariant?: WhenVariant };
 
-// Tapping a word lights it up, like pointing a finger while reading.
-function ReadingText({ text, label }: { text: string; label: string }) {
+// Tapping a word lights it up, like pointing a finger while reading. A teacher's picture sits above its word.
+function ReadingText({ text, label, pictures = {} }: { text: string; label: string; pictures?: Pictures }) {
   const [lit, setLit] = useState<ReadonlySet<number>>(new Set());
   return (
     <p className="text-xl leading-[1.9] font-semibold text-[#3C3C3C] sm:text-2xl">
-      {readingParts(text, label).map((part, i) =>
-        part.kind === "space" ? (
-          part.text
-        ) : (
+      {readingParts(text, label).map((part, i) => {
+        if (part.kind === "space") return part.text;
+        const picture = pictures[pictureKey(part.text)];
+        return (
           <span
             key={i}
             onClick={() => setLit((prev) => new Set(prev).add(i))}
             className={cn(
               "cursor-pointer rounded-md px-0.5 transition-colors duration-200",
+              // A pictured word is a chip, the same as in the teacher's preview (lesson-pictures.tsx).
+              picture && "my-1 inline-flex flex-col items-center rounded-xl border-2 border-hudyat-gold/40 bg-[#FFF8E7] px-1.5 pt-1 pb-0.5 align-bottom leading-snug font-black",
+              // After the chip, so the sign name's gold and the tap highlight still show on it.
               part.kind === "sign" ? "bg-hudyat-gold/35 font-black uppercase" : lit.has(i) && "bg-[#FFE58A]",
             )}
           >
+            {picture && <LessonPicture picture={picture} className="size-11 sm:size-12" />}
             {part.text}
           </span>
-        ),
-      )}
+        );
+      })}
     </p>
   );
 }
 
 function MeaningCard({ prompt }: CardProps) {
+  const pictures = prompt.meaningPictures ?? {};
+  // Pictures make some lines taller, so the notebook rules would no longer line up.
+  const ruled = Object.keys(pictures).length === 0;
   return (
     <div className="overflow-hidden rounded-3xl border-4 border-[#FBBF24] bg-white shadow-[0_6px_0_#0000001a]">
       <div
         className="relative py-5 pr-5 pl-9 sm:pl-12"
-        style={{
+        style={ruled ? {
           backgroundImage: "repeating-linear-gradient(transparent 0 calc(1.9em - 2px), #DCEBFA calc(1.9em - 2px) 1.9em)",
           backgroundPositionY: "1.25rem",
-        }}
+        } : undefined}
       >
         <span aria-hidden="true" className="absolute inset-y-0 left-5 w-0.5 bg-[#FCA5A5] sm:left-8" />
-        {prompt.referenceImageUrl && (
+        {/* The teacher's main picture shows what the word means; without one, the sign photo. */}
+        {(prompt.mainPicture || prompt.referenceImageUrl) && (
           <figure className="relative float-right mb-2 ml-3 w-28 rotate-3 rounded-lg bg-white p-1.5 pb-3 shadow-[0_4px_10px_#0000002a] sm:w-36">
             <span aria-hidden="true" className="absolute -top-2 left-1/2 h-4 w-12 -translate-x-1/2 -rotate-3 bg-[#FDE68A]/80" />
-            <ReferenceMedia imageUrl={prompt.referenceImageUrl} label={prompt.label} className="aspect-square rounded" />
+            {prompt.mainPicture ? (
+              <span role="img" aria-label={`Picture for ${prompt.label}`} className="block p-2">
+                <LessonPicture picture={prompt.mainPicture} className="aspect-square w-full" />
+              </span>
+            ) : (
+              <ReferenceMedia imageUrl={prompt.referenceImageUrl} label={prompt.label} className="aspect-square rounded" />
+            )}
           </figure>
         )}
-        <ReadingText text={signMeaningText(prompt.label, prompt.meaning)} label={prompt.label} />
+        <ReadingText text={signMeaningText(prompt.label, prompt.meaning)} label={prompt.label} pictures={pictures} />
       </div>
       <p className="border-t-2 border-dashed border-[#FDE68A] bg-[#FFFBEB] px-5 py-2 text-sm font-bold text-[#92700C]">
         Tap the words as you read them
@@ -89,7 +104,7 @@ function ContextCard({ prompt, title, color, whenVariant }: CardProps) {
         </div>
         <div className="relative mb-6 flex-1 rounded-[1.75rem] border-[3px] border-[#3C3C3C] bg-white p-4 sm:p-5">
           <span aria-hidden="true" className="absolute -bottom-[11px] left-4 size-5 rotate-45 border-r-[3px] border-b-[3px] border-[#3C3C3C] bg-white" />
-          <ReadingText text={signWhenToUseText(prompt.label, prompt.whenToUse)} label={prompt.label} />
+          <ReadingText text={signWhenToUseText(prompt.label, prompt.whenToUse)} label={prompt.label} pictures={prompt.whenToUsePictures} />
         </div>
       </div>
     </div>

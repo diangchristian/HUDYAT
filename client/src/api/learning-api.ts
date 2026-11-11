@@ -59,12 +59,15 @@ export type CategoryLesson = {
   categoryGestures: Array<{
     id: string;
     exampleUsage: string | null;
+    exampleUsagePictures: Record<string, string>;
     displayOrder: number;
 
     gesture: {
       id: string;
       label: string;
       meaning: string | null;
+      mainPicture: string | null;
+      meaningPictures: Record<string, string>;
       modelClass: string;
       referenceImageUrl: string | null;
       referenceVideoUrl: string | null;

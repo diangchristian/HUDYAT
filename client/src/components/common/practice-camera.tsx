@@ -18,7 +18,7 @@ import { cameraGrantRemembered, forgetCameraGrant } from "@/lib/camera-session";
 // fillOnPhone: below tablet width, fill the parent's height instead of a fixed 16:9 frame (practice page).
 // quietWrong: no red chip or sound for wrong readings (recognition flags wrong while the hand is still moving); onWrong still fires so the page can show its own gentle hint (sign test).
 // bare: no frame of its own, for when the parent already draws one (lesson Try card).
-export default function PracticeCamera({category,targetLabel,onCorrect,onWrong,fillOnPhone=false,quietWrong=false,bare=false}: {category?:string;targetLabel?:string;onCorrect?:()=>void;onWrong?:()=>void;fillOnPhone?:boolean;quietWrong?:boolean;bare?:boolean}) {
+export default function PracticeCamera({category,targetLabel,onCorrect,onWrong,onRunningChange,fillOnPhone=false,quietWrong=false,bare=false}: {category?:string;targetLabel?:string;onCorrect?:()=>void;onWrong?:()=>void;/** Told when recognition starts or stops checking signs (e.g. so a timer can wait for it). */onRunningChange?:(running:boolean)=>void;fillOnPhone?:boolean;quietWrong?:boolean;bare?:boolean}) {
   const { videoRef, status, error, start, stop: stopCamera } = useCamera();
   const isLive = status === "live";
   const [recognitionStatus,setRecognitionStatus]=useState<RecognitionStatus>({phase:'loading',message:'Preparing category model…'});
@@ -80,6 +80,7 @@ export default function PracticeCamera({category,targetLabel,onCorrect,onWrong,f
 
   // The coaching line ("no hand detected", "hold your sign steady") is the main thing to read while signing, so it takes over the camera chip on the video.
   const running=isLive&&recognitionStatus.phase==='running';
+  useEffect(()=>{onRunningChange?.(running);},[running,onRunningChange]);
   const holdShown=isLive&&settings.holdFeedback&&hold&&!feedback;
   const preparing=isLive&&(recognitionStatus.phase==='loading'||recognitionStatus.phase==='ready');
   const coachText=(holdShown&&hold.hint)||(running?recognitionStatus.message.replace(/^Recognition running · /,''):preparing?'Getting ready…':'');

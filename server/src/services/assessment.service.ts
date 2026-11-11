@@ -1,5 +1,8 @@
 import { Prisma } from "../generated/prisma/client.js";
 import { prisma } from "../config/db.js";
+import { hasCameraModel } from "../config/file-models.js";
+import { quizAttemptPasses, signTestPasses } from "../utils/passing.js";
+import { bestSignTests } from "./sign-test.service.js";
 
 /*
  * A category's assessment unlocks for a learner once they've
@@ -548,7 +551,7 @@ export const submitAssessment = async (
 export const getAssessmentsForLearner = async (
   learnerId: string,
 ) => {
-  const [learningAreas, progressRecords, completedAttempts] =
+  const [learningAreas, progressRecords, completedAttempts, signTests] =
     await Promise.all([
       prisma.learningArea.findMany({
         orderBy: {
@@ -614,6 +617,8 @@ export const getAssessmentsForLearner = async (
           },
         },
       }),
+
+      bestSignTests(learnerId),
     ]);
 
   const progressByCategoryId = new Map(
@@ -664,15 +669,17 @@ export const getAssessmentsForLearner = async (
             const attemptPassed = (
               attempt: (typeof attempts)[number],
             ) =>
-              attempt.totalPoints.gt(0) &&
-              attempt.score
-                .div(attempt.totalPoints)
-                .mul(100)
-                .gte(attempt.assessment.passingScore);
+              quizAttemptPasses(
+                attempt.score,
+                attempt.totalPoints,
+                attempt.assessment.passingScore,
+              );
 
             const latestAttempt = attempts[0] ?? null;
 
             const hasPassed = attempts.some(attemptPassed);
+
+            const bestSignTest = signTests.get(category.id);
 
             const status: "locked" | "not-started" | "completed" =
               !isUnlocked
@@ -704,6 +711,19 @@ export const getAssessmentsForLearner = async (
                   }
                 : null,
               status,
+              // Optional camera practice, offered once the quiz is passed (sign-test.service.ts).
+              signTest: {
+                // Whether the lesson has a Sign test at all (the card shows the step ahead of time).
+                hasModel: hasCameraModel(category.name),
+                available: hasPassed && hasCameraModel(category.name),
+                best: bestSignTest
+                  ? {
+                      score: bestSignTest.score,
+                      total: bestSignTest.total,
+                      passed: signTestPasses(bestSignTest.score, bestSignTest.total),
+                    }
+                  : null,
+              },
             };
           }),
       }))

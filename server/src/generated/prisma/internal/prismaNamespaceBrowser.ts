@@ -66,7 +66,8 @@ export const ModelName = {
   PracticeSession: 'PracticeSession',
   CategoryProgress: 'CategoryProgress',
   SystemSetting: 'SystemSetting',
-  AuditLog: 'AuditLog'
+  AuditLog: 'AuditLog',
+  SignTestAttempt: 'SignTestAttempt'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -161,6 +162,8 @@ export const FslGestureScalarFieldEnum = {
   modelClass: 'modelClass',
   referenceImageUrl: 'referenceImageUrl',
   referenceVideoUrl: 'referenceVideoUrl',
+  mainPicture: 'mainPicture',
+  meaningPictures: 'meaningPictures',
   isValidated: 'isValidated',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -174,6 +177,7 @@ export const CategoryGestureScalarFieldEnum = {
   categoryId: 'categoryId',
   gestureId: 'gestureId',
   exampleUsage: 'exampleUsage',
+  exampleUsagePictures: 'exampleUsagePictures',
   displayOrder: 'displayOrder',
   createdAt: 'createdAt'
 } as const
@@ -309,6 +313,19 @@ export const AuditLogScalarFieldEnum = {
 export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
 
 
+export const SignTestAttemptScalarFieldEnum = {
+  id: 'id',
+  learnerId: 'learnerId',
+  categoryId: 'categoryId',
+  score: 'score',
+  total: 'total',
+  missedGestureIds: 'missedGestureIds',
+  completedAt: 'completedAt'
+} as const
+
+export type SignTestAttemptScalarFieldEnum = (typeof SignTestAttemptScalarFieldEnum)[keyof typeof SignTestAttemptScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -323,6 +340,13 @@ export const NullableJsonNullValueInput = {
 } as const
 
 export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
 export const QueryMode = {

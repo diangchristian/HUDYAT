@@ -51,6 +51,8 @@ export default defineConfig(({ mode }) => ({
         globIgnores: ['**/models/**','**/mediapipe/**'],
         runtimeCaching: [
           {urlPattern: ({url})=>url.pathname.includes('/mediapipe/wasm/'),handler:'CacheFirst',options:{cacheName:'hudyat-mediapipe-runtime-v1',cacheableResponse:{statuses:[200]}}},
+          // Lesson pictures drawn with Twemoji (components/common/lesson-picture.tsx): kept once seen, for offline lessons.
+          {urlPattern: ({url})=>url.href.startsWith('https://cdn.jsdelivr.net/npm/@twemoji/svg@'),handler:'CacheFirst',options:{cacheName:'hudyat-twemoji-v15',cacheableResponse:{statuses:[200]},expiration:{maxEntries:500}}},
           {
             urlPattern: /^\/api\//,
             handler: 'NetworkFirst',

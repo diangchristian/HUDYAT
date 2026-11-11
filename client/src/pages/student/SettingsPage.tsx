@@ -134,6 +134,13 @@ export default function SettingsPage() {
         <ProfileSection />
         <PasswordSettingsCard />
       </div>
+
+      {/* Required by Twemoji's CC-BY 4.0 licence (lesson pictures). */}
+      <p className="mt-8 text-center text-xs text-muted-foreground">
+        Emoji art by{" "}
+        <a href="https://github.com/jdecked/twemoji" target="_blank" rel="noreferrer" className="underline">Twemoji</a>, licensed{" "}
+        <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer" className="underline">CC-BY 4.0</a>.
+      </p>
     </section>
   );
 }
