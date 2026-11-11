@@ -66,3 +66,15 @@ Validation: 87 client tests and five isolated Alphabet-update tests passed; clie
 The installed Alphabet model is `final-alphabet-20261108-131532`, completed 2026-11-08 14:08:33. Its 1,283 historical training/validation originals differ from the currently retained dataset. The separate 93.78% LOSO score does not belong to this saved model. v1 features retain shape/orientation changes but remove wrist translation: complete capture is not evidence that J/Z paths are recognized correctly. Full provenance remains beside each release.
 
 Rollback catalog entries are saved in `docs/dabest-models-rollback.json`. Do not delete the added signs when rolling back a model: learners may already have used them. The older Alphabet has only 26 outputs and will explicitly report Ñ/Ng as unsupported. See `docs/recorder-camera-check.md` for local testing and remaining device checks.
+
+## Family Parents release (2026-11-12)
+Family now selects a5cdd13bf84e63d3 from final-family-20261111-175651: 10 classes including parents, 32 x 141 face-location features. Previous entry: docs/family-model-rollback.json. No database writes. Live signing accuracy remains unverified.
+
+## Additional categories (2026-11-12)
+Enabled Calendar (22), Shapes (8), Word Concepts (10), and WH Questions (6), preserving trainer IDs, preprocessing and output ordering. All four use full gesture capture. family_concept matches the Family word-concept target. Calendar and Word Concepts support all-signs camera tests. Shapes lacks Pentagon/Hexagon; WH Questions lacks Which/How Many/How Much/Whose, so their all-signs tests remain unavailable. Existing lessons are preserved and unsupported prompts show the existing unsupported-model message. Rollback catalog: docs/four-models-rollback.json. No database writes; live signing remains unverified.
+
+## Colors lesson coverage (2026-11-12)
+Removed Black, White, Pink and Brown from Colors lesson links and seed data. The live lesson retains Red, Blue, Yellow, Green, Orange and Violet (Purple in seed; equivalent model target). Historical gestures/assessment references remain intact. The targeted script is server/prisma/scripts/trimColors.ts (preview; --apply writes), with backup and checkpoint remapping. Full Colors camera-test coverage now matches its six-sign lesson.
+
+## Applying lesson updates on another database
+From server, run npx tsx prisma/scripts/reorderAlphabet.ts to preview, then add --apply to save A-N, Ñ, Ng, O-Z. Run npx tsx prisma/scripts/trimColors.ts to preview, then add --apply to retain the six supported Colors signs. Both scripts back up affected records and remap learner checkpoints transactionally. Apply these targeted scripts instead of reseeding existing lessons. Restart the API after updating code/model assets. Model integration itself requires no schema migration.

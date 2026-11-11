@@ -59,7 +59,7 @@ export function isSteady(previous:Float32Array|undefined,current:Float32Array,ma
  return count>0 && Math.sqrt(sum/count)<=maxMotion;
 }
 // Names that mean the same sign: the Colors model calls Purple "violet".
-const SAME_SIGN:Record<string,string>={violet:'purple'};
+const SAME_SIGN:Record<string,string>={violet:'purple',familyconcept:'family'};
 const signKey=(name:string)=>{
  const label=name.normalize('NFC').toLowerCase();
  // Recorder class IDs retain their exported order; compare them with lesson labels here.

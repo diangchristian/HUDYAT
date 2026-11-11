@@ -1,0 +1,18 @@
+{
+  "id": "family",
+  "name": "Family",
+  "available": true,
+  "version": "a5cdd13bf84e63d3",
+  "modelUrl": "./models/family/a5cdd13bf84e63d3/model.json",
+  "weightsUrl": "./models/family/a5cdd13bf84e63d3/weights.bin",
+  "modelSha256": "d0fe9b3ee6e3cb1e3b57b295b96d74d9e23c839072867d44384650c6d10b3bc2",
+  "weightsSha256": "a5cdd13bf84e63d3a047fc6ea16db664850fe4bacc88eff2af47c7317132b70a",
+  "bytes": 1960732,
+  "handUrl": "./shared/fbc2a30080c3c557093b5ddfc334698132eb341044ccee322ccf8bcf3607cde1.task",
+  "handSha256": "fbc2a30080c3c557093b5ddfc334698132eb341044ccee322ccf8bcf3607cde1",
+  "handBytes": 7819105,
+  "classes": 10,
+  "faceUrl": "./shared/64184e229b263107bc2b804c6625db1341ff2bb731874b0bcc2fe6544e0bc9ff.task",
+  "faceSha256": "64184e229b263107bc2b804c6625db1341ff2bb731874b0bcc2fe6544e0bc9ff",
+  "faceBytes": 3758596
+}

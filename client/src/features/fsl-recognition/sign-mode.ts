@@ -12,7 +12,8 @@ type Model={category:string;version?:string;handRelative:boolean;handRelativeSeq
  * Its immutable model metadata and weights retain their original preprocessing contract.
  */
 export function usesCompleteSignCapture(model:Pick<Model,'category'|'version'>){
- return model.category==='alphabet'&&model.version==='7665532badb74b9f';
+ return (model.category==='alphabet'&&model.version==='7665532badb74b9f') ||
+  Boolean(model.version&&({shapes:'c857755d0a3b6e5b',calendar:'8f1bc49d95cbbcc4',word_concepts:'856effe4d20522e9',wh_questions:'545f7bcbe18ccf63'} as Record<string,string>)[model.category]===model.version);
 }
 
 export function usesSignCapture(model:Model,settings:Pick<RecognitionSettings,'alphabetMotion'|'dynamicCapture'>){

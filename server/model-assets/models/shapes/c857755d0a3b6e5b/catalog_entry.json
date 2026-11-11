@@ -1,0 +1,15 @@
+{
+  "id": "shapes",
+  "name": "Shapes",
+  "available": true,
+  "version": "c857755d0a3b6e5b",
+  "modelUrl": "./models/shapes/c857755d0a3b6e5b/model.json",
+  "weightsUrl": "./models/shapes/c857755d0a3b6e5b/weights.bin",
+  "modelSha256": "2e2f1ec9dd45a093c2c26e8a9bac71d80da36af3f11080425c302cff5cab792e",
+  "weightsSha256": "c857755d0a3b6e5b5fec45c2f00a55a9e4a8e1c1ec1cad82e3a1e1208264000b",
+  "bytes": 1949102,
+  "handUrl": "./shared/fbc2a30080c3c557093b5ddfc334698132eb341044ccee322ccf8bcf3607cde1.task",
+  "handSha256": "fbc2a30080c3c557093b5ddfc334698132eb341044ccee322ccf8bcf3607cde1",
+  "handBytes": 7819105,
+  "classes": 8
+}

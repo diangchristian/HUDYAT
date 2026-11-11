@@ -1,0 +1,13 @@
+{
+  "category": "family",
+  "date": "2026-11-12T00:43:39",
+  "export_name": "family-dabest-gdrive-s2-parents-20261111-v3",
+  "version": "a5cdd13bf84e63d3",
+  "n_samples": 69,
+  "real_clips": true,
+  "max_abs_diff": 1.7881393432617188e-07,
+  "same_top1": 1.0,
+  "ok": true,
+  "model_run_id": "final-family-20261111-175651",
+  "method": "numpy forward pass of the app's network from model.json + weights.bin, on the app's frame layout, vs the Keras model on the trainer's"
+}

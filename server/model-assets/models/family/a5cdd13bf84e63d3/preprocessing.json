@@ -1,0 +1,61 @@
+{
+  "frames": 32,
+  "features": 141,
+  "layout": [
+    "left_xyz_landmarks_0_to_20",
+    "right_xyz_landmarks_0_to_20",
+    "left_present",
+    "right_present",
+    "left_location_wrist_thumb_tip_index_tip_xy",
+    "right_location_wrist_thumb_tip_index_tip_xy",
+    "face_present"
+  ],
+  "normalization": "hand-face-location-v1",
+  "coordinates": "per hand: landmarks minus the wrist, in pixels (x * width, y * height, z * width), divided by the 2D wrist to middle-finger MCP (landmark 9) length; a hand whose length is ~0 is absent; then the 13 values of preprocessing.face",
+  "interpolation": "linear coordinates, nearest binary flags, absent coordinates zeroed",
+  "sign_window": {
+    "trim_margin_s": 0.1,
+    "trim_min_frames": 8,
+    "rule": "training clips are cut to the frames with a hand (plus the margin), then resampled to 32 frames"
+  },
+  "extraction": {
+    "backend": "MediaPipe HandLandmarker",
+    "mediapipe_version": "0.10.21",
+    "model_sha256": "fbc2a30080c3c557093b5ddfc334698132eb341044ccee322ccf8bcf3607cde1",
+    "model_url": "https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task",
+    "num_hands": 2,
+    "detection_confidence": 0.5,
+    "presence_confidence": 0.5,
+    "tracking_confidence": 0.5,
+    "swap_hands": false,
+    "image_orientation": "unmirrored camera frames; only the preview is mirrored"
+  },
+  "handedness": {
+    "canonical": true,
+    "rule": "trained on right-dominant signing; a left-handed signer's frames are mirrored first"
+  },
+  "confidence_threshold": 0.85,
+  "trainer": {
+    "feature_version": 3,
+    "model_run_id": "final-family-20261111-175651",
+    "from_experiment": null
+  },
+  "face": {
+    "backend": "MediaPipe FaceLandmarker",
+    "num_faces": 1,
+    "running_mode": "VIDEO",
+    "model_sha256": "64184e229b263107bc2b804c6625db1341ff2bb731874b0bcc2fe6544e0bc9ff",
+    "model_url": "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task",
+    "nose": 1,
+    "forehead": 10,
+    "chin": 152,
+    "hand_points": [
+      0,
+      4,
+      8
+    ],
+    "values": "per hand (Left, then Right): wrist, thumb tip and index tip as (x, y) minus the nose (face landmark 1), x multiplied by width / height first, divided by the 2D forehead (10) to chin (152) length; then the face flag. A hand that is absent (or whose palm length is ~0), or a frame without a face, gives zeros",
+    "interpolation": "a hand's location values linear only when the hand and the face are in both frames, else from the nearest frame; the face flag from the nearest frame",
+    "mirror": "a left-handed signer: location x negated, Left and Right location swapped, the face flag stays"
+  }
+}

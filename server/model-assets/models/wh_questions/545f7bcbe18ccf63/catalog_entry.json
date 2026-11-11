@@ -1,0 +1,15 @@
+{
+  "id": "wh_questions",
+  "name": "Wh Questions",
+  "available": true,
+  "version": "545f7bcbe18ccf63",
+  "modelUrl": "./models/wh_questions/545f7bcbe18ccf63/model.json",
+  "weightsUrl": "./models/wh_questions/545f7bcbe18ccf63/weights.bin",
+  "modelSha256": "0b1cdc13d7b572bf1850512070ec323fdc7208a6dcc90e50538fe5ae33aa7a1a",
+  "weightsSha256": "545f7bcbe18ccf63c08168935c3e1c8f1b2018449214ff5349e3b31b0a1365a0",
+  "bytes": 1948577,
+  "handUrl": "./shared/fbc2a30080c3c557093b5ddfc334698132eb341044ccee322ccf8bcf3607cde1.task",
+  "handSha256": "fbc2a30080c3c557093b5ddfc334698132eb341044ccee322ccf8bcf3607cde1",
+  "handBytes": 7819105,
+  "classes": 6
+}
