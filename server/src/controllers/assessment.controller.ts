@@ -1,5 +1,7 @@
 import { type Request, type Response } from "express";
 import * as assessmentService from "../services/assessment.service.js";
+import * as signTestService from "../services/sign-test.service.js";
+import { serviceEndpoint } from "../utils/serviceEndpoint.js";
 
 export const getAssessment = async (
   req: Request,
@@ -175,3 +177,13 @@ export const submitAssessment = async (
     });
   }
 };
+
+export const submitSignTest = serviceEndpoint(
+  (req) =>
+    signTestService.submitSignTest(
+      req.user!.id,
+      req.params.categoryId as string,
+      req.body,
+    ),
+  "Unable to save the sign test.",
+);

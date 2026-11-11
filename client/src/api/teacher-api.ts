@@ -150,6 +150,16 @@ export type LearnerDetail = {
     correctAttempts: number;
     accuracy: number;
   };
+  /** Each lesson's best Sign test go (optional camera test after the quiz). */
+  signTests: Array<{
+    categoryId: string;
+    score: number;
+    total: number;
+    passed: boolean;
+    missedSigns: string[];
+    attempts: number;
+    completedAt: string;
+  }>;
 };
 
 export type EditableSign = {
@@ -159,6 +169,11 @@ export type EditableSign = {
   exampleUsage: string | null;
   referenceImageUrl: string | null;
   referenceVideoUrl: string | null;
+  /** An emoji or an uploaded image link (see lesson-text.ts). */
+  mainPicture: string | null;
+  /** Pictures above words, by pictureKey(word). */
+  meaningPictures: Record<string, string>;
+  exampleUsagePictures: Record<string, string>;
 };
 
 export type EditableLesson = {

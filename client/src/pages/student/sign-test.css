@@ -1,0 +1,16 @@
+/* Sign test motion (SignTestPage.tsx). Only the result overlay plays when motion is reduced. */
+@keyframes st-feedback { 0% { transform: scale(.4); opacity: 0 } 18% { transform: scale(1.08); opacity: 1 } 28%, 85% { transform: scale(1); opacity: 1 } 100% { transform: scale(.95); opacity: 0 } }
+@keyframes st-tick { 0% { transform: scale(0) rotate(-30deg) } 60% { transform: scale(1.25) rotate(8deg) } 100% { transform: scale(1) rotate(0) } }
+@keyframes st-spark { 0% { transform: translate(-50%,-50%) rotate(var(--a)) translateY(0) scale(.4); opacity: 1 } 100% { transform: translate(-50%,-50%) rotate(var(--a)) translateY(-95px) scale(1); opacity: 0 } }
+@keyframes st-shake { 0%,100% { transform: translateX(0) } 20% { transform: translateX(-5px) } 40% { transform: translateX(5px) } 60% { transform: translateX(-3px) } 80% { transform: translateX(3px) } }
+@keyframes st-nudge { 0% { transform: translate(-50%, 8px); opacity: 0 } 15%, 80% { transform: translate(-50%, 0); opacity: 1 } 100% { transform: translate(-50%, 0); opacity: 0 } }
+@keyframes st-wiggle { 0%,100% { transform: rotate(0) } 25% { transform: rotate(-18deg) } 75% { transform: rotate(18deg) } }
+
+.st-feedback { animation: st-feedback 1.3s ease-out both }
+@media (prefers-reduced-motion: no-preference) {
+  .st-tick { animation: st-tick .5s cubic-bezier(.34,1.56,.64,1) both }
+  .st-spark { animation: st-spark .9s ease-out both }
+  .st-shake { animation: st-shake .45s ease-in-out }
+  .st-nudge { animation: st-nudge 1.4s ease-out both }
+  .st-wiggle { animation: st-wiggle .5s ease-in-out 2 }
+}

@@ -33,6 +33,9 @@ export default function CategoryLearnPage() {
       modelClass: item.gesture.modelClass,
       meaning: item.gesture.meaning ?? undefined,
       whenToUse: item.exampleUsage ?? undefined,
+      mainPicture: item.gesture.mainPicture,
+      meaningPictures: item.gesture.meaningPictures,
+      whenToUsePictures: item.exampleUsagePictures,
       referenceImageUrl: item.gesture.referenceImageUrl ?? undefined,
       referenceVideoUrl: item.gesture.referenceVideoUrl ?? undefined,
     })) ?? [];

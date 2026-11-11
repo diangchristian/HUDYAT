@@ -5,6 +5,7 @@ import {
   getAssessment,
   listAssessments,
   submitAssessment,
+  submitSignTest,
 } from "../controllers/assessment.controller.js";
 
 import { authMiddleware } from "../middleware/authMiddleware.js";
@@ -32,6 +33,11 @@ assessmentRouter.post(
 assessmentRouter.post(
   "/categories/:categoryId/submit",
   submitAssessment,
+);
+
+assessmentRouter.post(
+  "/categories/:categoryId/sign-test",
+  submitSignTest,
 );
 
 export default assessmentRouter;

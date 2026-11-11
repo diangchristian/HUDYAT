@@ -17,6 +17,7 @@ import LessonStage from "@/components/common/learn-card/lesson-stage";
 import ElevatedButton from "@/components/ui/elavated-button";
 import { usePreloadRecognition } from "@/features/fsl-recognition/preload";
 import { useSaveLessonCheckpoint } from "@/hooks/use-save-lesson-checkpoint";
+import type { Pictures } from "@/lib/lesson-text";
 import { categorySlug, type PracticePrompt } from "@/lib/practice";
 import { cn } from "@/lib/utils";
 
@@ -31,6 +32,9 @@ export type LessonPrompt = PracticePrompt & {
   modelClass: string;
   meaning?: string | null;
   whenToUse?: string | null;
+  mainPicture?: string | null;
+  meaningPictures?: Pictures;
+  whenToUsePictures?: Pictures;
 };
 
 const STEPS: LessonStep[] = ["meaning", "context", "how", "try"];
