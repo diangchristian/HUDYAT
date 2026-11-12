@@ -1,7 +1,7 @@
 /*
  * The Sign test: after passing a lesson's quiz, the child signs every sign of the lesson from memory
- * (the word only, no photo or video) while the camera checks it. Optional practice on top of the
- * quiz: it never locks or unlocks lessons.
+ * (the word only, no photo or video) while the camera checks it. Passing it after the quiz completes
+ * the lesson and unlocks the next one.
  * Rules: random order, 30 s per sign, any correct reading passes, wrong readings only show a gentle
  * "not yet" (never a miss), time out or Skip is a miss, 80% passes. Each finished go is saved and
  * the quiz page shows the best one; teachers see it on the student's page.
@@ -251,6 +251,11 @@ function Results({ test, title, categoryId }: { test: Test; title: string; categ
         <h1 className="mt-2 text-2xl font-black" style={{ color: test.passed ? "#3F8F00" : "#C2410C" }}>
           {test.passed ? "You passed! ★" : `Almost! Sign ${test.needed} to pass.`}
         </h1>
+        {save.data?.lessonCompleted && (
+          <p role="status" className="mt-3 inline-flex items-center gap-2 rounded-full bg-green-600 px-4 py-1.5 text-base font-extrabold text-white">
+            <Check aria-hidden="true" className="size-5" strokeWidth={3} /> Next lesson unlocked
+          </p>
+        )}
         {save.isError && (
           <p role="alert" className="mt-3 flex flex-wrap items-center justify-center gap-2 text-sm font-bold text-destructive">
             We couldn't save this go.

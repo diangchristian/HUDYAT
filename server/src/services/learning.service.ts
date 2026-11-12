@@ -1,4 +1,21 @@
 import { prisma } from "../config/db.js";
+import { httpError } from "../utils/httpError.js";
+
+export type LearningStatus = "completed" | "current" | "locked";
+
+/*
+ * Lessons unlock one at a time, in order across all learning areas: a finished
+ * lesson is completed, the first unfinished one is current, the rest are locked.
+ */
+export const learningStatuses = (done: boolean[]): LearningStatus[] => {
+  let currentFound = false;
+  return done.map((isDone) => {
+    if (isDone) return "completed";
+    if (currentFound) return "locked";
+    currentFound = true;
+    return "current";
+  });
+};
 
 export const getLearningAreas = async (learnerId: string) => {
   const [learningAreas, progressRecords] = await Promise.all([
@@ -20,6 +37,11 @@ export const getLearningAreas = async (learnerId: string) => {
                 gestures: true,
               },
             },
+            assessment: {
+              select: {
+                status: true,
+              },
+            },
           },
         },
       },
@@ -36,6 +58,7 @@ export const getLearningAreas = async (learnerId: string) => {
         lastLessonStep: true,
         startedAt: true,
         completedAt: true,
+        lessonCompletedAt: true,
       },
     }),
   ]);
@@ -47,7 +70,24 @@ export const getLearningAreas = async (learnerId: string) => {
     ]),
   );
 
-  let currentCategoryFound = false;
+  /*
+   * A lesson is done once its quiz and Sign test are passed (COMPLETED). One
+   * without a published quiz has nothing to pass, so finishing it is enough;
+   * otherwise it would lock every lesson after it.
+   */
+  const statuses = learningStatuses(
+    learningAreas.flatMap((area) =>
+      area.categories.map((category) => {
+        const progress = progressByCategoryId.get(category.id);
+        return (
+          progress?.status === "COMPLETED" ||
+          (category.assessment?.status !== "PUBLISHED" &&
+            progress?.lessonCompletedAt != null)
+        );
+      }),
+    ),
+  );
+  let lessonIndex = 0;
 
   return learningAreas.map((area) => ({
     ...area,
@@ -58,26 +98,7 @@ export const getLearningAreas = async (learnerId: string) => {
       const rawStatus =
         progress?.status ?? "NOT_STARTED";
 
-      /*
-       * Determine how the category should
-       * appear on the Learn page.
-       */
-      let learningStatus:
-        | "completed"
-        | "current"
-        | "locked";
-
-      if (rawStatus === "COMPLETED") {
-        learningStatus = "completed";
-      } else if (rawStatus === "IN_PROGRESS") {
-        learningStatus = "current";
-        currentCategoryFound = true;
-      } else if (!currentCategoryFound) {
-        learningStatus = "current";
-        currentCategoryFound = true;
-      } else {
-        learningStatus = "locked";
-      }
+      const learningStatus = statuses[lessonIndex++]!;
 
       /*
        * Count the total signs/gestures
@@ -97,7 +118,7 @@ export const getLearningAreas = async (learnerId: string) => {
        */
       let progressPercent = 0;
 
-      if (rawStatus === "COMPLETED") {
+      if (learningStatus === "completed") {
         progressPercent = 100;
       } else if (
         rawStatus === "IN_PROGRESS" &&
@@ -129,6 +150,7 @@ export const getLearningAreas = async (learnerId: string) => {
          * Don't send it to the frontend.
          */
         _count: undefined,
+        assessment: undefined,
 
         progress: {
           status: rawStatus,
@@ -153,6 +175,12 @@ export const getLearningAreas = async (learnerId: string) => {
   }));
 };
 
+/** One lesson's place in the learner's chain (practice can still open locked lessons). */
+const learningStatusOf = async (categoryId: string, learnerId: string) =>
+  (await getLearningAreas(learnerId))
+    .flatMap((area) => area.categories)
+    .find((category) => category.id === categoryId)?.learningStatus;
+
 export const getCategoryLesson = async (
   categoryId: string,
   learnerId: string,
@@ -161,6 +189,7 @@ export const getCategoryLesson = async (
     category,
     categoryGestures,
     progress,
+    learningStatus,
   ] = await Promise.all([
     prisma.category.findUnique({
       where: {
@@ -207,6 +236,8 @@ export const getCategoryLesson = async (
         completedAt: true,
       },
     }),
+
+    learningStatusOf(categoryId, learnerId),
   ]);
 
   if (!category) {
@@ -215,6 +246,8 @@ export const getCategoryLesson = async (
 
   return {
     category,
+
+    learningStatus,
 
     progress: {
       status:
@@ -260,6 +293,11 @@ export const saveLessonCheckpoint = async (
             displayOrder: "asc",
           },
         },
+        assessment: {
+          select: {
+            status: true,
+          },
+        },
       },
     });
 
@@ -271,6 +309,11 @@ export const saveLessonCheckpoint = async (
     throw new Error(
       "This category has no lessons yet.",
     );
+  }
+
+  // The Learn page hides locked lessons; this stops a direct link from finishing one anyway.
+  if ((await learningStatusOf(categoryId, learnerId)) === "locked") {
+    throw httpError(403, "Finish the lessons before this one first.");
   }
 
   if (
@@ -319,6 +362,18 @@ export const saveLessonCheckpoint = async (
   const isAlreadyCompleted =
     existingProgress?.status === "COMPLETED";
 
+  /*
+   * With no published quiz there's nothing left to pass, so finishing the
+   * lesson completes it (stored, so publishing a quiz later can't re-lock
+   * the lessons after it).
+   */
+  const completesLesson =
+    isFinalStep &&
+    category.assessment?.status !== "PUBLISHED";
+  const statusUpdate = completesLesson
+    ? { status: "COMPLETED" as const, completedAt: new Date() }
+    : { status: "IN_PROGRESS" as const };
+
   const progress =
     await prisma.categoryProgress.upsert({
       where: {
@@ -331,7 +386,7 @@ export const saveLessonCheckpoint = async (
       update: {
         ...(isAlreadyCompleted
           ? {}
-          : { status: "IN_PROGRESS" }),
+          : statusUpdate),
 
         lastGestureIndex:
           gestureIndex,
@@ -348,7 +403,7 @@ export const saveLessonCheckpoint = async (
         learnerId,
         categoryId,
 
-        status: "IN_PROGRESS",
+        ...statusUpdate,
 
         lastGestureIndex:
           gestureIndex,

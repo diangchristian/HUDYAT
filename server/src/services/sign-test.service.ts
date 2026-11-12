@@ -1,12 +1,13 @@
 /*
  * The Sign test: after passing a lesson's quiz, a learner signs every sign of the lesson in front of
  * the camera. Recognition runs in the browser, so the client reports which signs were missed (timed
- * out or skipped); the server checks they belong to the lesson and scores the go. It's optional
- * practice on top of the quiz: it never locks or unlocks lessons.
+ * out or skipped); the server checks they belong to the lesson and scores the go. Where the camera
+ * can check the lesson, passing it (after the quiz) is what completes the lesson and unlocks the next.
  */
 import { z } from "zod";
 
 import { prisma } from "../config/db.js";
+import type { Prisma } from "../generated/prisma/client.js";
 import { hasCameraModel } from "../config/file-models.js";
 import { httpError } from "../utils/httpError.js";
 import { parseInput } from "../utils/parseInput.js";
@@ -15,6 +16,17 @@ import { quizAttemptPasses, signTestPasses } from "../utils/passing.js";
 const signTestInput = z.object({
   missedGestureIds: z.array(z.string(), "Send the missed signs as a list.").max(200, "That's too many signs."),
 });
+
+type QuizForPassing = {
+  status: string;
+  passingScore: Prisma.Decimal;
+  assessmentAttempts: { score: Prisma.Decimal; totalPoints: Prisma.Decimal }[];
+} | null | undefined;
+
+/** Like the quiz list: an unpublished quiz (and its Sign test) is hidden from learners, so it can't count. */
+const quizPassed = (quiz: QuizForPassing) =>
+  quiz?.status === "PUBLISHED" &&
+  quiz.assessmentAttempts.some((attempt) => quizAttemptPasses(attempt.score, attempt.totalPoints, quiz.passingScore));
 
 export const submitSignTest = async (learnerId: string, categoryId: string, input: unknown) => {
   const { missedGestureIds } = parseInput(signTestInput, input);
@@ -42,12 +54,7 @@ export const submitSignTest = async (learnerId: string, categoryId: string, inpu
   if (!hasCameraModel(lesson.name)) {
     throw httpError(409, "This lesson can't check signs with the camera yet.");
   }
-  const { assessment } = lesson;
-  // Like the quiz list: an unpublished quiz (and its Sign test) is hidden from learners.
-  const quizPassed = assessment?.status === "PUBLISHED" && assessment.assessmentAttempts.some((attempt) =>
-    quizAttemptPasses(attempt.score, attempt.totalPoints, assessment.passingScore),
-  );
-  if (!quizPassed) throw httpError(409, "Pass this lesson's quiz first.");
+  if (!quizPassed(lesson.assessment)) throw httpError(409, "Pass this lesson's quiz first.");
 
   const lessonSigns = new Set(lesson.gestures.map(({ gestureId }) => gestureId));
   const missed = [...new Set(missedGestureIds)];
@@ -57,11 +64,60 @@ export const submitSignTest = async (learnerId: string, categoryId: string, inpu
 
   const total = lessonSigns.size;
   const score = total - missed.length;
-  await prisma.signTestAttempt.create({
-    data: { learnerId, categoryId, score, total, missedGestureIds: missed },
+  // Saved together, so a failure never leaves a saved go the learner is told wasn't saved.
+  const lessonCompleted = await prisma.$transaction(async (tx) => {
+    await tx.signTestAttempt.create({
+      data: { learnerId, categoryId, score, total, missedGestureIds: missed },
+    });
+    return completeLessonIfPassed(tx, learnerId, categoryId);
   });
 
-  return { score, total, passed: signTestPasses(score, total) };
+  return { score, total, passed: signTestPasses(score, total), lessonCompleted };
+};
+
+/*
+ * A lesson is complete (and the next one unlocked) once its published quiz is passed and, where the
+ * camera can check it, its Sign test too. Lessons completed before the Sign test counted stay complete.
+ * Returns whether the lesson is complete.
+ */
+export const completeLessonIfPassed = async (
+  db: Prisma.TransactionClient,
+  learnerId: string,
+  categoryId: string,
+) => {
+  const key = { learnerId_categoryId: { learnerId, categoryId } };
+  const progress = await db.categoryProgress.findUnique({ where: key, select: { status: true } });
+  if (progress?.status === "COMPLETED") return true;
+
+  const lesson = await db.category.findUnique({
+    where: { id: categoryId },
+    select: {
+      name: true,
+      assessment: {
+        select: {
+          status: true,
+          passingScore: true,
+          assessmentAttempts: {
+            where: { learnerId, completedAt: { not: null } },
+            select: { score: true, totalPoints: true },
+          },
+        },
+      },
+      signTestAttempts: { where: { learnerId }, select: { score: true, total: true } },
+    },
+  });
+  if (!lesson || !quizPassed(lesson.assessment)) return false;
+  if (hasCameraModel(lesson.name) && !lesson.signTestAttempts.some((go) => signTestPasses(go.score, go.total))) {
+    return false;
+  }
+
+  const now = new Date();
+  await db.categoryProgress.upsert({
+    where: key,
+    update: { status: "COMPLETED", completedAt: now },
+    create: { learnerId, categoryId, status: "COMPLETED", startedAt: now, completedAt: now },
+  });
+  return true;
 };
 
 /** Each lesson's best go (highest score, then latest), with how many goes the learner has had. */

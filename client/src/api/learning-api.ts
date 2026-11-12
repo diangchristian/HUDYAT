@@ -54,6 +54,9 @@ export type CategoryLesson = {
     isActive: boolean;
   } | null;
 
+  /** Where the lesson sits in the learner's chain; a locked one can't be studied yet. */
+  learningStatus?: LearningStatus;
+
   progress: LearningProgress;
 
   categoryGestures: Array<{

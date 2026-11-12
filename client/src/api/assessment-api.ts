@@ -54,6 +54,8 @@ export type AssessmentResult = {
   percentage: string;
   passingScore: string;
   passed: boolean;
+  /** The lesson is complete, so the next one is unlocked (needs the Sign test too where the camera can check it). */
+  lessonCompleted: boolean;
   answers: Array<{
     questionId: string;
     selectedChoiceId: string;
@@ -82,7 +84,7 @@ export type AssessmentListCategory = {
     completedAt: string;
   } | null;
   status: AssessmentListStatus;
-  /** Optional camera test, offered once the quiz is passed in lessons the camera can check. */
+  /** Camera test after the quiz in lessons the camera can check; passing both unlocks the next lesson. */
   signTest: {
     /** The camera can check this lesson, so its card shows a Sign test step (even before the quiz). */
     hasModel: boolean;
@@ -91,7 +93,7 @@ export type AssessmentListCategory = {
   };
 };
 
-export type SignTestResult = { score: number; total: number; passed: boolean };
+export type SignTestResult = { score: number; total: number; passed: boolean; lessonCompleted: boolean };
 
 export type AssessmentListResponse = {
   learningAreas: Array<{

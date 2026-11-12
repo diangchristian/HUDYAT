@@ -148,7 +148,7 @@ export const saveLessonCheckpoint = async (
         ? error.message
         : "Unable to save lesson progress.";
 
-    return res.status(500).json({
+    return res.status((error as { statusCode?: number }).statusCode ?? 500).json({
       success: false,
       message,
     });

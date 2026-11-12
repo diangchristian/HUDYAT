@@ -4,7 +4,7 @@ import type { AssessmentListCategory } from "@/api/assessment-api";
 export type QuizCardStep = "locked" | "quiz" | "sign" | "again";
 
 /*
- * Quiz first, then (in lessons the camera can check) the optional Sign test, then play again.
+ * Quiz first, then (in lessons the camera can check) the Sign test that unlocks the next lesson, then play again.
  * One button that changes, instead of two buttons side by side for young readers to choose between.
  */
 export const quizCardStep = (lesson: Pick<AssessmentListCategory, "isUnlocked" | "status" | "signTest">): QuizCardStep => {

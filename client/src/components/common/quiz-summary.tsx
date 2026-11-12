@@ -1,13 +1,14 @@
 /*
  * End of a lesson quiz, in the lesson's look (cream page, chunky cards), with the actions right under the result.
  * It answers the child's real question first: did I pass, and is the next lesson open?
- *  - passed:  confetti once, "Next lesson unlocked", NEXT LESSON (+ try again for a better score)
+ *  - passed:  confetti once, "Next lesson unlocked", NEXT LESSON (+ try again for a better score);
+ *             in lessons the camera can check, "Now the Sign test", SIGN TEST until that's passed too
  *  - not yet: no confetti, "Get N of M right to pass", TRY AGAIN (+ review the lesson)
  * Stars still show how well it went, whatever the result.
  */
 import { useEffect, useState } from "react";
 import Confetti from "react-confetti";
-import { Check, RotateCcw, Star, Target, ThumbsUp, Trophy, type LucideIcon } from "lucide-react";
+import { Check, Hand, RotateCcw, Star, Target, ThumbsUp, Trophy, type LucideIcon } from "lucide-react";
 
 import ElevatedButton from "@/components/ui/elavated-button";
 import { starsEarned } from "@/lib/quiz-stars";
@@ -16,10 +17,13 @@ type QuizSummaryProps = {
   score: number;
   totalItems: number;
   passed: boolean;
+  /** The lesson is complete and the next one open; a passed quiz still needs its Sign test otherwise. */
+  lessonCompleted: boolean;
   /** The teacher's passing mark, as a percentage of the total. */
   passingPercent: number;
   lessonName: string;
   onNextLesson: () => void;
+  onSignTest: () => void;
   onRetry: () => void;
   onReviewLesson: () => void;
 };
@@ -66,7 +70,7 @@ const FEEDBACK_TIERS: FeedbackTier[] = [
 
 const prefersReducedMotion = () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-const QuizSummary = ({ score, totalItems, passed, passingPercent, lessonName, onNextLesson, onRetry, onReviewLesson }: QuizSummaryProps) => {
+const QuizSummary = ({ score, totalItems, passed, lessonCompleted, passingPercent, lessonName, onNextLesson, onSignTest, onRetry, onReviewLesson }: QuizSummaryProps) => {
   const [windowSize, setWindowSize] = useState({ width: window.innerWidth, height: window.innerHeight });
   const [reduceMotion] = useState(prefersReducedMotion);
 
@@ -117,9 +121,13 @@ const QuizSummary = ({ score, totalItems, passed, passingPercent, lessonName, on
           <h1 className="mt-1 text-3xl font-black sm:text-4xl">{passed ? "You passed!" : "Almost there!"}</h1>
 
           {/* Pass / not-yet badge: the one thing the child most needs to know. */}
-          {passed ? (
+          {passed && lessonCompleted ? (
             <p role="status" className="mt-3 inline-flex items-center gap-2 rounded-full bg-green-600 px-4 py-1.5 text-base font-extrabold text-white">
               <Check aria-hidden="true" className="size-5" strokeWidth={3} /> Next lesson unlocked
+            </p>
+          ) : passed ? (
+            <p role="status" className="mt-3 inline-flex items-center gap-2 rounded-full bg-green-600 px-4 py-1.5 text-base font-extrabold text-white">
+              <Hand aria-hidden="true" className="size-5" strokeWidth={3} /> Now the Sign test
             </p>
           ) : (
             <p role="status" className="mt-3 inline-flex items-center gap-2 rounded-full border-2 border-[#E0D3B4] bg-white px-4 py-1.5 text-base font-extrabold text-[#4B4B4B]">
@@ -151,12 +159,12 @@ const QuizSummary = ({ score, totalItems, passed, passingPercent, lessonName, on
               the other choice as a quiet text button so the two never compete. */}
           <nav aria-label="What next" className="mt-6 flex w-full flex-col items-center gap-2">
             <ElevatedButton
-              text={passed ? "NEXT LESSON" : "TRY AGAIN"}
+              text={!passed ? "TRY AGAIN" : lessonCompleted ? "NEXT LESSON" : "SIGN TEST"}
               icon={passed ? undefined : RotateCcw}
               iconPosition="right"
               size="lg"
               className="min-h-14 w-full text-xl! font-black!"
-              onClick={passed ? onNextLesson : onRetry}
+              onClick={!passed ? onRetry : lessonCompleted ? onNextLesson : onSignTest}
             />
             <button
               type="button"

@@ -15,7 +15,8 @@ import { cn } from "@/lib/utils";
  * centred header, lessons grouped by learning area, and the LearnCard look (lesson world, hover lift,
  * lesson-coloured button). Each card has ONE button, always the next step (quiz → Sign test → play
  * again), so young readers never have to choose between two. The quiz's stars show the score, and a
- * ✋ badge lights up once the optional Sign test is passed (only in lessons the camera can check).
+ * ✋ badge lights up once the Sign test is passed (only in lessons the camera can check), which is
+ * what unlocks the next lesson there.
  */
 type QuizArea = { id: string; name: string; categories: AssessmentListCategory[] };
 
