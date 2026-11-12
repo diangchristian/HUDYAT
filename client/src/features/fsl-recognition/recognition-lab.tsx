@@ -84,9 +84,6 @@ export function RecognitionLab({settings,onChange}:{settings:RecognitionSettings
     <label className="flex items-center justify-between gap-2">Hold progress + hints
      <input type="checkbox" checked={settings.holdFeedback} onChange={e=>custom({holdFeedback:e.target.checked})}/>
     </label>
-    <label className="flex items-center justify-between gap-2">Blurred preview
-     <input type="checkbox" checked={settings.previewBlur} onChange={e=>custom({previewBlur:e.target.checked})}/>
-    </label>
     <label className="flex items-center justify-between gap-2">Moving signs
      <select value={settings.dynamicCapture} onChange={e=>custom({dynamicCapture:e.target.value as RecognitionSettings['dynamicCapture']})} className="rounded border border-border bg-background px-1 py-0.5">
       <option value="sign">sign ends when hands go down</option><option value="fixed">fixed 2s clips</option><option value="sliding">sliding window</option>

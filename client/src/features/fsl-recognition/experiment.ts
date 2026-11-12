@@ -29,8 +29,6 @@ export type RecognitionSettings={
  window:SlidingWindowOptions;
  /** Background processing applied to the frames the hand detector sees. */
  detectionBackground:BackgroundMode;
- /** Show the learner a background-blurred preview instead of the raw camera. */
- previewBlur:boolean;
  /** Alphabet: track the hand between frames (VIDEO mode) instead of re-detecting it every frame. */
  alphabetTracking:boolean;
  /** Where MediaPipe runs hand tracking; GPU falls back to CPU if it can't start. */
@@ -56,7 +54,7 @@ export const CAMERA_SIZE={'720p':{width:1280,height:720},'480p':{width:640,heigh
 export const BASELINE:RecognitionSettings={
  profile:'baseline',alphabetPollMs:200,lock:DEFAULT_LOCK_RULES,
  dynamicCapture:'sign',earlyCheck:true,earlyMinHandsMs:EARLY_MIN_HANDS_MS,earlyAgree:EARLY_AGREE,endAbsentMs:END_ABSENT_S*1000,window:{spanMs:2000,minSpanMs:1800,everyMs:500,minFrames:8,agree:2},
- detectionBackground:'off',previewBlur:false,
+ detectionBackground:'off',
  alphabetTracking:false,delegate:'CPU',cameraResolution:'720p',alphabetHands:2,preload:false,holdFeedback:false,alphabetModel:'published',
  alphabetMotion:true,
 };

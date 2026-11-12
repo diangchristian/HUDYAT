@@ -1,19 +1,23 @@
-import {useEffect,useRef,useState} from "react";
+import {useEffect,useRef,useState,type ReactNode} from "react";
 import type {HoldFeedback,RecognitionStatus} from "@/features/fsl-recognition/category-recognition";
 import {CategoryRecognition} from "@/features/fsl-recognition/category-recognition";
 // EXPERIMENT (feature/recog-enhancement): switchable enhancements + ?lab=1 panel.
-import {BlurredPreview} from "@/features/fsl-recognition/blurred-preview";
+import {BackgroundPreview} from "@/features/fsl-recognition/background-preview";
 import {CAMERA_SIZE,isLabEnabled,loadSettings,saveSettings,type RecognitionSettings} from "@/features/fsl-recognition/experiment";
 import {RecognitionLab} from "@/features/fsl-recognition/recognition-lab";
 import {isDiagnosticsEnabled} from "@/features/fsl-recognition/landmark-diagnostics";
 import {LandmarkDiagnosticsPanel} from "@/features/fsl-recognition/landmark-diagnostics-panel";
-import { Camera, CameraOff, Check, X } from "lucide-react";
+import { Ban, Camera, CameraOff, Check, Droplets, Wallpaper, X } from "lucide-react";
 import ElevatedButton from "@/components/ui/elavated-button";
 import { cn } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
 import { useCamera } from "@/hooks/use-camera";
 import { useCameraPreference } from "@/lib/camera-preference";
 import { cameraGrantRemembered, forgetCameraGrant } from "@/lib/camera-session";
+import { CAMERA_BACKGROUNDS, useCameraBackground, type CameraBackground } from "@/lib/camera-background";
+import { publicAsset } from "@/features/fsl-recognition/registry";
+
+const ROUND_BUTTON="flex size-11 shrink-0 items-center justify-center rounded-full bg-background/90 text-foreground shadow-sm transition-colors hover:bg-background focus-visible:ring-4 focus-visible:ring-hudyat-gold focus-visible:outline-none active:scale-95 sm:size-9";
 
 // fillOnPhone: below tablet width, fill the parent's height instead of a fixed 16:9 frame (practice page).
 // quietWrong: no red chip or sound for wrong readings (recognition flags wrong while the hand is still moving); onWrong still fires so the page can show its own gentle hint (sign test).
@@ -28,6 +32,8 @@ export default function PracticeCamera({category,targetLabel,onCorrect,onWrong,o
   const [diagnostics]=useState(isDiagnosticsEnabled);
   const changeSettings=(next:RecognitionSettings)=>{saveSettings(next);setSettings(next);};
   const [hold,setHold]=useState<HoldFeedback|null>(null);
+  const background=useCameraBackground(s=>s.choice);
+  const [picking,setPicking]=useState(false);
   const [feedback,setFeedback]=useState<{kind:'correct'|'wrong';target?:string}|null>(null);
   const feedbackTimer=useRef<ReturnType<typeof setTimeout>|undefined>(undefined);
   useEffect(()=>()=>{clearTimeout(feedbackTimer.current);},[targetLabel,category,isLive]);
@@ -100,6 +106,10 @@ export default function PracticeCamera({category,targetLabel,onCorrect,onWrong,o
             className={`h-full w-full -scale-x-100 object-contain ${isLive ? "" : "invisible"}`}
           />
 
+          {isLive && background!=='off' && (
+            <BackgroundPreview video={videoRef} choice={background} className="absolute inset-0 h-full w-full -scale-x-100 object-contain" />
+          )}
+
           {!isLive && (
             // Same waving hands and gold bar as the app's LoadingScreen, so it feels like part of the lesson.
             <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 overflow-y-auto bg-[#FFF8E7] p-4 text-center font-body sm:p-6">
@@ -147,8 +157,8 @@ export default function PracticeCamera({category,targetLabel,onCorrect,onWrong,o
             </div>
           )}
 
-          {isLive && settings.previewBlur && (
-            <BlurredPreview video={videoRef} className="absolute inset-0 h-full w-full -scale-x-100 object-contain" />
+          {isLive && picking && (
+            <BackgroundPicker choice={background} onPick={c=>{useCameraBackground.getState().choose(c);setPicking(false);}} onClose={()=>setPicking(false)} />
           )}
 
           {isLive && (
@@ -166,10 +176,15 @@ export default function PracticeCamera({category,targetLabel,onCorrect,onWrong,o
                 </span>
               )}
               </div>
-              {/* Icon-only so it stays out of the way of the video; still a 44px tap target on phones. */}
-              <button type="button" aria-label="Stop camera" title="Stop camera" onClick={turnOff} className="flex size-11 shrink-0 items-center justify-center rounded-full bg-background/90 text-foreground shadow-sm transition-colors hover:bg-background focus-visible:ring-4 focus-visible:ring-hudyat-gold focus-visible:outline-none active:scale-95 sm:size-9">
-                <CameraOff aria-hidden="true" className="size-5 sm:size-4.5" />
-              </button>
+              {/* Icon-only so they stay out of the way of the video; still 44px tap targets on phones. */}
+              <div className="flex shrink-0 gap-2">
+                <button type="button" aria-label="Change background" title="Change background" aria-expanded={picking} onClick={()=>setPicking(v=>!v)} className={cn(ROUND_BUTTON,picking&&"bg-hudyat-gold text-white hover:bg-hudyat-gold")}>
+                  <Wallpaper aria-hidden="true" className="size-5 sm:size-4.5" />
+                </button>
+                <button type="button" aria-label="Stop camera" title="Stop camera" onClick={turnOff} className={ROUND_BUTTON}>
+                  <CameraOff aria-hidden="true" className="size-5 sm:size-4.5" />
+                </button>
+              </div>
             </div>
           )}
         </div>
@@ -183,6 +198,27 @@ export default function PracticeCamera({category,targetLabel,onCorrect,onWrong,o
       {lab && <RecognitionLab settings={settings} onChange={changeSettings} />}
       {diagnostics && <LandmarkDiagnosticsPanel />}
 
+    </div>
+  );
+}
+
+/** Off, Blur, then the built-in pictures, along the bottom of the video. */
+function BackgroundPicker({choice,onPick,onClose}:{choice:CameraBackground;onPick:(choice:CameraBackground)=>void;onClose:()=>void}) {
+  const options:{id:CameraBackground;label:string;thumb:ReactNode}[]=[
+    {id:'off',label:'None',thumb:<Ban aria-hidden="true" className="size-6 text-[#6B6B6B]" />},
+    {id:'blur',label:'Blur',thumb:<Droplets aria-hidden="true" className="size-6 text-[#6B6B6B]" />},
+    ...CAMERA_BACKGROUNDS.map(b=>({id:b.id,label:b.label,thumb:<img src={publicAsset(b.src)} alt="" className="h-full w-full object-cover" />})),
+  ];
+  // Escape closes it wherever focus is (it usually stays on the toggle button).
+  useEffect(()=>{const close=(e:KeyboardEvent)=>{if(e.key==='Escape')onClose();};window.addEventListener('keydown',close);return ()=>window.removeEventListener('keydown',close);},[onClose]);
+  return (
+    <div role="group" aria-label="Camera background" className="absolute inset-x-3 bottom-3 z-10 flex gap-2 overflow-x-auto rounded-2xl bg-background/95 p-2 font-body shadow-md">
+      {options.map(o=>(
+        <button key={o.id} type="button" aria-pressed={choice===o.id} onClick={()=>onPick(o.id)} className="flex shrink-0 flex-col items-center gap-1 rounded-xl p-1 text-xs font-extrabold text-[#3C3C3C] focus-visible:ring-4 focus-visible:ring-hudyat-gold focus-visible:outline-none active:scale-95">
+          <span className={cn("flex h-11 w-16 items-center justify-center overflow-hidden rounded-lg border-2 border-[#e0e0e0] bg-muted",choice===o.id&&"border-hudyat-gold ring-2 ring-hudyat-gold")}>{o.thumb}</span>
+          {o.label}
+        </button>
+      ))}
     </div>
   );
 }
