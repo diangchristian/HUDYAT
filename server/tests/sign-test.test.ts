@@ -26,7 +26,7 @@ before(async () => {
 });
 after(ctx.stop);
 
-/** A lesson with three signs and a quiz. Its name decides whether a camera model exists ("Colors" has one). */
+/** A lesson with three signs and a quiz. Its name decides whether a camera model exists ("Colors" has one, a made-up name has none). */
 const createLesson = async (name: string) => {
   const signs = await Promise.all(
     ["a", "b", "c"].map((letter) => {
@@ -117,7 +117,7 @@ test("the sign test opens only after the quiz is passed, and only where the came
   // The card still shows the Sign test step ahead, so it needs to know the camera can check this lesson.
   assert.deepEqual(await signTestOnList(notPassed.lesson.id), { hasModel: true, available: false, best: null });
 
-  const noModel = await createLesson("Calendar");
+  const noModel = await createLesson(ctx.unique("No camera model"));
   await passQuiz(noModel.assessmentId);
   assert.equal((await takeSignTest(noModel.lesson.id, [])).status, 409);
   assert.deepEqual(await signTestOnList(noModel.lesson.id), { hasModel: false, available: false, best: null });
