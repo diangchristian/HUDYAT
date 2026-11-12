@@ -252,24 +252,6 @@
     "points": 1
   },
   {
-    "category": "Shapes",
-    "question_number": 9,
-    "question_text": "Which one is the correct sign for Pentagon?",
-    "question_type": "IMAGE_GESTURE",
-    "gesture": "Pentagon",
-    "reference_media_url": null,
-    "points": 1
-  },
-  {
-    "category": "Shapes",
-    "question_number": 10,
-    "question_text": "Which one is the correct sign for Hexagon?",
-    "question_type": "IMAGE_GESTURE",
-    "gesture": "Hexagon",
-    "reference_media_url": null,
-    "points": 1
-  },
-  {
     "category": "Colors",
     "question_number": 1,
     "question_text": "Select the correct gesture below",
@@ -310,7 +292,7 @@
     "question_number": 5,
     "question_text": "Select the correct gesture below",
     "question_type": "VIDEO_GESTURE",
-    "gesture": "Black",
+    "gesture": "Orange",
     "reference_media_url": null,
     "points": 1
   },
@@ -319,43 +301,7 @@
     "question_number": 6,
     "question_text": "Select the correct gesture below",
     "question_type": "VIDEO_GESTURE",
-    "gesture": "White",
-    "reference_media_url": null,
-    "points": 1
-  },
-  {
-    "category": "Colors",
-    "question_number": 7,
-    "question_text": "Select the correct gesture below",
-    "question_type": "VIDEO_GESTURE",
-    "gesture": "Orange",
-    "reference_media_url": null,
-    "points": 1
-  },
-  {
-    "category": "Colors",
-    "question_number": 8,
-    "question_text": "Select the correct gesture below",
-    "question_type": "VIDEO_GESTURE",
     "gesture": "Purple",
-    "reference_media_url": null,
-    "points": 1
-  },
-  {
-    "category": "Colors",
-    "question_number": 9,
-    "question_text": "Select the correct gesture below",
-    "question_type": "VIDEO_GESTURE",
-    "gesture": "Pink",
-    "reference_media_url": null,
-    "points": 1
-  },
-  {
-    "category": "Colors",
-    "question_number": 10,
-    "question_text": "Select the correct gesture below",
-    "question_type": "VIDEO_GESTURE",
-    "gesture": "Brown",
     "reference_media_url": null,
     "points": 1
   },
@@ -410,42 +356,6 @@
     "question_text": "Select the correct gesture below",
     "question_type": "VIDEO_GESTURE",
     "gesture": "How",
-    "reference_media_url": null,
-    "points": 1
-  },
-  {
-    "category": "WH Questions",
-    "question_number": 7,
-    "question_text": "Select the correct gesture below",
-    "question_type": "VIDEO_GESTURE",
-    "gesture": "Which",
-    "reference_media_url": null,
-    "points": 1
-  },
-  {
-    "category": "WH Questions",
-    "question_number": 8,
-    "question_text": "Select the correct gesture below",
-    "question_type": "VIDEO_GESTURE",
-    "gesture": "How Many",
-    "reference_media_url": null,
-    "points": 1
-  },
-  {
-    "category": "WH Questions",
-    "question_number": 9,
-    "question_text": "Select the correct gesture below",
-    "question_type": "VIDEO_GESTURE",
-    "gesture": "How Much",
-    "reference_media_url": null,
-    "points": 1
-  },
-  {
-    "category": "WH Questions",
-    "question_number": 10,
-    "question_text": "Select the correct gesture below",
-    "question_type": "VIDEO_GESTURE",
-    "gesture": "Whose",
     "reference_media_url": null,
     "points": 1
   },

@@ -129,13 +129,15 @@ const TakeAssessmentPage = () => {
   if (result) {
     return (
       <QuizSummary
+        testName="quiz"
         score={Number(result.score)}
         totalItems={Number(result.totalPoints)}
         passed={result.passed}
+        nextStep={result.lessonCompleted ? "next-lesson" : "sign-test"}
         passingPercent={Number(result.passingScore)}
         lessonName={assessment.category.name}
         // The Learn page shows the newly unlocked lesson as the current one.
-        onNextLesson={() => navigate("/student/learn")}
+        onNext={() => navigate(result.lessonCompleted ? "/student/learn" : `/student/assessment/${categoryId}/sign-test`)}
         onReviewLesson={() => navigate(`/student/learn/${categoryId}`)}
         onRetry={restartQuiz}
       />

@@ -20,7 +20,7 @@ for(const [id,count] of [['calendar',22],['shapes',8],['word_concepts',10],['wh_
  const read=name=>JSON.parse(readFileSync(new URL('../../server/prisma/data/learning/'+name+'.json',import.meta.url)));
  const targets=id==='calendar'?[...read('calendar'),...read('days')]:read(id.replaceAll('_','-'));
  const missing=targets.filter(t=>!meta.classes.some(c=>matchesTarget(c,t.label))).map(t=>t.label);
- assert.deepEqual(missing,id==='wh_questions'?['Which','How Many','How Much','Whose']:id==='shapes'?['Pentagon','Hexagon']:[]);
+ assert.deepEqual(missing,[]);
  assert.equal(meta.classes.filter(c=>matchesTarget(c,'Family')).length,id==='word_concepts'?1:0);
  await tf.setBackend('cpu');const model=buildModel(tf,count,128),input=tf.tensor(p.inputs);let output;
  try{loadWeights(tf,model,meta,bin.buffer.slice(bin.byteOffset,bin.byteOffset+bin.byteLength));output=model.predict(input);let error=0;
@@ -38,9 +38,9 @@ test('Colors lesson contains only the six supported targets',()=>{
   assert.equal(meta.classes.filter(c=>matchesTarget(c,target.label)).length,1);
  }
 });
-test('lesson slugs resolve to exports and incomplete categories cannot start all-signs tests',()=>{
+test('lesson slugs resolve to exports and every lesson model can start all-signs tests',()=>{
  for(const name of ['Word Concepts','word-concepts','word_concepts'])assert.equal(fileModelId(name),'word_concepts');
  assert.equal(fileModelId('WH Questions'),'wh_questions');
- for(const name of ['Calendar','Word Concepts','Family'])assert.equal(hasCameraModel(name),true);
- for(const name of ['Shapes','WH Questions','Unknown'])assert.equal(hasCameraModel(name),false);
+ for(const name of ['Calendar','Word Concepts','Family','Shapes','WH Questions'])assert.equal(hasCameraModel(name),true);
+ assert.equal(hasCameraModel('Unknown'),false);
 });

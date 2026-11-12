@@ -15,6 +15,8 @@ export function useSubmitAssessment(categoryId: string | undefined) {
       void queryClient.invalidateQueries({ queryKey: myProgressKey });
       void queryClient.invalidateQueries({ queryKey: learningAreasKey });
       void queryClient.invalidateQueries({ queryKey: assessmentListKey });
+      // A pass can complete the lesson, unlocking the next one's cached page.
+      void queryClient.invalidateQueries({ queryKey: ["category-lesson"] });
       void queryClient.invalidateQueries({
         queryKey: assessmentKey(categoryId),
       });

@@ -78,3 +78,6 @@ Removed Black, White, Pink and Brown from Colors lesson links and seed data. The
 
 ## Applying lesson updates on another database
 From server, run npx tsx prisma/scripts/reorderAlphabet.ts to preview, then add --apply to save A-N, Ñ, Ng, O-Z. Run npx tsx prisma/scripts/trimColors.ts to preview, then add --apply to retain the six supported Colors signs. Both scripts back up affected records and remap learner checkpoints transactionally. Apply these targeted scripts instead of reseeding existing lessons. Restart the API after updating code/model assets. Model integration itself requires no schema migration.
+
+## Shapes and WH Questions lesson coverage (2026-11-12)
+Removed Pentagon and Hexagon from Shapes, and Which, How Many, How Much and Whose from WH Questions, so every lesson sign has a model output and all-signs camera tests run in both. Their quizzes, and the Colors quiz left over from the Colors trim, drop questions about removed signs and swap removed wrong answers for kept signs. Gestures and other history stay. On another database run `npx tsx prisma/scripts/trimLessonSigns.ts` from server to preview, then add `--apply`; it backs up, remaps checkpoints and refuses to change a quiz that has attempts.

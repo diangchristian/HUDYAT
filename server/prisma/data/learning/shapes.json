@@ -46,17 +46,5 @@
     "meaning": "A rounded shape like a stretched circle.",
     "exampleUsage": "The mirror is oval-shaped.",
     "displayOrder": 8
-  },
-  {
-    "label": "Pentagon",
-    "meaning": "A shape with five sides.",
-    "exampleUsage": "The building looks like a pentagon.",
-    "displayOrder": 9
-  },
-  {
-    "label": "Hexagon",
-    "meaning": "A shape with six sides.",
-    "exampleUsage": "A honeycomb cell is a hexagon.",
-    "displayOrder": 10
   }
 ]

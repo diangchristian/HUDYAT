@@ -41,7 +41,10 @@ export default function CategoryLearnPage() {
     })) ?? [];
 
   // The lesson is full-screen with its own trail header and bottom bar.
-  if (!isLoading && !error && lesson?.category && prompts.length) {
+  // A locked lesson's link still loads (Practice uses the same data), but it can't be studied yet.
+  const locked = lesson?.learningStatus === "locked";
+
+  if (!isLoading && !error && lesson?.category && prompts.length && !locked) {
     return (
       <LearnSession
         key={lesson.category.id}
@@ -87,8 +90,10 @@ export default function CategoryLearnPage() {
           </div>
         ) : (
           <Card className="mx-auto max-w-md p-8 text-center">
-            <h1 className="text-2xl font-bold">Category not found</h1>
-            <p className="my-4 text-muted-foreground">Choose an available category to start learning.</p>
+            <h1 className="text-2xl font-bold">{locked ? "Not yet!" : "Category not found"}</h1>
+            <p className="my-4 text-muted-foreground">
+              {locked ? "Finish the lessons before this one first." : "Choose an available category to start learning."}
+            </p>
             <ElevatedButton
               text="BACK TO LEARN"
               variant="secondary"

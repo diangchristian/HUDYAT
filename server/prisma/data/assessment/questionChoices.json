@@ -560,8 +560,8 @@
         "display_order": 2
       },
       {
-        "gesture": "Pentagon",
-        "choice_text": "Pentagon",
+        "gesture": "Circle",
+        "choice_text": "Circle",
         "display_order": 3
       }
     ]
@@ -571,13 +571,13 @@
     "question_number": 8,
     "choices": [
       {
-        "gesture": "Pentagon",
-        "choice_text": "Pentagon",
+        "gesture": "Circle",
+        "choice_text": "Circle",
         "display_order": 1
       },
       {
-        "gesture": "Hexagon",
-        "choice_text": "Hexagon",
+        "gesture": "Square",
+        "choice_text": "Square",
         "display_order": 2
       },
       {
@@ -588,48 +588,6 @@
     ]
   },
   {
-    "category": "Shapes",
-    "question_number": 9,
-    "choices": [
-      {
-        "gesture": "Circle",
-        "choice_text": "Circle",
-        "display_order": 1
-      },
-      {
-        "gesture": "Pentagon",
-        "choice_text": "Pentagon",
-        "display_order": 2
-      },
-      {
-        "gesture": "Hexagon",
-        "choice_text": "Hexagon",
-        "display_order": 3
-      }
-    ]
-  },
-  {
-    "category": "Shapes",
-    "question_number": 10,
-    "choices": [
-      {
-        "gesture": "Hexagon",
-        "choice_text": "Hexagon",
-        "display_order": 1
-      },
-      {
-        "gesture": "Circle",
-        "choice_text": "Circle",
-        "display_order": 2
-      },
-      {
-        "gesture": "Square",
-        "choice_text": "Square",
-        "display_order": 3
-      }
-    ]
-  },
-  {
     "category": "Colors",
     "question_number": 1,
     "choices": [
@@ -676,8 +634,8 @@
     "question_number": 3,
     "choices": [
       {
-        "gesture": "Black",
-        "choice_text": "Black",
+        "gesture": "Red",
+        "choice_text": "Red",
         "display_order": 1
       },
       {
@@ -702,13 +660,13 @@
         "display_order": 1
       },
       {
-        "gesture": "Black",
-        "choice_text": "Black",
+        "gesture": "Red",
+        "choice_text": "Red",
         "display_order": 2
       },
       {
-        "gesture": "White",
-        "choice_text": "White",
+        "gesture": "Blue",
+        "choice_text": "Blue",
         "display_order": 3
       }
     ]
@@ -718,18 +676,18 @@
     "question_number": 5,
     "choices": [
       {
-        "gesture": "White",
-        "choice_text": "White",
+        "gesture": "Orange",
+        "choice_text": "Orange",
         "display_order": 1
       },
       {
-        "gesture": "Orange",
-        "choice_text": "Orange",
+        "gesture": "Purple",
+        "choice_text": "Purple",
         "display_order": 2
       },
       {
-        "gesture": "Black",
-        "choice_text": "Black",
+        "gesture": "Red",
+        "choice_text": "Red",
         "display_order": 3
       }
     ]
@@ -739,102 +697,18 @@
     "question_number": 6,
     "choices": [
       {
-        "gesture": "Purple",
-        "choice_text": "Purple",
-        "display_order": 1
-      },
-      {
-        "gesture": "White",
-        "choice_text": "White",
-        "display_order": 2
-      },
-      {
-        "gesture": "Orange",
-        "choice_text": "Orange",
-        "display_order": 3
-      }
-    ]
-  },
-  {
-    "category": "Colors",
-    "question_number": 7,
-    "choices": [
-      {
-        "gesture": "Orange",
-        "choice_text": "Orange",
-        "display_order": 1
-      },
-      {
-        "gesture": "Purple",
-        "choice_text": "Purple",
-        "display_order": 2
-      },
-      {
-        "gesture": "Pink",
-        "choice_text": "Pink",
-        "display_order": 3
-      }
-    ]
-  },
-  {
-    "category": "Colors",
-    "question_number": 8,
-    "choices": [
-      {
-        "gesture": "Pink",
-        "choice_text": "Pink",
-        "display_order": 1
-      },
-      {
-        "gesture": "Brown",
-        "choice_text": "Brown",
-        "display_order": 2
-      },
-      {
-        "gesture": "Purple",
-        "choice_text": "Purple",
-        "display_order": 3
-      }
-    ]
-  },
-  {
-    "category": "Colors",
-    "question_number": 9,
-    "choices": [
-      {
         "gesture": "Red",
         "choice_text": "Red",
         "display_order": 1
-      },
-      {
-        "gesture": "Pink",
-        "choice_text": "Pink",
-        "display_order": 2
-      },
-      {
-        "gesture": "Brown",
-        "choice_text": "Brown",
-        "display_order": 3
-      }
-    ]
-  },
-  {
-    "category": "Colors",
-    "question_number": 10,
-    "choices": [
-      {
-        "gesture": "Brown",
-        "choice_text": "Brown",
-        "display_order": 1
-      },
-      {
-        "gesture": "Red",
-        "choice_text": "Red",
-        "display_order": 2
       },
       {
         "gesture": "Blue",
         "choice_text": "Blue",
+        "display_order": 2
+      },
+      {
+        "gesture": "Purple",
+        "choice_text": "Purple",
         "display_order": 3
       }
     ]
@@ -933,8 +807,8 @@
         "display_order": 1
       },
       {
-        "gesture": "Which",
-        "choice_text": "Which",
+        "gesture": "What",
+        "choice_text": "What",
         "display_order": 2
       },
       {
@@ -949,97 +823,13 @@
     "question_number": 6,
     "choices": [
       {
-        "gesture": "How Many",
-        "choice_text": "How Many",
+        "gesture": "What",
+        "choice_text": "What",
         "display_order": 1
       },
       {
         "gesture": "How",
         "choice_text": "How",
-        "display_order": 2
-      },
-      {
-        "gesture": "Which",
-        "choice_text": "Which",
-        "display_order": 3
-      }
-    ]
-  },
-  {
-    "category": "WH Questions",
-    "question_number": 7,
-    "choices": [
-      {
-        "gesture": "Which",
-        "choice_text": "Which",
-        "display_order": 1
-      },
-      {
-        "gesture": "How Many",
-        "choice_text": "How Many",
-        "display_order": 2
-      },
-      {
-        "gesture": "How Much",
-        "choice_text": "How Much",
-        "display_order": 3
-      }
-    ]
-  },
-  {
-    "category": "WH Questions",
-    "question_number": 8,
-    "choices": [
-      {
-        "gesture": "How Much",
-        "choice_text": "How Much",
-        "display_order": 1
-      },
-      {
-        "gesture": "Whose",
-        "choice_text": "Whose",
-        "display_order": 2
-      },
-      {
-        "gesture": "How Many",
-        "choice_text": "How Many",
-        "display_order": 3
-      }
-    ]
-  },
-  {
-    "category": "WH Questions",
-    "question_number": 9,
-    "choices": [
-      {
-        "gesture": "What",
-        "choice_text": "What",
-        "display_order": 1
-      },
-      {
-        "gesture": "How Much",
-        "choice_text": "How Much",
-        "display_order": 2
-      },
-      {
-        "gesture": "Whose",
-        "choice_text": "Whose",
-        "display_order": 3
-      }
-    ]
-  },
-  {
-    "category": "WH Questions",
-    "question_number": 10,
-    "choices": [
-      {
-        "gesture": "Whose",
-        "choice_text": "Whose",
-        "display_order": 1
-      },
-      {
-        "gesture": "What",
-        "choice_text": "What",
         "display_order": 2
       },
       {

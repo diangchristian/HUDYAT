@@ -2,7 +2,7 @@ import { Prisma } from "../generated/prisma/client.js";
 import { prisma } from "../config/db.js";
 import { hasCameraModel } from "../config/file-models.js";
 import { quizAttemptPasses, signTestPasses } from "../utils/passing.js";
-import { bestSignTests } from "./sign-test.service.js";
+import { bestSignTests, completeLessonIfPassed } from "./sign-test.service.js";
 
 /*
  * A category's assessment unlocks for a learner once they've
@@ -270,16 +270,6 @@ export const submitAssessment = async (
           },
 
           include: {
-            category: {
-              select: {
-                id: true,
-                name: true,
-                description: true,
-                learningAreaId: true,
-                displayOrder: true,
-              },
-            },
-
             questions: {
               include: {
                 choices: true,
@@ -437,81 +427,10 @@ export const submitAssessment = async (
           },
         });
 
-      // ==========================================
-      // PASS → COMPLETE CURRENT CATEGORY
-      // ==========================================
-
-      if (passed) {
-        await tx.categoryProgress.upsert({
-          where: {
-            learnerId_categoryId: {
-              learnerId,
-              categoryId,
-            },
-          },
-
-          update: {
-            status: "COMPLETED",
-            completedAt:
-              new Date(),
-          },
-
-          create: {
-            learnerId,
-            categoryId,
-            status: "COMPLETED",
-            startedAt:
-              new Date(),
-            completedAt:
-              new Date(),
-          },
-        });
-
-        // ========================================
-        // UNLOCK NEXT CATEGORY
-        // ========================================
-
-        const nextCategory =
-          await tx.category.findFirst({
-            where: {
-              learningAreaId:
-                assessment.category
-                  .learningAreaId,
-
-              isActive: true,
-
-              displayOrder: {
-                gt: assessment.category
-                  .displayOrder,
-              },
-            },
-
-            orderBy: {
-              displayOrder: "asc",
-            },
-          });
-
-        if (nextCategory) {
-          await tx.categoryProgress.upsert({
-            where: {
-              learnerId_categoryId: {
-                learnerId,
-                categoryId:
-                  nextCategory.id,
-              },
-            },
-
-            update: {},
-
-            create: {
-              learnerId,
-              categoryId:
-                nextCategory.id,
-              status: "NOT_STARTED",
-            },
-          });
-        }
-      }
+      // A pass completes the lesson only once its Sign test is passed too (where the camera can check it).
+      const lessonCompleted =
+        passed &&
+        (await completeLessonIfPassed(tx, learnerId, categoryId));
 
       return {
         attemptId: attempt.id,
@@ -526,6 +445,8 @@ export const submitAssessment = async (
           assessment.passingScore,
 
         passed,
+
+        lessonCompleted,
 
         answers:
           attempt.answers.map(
