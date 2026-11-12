@@ -7,10 +7,11 @@
  * the quiz page shows the best one; teachers see it on the student's page.
  */
 import { useEffect, useRef, useState, type CSSProperties } from "react";
-import { ArrowRight, Check, Hand, RotateCcw, SkipForward, Star, Timer, X } from "lucide-react";
+import { ArrowRight, Check, Hand, SkipForward, Star, Timer, X } from "lucide-react";
 import { useNavigate, useParams } from "react-router";
 
 import PracticeCamera from "@/components/common/practice-camera";
+import QuizSummary from "@/components/common/quiz-summary";
 import ElevatedButton from "@/components/ui/elavated-button";
 import { usePreloadRecognition } from "@/features/fsl-recognition/preload";
 import { useAssessmentList } from "@/hooks/use-assessment-list";
@@ -19,7 +20,6 @@ import { useSubmitSignTest } from "@/hooks/use-submit-sign-test";
 import { categorySlug } from "@/lib/practice";
 import { cn } from "@/lib/utils";
 
-import Celebration from "./category-learn/celebration";
 import type { LessonPrompt } from "./category-learn/learn-session";
 import { HowCard } from "./category-learn/step-cards";
 import "./category-learn/learn-session.css";
@@ -241,34 +241,45 @@ function Results({ test, title, categoryId }: { test: Test; title: string; categ
     // eslint-disable-next-line react-hooks/exhaustive-deps -- once, when this go's results appear
   }, []);
 
-  return (
-    <div className="mx-auto w-full max-w-2xl space-y-4 overflow-y-auto pb-4">
-      {test.passed && <Celebration label={title} durationMs={2600} />}
-      <div className="ls-pop rounded-3xl border-4 bg-white p-6 text-center shadow-[0_6px_0_#0000001a]" style={{ borderColor: test.passed ? "#58CC02" : "#FF9600" }}>
-        <p className="text-6xl font-black text-[#3C3C3C]">
-          {test.score}<span className="text-3xl text-[#AFAFAF]">/{test.order.length}</span>
-        </p>
-        <h1 className="mt-2 text-2xl font-black" style={{ color: test.passed ? "#3F8F00" : "#C2410C" }}>
-          {test.passed ? "You passed! ★" : `Almost! Sign ${test.needed} to pass.`}
-        </h1>
-        {save.data?.lessonCompleted && (
-          <p role="status" className="mt-3 inline-flex items-center gap-2 rounded-full bg-green-600 px-4 py-1.5 text-base font-extrabold text-white">
-            <Check aria-hidden="true" className="size-5" strokeWidth={3} /> Next lesson unlocked
-          </p>
+  const result = save.data;
+
+  // The result shown is the saved one (the server scores the go), so wait for it.
+  if (!result) {
+    return (
+      <div className="flex min-h-dvh items-center justify-center bg-[#FFF8E7] p-4 font-body">
+        {save.isError ? (
+          <div role="alert" className="max-w-sm rounded-3xl border-4 border-[#E5E5E5] bg-white p-6 text-center">
+            <p className="text-2xl font-black text-[#3C3C3C]">We couldn't save this go</p>
+            <p className="mt-2 text-base font-semibold text-[#6B6B6B]">Your signs are still here. Try saving them again.</p>
+            <ElevatedButton text="SAVE AGAIN" size="lg" className="mt-5 min-h-12 w-full" onClick={send} />
+            <ElevatedButton text="BACK" variant="secondary" className="mt-3 min-h-12 w-full" onClick={() => navigate("/student/assessment")} />
+          </div>
+        ) : (
+          <p role="status" className="text-lg font-bold text-[#6B6B6B]">Saving your signs...</p>
         )}
-        {save.isError && (
-          <p role="alert" className="mt-3 flex flex-wrap items-center justify-center gap-2 text-sm font-bold text-destructive">
-            We couldn't save this go.
-            <button type="button" onClick={send} className="underline">Try saving again</button>
-          </p>
-        )}
-        <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-          <ElevatedButton text="TRY AGAIN" icon={RotateCcw} size="lg" variant={test.passed ? "secondary" : "primary"} className="min-h-14 flex-1" onClick={test.restart} />
-          <ElevatedButton text="DONE" icon={Check} size="lg" variant={test.passed ? "primary" : "secondary"} className="min-h-14 flex-1" onClick={() => navigate("/student/assessment")} />
-        </div>
       </div>
+    );
+  }
+
+  // The quiz's result screen, so both tests end the same way; what to practise sits under it.
+  return (
+    <QuizSummary
+      testName="Sign test"
+      score={result.score}
+      totalItems={result.total}
+      passed={result.passed}
+      // A passed Sign test completes the lesson (its quiz was passed to get here).
+      nextStep="next-lesson"
+      passingPercent={PASS * 100}
+      lessonName={title}
+      // The Learn page shows the newly unlocked lesson as the current one.
+      onNext={() => navigate("/student/learn")}
+      onRetry={test.restart}
+      onReviewLesson={() => navigate(`/student/learn/${categoryId}`)}
+      onLeave={() => navigate("/student/assessment")}
+    >
       {missed.length > 0 && (
-        <section className="rounded-3xl bg-white p-4 shadow-[0_4px_0_#0000000f]">
+        <section className="mt-6 w-full rounded-3xl bg-white p-4 text-left shadow-[0_4px_0_#0000000f]">
           <h2 className="text-lg font-black text-[#3C3C3C]">Let's look at these again</h2>
           <div className="mt-3 flex flex-wrap gap-2">
             {missed.map((sign) => (
@@ -284,7 +295,7 @@ function Results({ test, title, categoryId }: { test: Test; title: string; categ
           ))}
         </section>
       )}
-    </div>
+    </QuizSummary>
   );
 }
 
@@ -292,6 +303,8 @@ function Runner({ categoryId, title, prompts }: { categoryId: string; title: str
   const navigate = useNavigate();
   usePreloadRecognition(categorySlug(title));
   const test = useSignTest(prompts);
+  // TRY AGAIN goes back to the intro, so each finished go mounts Results (and saves) afresh.
+  if (test.started && test.finished) return <Results test={test} title={title} categoryId={categoryId} />;
   return (
     <div className="flex min-h-dvh flex-col bg-[#FFF8E7] font-body max-md:h-dvh">
       <header className="flex shrink-0 items-center gap-3 px-3 py-2 sm:px-6">
@@ -304,14 +317,7 @@ function Runner({ categoryId, title, prompts }: { categoryId: string; title: str
         <span className="text-sm font-black text-[#6B6B6B] tabular-nums">{Math.min(test.pos + 1, test.order.length)}/{test.order.length}</span>
       </header>
       <main className="mx-auto flex min-h-0 w-full max-w-3xl flex-1 flex-col gap-3 px-3 pb-[calc(.75rem+env(safe-area-inset-bottom))] sm:px-6">
-        {!test.started ? (
-          <Intro test={test} title={title} />
-        ) : test.finished ? (
-          // TRY AGAIN goes back to the intro, so each finished go mounts Results (and saves) afresh.
-          <Results test={test} title={title} categoryId={categoryId} />
-        ) : (
-          <RingTimer test={test} title={title} />
-        )}
+        {!test.started ? <Intro test={test} title={title} /> : <RingTimer test={test} title={title} />}
       </main>
     </div>
   );
