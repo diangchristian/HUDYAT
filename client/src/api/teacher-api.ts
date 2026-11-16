@@ -145,6 +145,16 @@ export type LearnerDetail = {
   >;
   progress: MyProgress;
   attempts: AttemptSummary[];
+  signTestHistory: Array<{
+    id: string;
+    categoryId: string;
+    categoryName: string;
+    score: number;
+    total: number;
+    percentage: number;
+    passed: boolean;
+    completedAt: string;
+  }>;
   practice: {
     totalAttempts: number;
     correctAttempts: number;

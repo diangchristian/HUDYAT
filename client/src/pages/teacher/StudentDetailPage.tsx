@@ -85,6 +85,15 @@ export default function StudentDetailPage() {
   const { learnerId } = useParams();
   const { data, isLoading, error, refetch } = useLearnerDetail(learnerId);
   const signTestsByLesson = new Map(data?.signTests.map((result) => [result.categoryId, result]));
+  const history = data ? [
+    ...data.attempts.map((attempt) => ({ ...attempt, type: "Quiz" })),
+    ...(data.signTestHistory ?? []).map((attempt) => ({
+      ...attempt,
+      assessmentTitle: attempt.categoryName,
+      totalPoints: attempt.total,
+      type: "Sign test",
+    })),
+  ].sort((a, b) => new Date(b.completedAt).getTime() - new Date(a.completedAt).getTime()) : [];
   const setStatus = useSetLearnerStatus();
   const [resetOpen, setResetOpen] = useState(false);
   const [statusOpen, setStatusOpen] = useState(false);
@@ -313,15 +322,16 @@ export default function StudentDetailPage() {
             <StaffCardHeader>
               <StaffCardTitle>Quiz history</StaffCardTitle>
             </StaffCardHeader>
-            {data.attempts.length === 0 ? (
+            {history.length === 0 ? (
               <p className="px-6 py-10 text-center text-sm text-muted-foreground">
-                This student hasn't submitted a quiz yet.
+                This student hasn't submitted a quiz or sign test yet.
               </p>
             ) : (
               <Table>
                 <TableHeader>
                   <TableRow className="hover:bg-transparent">
-                    <TableHead className="pl-6">Quiz</TableHead>
+                    <TableHead className="pl-6">Assessment</TableHead>
+                    <TableHead>Type</TableHead>
                     <TableHead className="hidden sm:table-cell">
                       Submitted
                     </TableHead>
@@ -330,11 +340,12 @@ export default function StudentDetailPage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {data.attempts.map((attempt) => (
-                    <TableRow key={attempt.id}>
+                  {history.map((attempt) => (
+                    <TableRow key={`${attempt.type}-${attempt.id}`}>
                       <TableCell className="py-3 pl-6 font-bold text-foreground">
-                        {attempt.assessmentTitle}
+                        {attempt.assessmentTitle.replace(/\s+assessment\s*$/i, "")}
                       </TableCell>
+                      <TableCell>{attempt.type}</TableCell>
                       <TableCell className="hidden text-muted-foreground sm:table-cell">
                         {new Date(attempt.completedAt).toLocaleString()}
                       </TableCell>

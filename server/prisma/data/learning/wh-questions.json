@@ -3,36 +3,42 @@
     "label": "What",
     "meaning": "Used to ask for information about something.",
     "exampleUsage": "What is your name?",
-    "displayOrder": 1
+    "displayOrder": 1,
+    "referenceImageUrl": "/references/validation/whquestions/what.gif"
   },
   {
     "label": "Who",
     "meaning": "Used to ask about a person.",
     "exampleUsage": "Who is your teacher?",
-    "displayOrder": 2
+    "displayOrder": 2,
+    "referenceImageUrl": "/references/validation/whquestions/who.gif"
   },
   {
     "label": "Where",
     "meaning": "Used to ask about a place.",
     "exampleUsage": "Where do you live?",
-    "displayOrder": 3
+    "displayOrder": 3,
+    "referenceImageUrl": "/references/validation/whquestions/where.gif"
   },
   {
     "label": "When",
     "meaning": "Used to ask about time.",
     "exampleUsage": "When is the assessment?",
-    "displayOrder": 4
+    "displayOrder": 4,
+    "referenceImageUrl": "/references/validation/whquestions/when.gif"
   },
   {
     "label": "Why",
     "meaning": "Used to ask for a reason.",
     "exampleUsage": "Why are you late?",
-    "displayOrder": 5
+    "displayOrder": 5,
+    "referenceImageUrl": "/references/validation/whquestions/why.gif"
   },
   {
     "label": "How",
     "meaning": "Used to ask about a method or condition.",
     "exampleUsage": "How are you feeling today?",
-    "displayOrder": 6
+    "displayOrder": 6,
+    "referenceImageUrl": "/references/validation/whquestions/how.gif"
   }
 ]

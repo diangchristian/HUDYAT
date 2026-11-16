@@ -3,60 +3,70 @@
     "label": "Father",
     "meaning": "A male parent.",
     "exampleUsage": "My father cooks breakfast every morning.",
-    "displayOrder": 1
+    "displayOrder": 1,
+    "referenceImageUrl": "/references/validation/family/father.gif"
   },
   {
     "label": "Mother",
     "meaning": "A female parent.",
     "exampleUsage": "My mother walks me to school.",
-    "displayOrder": 2
+    "displayOrder": 2,
+    "referenceImageUrl": "/references/validation/family/mother.gif"
   },
   {
     "label": "Son",
     "meaning": "A male child of a parent.",
     "exampleUsage": "Their son plays basketball.",
-    "displayOrder": 3
+    "displayOrder": 3,
+    "referenceImageUrl": "/references/validation/family/son.gif"
   },
   {
     "label": "Daughter",
     "meaning": "A female child of a parent.",
     "exampleUsage": "Their daughter is in Grade 3.",
-    "displayOrder": 4
+    "displayOrder": 4,
+    "referenceImageUrl": "/references/validation/family/daughter.gif"
   },
   {
     "label": "Grandfather",
     "meaning": "The father of your father or mother.",
     "exampleUsage": "My grandfather tells us stories.",
-    "displayOrder": 5
+    "displayOrder": 5,
+    "referenceImageUrl": "/references/validation/family/grandfather.gif"
   },
   {
     "label": "Grandmother",
     "meaning": "The mother of your father or mother.",
     "exampleUsage": "My grandmother lives with us.",
-    "displayOrder": 6
+    "displayOrder": 6,
+    "referenceImageUrl": "/references/validation/family/grandmother.gif"
   },
   {
     "label": "Uncle",
     "meaning": "The brother of your father or mother.",
     "exampleUsage": "My uncle visits us every Sunday.",
-    "displayOrder": 7
+    "displayOrder": 7,
+    "referenceImageUrl": "/references/validation/family/uncle.gif"
   },
   {
     "label": "Auntie",
     "meaning": "The sister of your father or mother.",
     "exampleUsage": "My auntie gave me a gift.",
-    "displayOrder": 8
+    "displayOrder": 8,
+    "referenceImageUrl": "/references/validation/family/auntie.gif"
   },
   {
     "label": "Cousin",
     "meaning": "The child of your uncle or auntie.",
     "exampleUsage": "My cousin and I play together.",
-    "displayOrder": 9
+    "displayOrder": 9,
+    "referenceImageUrl": "/references/validation/family/cousin.gif"
   },
   {
     "label": "Parents",
     "meaning": "Your father and mother together.",
     "exampleUsage": "My parents come to my school program.",
-    "displayOrder": 10
+    "displayOrder": 10,
+    "referenceImageUrl": "/references/validation/family/parents.gif"
   }
 ]

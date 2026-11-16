@@ -10,6 +10,7 @@ type VideoAnswer = {
 type VideoQuestionProps = {
   title?: string;
   videoUrl?: string;
+  imageUrl?: string;
   answers?: VideoAnswer[];
   correctAnswer?: string;
   selectedAnswer?: string | null;
@@ -20,6 +21,7 @@ type VideoQuestionProps = {
 const VideoQuestion = ({
   title,
   videoUrl,
+  imageUrl,
   answers,
   correctAnswer,
   selectedAnswer,
@@ -39,6 +41,7 @@ const VideoQuestion = ({
           <div className="min-h-0 w-full overflow-hidden rounded-3xl bg-black">
             <ReferenceMedia
               videoUrl={videoUrl}
+              imageUrl={imageUrl}
               label={title ?? "Reference video"}
               className="max-h-full w-full"
             />

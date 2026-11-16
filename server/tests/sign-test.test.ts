@@ -94,6 +94,9 @@ test("after passing the quiz a learner takes the sign test; the best go is kept 
   });
 
   const { data } = await ctx.request("GET", `/api/teacher/learners/${learnerId}`, { token: teacherToken });
+  const history = data.signTestHistory.filter((row: { categoryId: string }) => row.categoryId === lesson.id);
+  assert.equal(history.length, 3, "Quiz history must include every sign-test attempt, including worse retries");
+  assert.deepEqual(history.map((row: { score: number }) => row.score).sort(), [1, 2, 3]);
   const result = data.signTests.find((row: { categoryId: string }) => row.categoryId === lesson.id);
   assert.deepEqual(
     { score: result.score, total: result.total, missedSigns: result.missedSigns, attempts: result.attempts },

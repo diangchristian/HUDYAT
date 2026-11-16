@@ -30,6 +30,7 @@ export default function ReferenceMedia({
   }
 
   const hasMedia = Boolean(videoUrl || imageUrl);
+  const animatedImage = Boolean(imageUrl && /\.gif(?:[?#]|$)/i.test(imageUrl));
 
   return (
     <div
@@ -38,11 +39,14 @@ export default function ReferenceMedia({
         className,
       )}
     >
-      {!mediaFailed && videoUrl ? (
+      {!mediaFailed && videoUrl && !animatedImage ? (
         <video
           key={videoUrl}
           ref={videoRef}
           controls
+          autoPlay
+          muted
+          loop
           playsInline
           preload="metadata"
           className="h-full w-full rounded-lg object-contain"

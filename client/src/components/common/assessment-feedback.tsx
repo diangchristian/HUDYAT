@@ -19,17 +19,36 @@ const STARS = Array.from({ length: 10 }, (_, i) => {
 });
 
 /** The celebration behind the check: rings and stars bursting out of the badge. */
-function CorrectBadge() {
+function CorrectBadge({ compact = false }: { compact?: boolean }) {
   return (
-    <span className="relative z-10 flex size-28 items-center justify-center rounded-full bg-white text-green-700 shadow-xl motion-safe:animate-[feedback-pop_.45s_ease-out] sm:size-36">
+    <span className={`relative z-10 flex items-center justify-center rounded-full bg-white text-green-700 shadow-xl motion-safe:animate-[feedback-pop_.45s_ease-out] ${compact ? "size-16" : "size-28 sm:size-36"}`}>
       {[0, 250].map((delay) => (
         <span key={delay} aria-hidden="true" className="absolute inset-0 rounded-full border-4 border-white motion-reduce:hidden" style={{ animation: `feedback-ring 1s ease-out ${delay}ms both` }} />
       ))}
       {STARS.map(({ x, y }) => (
         <Star key={x + y} aria-hidden="true" className="absolute top-1/2 left-1/2 size-7 fill-hudyat-gold text-hudyat-gold motion-reduce:hidden" style={{ "--x": x, "--y": y, animation: "feedback-star 1.1s ease-out 150ms both" } as CSSProperties} />
       ))}
-      <Check aria-hidden="true" className="size-20 sm:size-24" strokeWidth={4} />
+      <Check aria-hidden="true" className={compact ? "size-12" : "size-20 sm:size-24"} strokeWidth={4} />
     </span>
+  );
+}
+
+/** Camera results share the quiz celebration without blocking signing or camera controls. */
+export function CameraFeedback({ isCorrect }: { isCorrect: boolean }) {
+  return (
+    <div className={`pointer-events-none absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 overflow-hidden rounded-lg p-4 text-center text-white ${isCorrect ? "bg-gradient-to-b from-green-500/90 to-green-700/95" : "bg-[#d95849]/90 motion-safe:animate-[feedback-nudge_.4s_ease-in-out]"}`}>
+      <style>{MOTION}</style>
+      {isCorrect && Array.from({ length: 20 }, (_, i) => (
+        <span key={i} aria-hidden="true" className="absolute top-0 size-2 rounded-sm motion-reduce:hidden" style={{ left: `${2 + i * 5}%`, background: CONFETTI_COLORS[i % 4], animation: `feedback-confetti 1.3s ease-in ${(i % 4) * 80}ms both` }} />
+      ))}
+      {isCorrect ? <CorrectBadge compact /> : (
+        <span className="flex size-16 items-center justify-center rounded-full bg-white text-[#d95849] motion-safe:animate-[feedback-pop_.4s_ease-out]">
+          <X aria-hidden="true" className="size-12" strokeWidth={4} />
+        </span>
+      )}
+      <p role="status" aria-live="polite" className="relative z-10 text-3xl font-extrabold sm:text-4xl">{isCorrect ? "Correct!" : "Not quite"}</p>
+      <p className="relative z-10 text-lg font-bold">{isCorrect ? "Great job!" : "Try again. You can do it!"}</p>
+    </div>
   );
 }
 

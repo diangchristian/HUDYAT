@@ -196,7 +196,7 @@ export const getLearnerDetail = async (learnerId: string) => {
     throw httpError(404, "Learner not found.");
   }
 
-  const [progress, attempts, practiceTotals, signTests] = await Promise.all([
+  const [progress, attempts, practiceTotals, signTests, signTestHistory] = await Promise.all([
     getMyProgress(learnerId),
     prisma.assessmentAttempt.findMany({
       where: { learnerId, completedAt: { not: null } },
@@ -209,6 +209,14 @@ export const getLearnerDetail = async (learnerId: string) => {
       _count: { _all: true },
     }),
     bestSignTests(learnerId),
+    prisma.signTestAttempt.findMany({
+      where: { learnerId },
+      orderBy: [{ completedAt: "desc" }, { id: "asc" }],
+      select: {
+        id: true, categoryId: true, score: true, total: true, completedAt: true,
+        category: { select: { name: true } },
+      },
+    }),
   ]);
 
   // The best go's missed signs, by name, so a teacher knows what to practise.
@@ -241,6 +249,16 @@ export const getLearnerDetail = async (learnerId: string) => {
     },
     progress,
     attempts: attempts.map(toAttemptSummary),
+    signTestHistory: signTestHistory.map((attempt) => ({
+      id: attempt.id,
+      categoryId: attempt.categoryId,
+      categoryName: attempt.category.name,
+      score: attempt.score,
+      total: attempt.total,
+      percentage: toPercentage(attempt.score, attempt.total),
+      passed: signTestPasses(attempt.score, attempt.total),
+      completedAt: attempt.completedAt,
+    })),
     practice: {
       totalAttempts: totalPractice,
       correctAttempts: correctPractice,

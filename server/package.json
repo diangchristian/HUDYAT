@@ -21,7 +21,8 @@
     "prebuild": "prisma generate",
     "premodels:register": "prisma generate",
     "models:alphabet-signs": "tsx prisma/scripts/ensureAlphabetExtensions.ts",
-    "test:alphabet-signs": "tsx --test tests/alphabet-extensions.test.ts"
+    "test:alphabet-signs": "tsx --test tests/alphabet-extensions.test.ts",
+    "dev:offline": "tsx watch src/offline.ts"
   },
   "keywords": [],
   "author": "",

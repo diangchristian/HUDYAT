@@ -145,7 +145,7 @@ export function HowCard({ prompt, fill = false }: Pick<CardProps, "prompt"> & { 
           )}
         />
       </div>
-      {prompt.referenceVideoUrl && (
+      {prompt.referenceVideoUrl && !/\.gif(?:[?#]|$)/i.test(prompt.referenceImageUrl ?? "") && (
         <div className={cn("mt-3 flex shrink-0 gap-2 px-1", fill && "max-md:mt-2")}>
           <button type="button" onClick={again} className={cn(control, "border-[#CECECE] bg-white text-[#064E3B]")}>
             <RotateCcw aria-hidden="true" className="size-6" /> Again

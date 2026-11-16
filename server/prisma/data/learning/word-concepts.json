@@ -3,60 +3,70 @@
     "label": "Yes",
     "meaning": "An affirmative response.",
     "exampleUsage": "Yes, I understand the lesson.",
-    "displayOrder": 1
+    "displayOrder": 1,
+    "referenceImageUrl": "/references/validation/wordconcepts/yes.gif"
   },
   {
     "label": "No",
     "meaning": "A negative response.",
     "exampleUsage": "No, I don't have a pen.",
-    "displayOrder": 2
+    "displayOrder": 2,
+    "referenceImageUrl": "/references/validation/wordconcepts/no.gif"
   },
   {
     "label": "Please",
     "meaning": "Used to make a polite request.",
     "exampleUsage": "Please help me with this.",
-    "displayOrder": 3
+    "displayOrder": 3,
+    "referenceImageUrl": "/references/validation/wordconcepts/please.gif"
   },
   {
     "label": "Sorry",
     "meaning": "Used to express apology.",
     "exampleUsage": "Sorry, I was late.",
-    "displayOrder": 4
+    "displayOrder": 4,
+    "referenceImageUrl": "/references/validation/wordconcepts/sorry.gif"
   },
   {
     "label": "Love",
     "meaning": "A strong feeling of affection.",
     "exampleUsage": "I love my family.",
-    "displayOrder": 5
+    "displayOrder": 5,
+    "referenceImageUrl": "/references/validation/wordconcepts/love.gif"
   },
   {
     "label": "Friend",
     "meaning": "A person you know and like.",
     "exampleUsage": "She is my best friend.",
-    "displayOrder": 6
+    "displayOrder": 6,
+    "referenceImageUrl": "/references/validation/wordconcepts/friend.gif"
   },
   {
     "label": "Family",
     "meaning": "A group of related people.",
     "exampleUsage": "My family is very supportive.",
-    "displayOrder": 7
+    "displayOrder": 7,
+    "referenceImageUrl": "/references/validation/wordconcepts/family.gif"
   },
   {
     "label": "Eat",
     "meaning": "To consume food.",
     "exampleUsage": "Let's eat lunch together.",
-    "displayOrder": 8
+    "displayOrder": 8,
+    "referenceImageUrl": "/references/validation/wordconcepts/eat.gif"
   },
   {
     "label": "Drink",
     "meaning": "To consume liquid.",
     "exampleUsage": "I drink water every day.",
-    "displayOrder": 9
+    "displayOrder": 9,
+    "referenceImageUrl": "/references/validation/wordconcepts/drink.gif"
   },
   {
     "label": "Help",
     "meaning": "To assist someone.",
     "exampleUsage": "Can you help me carry this?",
-    "displayOrder": 10
+    "displayOrder": 10,
+    "referenceImageUrl": "/references/validation/wordconcepts/help.gif"
   }
 ]

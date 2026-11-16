@@ -38,6 +38,7 @@ type QuizSummaryProps = {
   onReviewLesson: () => void;
   /** Adds a leave (X) button in the corner, for screens with no other way out. */
   onLeave?: () => void;
+  leaveLabel?: string;
   children?: ReactNode;
 };
 
@@ -83,7 +84,7 @@ const FEEDBACK_TIERS: FeedbackTier[] = [
 
 const prefersReducedMotion = () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-const QuizSummary = ({ testName, score, totalItems, passed, nextStep, passingPercent, lessonName, onNext, onRetry, onReviewLesson, onLeave, children }: QuizSummaryProps) => {
+const QuizSummary = ({ testName, score, totalItems, passed, nextStep, passingPercent, lessonName, onNext, onRetry, onReviewLesson, onLeave, leaveLabel, children }: QuizSummaryProps) => {
   const [windowSize, setWindowSize] = useState({ width: window.innerWidth, height: window.innerHeight });
   const [reduceMotion] = useState(prefersReducedMotion);
 
@@ -114,7 +115,7 @@ const QuizSummary = ({ testName, score, totalItems, passed, nextStep, passingPer
         />
       )}
 
-      {onLeave && (
+      {onLeave && !leaveLabel && (
         <button type="button" aria-label="Leave" onClick={onLeave} className="absolute top-2 left-3 z-20 flex size-11 items-center justify-center rounded-2xl text-[#AFAFAF] hover:bg-black/5 focus-visible:ring-4 focus-visible:ring-hudyat-gold focus-visible:outline-none">
           <X aria-hidden="true" className="size-7" strokeWidth={3} />
         </button>
@@ -190,6 +191,15 @@ const QuizSummary = ({ testName, score, totalItems, passed, nextStep, passingPer
             >
               {passed ? "Try again" : "Review lesson"}
             </button>
+            {onLeave && leaveLabel && (
+              <button
+                type="button"
+                onClick={onLeave}
+                className="min-h-11 rounded-xl px-4 text-base font-extrabold text-[#6B6B6B] uppercase underline-offset-4 hover:text-[#3C3C3C] hover:underline focus-visible:ring-4 focus-visible:ring-hudyat-gold focus-visible:outline-none"
+              >
+                {leaveLabel}
+              </button>
+            )}
           </nav>
 
           {children}

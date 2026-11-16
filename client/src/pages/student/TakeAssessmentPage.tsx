@@ -8,12 +8,24 @@ import HandSignQuestion from "@/components/common/hand-sign-question";
 import ElevatedButton from "@/components/ui/elavated-button";
 import QuizSummary from "@/components/common/quiz-summary";
 
-import type { AssessmentAnswer, AssessmentResult } from "@/api/assessment-api";
+import type { AssessmentAnswer, AssessmentData, AssessmentResult } from "@/api/assessment-api";
+import { shuffle } from "@/lib/shuffle";
 import { useAssessment } from "@/hooks/use-assessment";
+import { useAssessmentList } from "@/hooks/use-assessment-list";
 import { useCheckAnswer } from "@/hooks/use-check-answer";
 import { useSubmitAssessment } from "@/hooks/use-submit-assessment";
 
-const TakeAssessmentPage = () => {
+function randomizeAssessment(assessment: AssessmentData): AssessmentData {
+  return {
+    ...assessment,
+    questions: shuffle(assessment.questions).map((question) => ({
+      ...question,
+      choices: shuffle(question.choices),
+    })),
+  };
+}
+
+const TakeAssessmentAttempt = () => {
   const navigate = useNavigate();
   const { categoryId } = useParams();
 
@@ -24,10 +36,20 @@ const TakeAssessmentPage = () => {
   const assessmentEndSound = useRef<HTMLAudioElement | null>(null);
 
   const {
-    data: assessment,
+    data: loadedAssessment,
     isLoading,
     error: loadError,
   } = useAssessment(categoryId);
+  const { data: assessmentList } = useAssessmentList();
+  const hasSignTest = assessmentList?.learningAreas
+    .flatMap((area) => area.categories)
+    .find((category) => category.categoryId === categoryId)?.signTest.hasModel;
+
+  // Snapshot once per attempt so background refetches cannot move answers around.
+  const [assessment, setAssessment] = useState<AssessmentData | null>(null);
+  if (loadedAssessment && !assessment) {
+    setAssessment(randomizeAssessment(loadedAssessment));
+  }
 
   const checkAnswerMutation = useCheckAnswer(categoryId);
   const submitAssessmentMutation = useSubmitAssessment(categoryId);
@@ -51,6 +73,7 @@ const TakeAssessmentPage = () => {
 
   // Try again from the summary: a fresh attempt on the same quiz, without reloading the page.
   const restartQuiz = () => {
+    if (assessment) setAssessment(randomizeAssessment(assessment));
     setResult(null);
     setResults([]);
     setAnswers([]);
@@ -127,19 +150,23 @@ const TakeAssessmentPage = () => {
   }
 
   if (result) {
+    // Completion includes earlier attempts; each replay still offers both tests.
+    const nextStep = hasSignTest || !result.lessonCompleted ? "sign-test" : "next-lesson";
     return (
       <QuizSummary
         testName="quiz"
         score={Number(result.score)}
         totalItems={Number(result.totalPoints)}
         passed={result.passed}
-        nextStep={result.lessonCompleted ? "next-lesson" : "sign-test"}
+        nextStep={nextStep}
         passingPercent={Number(result.passingScore)}
         lessonName={assessment.category.name}
         // The Learn page shows the newly unlocked lesson as the current one.
-        onNext={() => navigate(result.lessonCompleted ? "/student/learn" : `/student/assessment/${categoryId}/sign-test`)}
+        onNext={() => navigate(nextStep === "next-lesson" ? "/student/learn" : `/student/assessment/${categoryId}/sign-test`)}
         onReviewLesson={() => navigate(`/student/learn/${categoryId}`)}
         onRetry={restartQuiz}
+        onLeave={() => navigate("/student/assessment")}
+        leaveLabel="Go back"
       />
     );
   }
@@ -346,7 +373,7 @@ const TakeAssessmentPage = () => {
             <span aria-hidden="true" className="flex size-8 items-center justify-center rounded-xl bg-violet-500 text-white">
               <Sparkles className="size-4.5" />
             </span>
-            {assessment.category.name} quiz · Question {currentQuestion.questionNumber}
+            {assessment.category.name} quiz · Question {questionNumber}
           </p>
 
           <h1 className="mt-2 shrink-0 text-2xl leading-snug font-bold text-[#3C3C3C] sm:text-3xl">
@@ -360,6 +387,7 @@ const TakeAssessmentPage = () => {
           <div className={`mx-auto mt-[clamp(0.75rem,2vh,1.5rem)] flex w-full min-h-0 max-w-2xl flex-1 flex-col ${showFeedback ? "[&_button>svg]:size-9!" : ""}`}>
             {isVideoQuestion ? (
               <VideoQuestion
+                imageUrl={currentQuestion.gesture.referenceImageUrl ?? undefined}
                 videoUrl={
                   currentQuestion.referenceMediaUrl ??
                   currentQuestion.gesture
@@ -411,6 +439,11 @@ const TakeAssessmentPage = () => {
       </nav>
     </div>
   );
+};
+
+const TakeAssessmentPage = () => {
+  const { categoryId } = useParams();
+  return <TakeAssessmentAttempt key={categoryId} />;
 };
 
 export default TakeAssessmentPage;

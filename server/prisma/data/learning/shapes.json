@@ -3,48 +3,56 @@
     "label": "Circle",
     "meaning": "A round shape with no corners.",
     "exampleUsage": "Draw a circle on the paper.",
-    "displayOrder": 1
+    "displayOrder": 1,
+    "referenceImageUrl": "/references/validation/shapes/circle.gif"
   },
   {
     "label": "Square",
     "meaning": "A shape with four equal sides.",
     "exampleUsage": "The gift box is a square.",
-    "displayOrder": 2
+    "displayOrder": 2,
+    "referenceImageUrl": "/references/validation/shapes/square.gif"
   },
   {
     "label": "Triangle",
     "meaning": "A shape with three sides.",
     "exampleUsage": "The rooftop looks like a triangle.",
-    "displayOrder": 3
+    "displayOrder": 3,
+    "referenceImageUrl": "/references/validation/shapes/triangle.gif"
   },
   {
     "label": "Rectangle",
     "meaning": "A shape with four sides, two long and two short.",
     "exampleUsage": "The door is shaped like a rectangle.",
-    "displayOrder": 4
+    "displayOrder": 4,
+    "referenceImageUrl": "/references/validation/shapes/rectangle.gif"
   },
   {
     "label": "Star",
     "meaning": "A shape with five or more points.",
     "exampleUsage": "I drew a star in my notebook.",
-    "displayOrder": 5
+    "displayOrder": 5,
+    "referenceImageUrl": "/references/validation/shapes/star.gif"
   },
   {
     "label": "Heart",
     "meaning": "A shape symbolizing love.",
     "exampleUsage": "She drew a heart on the card.",
-    "displayOrder": 6
+    "displayOrder": 6,
+    "referenceImageUrl": "/references/validation/shapes/heart.gif"
   },
   {
     "label": "Diamond",
     "meaning": "A shape with four sides like a rhombus.",
     "exampleUsage": "The kite is shaped like a diamond.",
-    "displayOrder": 7
+    "displayOrder": 7,
+    "referenceImageUrl": "/references/validation/shapes/diamond.gif"
   },
   {
     "label": "Oval",
     "meaning": "A rounded shape like a stretched circle.",
     "exampleUsage": "The mirror is oval-shaped.",
-    "displayOrder": 8
+    "displayOrder": 8,
+    "referenceImageUrl": "/references/validation/shapes/oval.gif"
   }
 ]

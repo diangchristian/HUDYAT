@@ -3,72 +3,84 @@
     "label": "January",
     "meaning": "The first month of the year.",
     "exampleUsage": "January is the first month of the year.",
-    "displayOrder": 1
+    "displayOrder": 1,
+    "referenceImageUrl": "/references/validation/calendar/january.gif"
   },
   {
     "label": "February",
     "meaning": "The second month of the year.",
     "exampleUsage": "February is the second month of the year.",
-    "displayOrder": 2
+    "displayOrder": 2,
+    "referenceImageUrl": "/references/validation/calendar/february.gif"
   },
   {
     "label": "March",
     "meaning": "The third month of the year.",
     "exampleUsage": "March is the third month of the year.",
-    "displayOrder": 3
+    "displayOrder": 3,
+    "referenceImageUrl": "/references/validation/calendar/march.gif"
   },
   {
     "label": "April",
     "meaning": "The fourth month of the year.",
     "exampleUsage": "April is the fourth month of the year.",
-    "displayOrder": 4
+    "displayOrder": 4,
+    "referenceImageUrl": "/references/validation/calendar/april.gif"
   },
   {
     "label": "May",
     "meaning": "The fifth month of the year.",
     "exampleUsage": "May is the fifth month of the year.",
-    "displayOrder": 5
+    "displayOrder": 5,
+    "referenceImageUrl": "/references/validation/calendar/may.gif"
   },
   {
     "label": "June",
     "meaning": "The sixth month of the year.",
     "exampleUsage": "June is the sixth month of the year.",
-    "displayOrder": 6
+    "displayOrder": 6,
+    "referenceImageUrl": "/references/validation/calendar/june.gif"
   },
   {
     "label": "July",
     "meaning": "The seventh month of the year.",
     "exampleUsage": "July is the seventh month of the year.",
-    "displayOrder": 7
+    "displayOrder": 7,
+    "referenceImageUrl": "/references/validation/calendar/july.gif"
   },
   {
     "label": "August",
     "meaning": "The eighth month of the year.",
     "exampleUsage": "August is the eighth month of the year.",
-    "displayOrder": 8
+    "displayOrder": 8,
+    "referenceImageUrl": "/references/validation/calendar/august.gif"
   },
   {
     "label": "September",
     "meaning": "The ninth month of the year.",
     "exampleUsage": "September is the ninth month of the year.",
-    "displayOrder": 9
+    "displayOrder": 9,
+    "referenceImageUrl": "/references/validation/calendar/september.gif"
   },
   {
     "label": "October",
     "meaning": "The tenth month of the year.",
     "exampleUsage": "October is the tenth month of the year.",
-    "displayOrder": 10
+    "displayOrder": 10,
+    "referenceImageUrl": "/references/validation/calendar/october.gif"
   },
   {
     "label": "November",
     "meaning": "The eleventh month of the year.",
     "exampleUsage": "November is the eleventh month of the year.",
-    "displayOrder": 11
+    "displayOrder": 11,
+    "referenceImageUrl": "/references/validation/calendar/november.gif"
   },
   {
     "label": "December",
     "meaning": "The twelfth and final month of the year.",
     "exampleUsage": "December is the last month of the year.",
-    "displayOrder": 12
+    "displayOrder": 12,
+    "referenceImageUrl": "/references/validation/calendar/december.gif"
   }
 ]

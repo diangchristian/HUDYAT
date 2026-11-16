@@ -16,11 +16,12 @@ import { useCameraPreference } from "@/lib/camera-preference";
 import { cameraGrantRemembered, forgetCameraGrant } from "@/lib/camera-session";
 import { CAMERA_BACKGROUNDS, useCameraBackground, type CameraBackground } from "@/lib/camera-background";
 import { publicAsset } from "@/features/fsl-recognition/registry";
+import { CameraFeedback } from "@/components/common/assessment-feedback";
 
 const ROUND_BUTTON="flex size-11 shrink-0 items-center justify-center rounded-full bg-background/90 text-foreground shadow-sm transition-colors hover:bg-background focus-visible:ring-4 focus-visible:ring-hudyat-gold focus-visible:outline-none active:scale-95 sm:size-9";
 
 // fillOnPhone: below tablet width, fill the parent's height instead of a fixed 16:9 frame (practice page).
-// quietWrong: no red chip or sound for wrong readings (recognition flags wrong while the hand is still moving); onWrong still fires so the page can show its own gentle hint (sign test).
+// quietWrong: show the retry feedback without playing a wrong-answer sound (sign test).
 // bare: no frame of its own, for when the parent already draws one (lesson Try card).
 export default function PracticeCamera({category,targetLabel,onCorrect,onWrong,onRunningChange,fillOnPhone=false,quietWrong=false,bare=false}: {category?:string;targetLabel?:string;onCorrect?:()=>void;onWrong?:()=>void;/** Told when recognition starts or stops checking signs (e.g. so a timer can wait for it). */onRunningChange?:(running:boolean)=>void;fillOnPhone?:boolean;quietWrong?:boolean;bare?:boolean}) {
   const { videoRef, status, error, start, stop: stopCamera } = useCamera();
@@ -65,10 +66,10 @@ export default function PracticeCamera({category,targetLabel,onCorrect,onWrong,o
   const turnOff=()=>{forgetCameraGrant();stop();};
   const incorrect=()=>{
     onWrong?.();
-    if(quietWrong)return;
     clearTimeout(feedbackTimer.current);
     setFeedback({kind:'wrong',target:targetLabel});
     feedbackTimer.current=setTimeout(()=>setFeedback(null),1800);
+    if(quietWrong)return;
     const sound=wrongSound.current??new Audio(import.meta.env.BASE_URL+'sounds/wrong.mp3');
     wrongSound.current=sound;sound.muted=false;sound.currentTime=0;
     void sound.play().catch(error=>console.warn('Wrong sound could not play:',error));
@@ -148,6 +149,8 @@ export default function PracticeCamera({category,targetLabel,onCorrect,onWrong,o
           )}
 
           {category && <CategoryRecognition key={category} category={category} targetLabel={targetLabel} video={videoRef} active={isLive} onCorrect={recognized} onWrong={incorrect} onStatus={setRecognitionStatus} retry={recognitionRetry} settings={settings} onHold={setHold} />}
+
+          {result && <CameraFeedback key={result} isCorrect={result === 'correct'} />}
 
           {holdShown && (
             <div className="pointer-events-none absolute inset-x-3 bottom-3 flex flex-col items-center gap-2">

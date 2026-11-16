@@ -3,60 +3,70 @@
     "label": "Good Morning",
     "meaning": "A greeting used when meeting someone in the morning.",
     "exampleUsage": "Good morning! How are you?",
-    "displayOrder": 1
+    "displayOrder": 1,
+    "referenceImageUrl": "/references/validation/greetings/goodmorning.gif"
   },
   {
     "label": "Good Afternoon",
     "meaning": "A greeting used when meeting someone in the afternoon.",
     "exampleUsage": "Good afternoon! How was your day?",
-    "displayOrder": 2
+    "displayOrder": 2,
+    "referenceImageUrl": "/references/validation/greetings/goodafternoon.gif"
   },
   {
     "label": "Good Evening",
     "meaning": "A greeting used when meeting someone in the evening.",
     "exampleUsage": "Good evening! Welcome.",
-    "displayOrder": 3
+    "displayOrder": 3,
+    "referenceImageUrl": "/references/validation/greetings/goodevening.gif"
   },
   {
     "label": "Hello",
     "meaning": "A common greeting used when meeting or addressing someone.",
     "exampleUsage": "Hello! Nice to meet you.",
-    "displayOrder": 4
+    "displayOrder": 4,
+    "referenceImageUrl": "/references/validation/greetings/hello.gif"
   },
   {
     "label": "How are you",
     "meaning": "An expression used to ask about someone's condition or well-being.",
     "exampleUsage": "Hello! How are you?",
-    "displayOrder": 5
+    "displayOrder": 5,
+    "referenceImageUrl": "/references/validation/greetings/howareyou.gif"
   },
   {
     "label": "I'm fine",
     "meaning": "An expression used to say that you are doing well.",
     "exampleUsage": "I'm fine, thank you.",
-    "displayOrder": 6
+    "displayOrder": 6,
+    "referenceImageUrl": "/references/validation/greetings/imfine.gif"
   },
   {
     "label": "Nice to meet you",
     "meaning": "An expression used when meeting someone for the first time.",
     "exampleUsage": "Nice to meet you. I am happy to meet you.",
-    "displayOrder": 7
+    "displayOrder": 7,
+    "referenceImageUrl": "/references/validation/greetings/nicetomeetyou.gif"
   },
   {
     "label": "Thank you",
     "meaning": "An expression used to show appreciation or gratitude.",
     "exampleUsage": "Thank you for helping me.",
-    "displayOrder": 8
+    "displayOrder": 8,
+    "referenceImageUrl": "/references/validation/greetings/thankyou.gif"
   },
   {
     "label": "You're welcome",
     "meaning": "An expression used in response to someone who has thanked you.",
     "exampleUsage": "Thank you! You're welcome.",
-    "displayOrder": 9
+    "displayOrder": 9,
+    "referenceImageUrl": "/references/validation/greetings/yourewelcome.gif"
   },
   {
     "label": "See you tomorrow",
     "meaning": "An expression used when saying goodbye to someone you expect to see the next day.",
     "exampleUsage": "Goodbye! See you tomorrow.",
-    "displayOrder": 10
+    "displayOrder": 10,
+    "referenceImageUrl": "/references/validation/greetings/seeyoutomorrow.gif"
   }
 ]
